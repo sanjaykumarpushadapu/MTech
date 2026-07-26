@@ -10,8 +10,8 @@
 | EC | Component | Type | Weight | Date |
 |---|---|---|---|---|
 | EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 (3 days) |
-| EC-1 | **Situated Learning** | Online | 5% | **27 Aug – 7 Sep 2026** ⚠️ collides with the crunch |
-| EC-1 | Assignment I & II | Online | 20% | 29 Oct – 11 Nov 2026 |
+| EC-1 | **Situated Learning** | Online | 5% | **27 Aug – 7 Sep 2026** ⚠️ handout says this window; **slide 11 says "after mid-term"** — verify on Taxila |
+| EC-1 | Assignment I & II | Online | 20% (10+10) | 29 Oct – 11 Nov 2026 ⚠️ **slide 11 says Assignment I is *before* mid-term** — verify on Taxila |
 | EC-2 | Mid-semester test | **Closed book** | 30% | **19 Sep 2026 (EN)**, 2h |
 | EC-3 | Comprehensive exam | Open book | 40% | **5 Dec 2026 (EN)**, 2½h |
 
@@ -72,7 +72,7 @@ Design and judgment, least mathematical of the four. **Pick one running example 
 
 ## Running example
 
-**System:** ____________________ (fraud detection recommended — it's the handout's own example for Lab 1)
+**System:** **Fraud detection** — named in the handout as the Lab 1 example. Locked in at session 1; every module applies to this same system.
 
 ## Overlap
 

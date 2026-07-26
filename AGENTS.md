@@ -28,7 +28,7 @@ The user uploads material session by session and says **subject, session number,
 | `.pdf` (scanned) | Nothing until OCR'd | OCR first; say that it's happening |
 | `.pptx` | Slide text **and speaker notes** — notes often carry the real explanation | `python-pptx`; always read the notes slides |
 | `.docx` | Full text and tables | `python-docx` |
-| `.png` / `.jpg` of a diagram | Read directly | Describe the diagram in the note; don't just cite it |
+| `.png` / `.jpg` of a diagram | Read directly | Convert to Mermaid — see below |
 | `.txt` / `.srt` / `.vtt` transcript | Full text | Primary source for what the instructor emphasised |
 | **`.mp4` / video** | **Nothing** | Cannot be processed. See below |
 
@@ -36,7 +36,47 @@ The user uploads material session by session and says **subject, session number,
 
 **Auto-generated transcripts are noisy.** Technical terms come through mangled (`RoPE` → "rope", `SwiGLU` → "swiglue", `GQA` → "GQ A"). Reconcile against the slides, which have the correct spellings, and silently use the correct term in the note. Do not ask the user to clean transcripts first.
 
-**When both slides and transcript exist,** the slides define the scope and the transcript defines the emphasis. What the instructor spent ten minutes on is what the exam asks about — mark it in the note.
+### Layering sources
+
+Material arrives for the same session at different times — slides first, transcript later, textbook chapter later still. **Rewrite the existing note; never create a second file for the same session.**
+
+| Source | Contributes | Wins when sources disagree |
+|---|---|---|
+| **Slides** | Scope — what is examinable, in the instructor's words | **Scope and terminology.** If the deck omits a textbook topic, it is probably not examinable — note it as background, don't expand it |
+| **Textbook** | Depth — mechanism, worked examples, edge cases, the tradeoff line | **Explanation.** Slides compress; the book is where the argument is actually made |
+| **Transcript** | Emphasis — what got ten minutes vs. thirty seconds; asides, exam hints | **Emphasis and anything said but not written** |
+
+When a later source arrives, say in one line what changed in the note rather than re-describing the whole session.
+
+**Textbooks: request chapters, not whole books.** A 500-page textbook covers all sixteen sessions; processing it for one session pulls in concepts the instructor has not yet introduced, which makes the note worse. If only the full book is available, ask which chapters — or take them from the master index's Source column — and extract just those pages. Never let unintroduced material leak into an early session's note.
+
+### Images and diagrams → Mermaid
+
+**Always extract embedded images from decks and look at them.** Slide text routinely omits what the diagram says; in 546 session 1, five of the eight concepts existed *only* as pictures. A note written from slide text alone will silently miss them.
+
+Extraction: `python-pptx` → `shape.image.blob` for `.pptx`; `pdfplumber` / `pypdfium2` for PDFs. Write the files out, then read them.
+
+**Convert every content-bearing diagram to a Mermaid block in the note.** Never write "see the diagram on slide 16" — the slides won't be in the exam hall and won't be in the bound open-book file unless they're in these notes.
+
+| Diagram type | Mermaid to use |
+|---|---|
+| Process, cycle, pipeline | `flowchart LR` (or `TD`) |
+| Layered pyramid / stack | `flowchart BT` bottom-up, one node per layer |
+| Chronology, eras | `timeline` |
+| Sequence of interactions | `sequenceDiagram` |
+| State machine, lifecycle | `stateDiagram-v2` |
+| Comparison across eras/options | **Markdown table, not Mermaid** |
+| Venn diagram | **Table of the overlaps** — Mermaid has no Venn; name each intersection |
+| Screenshot, photo, decorative art | **Skip it.** Not every image is a diagram |
+
+Rules for the conversion:
+
+- **Carry the labels across verbatim.** The exam uses the instructor's words.
+- **Don't invent structure the image doesn't have.** If an arrow's direction is ambiguous, say so in the prose rather than guessing in the diagram.
+- **Put the diagram under "Mechanism"**, then still write the intuition, worked example and tradeoff around it. A Mermaid block is not a substitute for the four-part explanation.
+- **Keep node text short** — long labels wrap badly. Use `<br/>` for deliberate line breaks.
+- **Prefer a table when the content is genuinely tabular.** A 5×3 comparison forced into a flowchart is worse than the table it should have been.
+- Original images are **not** committed (they're inside the deck in Drive). The Mermaid block is the permanent record.
 
 ## How notes must be written
 

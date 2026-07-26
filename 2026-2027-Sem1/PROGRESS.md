@@ -72,7 +72,7 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Note | Card | Open | Lab |
 |---|---|---|---|---|---|
-| 1 | Foundations of ML systems eng | ☐ | ☐ | ☐ | ☐ |
+| 1 | Foundations of ML systems eng | ✅ | ✅ | ☐ | — |
 | 2 | Models → systems, AI paradigms | ☐ | ☐ | ☐ | ☐ |
 | 3 | Requirements engineering, GR4ML | ☐ | ☐ | ☐ | ☐ L1 |
 | 4 | Measures & quality attributes | ☐ | ☐ | ☐ | ☐ L2 |
@@ -109,7 +109,7 @@ One view across all four subjects. Update the same weekend the session happens.
 | | Done |
 |---|---|
 | 549 Python self-study complete | ☐ |
-| Running example chosen for 546 | ☐ |
+| Running example chosen for 546 (fraud detection) | ✅ |
 | Transcript workflow confirmed working | ☐ |
 | Quizzes ×4 taken (by 20 Aug) | ☐ |
 | Crunch deliverables submitted (7 Sep) | ☐ |

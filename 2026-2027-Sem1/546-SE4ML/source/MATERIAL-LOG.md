@@ -7,7 +7,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 |  |  |  |  | ☐ |
+| 1 | ✓ `Session 1- Intro.pptx` (28 sl) | T1 ch1,3 | ✗ | ✗ | ✅ `notes/S01-foundations.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
