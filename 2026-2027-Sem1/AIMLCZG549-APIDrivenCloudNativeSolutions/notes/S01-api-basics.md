@@ -229,6 +229,26 @@ curl -X GET "https://jsonplaceholder.typicode.com/posts"
 
 Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · response = posts in JSON. The deck also suggests trying it in **Postman**, which is worth installing now — you'll want it for labs 3 and 4.
 
+> ***Going deeper*** *(my own — what that `curl` actually sends and receives on the wire; an SDK hides this, but it's all HTTP really is):*
+> The **request** your client sends is plain text:
+> ```http
+> GET /posts/1 HTTP/1.1
+> Host: jsonplaceholder.typicode.com
+> Authorization: Bearer sk-abc123
+> Accept: application/json
+> ```
+> Three parts: a **request line** (method + path + version), **headers** (`key: value` — who you are, what you accept), and an optional **body** (empty for `GET`; the JSON payload for `POST`/`PUT`).
+>
+> The **response** mirrors it:
+> ```http
+> HTTP/1.1 200 OK
+> Content-Type: application/json
+> Content-Length: 83
+>
+> {"userId": 1, "id": 1, "title": "…", "body": "…"}
+> ```
+> A **status line** (version + code + reason), **headers**, a **blank line**, then the **body**. That blank line is the whole framing rule — headers above it, data below. Everything else — REST, an SDK, Postman — is a convenience layer over these messages. When an API "doesn't work," this is the level you drop to: `curl -v` prints exactly these bytes.
+
 **Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (section 7).
 
 > ***Going deeper*** *(beyond the deck — safe vs idempotent methods, the property that makes retries safe):*
@@ -620,6 +640,18 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 **Why HTTP/2 actually helps** — the deck lists it as a feature; R2 says why. HTTP/2 adds **binary compression and framing**: a transparent binary framing layer splits and compresses messages into chunks, enabling **full request/response multiplexing over a single connection**. Fetching 20 attendees over HTTP/1 needs **20 new TCP connections**; over HTTP/2 it's **20 requests on one connection**. gRPC uses HTTP/2 by default and shrinks payloads with a binary protocol.
 
 *(R2 also notes HTTP/3 is coming, built on **QUIC** over UDP.)*
+
+> ***Going deeper*** *(my own — the four call types HTTP/2 multiplexing unlocks; the deck's calculator shows only the first):*
+> Because gRPC rides on HTTP/2, a call isn't limited to one-request-one-response. There are **four kinds**, and knowing they exist is most of what the topic is about:
+>
+> | Type | Shape | Example |
+> |---|---|---|
+> | **Unary** | 1 request → 1 response (like REST) | `Add(a, b) → sum` — the deck's calculator |
+> | **Server streaming** | 1 request → *stream* of responses | "subscribe to stock prices" — one ask, many updates |
+> | **Client streaming** | *stream* of requests → 1 response | "upload 10,000 sensor readings" → one ack |
+> | **Bidirectional** | both stream at once | live chat, real-time translation |
+>
+> In the `.proto` you mark it with the `stream` keyword — `rpc Prices(Req) returns (stream Price)`. Streaming is the concrete payoff of HTTP/2 multiplexing, and it's something REST cannot do cleanly — a real reason to reach for gRPC beyond raw speed.
 
 **Advantages and disadvantages — from the deck:**
 
