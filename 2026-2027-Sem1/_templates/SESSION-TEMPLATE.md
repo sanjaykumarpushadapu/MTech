@@ -1,6 +1,8 @@
-# <CODE> · Session <NN> · <Topic Title>
+# <Subject Name> · Session <NN> · <Topic Title>
 
-*Learned ____ · Instructor <name> · built from <deck (n sl)> + <durable sources>. Exam scope & logistics folded into the **Exam layer** at the end.*
+<!-- Title leads with the subject NAME (e.g. "Conversational AI"), not the code. -->
+
+*Learned ____*
 
 <!-- A note is a KNOWLEDGE BASE that folds down to an exam aid. Lead with knowledge;
      the exam scaffolding is collapsed so it never dominates the read. -->

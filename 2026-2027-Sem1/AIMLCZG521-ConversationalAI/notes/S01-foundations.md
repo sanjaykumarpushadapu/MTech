@@ -1,6 +1,6 @@
-# 521 · Session 01 · Foundations of Conversational AI
+# Conversational AI · Session 01 · Foundations of Conversational AI
 
-*Learned ____ · Instructor Dr Bharathi R · built from `Session-1-Foundations-of-ConvAI.pdf` (56 sl) + Teams recording + *The Landscape of AI Agents* (Masterman et al., arXiv:2404.11584) + HF BPE course. Exam scope & logistics folded into the **Exam layer** at the end.*
+*Learned ____*
 
 > ### What the instructor emphasised
 > *From the session-1 recording, 26 Jul.*

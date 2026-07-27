@@ -1,6 +1,6 @@
-# 546 · Session 01 · Foundations of ML Systems Engineering
+# Software Engineering for Machine Learning · Session 01 · Foundations of ML Systems Engineering
 
-*Learned ____ · Instructor Dr. Prashant Vaish · built from Session-1 slides (28 sl, 15 images) + T1 Kästner ch1 & ch3 + R1 Tech Mahindra ADLC white paper (12 pp). Exam scope & logistics folded into the **Exam layer** at the end.*
+*Learned ____*
 
 ## Why this matters
 

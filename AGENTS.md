@@ -194,7 +194,7 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge-
 
 **Note structure (top to bottom):**
 
-1. **Title** + a one-line identity aside (date learned · instructor · sources · "exam layer folded at the end").
+1. **Title** — `<Subject Name> · Session NN · <Topic>`, leading with the subject **name** (e.g. "Conversational AI"), not the code. Then a one-line identity aside: **just** `*Learned <date>*` — no instructor, sources or other metadata (per-concept `*Reference:*` lines carry provenance; the exam layer carries logistics).
 2. **Why this matters** — what this is and why it's worth knowing *for a career*, not just the syllabus. Lead with the knowledge, not the exam.
 3. **How to use this note** — a small table routing the reader by *goal* (learn end-to-end · look up · build · revise for exam).
 4. **Topics** — the numbered index.

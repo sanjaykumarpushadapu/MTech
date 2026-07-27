@@ -1,6 +1,6 @@
-# 536 · Session 01 · Foundations of Large Language Models
+# Large Language Models for Generative AI · Session 01 · Foundations of Large Language Models
 
-*Learned ____ · Instructor Dr. Monali Mavani · built from `CS-1 Intro to LLM.pptx` (69 sl, 47 images) + T1 Jurafsky & Martin ch2/7/8 + T2 Alammar & Grootendorst ch1–3 + R1 Raschka ch1–2 + HF LLM course 6.5 + 2h05 recording. Exam scope & logistics folded into the **Exam layer** at the end.*
+*Learned ____*
 
 ## Why this matters
 

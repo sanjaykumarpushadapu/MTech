@@ -1,6 +1,6 @@
-# 549 · Session 01 · API Basics
+# API-driven Cloud Native Solutions · Session 01 · API Basics
 
-*Learned 25 Jul 2026 · Instructor Nithya Ramachandran · built from `API driven_Lecture 1_25Jul.pptx` (72 sl, 21 images) + **R2 Gough, Bryant & Auburn ch1** + web. Exam scope, dates and study logistics are folded into the **Exam layer** at the very end.*
+*Learned 25 Jul 2026*
 
 ## Why this matters
 
