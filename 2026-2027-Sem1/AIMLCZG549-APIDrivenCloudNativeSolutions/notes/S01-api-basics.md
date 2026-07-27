@@ -43,7 +43,7 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 ## 1. What an API is
 
-*Sources: slides 13–14*
+*Reference: R2 Gough, Bryant & Auburn, *Mastering API Architecture* ch1 (Design, Build & Specify APIs).*
 
 **Intuition** — An API is a **contract between a service and its clients**. It says: send me a request shaped like this, and I promise a response shaped like that. Neither side needs to know how the other is built. That's the whole point — the contract is the product.
 
@@ -78,7 +78,7 @@ Cross-link: → `_shared/api-design.md` · **546 S9**
 
 ## 2. Synchronous vs asynchronous
 
-*Sources: slides 15–17*
+*Reference: R2 ch1; for the async side, the RabbitMQ and Apache Kafka docs, and [asyncapi.com](https://www.asyncapi.com) (the async counterpart to OpenAPI).*
 
 **Intuition** — Synchronous means the caller **waits**; the next task can't start until this one finishes (blocked). Asynchronous means the caller doesn't wait; a second task can begin in parallel (non-blocked).
 
@@ -133,7 +133,7 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 ## 3. HTTP APIs
 
-*Sources: slides 18–24 · transcript Q&A (status-code classes, endpoint anatomy)*
+*Reference: [MDN HTTP docs](https://developer.mozilla.org/en-US/docs/Web/HTTP) and **RFC 9110** (HTTP semantics) — the canonical, durable source for methods and status codes. (The status-code classes and endpoint anatomy came from the class Q&A.)*
 
 **Intuition** — HTTP APIs are the standard way applications talk over the web, typically browser → server. Three components: **endpoint**, **request**, **response**.
 
@@ -237,7 +237,7 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 ## 4. OpenAPI and the API lifecycle
 
-*Sources: slides 25–31 · openapis.org*
+*Reference: the OpenAPI spec at [openapis.org](https://www.openapis.org) / [spec.openapis.org](https://spec.openapis.org); [FastAPI docs](https://fastapi.tiangolo.com) for the worked stack.*
 
 **Intuition** — If an API is a contract, someone has to write the contract down in a form both humans and machines can read. That's **OpenAPI** — an *API description standard*, formerly called Swagger, providing a formal way to describe HTTP APIs, mainly RESTful ones.
 
@@ -313,7 +313,7 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML ser
 
 ## 5. REST
 
-*Sources: slides 32–39*
+*Reference: Roy Fielding's 2000 dissertation, ch5 (the origin of REST); R2 ch1.*
 
 **Intuition** — REST is not a technology, it's an **architectural style** — Roy Fielding, 2000 — and it's the architecture of the web itself. Its single organising idea: **treat every piece of content as a resource**, give each resource a URI, and manipulate it with HTTP's existing verbs.
 
@@ -352,7 +352,7 @@ Same resource, two representations:
 
 ### How RESTful is it? The Richardson Maturity Model
 
-*Not in the deck — this is R2 ch1, and it's the standard way to grade a REST API.*
+*Not in the deck — this is R2 ch1, and it's the standard way to grade a REST API. Go deeper: Fowler, ["Richardson Maturity Model"](https://martinfowler.com/articles/richardsonMaturityModel.html).*
 
 **Intuition** — Leonard Richardson (QCon 2008) reviewed many REST APIs and found teams adopt REST in **levels**, not all-or-nothing. Martin Fowler popularised them. Most real APIs sit at level 2.
 
@@ -435,7 +435,7 @@ The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetc
 
 ## 6. GraphQL
 
-*Sources: slides 40–49 · graphql.org · AWS architecture blog*
+*Reference: [graphql.org/learn](https://graphql.org/learn); AWS AppSync docs for the managed option.*
 
 **Intuition** — Built by **Facebook in 2015** specifically to fix REST's multiple-round-trips problem. Instead of the server deciding what each endpoint returns, **the client describes exactly the data it wants**, across multiple sources, in **one call**.
 
@@ -528,7 +528,7 @@ query {
 
 ## 7. gRPC
 
-*Sources: slides 50–57*
+*Reference: [grpc.io/docs](https://grpc.io/docs) and the Protocol Buffers docs at [protobuf.dev](https://protobuf.dev).*
 
 **Intuition** — Start from **RPC** (Remote Procedure Call): make a call to a remote server *look like calling a local function*, for distributed client-server applications. gRPC is Google's 2015 open-source RPC framework, tuned for speed between services.
 
@@ -626,7 +626,7 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 ## 7b. North–south vs east–west — how to actually choose
 
-*Sources: R2 ch1 (absent from the deck, and it's the framing that makes the comparison table usable)*
+*Reference: R2 Gough ch1 — this north–south / east–west framing is R2's, absent from the deck, and it's what makes the comparison table usable.*
 
 **Intuition** — Which API format is right depends less on the format's features than on **where the traffic comes from**:
 
@@ -666,7 +666,7 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 ## 8. Choosing between REST, GraphQL and gRPC
 
-*Sources: slides 58–59*
+*Reference: R2 ch1 (modelling exchanges & choosing an API format); the comparison table is the deck's own.*
 
 The deck's comparison table, which is close to guaranteed exam material:
 
@@ -693,7 +693,7 @@ The deck's comparison table, which is close to guaranteed exam material:
 
 ## 9. API versioning
 
-*Sources: slides 60–66 · HubSpot blog · semver*
+*Reference: [semver.org](https://semver.org) (the spec); [Stripe API versioning](https://docs.stripe.com/api/versioning) for the date-based scheme in practice.*
 
 **Intuition** — Versioning is managing change to an API **without disrupting clients**. A good strategy communicates what changed and lets consumers upgrade **at their own pace**.
 
@@ -765,7 +765,7 @@ Each version reachable at its own endpoint:
 
 ## Self-study — four APIs to explore
 
-*Sources: slides 67–71*
+*The deck's own self-study picks; each links to its source below.*
 
 | # | What | Where | Why |
 |---|---|---|---|
