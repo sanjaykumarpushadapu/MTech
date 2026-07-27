@@ -244,6 +244,15 @@ Rules for the ask:
 - [ ] No PDFs, slides, datasets or secrets staged for commit
 - [ ] Dates and weights match the handout, or are marked `⚠️`
 
+## Branch hygiene
+
+**A feature branch is deleted once it is merged into `main`.** A merged branch is finished — leaving it around clutters the branch list and invites someone to push new work onto already-merged history.
+
+- Delete the **local** branch immediately after the merge: `git branch -d <branch>`.
+- Delete the **remote** branch too: `git push origin --delete <branch>`.
+- ⚠️ **Some managed environments allow ref updates (pushes) but block ref deletions** — the remote delete hangs up with "unexpected disconnect" while the proxy logs no failure. When that happens, say so plainly and leave the remote branch for the user to delete from GitHub's UI. Do not keep retrying a deletion the environment refuses.
+- Never reuse a merged branch for follow-up work. Start fresh from the latest `main` (see the branch-restart rule in the task brief).
+
 ## Repo layout
 
 ```
