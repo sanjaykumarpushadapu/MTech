@@ -280,7 +280,16 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 | 5 | **Response Generation** | Generate natural responses | Contextual generation, personality/tone, multi-modal output, structured responses | **LLM generation with control** |
 | 6 | **Memory Systems** | Remember user context | Short-term (conversation), long-term (user profile), **episodic**, **semantic** | **Vector + SQL hybrid** |
 
-**Worked example — banking customer support across four generations**, same user problem each time:
+*The four kinds of memory in row 6 (my own — the table names them but doesn't define them; the human-memory analogy is the fastest way in):*
+
+| Memory | What it holds | Analogy / where it lives |
+|---|---|---|
+| **Short-term (working)** | the current conversation | what you're holding in your head *right now* — the context window, free |
+| **Long-term** | facts that persist across sessions — a user profile | your notebook: survives after you close it (SQL / key-value store) |
+| **Episodic** | specific past events — "last time you ordered the large" | remembering *a particular occasion* |
+| **Semantic** | general knowledge the agent draws on | facts you just *know* — usually a vector store / knowledge base |
+
+Short-term is free (it *is* the prompt); the other three need real storage, which is why memory sits in the "expensive, touches the outside world" half below.
 
 | Approach | User: "I lost my card" → Bot |
 |---|---|
@@ -748,7 +757,30 @@ Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **10
 
 ⚠️ **The notebook differs from the deck.** Slide 47 says "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
 
-Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, four sessions before it's formally taught in S4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
+Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, four sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
+
+> ***Going deeper*** *(my own — what the ReAct trace you're about to watch actually is; full treatment L4):*
+> **ReAct = Reason + Act.** The agent doesn't answer in one shot — it runs a loop, thinking out loud between tool calls:
+>
+> ```mermaid
+> flowchart LR
+>     Q[user question] --> T["Thought:<br/>what do I need?"]
+>     T --> A["Action:<br/>call a tool"]
+>     A --> O["Observation:<br/>tool result"]
+>     O --> D{enough<br/>to answer?}
+>     D -->|no| T
+>     D -->|yes| F[Final Answer]
+> ```
+>
+> For "weather in Tokyo?", `verbose=True` prints exactly this cycle:
+> ```
+> Thought: I need the current weather in Tokyo. I'll search.
+> Action: get_weather("Tokyo")
+> Observation: 32°C, humid, partly cloudy
+> Thought: I now have what I need.
+> Final Answer: It's 32°C and humid in Tokyo right now.
+> ```
+> That interleaving — **reason, act, read the result, decide the next step** — is the core agent pattern the whole course builds on. It's also why stage 1 (no tools) matters: you watch the model *fail*, then *reach for a tool*.
 
 One detail worth noticing in the code: the tool is declared as
 
