@@ -87,6 +87,16 @@ Legend: ✓ have · ✗ missing · — n/a
 *Ch8 Transformers* — **Attention (182)** · **Transformer Blocks (188)** · Parallelizing computation using a single matrix X (191) · **The input: embeddings for token and position (195)** · **The Language Modeling Head (197)** — *this is the source of the deck's fig 8.15* · More on Sampling (198) · Training (200) · Dealing with Scale (201) · Interpreting the Transformer (203)
 
 
+## 🔴 Handout cohort mismatch
+
+The handout held is **`(S2-25_AIMLCZG521) - April 2026.pdf`**, Version 2.0, dated 25/02/2025 — the **April–May 2025-26 cohort**, not yours.
+
+Your cohort is **S1-26** (First Semester 2026-27), as shown on every session recording filename.
+
+**Until the S1-26 handout is obtained, the session-1 deck is the authoritative source** for evaluation and scope. Where they differ, the deck wins.
+
+Known differences: quizzes (3-best-of-2 → **2**), assignment duration (15 days → **3 weeks**).
+
 ## Scope rule
 
 521 cites **no textbook chapters** — every reference is a specific public paper or spec, listed per session in `521-master.md`. **The named paper is the scope.** Related work it cites, or later papers by the same authors, are out of the syllabus unless the handout names them.

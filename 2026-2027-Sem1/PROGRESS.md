@@ -114,7 +114,8 @@ One view across all four subjects. Update the same weekend the session happens.
 | 549 Python self-study complete | ☐ |
 | Running example chosen for 546 (fraud detection) | ✅ |
 | Transcript workflow confirmed working | ✅ **26 Jul — 536 S1 Teams transcript processed** |
-| **EC-1 confirmed: 536 ✅ · 546 ✅ · 549 ✅ · 521 ⚠️ (not stated aloud — ask on Canvas)** | ✅ 3 of 4 |
+| **EC-1 confirmed: 536 ✅ · 546 ✅ · 549 ✅ · 521 → use the DECK (handout is wrong cohort)** | ✅ |
+| 🔴 **Get 521's S1-26 handout — the one held is S2-25 (April–May cohort)** | ☐ |
 | Quizzes ×4 taken (by 20 Aug) | ☐ |
 | Crunch deliverables submitted (7 Sep) | ☐ |
 | Mid-sems done (20 Sep) | ☐ |

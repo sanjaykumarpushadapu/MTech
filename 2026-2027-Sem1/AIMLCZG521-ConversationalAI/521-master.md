@@ -16,7 +16,23 @@
 | EC-2 | Mid-term | **Closed book** | 30% | ~19–20 Sep 2026 |
 | EC-3 | End semester | Open book | 40% | ~early Dec 2026 |
 
-⚠️ **No dates are published in the handout.** Strictly no makeups for quizzes and assignments. Check Canvas every Wednesday.
+🔴 **THE HANDOUT WE HOLD IS FOR THE WRONG COHORT.**
+
+`Conversational_AI_Course_Handout (S2-25_AIMLCZG521) - April 2026.pdf` · Version 2.0 · dated **25/02/2025**.
+**S2-25** = Second Semester 2025-26, the **April–May cohort**. Your recordings are all labelled **S1-26** (First Semester 2026-27). Prof. Mavani confirmed the pattern in 536's session 1: *"The first offering was in the April–May cohort, which is still going on."*
+
+**Consequence: where this handout and the current deck disagree, the deck wins** — the deck is this cohort's, the handout isn't.
+
+| | S2-25 handout (old) | **L1 slide 26 (current)** |
+|---|---|---|
+| Quizzes | 3, best 2 of 3 | **2** ✅ use this |
+| Assignments | ~15 days each | **~3 weeks each** ✅ use this |
+| Mid-term | 30%, closed, L1–L8 | same |
+| End semester | 40%, open, L1–L16 | same |
+
+⚠️ **Get the S1-26 handout from Canvas.** Until then, session topics and references in the table below are taken from the old handout and may have changed. The deck's own course-architecture slide (24) matches the old module structure, so the session plan is probably stable — but "probably" isn't good enough for exam scope.
+
+Strictly no makeups for quizzes and assignments. Check Canvas every Wednesday.
 
 ## Session index
 
