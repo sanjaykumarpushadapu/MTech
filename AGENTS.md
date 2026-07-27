@@ -18,6 +18,34 @@ Read `2026-2027-Sem1/STUDY-PLAN.md` for phases, calendar and deadlines before pl
 5. **One file per session**, in `<subject>/notes/`, named `S<NN>-<slug>.md` — **`S` prefix in every subject**, including 521, whose handout labels sessions `L1…L16`. Use the label `L3` in prose, the filename `S03-…`. If a note is created, update its row in `<code>-master.md` **and** in `2026-2027-Sem1/PROGRESS.md` in the same change.
 6. **Lab code goes in `<subject>/labs/S<NN>-<slug>/`,** not in `notes/`. Notes link to it.
 
+## Read the handout's session plan before asking for anything
+
+Every handout's **Part B: Learning Plan** contains the session plan table, and it is the contract for the course. Its four columns:
+
+| Column | Means |
+|---|---|
+| **Contact Session** | The session number. Some rows cover two (e.g. "10 & 11", "L15 & L16") |
+| **List of Topic Title** | The topic(s) that session covers — the note's title |
+| **Sub-Topics** | The breakdown within each topic — these become the note's sections, and they define examinable scope |
+| **Reference** | **Where the instructor built the slides from** — a textbook chapter, a research paper, a spec, or just "Web Resources / Lecture Notes" |
+
+Each master index reproduces this table. Its **Source** column *is* the handout's Reference column.
+
+**Read the Reference column before requesting material.** It tells you what to ask for, what to fetch yourself, and — critically — whether anything exists behind the slides at all.
+
+| Reference says | Do this |
+|---|---|
+| A textbook chapter (`T1 ch8`, `R3 ch1`) | Ask for those chapters, or extract them from a book already uploaded. Chapter→page maps live in `source/MATERIAL-LOG.md` |
+| A paper or public spec (ReAct, DPO, MCP spec, an Anthropic post) | **Fetch it directly** — these are public. Don't make the user upload them |
+| "Web Resources", "Lecture Notes", or blank | **There is no source behind the slides.** The deck and the recording are the entire syllabus for that session. Say so in the note, and treat missing material as unrecoverable rather than reconstructable |
+
+**Per-subject reference profile — this semester:**
+
+- **546** — T1 (Kästner) and T2 (Nelson) chapters cover S1–S14. S15–S16 are lecture notes only.
+- **536** — T1/T2/R1 chapters plus research papers cover most sessions. S6, S15, S16 are papers and web only.
+- **521** — no textbook chapters at all; every reference is a **public paper or spec**, so fetch rather than ask.
+- **549** — ⚠️ **only S1–S3 have book references (R2, R3). S4–S16 are "Web Resources, Lecture Notes."** Thirteen of sixteen sessions have nothing behind the slides. 549 decks and recordings are the highest-value artifacts of the semester; a missed 549 session cannot be reconstructed from a book.
+
 ## Intake — what arrives, and what to do with it
 
 The user uploads material session by session and says **subject, session number, and file type** (e.g. *"549, session 3, slides + transcript"*). If the session number is missing, infer it from the master index and **state the inference** rather than silently guessing.
@@ -36,9 +64,20 @@ The user uploads material session by session and says **subject, session number,
 
 **Auto-generated transcripts are noisy.** Technical terms come through mangled (`RoPE` → "rope", `SwiGLU` → "swiglue", `GQA` → "GQ A"). Reconcile against the slides, which have the correct spellings, and silently use the correct term in the note. Do not ask the user to clean transcripts first.
 
+### Organise by topic, never by source
+
+**This is the most important rule in this file.** A note is one person's notebook on a topic, assembled from wherever the information happened to come from. It is not a set of source summaries stacked together.
+
+- **Never** create sections like "From the slides" / "From the textbook" / "Part C — T1 ch3". The reader does not care which artifact a fact arrived in.
+- **One topic, one place.** Everything known about the SDLC — the diagram from the slides, the reason it breaks for ML from the textbook, the instructor's aside from the transcript — lives in the SDLC section. A reader revising that topic should never need to look elsewhere in the file.
+- **No duplication.** If a concept genuinely belongs to two topics, write it once in the more natural home and cross-reference from the other. Two half-explanations of the same idea in one note is the failure mode.
+- **No source overrides another.** Sources *combine*. The slides' framing, the book's mechanism and the lecturer's emphasis are complementary, not competing versions to choose between. Only flag a conflict when the sources make genuinely incompatible factual claims (a date, a weight, a definition) — then present both and mark it `⚠️`.
+- **Attribute lightly.** A short `Sources:` line under the topic heading is enough for looking things up later. Attribution belongs in a byline, not in the structure.
+- **Order topics for learning, not for arrival.** Vocabulary before the concepts that use it; motivation before mechanism. If the textbook supplies terms the slides assume, those terms come first in the note even though the slides came first in the class.
+
 ### Layering sources
 
-Material arrives for the same session at different times — slides first, transcript later, textbook chapter later still. **Rewrite the existing note; never create a second file for the same session.**
+Material arrives for the same session at different times — slides first, transcript later, textbook chapter later still. **Rewrite the existing note in place; never create a second file, and never append a new source as a new section at the bottom.** New material gets distributed into the topics it belongs to.
 
 | Source | Contributes | Wins when sources disagree |
 |---|---|---|

@@ -10,7 +10,7 @@
 | EC | Component | Type | Weight | Date |
 |---|---|---|---|---|
 | EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 |
-| EC-1 | Project / Assignment | Online | **30%** | 27 Aug – 7 Sep 2026 |
+| EC-1 | Project / Assignment | Online | **30%** | 27 Aug – 7 Sep 2026 ⚠️ **Lecture 1 slide 9 splits this into Mini Project I (15%) + Mini Project II (15%), dates unstated** — confirm on Taxila |
 | EC-2 | Mid-semester test | **Closed book** | 30% | **20 Sep 2026 (FN)**, 2h |
 | EC-3 | Comprehensive exam | Open book | 35% | **6 Dec 2026 (FN)**, 2½h |
 
@@ -60,6 +60,10 @@ Tools: Prefect / Prefect Cloud, MLflow, AWS SageMaker, Hugging Face APIs, OpenAI
 
 Breadth, not depth. Build **one layer-map** — containers → orchestration → serverless → observability — and hang each new tool on its layer with a single line of what it does. Never study internals. The labs are where the actual learning happens.
 **Trap:** drowning in tools. The CNCF landscape has hundreds of logos; you need the layers, not the logos.
+
+> ⚠️ **Reference profile — read this once.** Only sessions 1–3 cite a book (R2, R3). **Sessions 4–16 list "Web Resources, Lecture Notes" only** — there is no textbook behind those slides. A missed 549 session cannot be reconstructed from a chapter the way a 546 one can.
+> **Therefore: collect the deck and the recording for every 549 session the same weekend, without exception** — including during the 27 Aug – 7 Sep crunch when notes drop to bare concept lists. These are the highest-value artifacts in the semester.
+
 **Weekday slot:** Tuesday. Highest credit count, so this is the last subject to drop if you fall behind.
 
 ## Overlap note

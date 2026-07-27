@@ -7,7 +7,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 |  |  |  |  | ☐ |
+| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl) | T1 ch2,7,8 · T2 ch1-3 · R1 ch1-2 ✗ not held | ✗ | ✗ | ✅ `notes/S01-foundations.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |

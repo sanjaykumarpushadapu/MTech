@@ -8,7 +8,7 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Note | Card | Open | Lab |
 |---|---|---|---|---|---|
-| 1 | Foundations & tokenization | ☐ | ☐ | ☐ | ☐ L1 |
+| 1 | Foundations & tokenization | ✅ | ✅ | ☐ | ☐ L1 |
 | 2 | Pre-training & scaling laws | ☐ | ☐ | ☐ | ☐ |
 | 3 | Architecture advances (RoPE, MoE) | ☐ | ☐ | ☐ | ☐ L2 |
 | 4 | Training & attention efficiency | ☐ | ☐ | ☐ | ☐ |
@@ -30,7 +30,7 @@ One view across all four subjects. Update the same weekend the session happens.
 | S | Topic | Note | Card | Open | Lab |
 |---|---|---|---|---|---|
 | 0 | **Python self-study** | ☐ | — | — | — |
-| 1 | API basics & OpenAPI | ☐ | ☐ | ☐ | ☐ |
+| 1 | API basics & OpenAPI | ✅ | ✅ | ☐ | — |
 | 2 | Cloud-native concepts | ☐ | ☐ | ☐ | ☐ |
 | 3 | CNCF ecosystem, containers, K8s | ☐ | ☐ | ☐ | ☐ |
 | 4 | Data science & ML lifecycle | ☐ | ☐ | ☐ | ☐ |

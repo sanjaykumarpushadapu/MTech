@@ -68,6 +68,10 @@ Tools: Prefect / Prefect Cloud, MLflow, DVC, Amazon SageMaker, Docker, Kubernete
 Design and judgment, least mathematical of the four. **Pick one running example on day one** and apply every single module to that same system: requirements for it, architecture for it, tests for it, deployment for it, fairness analysis for it. Lab 1 (session 3) forces this choice anyway — make it early and never change it.
 
 **Trap:** memorising definitions in the abstract. A definition you can only recite is worth nothing in an exam that asks you to apply it.
+
+> **Reference profile.** T1 (Kästner) and T2 (Nelson) chapters cover sessions 1–14 — the best textbook coverage of the four subjects, so a missed session is largely recoverable. **S15–S16 (agentic AI, ADLC) are lecture notes only** — deck and recording are the whole source there.
+> T1 is free online: https://mlip-cmu.github.io/book/ (CC BY-NC-ND). Chapter→page map in `source/MATERIAL-LOG.md`.
+
 **Weekday slot:** Thursday. First subject to drop if you fall behind — least cumulative, most recoverable.
 
 ## Running example

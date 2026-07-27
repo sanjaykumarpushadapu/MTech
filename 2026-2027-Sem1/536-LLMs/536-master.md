@@ -9,8 +9,8 @@
 
 | EC | Component | Type | Weight | Date |
 |---|---|---|---|---|
-| EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 (1 week) |
-| EC-1 | Assignment / Lab assignment / Lab exam | Online | **30%** | 27 Aug – 7 Sep 2026 (10 days) |
+| EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 (1 week) ⚠️ **CS-1 slide 4 omits the quiz** |
+| EC-1 | Assignment / Lab assignment / Lab exam | Online | **30%** | 27 Aug – 7 Sep 2026 (10 days) ⚠️ **CS-1 slide 4 says "Assignments 35%", no dates, plan shared week 2** — handout allows either 2 assignments or 3 quizzes; instructor appears to have chosen assignments |
 | EC-2 | Mid-semester test | **Closed book** | 30% | **20 Sep 2026 (EN)**, 2h |
 | EC-3 | Comprehensive exam | Open book | 35% | **6 Dec 2026 (EN)**, 2½h |
 
@@ -69,6 +69,9 @@ Theory-heavy — give it your sharpest hour. Split every topic into one of two k
 - **Landscape** — decoding strategies, serving patterns, benchmarks, emerging architectures → a comparison table, nothing more.
 
 **Trap:** reading a slide and feeling you got it. You didn't, until you reproduced the example without looking.
+
+> **Reference profile.** T1 (Jurafsky & Martin), T2 (Alammar & Grootendorst) and R1 (Raschka) chapters cover most sessions, always supplemented by research papers. **S6 (compression & serving), S15 (safety) and S16 (advanced topics) are research papers and web references only** — no chapter behind them.
+
 **Weekday slot:** Monday.
 
 ## Notes on scope

@@ -7,7 +7,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 |  |  |  |  | ☐ |
+| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | R2 ch1 ✗ not held | ✗ | ✗ | ✅ `notes/S01-api-basics.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
@@ -23,6 +23,55 @@ Legend: ✓ have · ✗ missing · — n/a
 | 14 |  |  |  |  | ☐ |
 | 15 |  |  |  |  | ☐ |
 | 16 |  |  |  |  | ☐ |
+
+## Textbooks held
+
+### R1 · Severance, *Python for Everybody* (241 pp) — **Module 0 self-study**
+Free: https://do1.dr-chuck.com/pythonlearn/EN_us/pythonlearn.pdf · CC licensed
+
+| Ch | Title | PDF page | In handout's self-study list? |
+|---|---|---|---|
+| 1 | Why should you learn to write programs? | 13 | ✓ (structure of a Python program) |
+| 2 | Variables, expressions, statements | 31 | ✓ |
+| 3 | Conditional execution | 43 | ✓ |
+| 4 | Functions | 55 | ✓ |
+| 5 | Iteration | 69 | ✓ |
+| 6 | Strings | 79 | ✓ |
+| 7 | Files | 91 | ✓ |
+| 8 | Lists | 103 | ✓ |
+| 9 | Dictionaries | 121 | ✓ |
+| 10 | Tuples | 131 | ✓ |
+| 11 | Regular expressions | 143 | ✗ not listed — skip |
+| 12 | Networked programs | 157 | ✗ not listed — **but relevant to S1 APIs** |
+| 13 | Using Web Services | 171 | ✗ not listed — **directly relevant to S1: JSON, APIs** |
+| 14 | Object-oriented programming | 179 | ✓ |
+| 15 | Using Databases and SQL | 193 | ✓ |
+| 16 | Visualizing data | 217 | ✓ |
+
+⚠️ The handout's self-study list skips ch11–13. **Read ch13 (Web Services) anyway** — it covers JSON and calling APIs from Python, which is exactly session 1's material and every lab from 3 onward.
+
+### R3 · Davis, *Cloud Native Patterns* (Manning 2019, 399 pp) — **S2, S3**
+
+| Part | Ch | Title | Book page |
+|---|---|---|---|
+| 1 · The cloud native context | 1 | You keep using that word: Defining "cloud-native" | 3 |
+| | 2 | Running cloud-native applications in production | 26 |
+| | 3 | The platform for cloud-native software | 51 |
+| 2 · Cloud native patterns | 4 | Event-driven microservices | 83 |
+| | 5 | App redundancy: scale-out and statelessness | 108 |
+| | 6 | Application configuration | 139 |
+| | 7 | The application lifecycle | 170 |
+| | 8 | Accessing apps: services, routing, service discovery | 207 |
+| | 9 | Interaction redundancy: retries and control loops | 231 |
+| | 10 | Fronting services: circuit breakers and API gateways | 267 |
+| | 11 | Troubleshooting | 295 |
+| | 12 | Cloud-native data: breaking the data monolith | 320 |
+
+Handout cites **R3 ch1 for sessions 2 and 3**. Note ch4 (event-driven microservices) is the natural follow-on from S1's sync-vs-async topic, and ch10 (API gateways) matches the food-delivery diagram in S1.
+
+### Not held
+- **R2** Gough et al., *Mastering API Architecture* — cited for S1 and S2, and the source of the Conference API self-study example.
+- **R4** Treveil, *Introducing MLOps* — cited for S6.
 
 ## Where things live
 

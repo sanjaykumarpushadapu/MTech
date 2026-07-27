@@ -60,6 +60,9 @@ Tools: Python, NLTK, spaCy, Jupyter, scikit-learn, OpenAI. Infra: Colab / VS Cod
 
 Build-it, not read-it. Every session is effectively a lab. Skip trying to understand from notes — write the minimal version (ReAct loop, tiny RAG, memory store, MCP server) and it clicks when the code runs.
 **Trap:** reading about agents instead of coding one.
+
+> **Reference profile.** No textbook chapters — every reference is a **public paper or spec** (ReAct, DPO, Dense Passage Retrieval, MemGPT, MetaGPT, MCP spec, A2A spec, Anthropic contextual retrieval). These can be fetched directly, so you never need to upload a 521 reference. Just give the session number.
+
 **Weekday slot:** Wednesday. Lab weeks will overflow into Friday flex — expect this more often than for the other three subjects.
 
 ## Prerequisites (assumed by the handout)
