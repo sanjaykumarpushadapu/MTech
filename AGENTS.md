@@ -220,6 +220,26 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge 
 
 **Exam-scope footer** — one line at the note's end: this session's scope + a link to the master. Weights, dates, evaluation and logistics are **not** duplicated here; they live once in the `<code>-master.md`.
 
+## Every concept gets a diagram
+
+**All 47 session-1 concepts have at least one Mermaid diagram. Keep it that way.** A concept with no picture is a concept you will re-read three times and still not hold.
+
+Sources of diagrams, in order of preference:
+
+1. **Convert the deck's own figure.** Extract images from the deck (`python-pptx`: `shape.image.blob`; PDFs: `pdfplumber`/`PyMuPDF`) and *look at them*. Slide text alone routinely omits what the figure shows — 536's transformer equations, embedding numbers and LM-head shapes existed only as images.
+2. **Convert a textbook figure** the deck reproduces, citing it (`Raschka 2.18`, `Alammar 1-27`).
+3. **Draw your own** where neither source has one, and mark it `(my own)`. A comparison table often hides a structure worth drawing — the point is usually the *relationship*, not the cells.
+
+Use `flowchart LR/TD/BT` for structure, `timeline` for eras, `sequenceDiagram` for protocols. Tables stay tables — don't force a comparison into a graph.
+
+**Validate before committing.** A diagram that fails to parse renders as raw text:
+
+```bash
+node tools/check-mermaid.mjs 2026-2027-Sem1/AIML*/notes/*.md 2026-2027-Sem1/_shared/*.md
+```
+
+⚠️ **Mermaid label gotchas found the hard way:** wrap any label containing `(`, `)`, `:`, `,` or `#` in double quotes · `end` is reserved and cannot be a node id · `<br/>` works inside quoted labels but HTML tags like `<b>` do not render in every viewer, so prefer plain text.
+
 ## The Topics index is a map, not a list
 
 Every session note opens with a `## Topics` index. It is **one table per Part**, and it carries two columns beyond the concept name:

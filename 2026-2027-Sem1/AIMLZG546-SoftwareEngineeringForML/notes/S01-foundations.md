@@ -524,6 +524,18 @@ Cross-link: → `_shared/ml-lifecycle.md` · **546 M1 Interdisciplinary Teams** 
 
 **Intuition** — There's an open debate about whether ML fundamentally changes engineering or just demands that we finally apply existing practice rigorously. T1 gives three challenges, and for each argues the challenge is *harder* but *not new*. That two-part shape — challenge, then "but we've seen this before" — is what makes it exam-friendly, and you should reproduce both halves.
 
+```mermaid
+flowchart TD
+    ML["What ML changes"] --> C1["8.1 · No specifications<br/>deductive → inductive"]
+    ML --> C2["8.2 · Interacting with<br/>the real world"]
+    ML --> C3["8.3 · Data-focused<br/>and scalable"]
+    C1 --> N1["but not new:<br/>safe systems from<br/>unreliable parts"]
+    C2 --> N2["but not new:<br/>hazard analysis,<br/>threat modelling"]
+    C3 --> N3["but not new:<br/>cloud + big data<br/>predate ML"]
+```
+
+*Every row is a pair — the challenge, then the "we've seen this before". Reproduce both halves; section 8.4 is where the second half stops holding.*
+
 #### 8.1 Lack of specifications
 
 Traditional engineering relies on decomposition: specify each component, build and test separately, compose. T1's contrast:
@@ -597,6 +609,16 @@ Cross-link: → **521 S1 section 12** (open problems — the same limits, named 
 | High | Aircraft control, nuclear plant control | Heavy, slow, expensive — and we know how |
 
 > **The conjecture:** software products with ML components tend to fall toward the more complex and more risky end of the spectrum, compared to traditional products — calling for more investment in rigorous engineering practices.
+
+```mermaid
+flowchart LR
+    L["LOW RISK<br/>music recommender<br/>photo tagging"] --> M["MEDIUM<br/>fraud detection<br/>hiring screen"]
+    M --> H["HIGH RISK<br/>medical diagnosis<br/>autonomous driving"]
+    L -.->|"heavy process here<br/>is its own failure"| L
+    H -.->|"light process here<br/>is negligence"| H
+```
+
+**The thesis in one line:** ML doesn't make projects riskier — *we attempt riskier things with ML*. The judgment being taught is **locating your system on this line first**, then matching practice to position.
 
 **Worked example** — Fraud detection is not a restaurant website. False negatives cost money; false positives block legitimate customers and can be discriminatory; the system runs on live payment traffic at scale. Mid-to-high on the spectrum, and the practices should match — which is what modules 2–7 supply.
 
@@ -676,6 +698,30 @@ Cross-link: → `_shared/rag.md` · **546 S6** · **536 S10, S12** · **521 S7�
 That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, SageMaker, plus DVC, Prefect, Docker/K8s, FastAPI, PyTest.
 
 **Responsible ML** — T1's position is blunt: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Attempted without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
+
+*Why "cross-cutting" is the whole claim (my own) — these aren't phases you can schedule:*
+
+```mermaid
+flowchart TD
+    subgraph P["The lifecycle phases"]
+        direction LR
+        R["Requirements"] --> D["Design"] --> B["Build"] --> T["Test"] --> DEP["Deploy"] --> O["Operate"]
+    end
+    MLO["MLOps"] -.-> R
+    MLO -.-> D
+    MLO -.-> B
+    MLO -.-> T
+    MLO -.-> DEP
+    MLO -.-> O
+    RML["Responsible ML"] -.-> R
+    RML -.-> D
+    RML -.-> B
+    RML -.-> T
+    RML -.-> DEP
+    RML -.-> O
+```
+
+Both touch **every** phase. A team that plans to "do the fairness work in sprint 12" has already lost — the decisions that determined fairness (what data, what labels, what happens on a low-confidence prediction) were made in sprints 1 through 11.
 
 **Tradeoff** — the practical implication of "cross-cutting" is that you cannot schedule either as a phase. A team that plans to "do the fairness work in sprint 12" has already lost, because the decisions that determine fairness — what data, what labels, what the system does with a low-confidence prediction — were made in sprints 1 through 11.
 

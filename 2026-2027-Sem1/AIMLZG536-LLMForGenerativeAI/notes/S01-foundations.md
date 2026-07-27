@@ -75,6 +75,18 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 **Intuition** — A language model answers one question: *given what came before, what comes next?* Everything else in this course is built on that.
 
+*The deck opens with this (Alammar fig 1-2) — one input type, three different output types, and 536 follows only the first:*
+
+```mermaid
+flowchart TD
+    T["Text input<br/>unstructured data"] --> LAI["Language AI<br/>processes the input text"]
+    LAI --> G["Text output<br/>generative modelling"]
+    LAI --> E["Embeddings<br/>numeric values"]
+    LAI --> C["Classification<br/>identify targets"]
+```
+
+All three run on the same machinery — only the *head* on top differs. That's why section 9's language-modelling head matters, and why 521 S2's embeddings come from the same model with the head swapped out.
+
 **Mechanism** — formally, a model that computes either:
 
 - the probability of a sentence, **P(W)**, or
@@ -110,6 +122,20 @@ Cross-link: → **521 S1 section 8** (the same object seen from the application 
 3. **Context** — a larger context of words
 
 LLMs are **deep neural networks** trained on that data.
+
+*The three axes, and what each actually charges you (my own — the deck lists them without separating their cost curves):*
+
+```mermaid
+flowchart LR
+    L(("LARGE")) --> P["1 · Parameters<br/>7B → 70B → 400B+"]
+    L --> D["2 · Training data<br/>trillions of tokens"]
+    L --> C["3 · Compute<br/>GPU-months"]
+    P --> PC["memory + latency<br/>paid on EVERY request"]
+    D --> DC["collection + cleaning<br/>paid once, up front"]
+    C --> CC["the training bill<br/>paid once, enormous"]
+```
+
+**Read the right-hand column, not the left.** Only the parameter axis charges you forever; data and compute are sunk costs. That asymmetry is the reason S6 compression attacks parameters and nothing else.
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
 
@@ -508,6 +534,20 @@ i = 1  →  10000^(2/4)  = 100      → slow:  sin(pos/100), cos(pos/100)
 | 1 | 0.84 | 0.54 | 0.01 | 1.00 |
 | 2 | 0.91 | −0.42 | 0.02 | 1.00 |
 
+*The deck's figure (Raschka 2.18) shows the addition itself. The key point: it is an **elementwise sum**, not a concatenation — position and meaning share the same d dimensions:*
+
+```mermaid
+flowchart BT
+    TE1["token emb<br/>1, 1, 1"] --> S1(("+"))
+    PE1["positional emb, pos 0<br/>1.1, 1.2, 1.3"] --> S1
+    S1 --> IE1["input emb<br/>2.1, 2.2, 2.3"]
+    TE2["token emb<br/>1, 1, 1"] --> S2(("+"))
+    PE2["positional emb, pos 1<br/>2.1, 2.2, 2.3"] --> S2
+    S2 --> IE2["input emb<br/>3.1, 3.2, 3.3"]
+```
+
+Both tokens carry the **identical** token embedding `[1,1,1]` — the same word — yet leave with different input embeddings. Position is the only thing that separated them. That is this whole section in one picture.
+
 **Tradeoff / where sinusoidal breaks** — it preserves *relative* distance beautifully but the model has to infer that relationship from a sum; nothing enforces it. Adding position into the same dimensions as meaning also means the two compete for representational space. RoPE's answer is to **rotate** Q and K instead — position then acts on the *angle* between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it.
 
 Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91), the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Each position gets a unique multi-frequency "fingerprint" — like clock hands turning at different speeds — and because it's the *same fixed function at every position*, the model can encode a position it never saw in training, which learned embeddings cannot. RoPE keeps this multi-frequency idea but **rotates** Q and K rather than **adding** to the embedding.
@@ -665,6 +705,22 @@ Cross-link: → **536 S5** (inference — this matrix runs once per generated to
 
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
+*The deck's figure (Alammar 1-27) makes the point people miss — **generated tokens count against the same budget as the prompt**:*
+
+```mermaid
+flowchart LR
+    subgraph CTX["current context length = 8"]
+        direction LR
+        P["prompt tokens 1-6<br/>Tell me something about llamas."]
+        G["generated tokens 7-8<br/>Llamas are"]
+    end
+    CTX --> M["Generative LLM<br/>maximum context length: 512"]
+    M --> O["token 9<br/>domesticated"]
+    O -->|"append, context grows to 9"| CTX
+```
+
+**The consequence:** a 512-token window with a 400-token prompt leaves room for about 112 tokens of answer, not 512. Every token generated shrinks what's left. This is why a long system prompt costs you twice — you pay for it on every request *and* it eats the answer budget.
+
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
 
 
@@ -743,6 +799,19 @@ Transformer##ify    →  novel items
 | **Word tokens** (e.g. word2vec) | One token per word | **Cannot handle new words** entering after the tokenizer was trained; and **many tokens with minimal differences** — apology, apologize, apologetic, apologist |
 | **Subword tokens** | Break unknown words into smaller pieces already in the vocabulary | **Can represent new words**; the standard choice |
 | **Byte tokens** | Vocabulary of **UTF-8 bytes (256)**; **one token = one byte** | No OOV ever; very long sequences. "Apple" → `[65][112][112][108][101]` = 5 tokens. Used by **tokenizer-free models — ByT5, CANINE** |
+
+*The deck's figure (Alammar 2-6) runs one sentence through all four granularities. Read it top to bottom as a trade of vocabulary size against sequence length:*
+
+```mermaid
+flowchart TD
+    T["Text: Have the ♫ bards who preceded…"]
+    T --> W["Word tokens<br/>Have · the · ♫ · bards · who · preceded<br/>6 tokens · huge vocab · ♫ breaks it"]
+    T --> S["Subword tokens<br/>Have · the · ♫ · bard · s · who · preced · ed<br/>8 tokens · moderate vocab · the standard"]
+    T --> C["Character tokens<br/>H·a·v·e · t·h·e · ♫ · b·a·r·d·s<br/>very long · tiny vocab"]
+    T --> B["Byte tokens<br/>UTF-8 bytes, 256-entry vocab<br/>longest · never OOV · ByT5, CANINE"]
+```
+
+Going down the figure, **vocabulary shrinks and sequence length grows**. Since attention is O(n²) in sequence length (section 10), the bottom two buy robustness with compute. Subword sits where it does because that trade is least bad there.
 
 #### 12.3 Subword algorithms
 
@@ -867,6 +936,20 @@ Cross-link: → `_shared/tokenization.md` — *the full treatment, written once 
 *Reference: T2 ch1 for the history; scaling laws — Kaplan et al. 2020 and Hoffmann et al. 2022 (Chinchilla).*
 
 **Intuition** — Worth learning as a *causal chain*, not a list of names: each item made the next possible.
+
+*The chain the deck implies but never draws (my own) — each link forces the next:*
+
+```mermaid
+flowchart LR
+    A["Transformer<br/>2017"] --> B["scale works<br/>bigger = better, predictably"]
+    B --> C["only the well-funded<br/>can pre-train"]
+    C --> D["most teams ADAPT<br/>rather than train"]
+    D --> E["prompting · RAG · PEFT<br/>= the whole second half of 536"]
+    C --> F["openness becomes<br/>a strategic choice"]
+    F --> G["closed API<br/>open weights<br/>fully open"]
+```
+
+**Why this matters for the course:** the middle link is why sessions 9–16 exist at all. If anyone could pre-train, the syllabus would be about pre-training. Because they can't, it's about adaptation.
 
 **Pre-neural (before 2010s)** — Shannon 1950 uses a language model to measure the **entropy of English**; then decades of **n-gram** language models for machine translation and speech recognition.
 

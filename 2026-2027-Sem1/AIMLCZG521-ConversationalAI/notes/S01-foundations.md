@@ -77,7 +77,17 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 **The bot ladder** — a progression of sophistication, from the same slide:
 
-`Chatbot (keyword match) → Task Bot (slot filling) → FAQ Bot (context-aware) → generative → plans + acts`
+```mermaid
+flowchart LR
+    A["Chatbot<br/>keyword match"] --> B["Task Bot<br/>slot filling"]
+    B --> C["FAQ Bot<br/>context-aware"]
+    C --> D["Generative<br/>fluent, open-ended"]
+    D --> E["Agent<br/>plans + acts"]
+    A -.->|"deterministic · auditable · cheap"| A
+    E -.->|"adaptive · opaque · expensive"| E
+```
+
+Every step rightward buys coverage of a wider query space and pays for it in predictability. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
@@ -91,6 +101,20 @@ Cross-link: → **546 S2** (models → systems: the same "it's not the model" ar
 *Reference: deck; for the agent era, Masterman et al. 2024, [The Landscape of AI Agents](https://arxiv.org/abs/2404.11584).*
 
 **Intuition** — Seven eras, each fixing the previous one's fatal limitation and introducing a new one. Learn it by the **Limitations** column: that's what drives the next row.
+
+```mermaid
+timeline
+    title Conversational AI, 1960s to 2026
+    1960s-1990s : Rule-based, ELIZA and ALICE : no learning, no context
+    2000-2010 : Statistical ML, SVM CRF HMM : hand-crafted features
+    2010-2017 : Deep learning, RNN LSTM Seq2Seq : data hungry, task-specific
+    2017-2020 : Transformers, BERT GPT-2 T5 : still needs fine-tuning
+    2020-2023 : LLMs and GenAI, GPT-3 ChatGPT : hallucinates, cannot act
+    2023-2025 : Agentic AI, LLM plus tools and memory : orchestration, cost
+    2025-2026 : Protocols and multi-agent, MCP and A2A : standards still settling
+```
+
+*Read the last clause of each row — the limitation is what causes the next era.*
 
 | Era | Technology | Capabilities | Limitations |
 |---|---|---|---|
@@ -253,6 +277,22 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 
 **Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, has to do the same six jobs: work out what you want, keep track of where the conversation is, look things up, do things, say something back, and remember. What changed over twenty years is not the list — it's that all six used to be separate hand-built modules, and now the LLM absorbs three of them (understanding, dialogue, generation) while the other three (knowledge, action, memory) became *harder* because we now expect them to work on open-ended input.
 
+*The six, arranged by what the LLM absorbed and what it didn't (my own — the deck gives a flat table, and the split is the insight):*
+
+```mermaid
+flowchart TD
+    U([User input]) --> N["1 · NLU<br/>intent = the verb<br/>entities = the nouns"]
+    N --> DM["2 · Dialogue management<br/>state, turns, errors"]
+    DM --> K["3 · Knowledge access<br/>vector DB, RAG"]
+    DM --> A["4 · Action execution<br/>tools, APIs, code"]
+    K --> RG["5 · Response generation"]
+    A --> RG
+    MEM["6 · Memory<br/>short-term · long-term<br/>episodic · semantic"] <--> DM
+    RG --> O([Reply])
+```
+
+**The split that matters:** 1, 2 and 5 come almost free with the LLM — one model does all three in a single pass. **3, 4 and 6 do not.** They need a vector store, real API credentials, and somewhere to put user data. That is where the cost, the risk and the engineering live.
+
 **Use this list as a checklist.** When a system misbehaves, the useful question is *which of the six failed?* "The bot gave a wrong answer" is not diagnosable; "knowledge access retrieved the wrong document" is.
 
 | # | Component | Role | Contains | Modern approach |
@@ -317,6 +357,27 @@ The generational split matters more than any individual row: the 2015 tools assu
 | **Haystack** | End-to-end NLP framework | Production RAG systems, search applications |
 | **AutoGen** | Multi-agent conversation framework | Complex workflows with agent collaboration |
 
+*What actually changed between the two generations (my own) — one assumption flipped, and the rest follows:*
+
+```mermaid
+flowchart TD
+    subgraph T["Traditional · 2015-2020"]
+        direction TB
+        T1["YOU enumerate the intents<br/>in advance"] --> T2["train a classifier<br/>per intent"]
+        T2 --> T3["write dialogue policies<br/>for each path"]
+        T3 --> T4["unlisted intent = failure"]
+    end
+    subgraph M["Agentic · 2023-2025"]
+        direction TB
+        M1["the MODEL infers<br/>the intent at runtime"] --> M2["you describe TOOLS,<br/>not intents"]
+        M2 --> M3["the model plans<br/>the path"]
+        M3 --> M4["unlisted intent = it tries<br/>anyway, right or wrong"]
+    end
+    T -.->|"the assumption that flipped"| M
+```
+
+The bottom row is the honest trade: the old stack failed **loudly and predictably**; the new one fails **plausibly**. Rasa could not answer an unanticipated question. LangChain will answer it — correctly or not.
+
 **The key shift**, in the deck's words: *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
 
 **Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
@@ -333,6 +394,15 @@ Cross-link: → `_shared/agents.md` · **549 S9** (LangChain from the API-integr
 *Reference: [HuggingFace NLP course ch6](https://huggingface.co/learn/nlp-course/chapter6); BPE — Sennrich et al. 2016. Shared with 536 S1/S12 and `_shared/tokenization.md`.*
 
 **Intuition** — Breaking text into subword units that LLMs process. BPE sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
+
+```mermaid
+flowchart LR
+    C["Character-level<br/>tiny vocabulary"] --> G["Subword / BPE<br/>the Goldilocks zone"]
+    W["Word-level<br/>huge vocabulary"] --> G
+    C -.->|"sequences far too long<br/>little meaning per token"| C
+    W -.->|"fails on unseen words<br/>apology / apologize / apologetic"| W
+    G -.->|"new words representable<br/>sequence length manageable"| G
+```
 
 **Why it matters for conversational AI specifically** — four consequences, and this framing is what makes it a 521 topic rather than just a 536 one:
 
@@ -418,6 +488,17 @@ Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subject
 > **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG + memory systems** (Module 2).
 
 *Why it happens (my clarity — the deck names the effect, not the cause): a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. So a fact buried mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
+
+*"Lost in the middle" drawn (my own) — recall accuracy against position in the context:*
+
+```mermaid
+flowchart LR
+    S["START of context<br/>recalled well"] --> MID["MIDDLE of context<br/>frequently missed"]
+    MID --> E["END of context<br/>recalled well"]
+    MID -.->|"the trough is why<br/>200K is not 200K usable"| MID
+```
+
+Accuracy is U-shaped, not flat. A fact placed halfway through a long context is the one the model is most likely to overlook — so **where** you put something in the prompt matters as much as whether you put it there at all.
 
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
@@ -607,6 +688,19 @@ Cross-link: → `_shared/agents.md`
 | **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery** across heterogeneous networks | Decentralised agent ecosystems |
 | **Custom REST / GraphQL** | — | Traditional service integration | Enterprise systems, legacy integrations |
 
+*What each protocol standardises — they solve different edges of the same picture, which is why they are not competitors (my own):*
+
+```mermaid
+flowchart TD
+    U([User]) --> AG["Agent"]
+    AG -->|"MCP · Anthropic 2024"| T["Tools and data sources<br/>DBs, files, APIs"]
+    AG -->|"A2A · Google"| AG2["Another agent"]
+    AG -->|"ANP · emerging"| NET["Open agent network<br/>discovery across orgs"]
+    AG2 -->|"MCP again"| T2["its own tools"]
+```
+
+**The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges. USB-C is the analogy the deck reaches for, and it's a good one — before it, every device needed its own cable.
+
 **The deck's own caveat, worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes in L13–L14 (the deck says 14–15).
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
@@ -623,6 +717,24 @@ Cross-link: → `_shared/agents.md`, `_shared/api-design.md` · **549 S1** (REST
 *Reference: deck; the tools' own docs (LangSmith, Arize Phoenix, OpenTelemetry).*
 
 **Intuition** — the deck's framing: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
+
+*The four axes are not independent — every fix on one pushes on another (my own):*
+
+```mermaid
+flowchart LR
+    O["Observability<br/>traces, tool success,<br/>latency, cost per session"]
+    C["Cost<br/>caching, routing,<br/>token budgets"]
+    L["Latency<br/>budget per stage"]
+    S["Safety<br/>input · tool · output"]
+    C -->|"smaller model<br/>= lower quality"| L
+    L -->|"fewer checks<br/>= faster"| S
+    S -->|"more checks<br/>= more cost"| C
+    O -->|"cannot manage what<br/>you cannot see"| C
+    O --> L
+    O --> S
+```
+
+**Observability comes first** — not because it matters most, but because the other three are unmanageable without it. You cannot tune a latency budget you are not measuring.
 
 **📊 Observability — what to track**
 Conversation flows · tool invocations · **token usage per conversation** · response latencies & error traces.

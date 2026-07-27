@@ -52,6 +52,16 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 **Intuition** — An API is a **contract between a service and its clients**. It says: send me a request shaped like this, and I promise a response shaped like that. Neither side needs to know how the other is built. That's the whole point — the contract is the product.
 
+```mermaid
+flowchart LR
+    CL["Client<br/>knows only the contract"] -->|"request shaped<br/>like THIS"| API{{"THE CONTRACT<br/>the API"}}
+    API -->|"response shaped<br/>like THAT"| CL
+    API --- IMPL["Service internals<br/>language · DB · servers<br/>free to change"]
+    IMPL -.->|"invisible to the client"| IMPL
+```
+
+**Everything to the right of the contract can be rewritten** — new language, new database, new hardware — and no client notices. That independence *is* the product. It's also why a breaking change is such a big deal (section 9): it's the one thing that reaches across the line.
+
 **Three definitions from the deck, in increasing usefulness:**
 
 1. "Application Programming Interface" — the acronym, tells you nothing.
@@ -687,6 +697,17 @@ Cross-link: → `_shared/api-design.md` · **546 S5** (microservices — gRPC is
 | Control | You don't control the consumer | You control **both ends** |
 | Implication | Prioritise ubiquity, caching, stability | Can trade readability for **efficiency** |
 
+```mermaid
+flowchart TD
+    U([Users / browsers / mobile]) ==>|"NORTH-SOUTH<br/>REST · GraphQL<br/>public, cacheable, versioned"| GW["API Gateway"]
+    GW --> A["Order service"]
+    A <-->|"EAST-WEST · gRPC"| B["Consumer service"]
+    A <-->|"EAST-WEST · gRPC"| C["Restaurant service"]
+    A <-->|"EAST-WEST · gRPC"| D["Payment service"]
+```
+
+**The axis decides the style.** North–south crosses a trust and control boundary: you don't own the caller, so you need ubiquity, caching and stable versions → REST or GraphQL. East–west stays inside: you own both ends, deploy them together, and care only about speed → gRPC.
+
 **The multiplier that makes this matter:** *"In a microservices-based architecture it is likely that **one north–south request will involve multiple east–west exchanges**."* So east–west inefficiency doesn't stay local — it cascades back to the user.
 
 **Three factors R2 says to weigh:**
@@ -723,6 +744,21 @@ The deck's comparison table, which is close to guaranteed exam material:
 | Request caching | **REST** |
 | Code generation | **gRPC** — native, 10+ languages · GraphQL — GraphQL Code Generator (3rd party) · REST — Swagger (3rd party) |
 | Payload data structure | GraphQL — JSON · REST — JSON & XML · gRPC — **Protocol Buffers** |
+
+*The three questions as a decision tree (my own) — ask them in this order and the style picks itself:*
+
+```mermaid
+flowchart TD
+    Q1{"Who calls it?"}
+    Q1 -->|"a browser or a third party<br/>you don't control"| Q2{"Does one screen need<br/>data from many resources?"}
+    Q1 -->|"another service you own"| Q3{"Is latency or payload<br/>size a real budget?"}
+    Q2 -->|"no — flat resources"| REST["<b>REST</b><br/>ubiquity + HTTP caching"]
+    Q2 -->|"yes — 3+ round trips today"| GQL["<b>GraphQL</b><br/>one call, client picks fields"]
+    Q3 -->|"yes — measured"| GRPC["<b>gRPC</b><br/>protobuf + HTTP/2"]
+    Q3 -->|"no"| REST
+```
+
+Notice **REST is the destination of two branches**. That's not an accident — it's the default, and the other two need a *measured* reason to win.
 
 **The one-line summary worth carrying:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
 
@@ -775,6 +811,17 @@ That last one catches people — *adding* something can be a breaking change if 
 | **Date-based** | `Stripe-Version: 2024-06-20` | Pins a client to the API as it behaved on a date; the server maintains compatibility shims. Powerful, and the most work to run |
 
 **The rollout sequence** — versioning is a *process*, not a number:
+
+```mermaid
+flowchart LR
+    S1["1 · Ship v2<br/>alongside v1"] --> S2["2 · Announce<br/>deprecation + date"]
+    S2 --> S3["3 · Monitor<br/>who still calls v1"]
+    S3 --> S4["4 · Contact<br/>the stragglers"]
+    S4 --> S3
+    S3 --> S5["5 · Sunset v1<br/>only when traffic ≈ 0"]
+    S3 -.->|"skip this and you<br/>maintain v1 forever"| S3
+```
+
 
 ```
 1  Ship v2 alongside v1        both live, clients unchanged
