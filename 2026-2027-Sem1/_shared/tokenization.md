@@ -1,31 +1,22 @@
 # Shared · Tokenization & BPE
 
 **Status:** ✅ written 26 Jul 2026
-**Written from:** 521 S1 deck · 536 S1 deck · HuggingFace LLM course ch6.5 (the source both decks copied) · **T1 Jurafsky & Martin ch2 §2.4** · **T2 Alammar ch2**
+**Written from:** 521 S1 deck · 536 S1 deck · HuggingFace LLM course ch6.5 (the source both decks copied) · **T1 Jurafsky & Martin ch2 section 2.4** · **T2 Alammar ch2**
 **Reused by:** 521 S11 (cost optimisation) · 536 S6 (serving economics)
 
 > 🔴 **Closed-book scope in BOTH subjects** — 521 mid-sem (L1–L8) and 536 mid-sem (S1–8). You must reproduce BPE by hand for two different exams, one day apart. Highest-value shared note of the semester.
 
 > **Both decks copied the same source.** 521 and 536 independently reproduce HuggingFace LLM course ch6.5 — identical corpus (`hug/pug/pun/bun/hugs`), identical merges, identical `mug`/`thug`/`unhug` exercises. Learn it once, here.
 
-## What this note is
+## Why this matters
 
-The one place tokenization lives. Both 521 and 536 taught it in session 1 from the same source, so instead of two half-notes there is this: one topic, assembled from five sources, deep enough for both exams.
+Tokenization sits under everything else in the degree. Context limits are counted in tokens, API bills are priced in tokens, prompt-injection tricks exploit token boundaries, and when a model "can't count the r's in strawberry" the tokenizer is why. It is the least glamorous topic here and the one that explains the most surprising behaviour — which is why it's worth this much space.
 
-**Why tokenization is worth this much space** — it sits under everything. Context limits are counted in tokens. API bills are priced in tokens. Prompt-injection tricks exploit token boundaries. When a model "can't count the r's in strawberry," the tokenizer is why. It is the least glamorous topic in the degree and the one that explains the most surprising behaviour.
+**Assembled from five sources.** 521 and 536 both taught it in session 1 from the same origin (HuggingFace ch6.5), so rather than two half-notes there is one, with J&M and Alammar filling the gaps both decks leave.
 
-## How to use this note
+**Two worked corpora, deliberately.** The HuggingFace one (section 4) is what both decks use. The J&M one (section 4, second pass) is the more instructive: BPE independently discovers the English prefix `re-` from raw frequency counts, with nobody telling it that prefixes exist. That is the point of the algorithm in one example.
 
-| If you have… | Read |
-|---|---|
-| **10 minutes** | The eight closed-book cards — the `>` blockquotes |
-| **45 minutes** | §3 — and **work the BPE merge table by hand, on paper, twice** |
-| **The night before either mid-sem** | §3 and §4 only. The rest is context |
-| **Pricing a real system** | §7, token economics |
-
-🔴 **This is a doing note, not a reading note.** Both exams can ask you to *perform* BPE on a small corpus. The test is: given `hug, pug, pun, bun, hugs` with counts, can you produce the merge list in order from a blank page? If not, you have read §3 but you do not have it.
-
-**Two worked corpora, deliberately.** The HuggingFace one (§3) is what both decks use — learn it because it's what they'll examine. The J&M one (§3, second pass) is more interesting: BPE independently discovers the English prefix `re-` from raw frequency counts, with nobody telling it that prefixes exist. That's the point of the algorithm in one example.
+🔴 **A doing note, not a reading note.** The test is: given `hug, pug, pun, bun, hugs` with counts, can you produce the merge list in order from a blank page? If not, you have read section 4 but you do not have it.
 
 ## Sections
 
@@ -210,7 +201,7 @@ function BYTE-PAIR-ENCODING(strings C, number of merges k) returns vocab V
 
 ### Merges never cross word boundaries
 
-The one practical complication J&M flags. The corpus is first separated at **whitespace and punctuation**, giving one string per word plus its count. **Counts come from the corpus, but merges are only allowed within a word.** And *"the white space is usually attached to the start of the word"* — which is exactly why GPT-2 tokenizes `sun` as `" sun"` with the space glued on (§6).
+The one practical complication J&M flags. The corpus is first separated at **whitespace and punctuation**, giving one string per word plus its count. **Counts come from the corpus, but merges are only allowed within a word.** And *"the white space is usually attached to the start of the word"* — which is exactly why GPT-2 tokenizes `sun` as `" sun"` with the space glued on (section 6).
 
 ### Segmenting new words
 
@@ -230,7 +221,7 @@ J&M states the encoder rule precisely, and it's a common exam trap: the encoder 
 **Advantages** — efficient handling of rare words; reduced vocabulary size; better generalisation.
 **Limitations** — **fragments morphologically complex languages**; **may not capture semantic meaning** as well as other methods.
 
-**Tradeoff / where BPE fails** — the `mug` case is the whole limitation: **character-level BPE has no fallback**. Any character missing from the base vocabulary becomes `[UNK]` and its meaning is destroyed. HuggingFace notes this is precisely why many NLP models handle emoji badly. Byte-level BPE (§6) fixes it.
+**Tradeoff / where BPE fails** — the `mug` case is the whole limitation: **character-level BPE has no fallback**. Any character missing from the base vocabulary becomes `[UNK]` and its meaning is destroyed. HuggingFace notes this is precisely why many NLP models handle emoji badly. Byte-level BPE (section 6) fixes it.
 
 > **Closed-book card**
 > **BPE** (Sennrich et al. 2016; earlier Gage 1994): **two parts — a trainer and an encoder.** Trainer: pre-tokenize → word-freq dict → uni-character vocab → **merge most frequent adjacent pair** → repeat **k** times. Final vocab = characters **+ k new symbols**; **k is the parameter**.
@@ -346,9 +337,9 @@ tiktoken BPE (Llama-3):
 
 *Source: T2 Alammar ch2, "Tokenizer Properties" — the design-level framing no other source gives*
 
-**Intuition** — §3–§6 covered *algorithms*. But two tokenizers using the same algorithm still behave differently. Alammar names **three groups of design choices** that determine the result:
+**Intuition** — sections 3–6 covered *algorithms*. But two tokenizers using the same algorithm still behave differently. Alammar names **three groups of design choices** that determine the result:
 
-**① Tokenization method** — BPE, unigram LM, WordPiece (§3). The algorithm for choosing which tokens represent a dataset.
+**① Tokenization method** — BPE, unigram LM, WordPiece (section 3). The algorithm for choosing which tokens represent a dataset.
 
 **② Tokenizer parameters** — what the designer decides after picking a method:
 
@@ -370,7 +361,7 @@ def add_numbers(a, b):
 
 Every run of four spaces becomes multiple tokens, wasting context and forcing the model to learn that "four spaces" is one meaningful unit. **Code-focused models make different choices** — treating an indentation run as a single token — which *"makes the model's job easier and thus its performance has a higher probability of improving."*
 
-*This is the mechanism behind the Llama-3 switch in §6: it's not that tiktoken is a better algorithm, it's that byte-level plus regex pre-splitting produces a better compression ratio on **English and code specifically** — a domain choice.*
+*This is the mechanism behind the Llama-3 switch in section 6: it's not that tiktoken is a better algorithm, it's that byte-level plus regex pre-splitting produces a better compression ratio on **English and code specifically** — a domain choice.*
 
 **Tradeoff / the design decision in one line** — every parameter trades **vocabulary space against sequence length**. Keeping all-caps variants costs vocabulary entries; dropping them loses information that names carry. Adding domain-specific special tokens costs entries but saves many tokens per document in that domain. **There's no universally correct tokenizer — only one fitted to a corpus and a use case.**
 
@@ -453,6 +444,6 @@ Then add 521's cost layer: multiply token counts by current per-token pricing an
 ## Sources
 
 **T2 Alammar ch2** (PDF p59–79) — tokenizer design choices, tokenizer comparison, token types.
-**T1 Jurafsky & Martin ch2 §2.4** (PDF p21–25) — the definitional treatment: why tokenize, the trainer/encoder split, pseudocode, the `re-` morpheme example, the greedy-encoder rule.
+**T1 Jurafsky & Martin ch2 section 2.4** (PDF p21–25) — the definitional treatment: why tokenize, the trainer/encoder split, pseudocode, the `re-` morpheme example, the greedy-encoder rule.
 HuggingFace LLM course ch6.5 — https://huggingface.co/learn/llm-course/en/chapter6/5
 Cited directly on 536's reference slide 60; 521 uses the same corpus and exercises without citing it.

@@ -104,6 +104,9 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 **Tradeoff / when NOT to go async** — Asynchronous buys availability (the consumer service can be down and the message waits) and decoupling, and charges you a broker to operate, eventual consistency, harder debugging, and no simple "what did it return?" answer. Use sync when the caller genuinely needs the answer to proceed — a payment authorisation. Use async for work that can complete later — sending the confirmation email.
 
+
+Cross-link: → `_shared/api-design.md` · **549 S5** (API-driven data pipelines) · **546 S5** (microservices)
+
 ---
 
 ## Part 2 · HTTP and specification
@@ -250,6 +253,9 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 > | `POST` | ❌ no | ❌ **no** — "create a new order" twice makes **two orders** |
 >
 > This is why a failed `PUT` is safe to blindly retry but a failed `POST` isn't — retrying a charge could double-bill. Real payment APIs (Stripe) solve it with an **idempotency key**: you send a unique key with the `POST`, and the server dedupes repeats. This is also the deeper reason `POST`→`201` and `PUT`→`200` (section 3, *which success code when*): `POST` makes something new each time; `PUT` converges on one state.
+
+
+Cross-link: → `_shared/api-design.md` · **549 S8** (calling AI/cognitive service APIs — all of them are HTTP APIs shaped like this)
 
 ---
 
@@ -423,6 +429,9 @@ The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetc
 >
 > Naming conventions that mark a REST API as well-designed: **plural nouns** (`/students` not `/getStudent`), **no verbs in the path** (the HTTP method *is* the verb), and **nesting for relationships** (`/students/123/courses`). Get these right and the API is self-explanatory; get them wrong and every consumer needs the docs open constantly.
 
+
+Cross-link: → `_shared/api-design.md` · **546 S9** (APIs and packaging) · **549 S8**
+
 ---
 
 ### 6. GraphQL
@@ -506,6 +515,9 @@ query {
 | **Self-managed GraphQL** | You run the server yourself |
 
 **Tradeoff / when NOT to use GraphQL** — The deck's own comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
+
+
+Cross-link: → `_shared/api-design.md`
 
 ---
 
@@ -608,6 +620,9 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 **Tradeoff / when NOT to use gRPC** — The disadvantages column is the answer, and it's sharp: gRPC is for **service-to-service** traffic where you control both ends. Put it on a public, browser-facing edge and you've chosen a protocol browsers can't natively speak, for consumers who can't debug it with `curl`. The usual architecture is REST or GraphQL at the edge, gRPC behind it.
 
+
+Cross-link: → `_shared/api-design.md` · **546 S5** (microservices — gRPC is the east–west default there) · **549 S12**
+
 ---
 
 ### 7b. North–south vs east–west — how to actually choose
@@ -639,9 +654,15 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 **Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the deck's "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
 
+Cross-link: → **546 S5** (architecture and microservices) · `_shared/docker-k8s.md`
+
+---
+
 ### 8. Choosing between REST, GraphQL and gRPC
 
 *Reference: R2 ch1 (modelling exchanges & choosing an API format); the comparison table is the deck's own.*
+
+**Intuition** — There is no best API style, only a best fit. The choice falls out of three questions asked in order: **who calls it** (a browser you don't control, or a service you do), **what shape is the data** (a flat resource, or a graph you'd otherwise fetch in five round-trips), and **what does a mistake cost** (a slow page, or a blown latency budget). Answer those and the style picks itself.
 
 The deck's comparison table, which is close to guaranteed exam material:
 
@@ -654,7 +675,24 @@ The deck's comparison table, which is close to guaranteed exam material:
 | Code generation | **gRPC** — native, 10+ languages · GraphQL — GraphQL Code Generator (3rd party) · REST — Swagger (3rd party) |
 | Payload data structure | GraphQL — JSON · REST — JSON & XML · gRPC — **Protocol Buffers** |
 
-**The one-line summary worth carrying into the exam:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
+**The one-line summary worth carrying:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
+
+**Worked example — the same product catalogue, three ways.** A retailer needs product data reaching (a) a public website, (b) a mobile app on poor connections, (c) an internal pricing service called on every page render.
+
+| Consumer | Constraint that decides it | Style | Why the others lose |
+|---|---|---|---|
+| Public website | Must be cacheable at the CDN; called by code you don't control | **REST** | GraphQL POSTs bypass HTTP caching; gRPC needs a proxy to reach a browser |
+| Mobile app | One screen needs product + reviews + stock + related items; four REST calls on 3G is a visible delay | **GraphQL** | REST over-fetches and round-trips; gRPC can't easily do client-driven field selection |
+| Internal pricing service | 50 ms budget, called on every render, both sides are your code | **gRPC** | JSON parsing and HTTP/1 overhead eat the budget for no benefit |
+
+The lesson: **one system, three correct answers.** Anyone who says "we're a GraphQL shop" has stopped asking the question.
+
+**Tradeoff / when NOT to choose** — the real cost is rarely the style; it's **running more than one**. Each adds a schema to keep in sync, a toolchain, an auth integration, a monitoring story, and a thing your team must know. A single slightly-wrong style is usually cheaper than two right ones. Default to **REST until a specific pain justifies moving** — measured over-fetching for GraphQL, a measured latency budget for gRPC. Choosing on novelty is how teams acquire three API styles and expertise in none.
+
+**The trap in the table above:** it compares styles on *features*, which invites picking the one with the most ticks. Features don't decide this — consumers do. gRPC's superior speed is worth nothing if the caller is a browser.
+
+
+Cross-link: → `_shared/api-design.md` — *written once; 546 S9 reaches the same material from the packaging side*
 
 ---
 
@@ -720,6 +758,9 @@ Each version reachable at its own endpoint:
 > | **Date-based** (Stripe) | `Stripe-Version: 2024-06-20` | Each account pins a date; Stripe transforms old-shaped responses so you upgrade on your own schedule |
 >
 > Two career habits the exam won't test but the job will: **deprecation policy** — announce, give a window (6–12 months), monitor who's still on the old version, then sunset — and **most changes should be non-breaking by design**, so you add far fewer major versions than the semver table suggests. In modern practice, teams version **`v1`/`v2`** at the *major* level only and ship minor/patch changes silently — full `X.Y.Z` in the path is rarer than the deck implies.
+
+
+Cross-link: → `_shared/api-design.md` · **546 S9** (versioning a model API is versioning an API, plus the model)
 
 ---
 

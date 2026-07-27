@@ -80,6 +80,9 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
+
+Cross-link: → **521 S1 section 1** (the same "it's a system, not a model" point from the agent side)
+
 ---
 
 ### 2. Machine learning vocabulary
@@ -148,6 +151,9 @@ T1 devotes a section to this, which signals it can be asked.
 | model | *machine-learned model* vs *software-architecture model* |
 | performance | *prediction accuracy* vs *inference latency* |
 | parameter | *model parameter* (learned) vs *hyperparameter* (chosen) |
+
+
+Cross-link: → `_shared/ml-lifecycle.md` · **549 S4** (data science and the ML lifecycle)
 
 ---
 
@@ -392,6 +398,9 @@ flowchart BT
 
 **Tradeoff / how NOT to read the pyramid** — It's a *dependency* claim, not a *sequencing mandate*. Read literally it says "spend two years on data infrastructure before touching ML," which kills projects. Honest reading: cut a thin vertical slice through all six layers for one use case, then widen. Note also that simple ML sits *below* deep learning — A/B tests and logistic regression solve a large share of problems pitched as AI.
 
+
+Cross-link: → `_shared/ml-lifecycle.md` · **549 S4**
+
 ---
 
 ## Part 4 · People and judgment
@@ -527,6 +536,23 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 *But not new:* cloud operation and large-scale data management (warehouses, batch, streaming) predate ML by a decade. The demands are simply higher.
 
+#### 8.4 Where the "not new" argument breaks down
+
+**Tradeoff / when this framing misleads** — reproduce both halves of T1's argument, but don't over-apply the reassuring half. "Harder but not new" is right about the *techniques* and can be wrong about the *consequences*, in three places:
+
+| The argument holds | Where it strains |
+|---|---|
+| We've always built reliable systems from unreliable parts | Those parts failed **detectably** — a crash, a timeout, a checksum. A model returns a confident wrong answer that looks exactly like a right one. You can retry a failed disk read; you cannot retry a plausible misclassification, because nothing told you to |
+| Requirements engineering and hazard analysis already exist | They assume you can *enumerate* the hazards. A model's failure modes are discovered in production, from users, often months later, and often by the group harmed |
+| Cloud and big data predate ML | True — but the **flywheel** is new. Scale used to be a consequence of success; with ML it's an input to quality, so competitors with more users get better models and pull further ahead. That's a market dynamic, not an engineering one |
+
+**How to use this:** give T1's two-part shape — challenge, then "we've seen this before" — and then add the qualifier. *"The techniques transfer; the assumption that failures are detectable does not."* That earns more than reciting the three challenges.
+
+**The concrete risk** — "not new" can license doing nothing differently. Every one of the three challenges needs a *specific* new practice: model-behaviour testing rather than unit tests (session 10), monitoring for drift rather than for crashes (session 11), and documenting intended use rather than trusting an API contract (session 13, model cards). The reassurance is about the *discipline* being available, not about the *work* being already done.
+
+
+Cross-link: → **521 S1 section 12** (open problems — the same limits, named from the research side) · **546 S10–11** (testing and quality, the practices these three challenges demand)
+
 ---
 
 ### 9. The risk spectrum
@@ -554,6 +580,9 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 3. Navigating conflicting qualities — accuracy, operating cost, latency, time to release
 4. Planning a responsible testing strategy
 5. Designing systems that can be updated rapidly and monitored in production
+
+
+Cross-link: → **546 S14** (responsible ML engineering) · **521 S12** (security and prompt injection)
 
 ---
 
@@ -636,6 +665,9 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 > | **Streaming** | Score events as they flow through a queue (Kafka) | Continuous event data — clickstreams, IoT, live anomaly detection |
 >
 > The running example makes the choice concrete: **fraud detection is online** (the score gates a live payment, ~200 ms budget); a monthly churn report is **batch**. Building a heavy real-time service for something a nightly batch job would do — or vice-versa — is the same "match the machinery to the need" judgment as the risk spectrum in section 9.
+
+
+Cross-link: → `_shared/ml-lifecycle.md` · `_shared/evaluation.md` · **549 S6** (ML pipelines & MLOps) · **546 S13–14**
 
 ---
 

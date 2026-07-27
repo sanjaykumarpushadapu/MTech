@@ -67,6 +67,9 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
+
+Cross-link: → **546 S2** (models → systems: the same "it's not the model" argument, from the engineering side)
+
 ---
 
 ### 2. The evolution, 1960s → 2026
@@ -152,6 +155,9 @@ flowchart TD
 
 **Tradeoff / what the old architecture was better at** — the traditional pipeline is *inspectable*. When it misfires you can point at the intent classifier or the dialogue policy and see exactly what went wrong. The agentic version replaces those legible stages with an LLM making decisions you cannot fully audit, which is precisely why safety (stage 6) and observability become their own topics rather than afterthoughts. **You trade debuggability for capability.**
 
+
+Cross-link: → `_shared/agents.md` · **536 S13** (agentic AI) · **546 S15–16** (SE for agentic systems)
+
 ---
 
 ### 3b. Workflows vs agents — and when not to build one
@@ -231,6 +237,10 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 
 *Reference: deck — the six-component taxonomy is standard conversational-AI architecture.*
 
+**Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, has to do the same six jobs: work out what you want, keep track of where the conversation is, look things up, do things, say something back, and remember. What changed over twenty years is not the list — it's that all six used to be separate hand-built modules, and now the LLM absorbs three of them (understanding, dialogue, generation) while the other three (knowledge, action, memory) became *harder* because we now expect them to work on open-ended input.
+
+**Use this list as a checklist.** When a system misbehaves, the useful question is *which of the six failed?* "The bot gave a wrong answer" is not diagnosable; "knowledge access retrieved the wrong document" is.
+
 | # | Component | Role | Contains | Modern approach |
 |---|---|---|---|---|
 | 1 | **Natural Language Understanding** | Understand what the user wants | Intent classification, entity extraction, sentiment analysis, context understanding | **LLM-based, single pass** |
@@ -270,6 +280,10 @@ Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (R
 
 *Reference: deck; each framework's own docs (langchain.com, llamaindex.ai, microsoft.github.io/autogen).*
 
+**Intuition** — A framework is glue, not capability. Nothing in the tables below does anything you couldn't do with the model's HTTP API and a few hundred lines of Python — the Tavily lab proves it. What you're buying is **the conventions**: a standard way to describe a tool, a retry policy, a place to put memory, a trace you can read. That's worth real money on a team and close to nothing when you're learning, which is why the labs deliberately make you see the loop before the framework hides it.
+
+The generational split matters more than any individual row: the 2015 tools assume **you enumerate the intents in advance**; the 2023 tools assume **the model works out the intent at runtime**. Everything else follows from that one assumption change.
+
 **Traditional (2015–2020)**
 
 | Framework | Approach | Use case |
@@ -292,6 +306,9 @@ Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (R
 **The key shift**, in the deck's words: *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
 
 **Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
+
+
+Cross-link: → `_shared/agents.md` · **549 S9** (LangChain from the API-integration angle)
 
 ---
 
@@ -390,11 +407,18 @@ Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subject
 
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
+
+Cross-link: → **536 S1 section 10** (why the window is capped — O(n²) and KV-cache) · `_shared/rag.md` — *"lost in the middle" is the argument for retrieval*
+
 ---
 
 ### 8. LLMs as the brain — capabilities and limits
 
 *Reference: deck — the capability→consequence mapping is the deck's own.*
+
+**Intuition** — The LLM is the reasoning engine, and its strengths and failures are *the same property seen twice*. It is a next-token predictor trained to produce plausible continuations — so it is fluent, flexible and good at intent, **and** it will produce a plausible continuation when it has no idea, which is what hallucination is. It is not a bug bolted onto a good system; it's the cost of the mechanism that makes the system work at all.
+
+That's why the fixes below are all *architectural* rather than *model* fixes. You don't repair hallucination by finding a better model; you repair it by giving the model evidence (retrieval) or by not asking it questions it can't ground.
 
 **The path from architecture to agent:**
 
@@ -455,6 +479,9 @@ flowchart LR
 > ```
 >
 > Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8 and `_shared/rag.md`.
+
+
+Cross-link: → **536 S1 sections 1, 3** (the mechanism behind every capability in this table) · `_shared/rag.md` (the fix for the first limitation)
 
 ---
 
@@ -583,11 +610,16 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 **Tradeoff** — these four pull against each other, and naming the tension is what a good exam answer does. Every safety layer adds latency. Cheaper model routing costs quality. Prompt caching saves 50–90% but constrains how you structure prompts. There is no configuration that maximises all four; production work is **choosing which to sacrifice for this particular product.**
 
+
+Cross-link: → `_shared/evaluation.md` · **546 S11** (pipeline and system quality) · **549 S7** (deployment and tooling)
+
 ---
 
 ### 12. Open problems
 
 *Reference: deck; each research direction is its own paper (MemGPT, Titans, GAIA, SWE-bench, Constitutional AI).*
+
+**Intuition** — Every item below is a limitation of the *current* generation, not a law. It's worth knowing which is which: some of these are engineering problems that money and iteration will close, and some are open research questions that may not close at all. Reading them as a single list of "things AI can't do yet" is the mistake — the useful skill is telling a **workaround** from a **wall**.
 
 Where research is active — useful for essay-style questions asking "what are the limitations of current systems?"
 
@@ -599,6 +631,33 @@ Where research is active — useful for essay-style questions asking "what are t
 | **Reliable long-horizon execution** | Agents running 100-step tasks drift, get stuck, or make **compounding errors** | Agent benchmarks (GAIA, SWE-bench) |
 | **Safety & alignment at scale** | More autonomy → harder to ensure agents follow human intent without side-effects | Constitutional AI, RLAIF, interpretability |
 | **Compute & energy efficiency** | SOTA models need enormous infrastructure; efficient inference is an open engineering problem | Mamba, QLoRA, mixture-of-experts |
+
+*Sorting them — my own, and the more useful half of this section:*
+
+| | Problem | Why |
+|---|---|---|
+| ⚙️ **Engineering — will close** | Compute & energy efficiency | Quantisation, MoE and better kernels are already shipping; this is a cost curve, not a mystery |
+| ⚙️ **Engineering — will close** | Persistent cross-session memory | External memory is ugly but it works; the remaining problems are retrieval quality and cost |
+| 🧱 **Research — may not close** | Consistent multi-step reasoning | Next-token prediction has no mechanism that *guarantees* a valid inference chain, only one that makes valid chains likely |
+| 🧱 **Research — may not close** | Grounded factual accuracy | A model has no internal notion of "I don't know this." RAG supplies evidence; it doesn't install doubt |
+| 🧱 **Research — may not close** | Safety & alignment at scale | We can't fully specify what we want (**546 section 8.1** — the same specification problem, from the other end) |
+| ⚠️ **Compounding** | Reliable long-horizon execution | 95% per-step accuracy over 100 steps is 0.6% end-to-end. Arithmetic, not capability — and it's why long agent runs need checkpoints rather than better models |
+
+**Tradeoff / how to use this section** — the temptation is to treat these as reasons not to build. That's the wrong read. **Every one of them has a design response available today**, and knowing the response is what separates an architect from a commentator:
+
+| Problem | What you actually do about it now |
+|---|---|
+| Multi-step reasoning fails | Decompose into a **workflow** with fixed steps (section 3b) rather than trusting an agent to plan |
+| No cross-session memory | Explicit memory store, written and read at defined points (session 6) |
+| Hallucination | Retrieval with **citations the user can check**, so the failure is visible rather than silent |
+| Long-horizon drift | Checkpoints, step limits, and a human approval gate before anything irreversible |
+| Alignment | Layered safety — input filter, tool allow-list, output check (section 11) |
+| Cost | Route easy queries to a small model; cache aggressively (session 11) |
+
+The honest summary: **none of these are solved, and all of them are survivable.** Production systems ship on top of every limitation in this table — by constraining the problem until the model's reliability is enough for it, which is the real design skill this course teaches.
+
+
+Cross-link: → **546 S8.1** (the specification problem, reached from software engineering) · `_shared/agents.md`
 
 ---
 

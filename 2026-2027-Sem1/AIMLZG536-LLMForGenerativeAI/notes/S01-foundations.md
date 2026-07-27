@@ -80,6 +80,9 @@ Same words, different order. A language model that has learned English assigns f
 
 **Tradeoff / what this framing costs** — Defining a model purely by next-word probability means there is **no notion of truth in the objective**. A fluent falsehood scores well; that's not a bug in the training, it's what the objective asked for. Hallucination is downstream of this definition, which is why S14 needs separate faithfulness metrics.
 
+
+Cross-link: → **521 S1 section 8** (the same object seen from the application side — what it lets an agent do, and how each capability has a matching failure)
+
 ---
 
 ### 2. What makes a language model "large"
@@ -95,6 +98,9 @@ Same words, different order. A language model that has learned English assigns f
 LLMs are **deep neural networks** trained on that data.
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
+
+
+Cross-link: → `_shared/quantization.md` · **536 S5–6** — *every one of the three "large" axes becomes a serving cost later; scale is the thing compression exists to undo*
 
 ---
 
@@ -132,6 +138,9 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 **Generative AI** is the broader area: using computational models to generate text, code, speech, images, video and audio. LLMs are the text branch. And LLMs are **(mostly) natural language generation (NLG) systems** — the process of generating text with them is called **decoding** (the whole of S5).
 
 **Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration. This is the same tradeoff 546 draws in its foundation-models section — the expensive general answer versus the cheap specific one.
+
+
+Cross-link: → **521 S1 section 8** · `_shared/rag.md` — *"plausible continuation" is the mechanism; hallucination is that mechanism running without evidence*
 
 ---
 
@@ -235,6 +244,9 @@ That last line **is** attention: each token's output is a **weighted average of 
 > - At **inference** the trick that makes generation fast is the **KV-cache**: keys and values for past tokens are cached so each new token is O(n) not O(n²). This is why the *first* token of a long prompt is slow ("prefill") and later tokens are fast ("decode") — a distinction you'll meet the moment you look at latency metrics.
 > - Practical consequence: **long prompts cost real money and time.** "Just paste the whole document in" runs straight into this quadratic. It's the reason retrieval (RAG) exists — fetch the relevant 4K tokens instead of paying for 100K.
 
+
+Cross-link: → **521 S1 section 8** (self-attention → multi-turn coherence) · **536 S4** (attention efficiency) · **536 S5** (KV-cache — caching exactly the K and V computed here)
+
 ---
 
 ### 5. Multi-head attention
@@ -279,6 +291,9 @@ flowchart LR
 Each head runs the exact five-step computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
+
+
+Cross-link: → **536 S3** (grouped-query attention shrinks the heads' KV footprint) · **536 S4**
 
 ---
 
@@ -340,6 +355,9 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 
 **Tradeoff** — the FFNN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFNN with sparsely-activated ones: it's the biggest block of weights to attack.
 
+
+Cross-link: → **536 S3** (architecture advances — what modern blocks change about this one)
+
 ---
 
 ### 7. Positional encoding
@@ -367,6 +385,9 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91), the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Each position gets a unique multi-frequency "fingerprint" — like clock hands turning at different speeds — and because it's the *same fixed function at every position*, the model can encode a position it never saw in training, which learned embeddings cannot. RoPE keeps this multi-frequency idea but **rotates** Q and K rather than **adding** to the embedding.
 
 **Tradeoff** — learned embeddings are simplest and fail hardest outside the trained length; sinusoidal costs nothing and generalises modestly; RoPE is the current default precisely because long context is the pressure point, and it's the only one of the three that rotates rather than adds. RoPE gets full treatment in S3 — this is the preview.
+
+
+Cross-link: → **536 S3** (RoPE in depth) · **536 S5** (why RoPE extrapolates and learned embeddings don't)
 
 ---
 
@@ -435,6 +456,9 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 **Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what section 12's tokenizer choices are negotiating.
 
+
+Cross-link: → `_shared/tokenization.md` · **521 S1 section 6** — *one note, both subjects*
+
 ---
 
 ### 9. The language modelling head, and weight tying
@@ -490,6 +514,9 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 **Tradeoff / when NOT to tie** — the deck states it cleanly: untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
 
+
+Cross-link: → **536 S5** (inference — this matrix runs once per generated token) · **536 S6** (compression: the LM head is a compression target precisely because it's 13% of parameters)
+
 ---
 
 ### 10. Context length
@@ -499,6 +526,9 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
+
+
+Cross-link: → **521 S1 section 7** (context windows and "lost in the middle") · `_shared/quantization.md` (KV-cache) · `_shared/rag.md` — *retrieval exists because this number is finite*
 
 ---
 
@@ -545,6 +575,9 @@ And the zoom-ins, which are section 4 and section 5 in picture form: **scaled do
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
 **Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the deck's own line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
+
+
+Cross-link: → **521 S1 section 2** (the same history told as conversational-AI eras) · **536 S3**
 
 ---
 
@@ -673,6 +706,9 @@ tiktoken BPE (Llama-3):
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure you'll see in 521 is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
+
+Cross-link: → `_shared/tokenization.md` — *the full treatment, written once for both subjects* · **521 S1 section 6**
+
 ---
 
 ### 13. The LLM landscape
@@ -726,6 +762,9 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 **Frontier models named in the deck** — OpenAI o3 · Anthropic Claude Sonnet 3.7 · xAI Grok 3, with a more recent table listing GPT-5.4 Thinking (deep reasoning, tool use, long-horizon research), Gemini 3.1 Pro (complex problem-solving, multimodal, tool workflows), Gemma 4 (open-weight reasoning, agentic), Claude Opus 4.6 (long-context reasoning, coding, sustained agentic work), Mistral Large 3 (open-weight multimodal, **sparse MoE**), Grok 4.20 (parallel multi-agent research), DeepSeek-R1 (**RL-driven** math, logic, reasoning).
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
+
+
+Cross-link: → **521 S3** (model landscape and cost — the same table, used to make a build decision) · **546 S10** (when the general answer is the wrong one)
 
 ---
 
