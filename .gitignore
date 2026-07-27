@@ -47,6 +47,12 @@ Thumbs.db
 # Transcripts — raw source, not knowledge base. Read them to build/update the note,
 # fold the important content (instructor quotes, emphasis, off-slide clarifications)
 # into the session note, then don't commit. The note is the record, not the transcript.
+# Transcripts are raw source: read them, fold them into the note, discard.
+# The .gitkeep exception is load-bearing — the directory's CONTENTS are ignored,
+# so without it the folder wouldn't exist on a fresh clone and there'd be nowhere
+# obvious to drop a transcript. This is the only .gitkeep in the repo that has a
+# job; git tracks files, not folders, so every other directory appears by itself
+# the moment it holds something real.
 2026-2027-Sem1/*/source/transcripts/*
 !2026-2027-Sem1/*/source/transcripts/.gitkeep
 
