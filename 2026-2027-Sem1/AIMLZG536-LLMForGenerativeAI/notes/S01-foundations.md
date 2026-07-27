@@ -1,7 +1,7 @@
 # 536 · Session 01 · Foundations of Large Language Models
 
 Exam: **mid-sem (closed book)** | Date learned: ____ | Instructor: Dr. Monali Mavani
-Assembled from: `CS-1 Intro to LLM.pptx` (69 sl) · T1 Jurafsky & Martin ch2, 7, 8 · T2 Alammar & Grootendorst ch1–3 · R1 Raschka ch1–2 · HuggingFace LLM course ch6.5
+Assembled from: `CS-1 Intro to LLM.pptx` (69 sl, **47 embedded images extracted and read**) · T1 Jurafsky & Martin ch2, 7, 8 · T2 Alammar & Grootendorst ch1–3 · R1 Raschka ch1–2 · HuggingFace LLM course ch6.5
 
 ## Topics
 
@@ -135,6 +135,14 @@ flowchart LR
 2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax.
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
+As the original paper's block, which is the form to reproduce in an exam:
+
+```
+MatMul(Q, Kᵀ) → Scale (÷√d_k) → Mask (optional) → SoftMax → MatMul(·, V)
+```
+
+The **Mask** step is optional in the general figure and **mandatory in a decoder** — it's what enforces causality (§11).
+
 Then an **output projection** maps the result from (n × d_v) back to (n × d), the model dimension, so layers can stack.
 
 **Worked example — the shapes, which you must be able to write from memory.** Notation: **n** sequence length · **d** model/embedding dim · **d_k** key/query dim · **d_v** value dim · **h** heads.
@@ -205,7 +213,47 @@ Weight-matrix notation from the slide: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d
 
 **Intuition** — Attention alone only *mixes* information between tokens. The block adds the parts that *process* it: a feed-forward network to do computation, layer normalisation to keep training stable, and residual connections so gradients survive depth.
 
-**Mechanism — the components:**
+**Mechanism — the block, as equations.** The deck gives these twice, and they were images not text, so they are easy to miss. **Learn the two-line form; be able to expand it to the six-line form.**
+
+Compact (pre-norm, which is what modern LLMs use):
+
+```
+O = X + MultiHeadAttention(LayerNorm(X))
+H = O + FFN(LayerNorm(O))
+```
+
+Expanded step by step, with **T** marking each intermediate ([N × d]):
+
+```
+T¹ = LayerNorm(X)
+T² = MultiHeadAttention(T¹)
+T³ = T² + X            ← residual 1
+T⁴ = LayerNorm(T³)
+T⁵ = FFN(T⁴)
+H  = T⁵ + T³           ← residual 2
+```
+
+```mermaid
+flowchart LR
+    X[X input] --> LN1["T¹ = LayerNorm(X)"]
+    LN1 --> MHA["T² = MultiHeadAttention(T¹)"]
+    MHA --> R1(("+"))
+    X --> R1
+    R1 --> T3["T³ residual 1"]
+    T3 --> LN2["T⁴ = LayerNorm(T³)"]
+    LN2 --> FFN["T⁵ = FFN(T⁴)"]
+    FFN --> R2(("+"))
+    T3 --> R2
+    R2 --> H["H output, same shape as X"]
+```
+
+Three things to read off it, all examinable:
+
+1. **Two residual connections**, one around attention and one around the FFN. `X` and `T³` both reappear as addends — that's what lets gradients reach the bottom of a deep stack.
+2. **LayerNorm comes *before* each sublayer, not after** — `LayerNorm(X)` feeds attention, and the residual adds the *un*-normalised `X`. This is **pre-norm**, and it's why deep transformers train stably.
+3. **H has the same shape as X**, which is what makes blocks stackable.
+
+**The components:**
 
 **Layer normalisation** — applied **independently to each token's hidden vector**, normalising **across the feature dimension** (not across the batch or the sequence — that's the distinction that gets examined). Has **two learnable parameters, γ and β**.
 
@@ -272,6 +320,41 @@ flowchart LR
 
 So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; §9 reuses it.
 
+**Special context tokens — the concrete case.** Raschka's example extends a vocabulary of `brown→0, dog→1, fox→2, …` with two extras at the end:
+
+| Token | ID | Purpose |
+|---|---|---|
+| `<|unk|>` | 783 | New/unknown words not in the training data, so absent from the vocabulary |
+| `<|endoftext|>` | 784 | Separates two **unrelated** text sources |
+
+**Worked example — the embedding lookup, with numbers.** Input `fox jumps over dog` → token IDs `[2, 3, 5, 1]`. The embedding matrix is `|V| × d`; each ID selects a **row**:
+
+```
+Embedding weight matrix (|V| × 3 shown)
+row 0:   0.3374  -0.1778  -0.1690
+row 1:   0.9178   1.5810   1.3010
+row 2:   1.2753  -0.2010  -0.1606   ← token ID 2 ("fox")
+row 3:  -0.4015   0.9666  -1.1481
+row 4:  -1.1589   0.3255  -0.6315
+row 5:  -2.8400  -0.7849  -1.4096   ← token ID 5 ("over")
+```
+
+⚠️ **The trap Raschka calls out explicitly:** the embedding for token ID 5 is the **sixth** row, not the fifth — Python counts from 0. Easy marks lost if you index by one.
+
+**Then positional embeddings are added elementwise**, and they have **the same dimension** as the token embeddings:
+
+```
+token embedding      [1.0, 1.0, 1.0]     (shown as 1s for simplicity)
+positional embedding [1.1, 1.2, 1.3]   ← position 1
+                   + ─────────────────
+input embedding      [2.1, 2.2, 2.3]
+
+position 2:  + [2.1, 2.2, 2.3]  →  [3.1, 3.2, 3.3]
+position 3:  + [3.1, 3.2, 3.3]  →  [4.1, 4.2, 4.3]
+```
+
+Note it is **addition, not concatenation** — the vector doesn't grow. That's why positional information has to share capacity with semantic information, and it's the reason RoPE's rotation approach (§7) is considered cleaner.
+
 **Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what §12's tokenizer choices are negotiating.
 
 > **Closed-book card**
@@ -289,9 +372,22 @@ So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; §9
 
 **Mechanism**
 
+```mermaid
+flowchart LR
+    W["w₁ … w_N tokens"] --> TB["Layer L<br/>transformer block"]
+    TB --> H["h^L_N &nbsp; [1 × d]"]
+    H --> UE["Unembedding layer<br/>U = Eᵀ &nbsp; [d × |V|]"]
+    UE --> U["logits u &nbsp; [1 × |V|]"]
+    U --> SM["Softmax over vocabulary V"]
+    SM --> Y["word probabilities y &nbsp; [1 × |V|]"]
+```
+
 - **h_LN** = output token embedding at position N from the final block L, shape **[1 × d]**
-- Multiply by the unembedding matrix → **u**, the **logit vector**, one score per vocabulary item
-- **Softmax** turns logits u into probabilities **y** over the vocabulary
+- **Unembedding layer U = Eᵀ**, shape **[d × |V|]**
+- Product → **u**, the **logit vector**, shape **[1 × |V|]** — one score per vocabulary item
+- **Softmax** turns logits u into probabilities **y**, shape **[1 × |V|]**
+
+Carry the three shapes — `[1 × d] → [d × |V|] → [1 × |V|]`. The whole head is one matrix multiply plus a softmax.
 
 Softmax probabilities y can then be used to **assign a probability to a given text**, or to **generate text by sampling a word from them** — the two directions of §3, now concrete.
 
@@ -354,6 +450,30 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 | **Context** | **Bidirectional** | **Unidirectional (left-to-right)**, preserving causal structure | Both |
 | **Strengths** | Comprehension — classification, **NER**, sentiment — builds dense semantic representations | Open-ended generation, dialogue, code completion, story synthesis | Translation, summarisation, **multimodal pipelines where input and output domains differ** |
 | **Weaknesses** | **Not naturally generative** — needs adapter heads or fine-tuning for sequence output | Less efficient for classification or bidirectional reasoning | **Dual stacks increase training complexity and inference latency** |
+
+**The original Vaswani figure, which all three descend from** — worth being able to sketch:
+
+```mermaid
+flowchart BT
+    IN[Inputs] --> IE[Input embedding]
+    IE --> PE1((+ positional encoding))
+    PE1 --> ENC["ENCODER ×N<br/>Multi-Head Attention → Add & Norm<br/>Feed Forward → Add & Norm"]
+    OUT["Outputs<br/>shifted right"] --> OE[Output embedding]
+    OE --> PE2((+ positional encoding))
+    PE2 --> DEC["DECODER ×N<br/>MASKED Multi-Head Attention → Add & Norm<br/>Multi-Head Attention (cross) → Add & Norm<br/>Feed Forward → Add & Norm"]
+    ENC -->|K, V| DEC
+    DEC --> LIN[Linear]
+    LIN --> SM[Softmax]
+    SM --> P[Output probabilities]
+```
+
+Three details the figure encodes that the prose doesn't:
+
+- The decoder's **first** attention is **masked** (no peeking ahead); its **second** is cross-attention taking **K and V from the encoder** and Q from the decoder. That's the only place the two stacks touch.
+- Outputs are **shifted right** so position *i* predicts token *i*, never seeing it.
+- **Add & Norm** appears after every sublayer — the residual-plus-normalisation pattern from §6, repeated six times in this diagram.
+
+And the zoom-ins, which are §4 and §5 in picture form: **scaled dot-product attention** = `MatMul(Q,K) → Scale → Mask (opt.) → SoftMax → MatMul(·,V)`; **multi-head attention** = `Linear ×3 (V,K,Q) → h parallel scaled-dot-product heads → Concat → Linear`.
 
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
