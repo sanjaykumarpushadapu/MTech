@@ -14,11 +14,11 @@ The **vocabulary and machinery** session. Everything in 536 after this assumes y
 | If you have… | Read |
 |---|---|
 | **10 minutes** | The closed-book cards only — the `>` blockquotes at the end of each topic |
-| **1 hour** (your Monday slot) | §4 and §5 — self-attention and multi-head — and **reproduce the shape tables by hand** |
+| **1 hour** (your Monday slot) | section 4 and section 5 — self-attention and multi-head — and **reproduce the shape tables by hand** |
 | **Before the mid-sem** | Everything except the "not for exams" section at the end |
 | **Looking something up in December** | The topic list below is the index; each topic is self-contained |
 
-🔴 **This is the one subject where reading is not enough.** The mechanism topics (§4, §5, §6, §9, §10) have worked examples with real numbers. If you cannot reproduce the multi-head shape table from a blank page, you do not have §5 — regardless of how clear it felt to read.
+🔴 **This is the one subject where reading is not enough.** The mechanism topics (section 4, section 5, section 6, section 9, section 10) have worked examples with real numbers. If you cannot reproduce the multi-head shape table from a blank page, you do not have section 5 — regardless of how clear it felt to read.
 
 **Running example for 536:** she uses **Llama-3 8B** (d = 4096, 32 heads, d_k = 128) throughout. Anchor new numbers to it, the way 546 anchors everything to fraud detection.
 
@@ -89,7 +89,7 @@ Same words, different order. A language model that has learned English assigns f
 
 LLMs are **deep neural networks** trained on that data.
 
-**Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (§4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
+**Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
 
 > **Closed-book card**
 > LLM = deep neural network trained on massive text. **"Large" means three things: parameter count · training dataset size · context length.** Each scales cost differently → quantization (S6), scaling laws (S2), attention efficiency (S4).
@@ -177,7 +177,7 @@ As the original paper's block, which is the form to reproduce in an exam:
 MatMul(Q, Kᵀ) → Scale (÷√d_k) → Mask (optional) → SoftMax → MatMul(·, V)
 ```
 
-The **Mask** step is optional in the general figure and **mandatory in a decoder** — it's what enforces causality (§11).
+The **Mask** step is optional in the general figure and **mandatory in a decoder** — it's what enforces causality (section 11).
 
 Then an **output projection** maps the result from (n × d_v) back to (n × d), the model dimension, so layers can stack.
 
@@ -297,7 +297,7 @@ Three things to read off it, all examinable:
 
 Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]) marks the transformer computation, with superscripts demarcating each step inside the block.
 
-**The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to §11.
+**The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to section 11.
 
 **Tradeoff** — the FFNN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFNN with sparsely-activated ones: it's the biggest block of weights to attack.
 
@@ -354,7 +354,7 @@ flowchart LR
 - Those values are **optimised during LLM training as part of the LLM optimisation itself** — embeddings are *learned*, not looked up from somewhere else.
 - Shape: **rows = vocabulary size, columns = embedding dimension**.
 
-So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; §9 reuses it.
+So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; section 9 reuses it.
 
 **Special context tokens — the concrete case.** Raschka's example extends a vocabulary of `brown→0, dog→1, fox→2, …` with two extras at the end:
 
@@ -389,9 +389,9 @@ position 2:  + [2.1, 2.2, 2.3]  →  [3.1, 3.2, 3.3]
 position 3:  + [3.1, 3.2, 3.3]  →  [4.1, 4.2, 4.3]
 ```
 
-Note it is **addition, not concatenation** — the vector doesn't grow. That's why positional information has to share capacity with semantic information, and it's the reason RoPE's rotation approach (§7) is considered cleaner.
+Note it is **addition, not concatenation** — the vector doesn't grow. That's why positional information has to share capacity with semantic information, and it's the reason RoPE's rotation approach (section 7) is considered cleaner.
 
-**Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what §12's tokenizer choices are negotiating.
+**Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what section 12's tokenizer choices are negotiating.
 
 > **Closed-book card**
 > Pipeline: **text → vocabulary building → tokens → token IDs → token embeddings → + positional embeddings → model input.** Special context tokens (end-of-text, unknown, padding) added here.
@@ -425,7 +425,7 @@ flowchart LR
 
 Carry the three shapes — `[1 × d] → [d × |V|] → [1 × |V|]`. The whole head is one matrix multiply plus a softmax.
 
-Softmax probabilities y can then be used to **assign a probability to a given text**, or to **generate text by sampling a word from them** — the two directions of §3, now concrete.
+Softmax probabilities y can then be used to **assign a probability to a given text**, or to **generate text by sampling a word from them** — the two directions of section 3, now concrete.
 
 Training vs inference differ in *which position* is used: during training **every position predicts its next token** (that's the parallelism paying off); during inference **only the last position** is used to generate. At training the logits go to cross-entropy against the next token; at inference they're sampled with **temperature, top-k or top-p** — all of S5.
 
@@ -466,7 +466,7 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
-**Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from §4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
+**Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
 
 > **Closed-book card**
 > **Context length** = maximum tokens the model can process. **Autoregressive ⇒ current context grows as tokens are generated** (prompt + generated so far). Capped by **O(n²) attention** and **KV-cache memory**, not by architecture.
@@ -507,13 +507,13 @@ Three details the figure encodes that the prose doesn't:
 
 - The decoder's **first** attention is **masked** (no peeking ahead); its **second** is cross-attention taking **K and V from the encoder** and Q from the decoder. That's the only place the two stacks touch.
 - Outputs are **shifted right** so position *i* predicts token *i*, never seeing it.
-- **Add & Norm** appears after every sublayer — the residual-plus-normalisation pattern from §6, repeated six times in this diagram.
+- **Add & Norm** appears after every sublayer — the residual-plus-normalisation pattern from section 6, repeated six times in this diagram.
 
-And the zoom-ins, which are §4 and §5 in picture form: **scaled dot-product attention** = `MatMul(Q,K) → Scale → Mask (opt.) → SoftMax → MatMul(·,V)`; **multi-head attention** = `Linear ×3 (V,K,Q) → h parallel scaled-dot-product heads → Concat → Linear`.
+And the zoom-ins, which are section 4 and section 5 in picture form: **scaled dot-product attention** = `MatMul(Q,K) → Scale → Mask (opt.) → SoftMax → MatMul(·,V)`; **multi-head attention** = `Linear ×3 (V,K,Q) → h parallel scaled-dot-product heads → Concat → Linear`.
 
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
-**Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **§3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the deck's own line from §6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
+**Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the deck's own line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
 
 > **Closed-book card**
 > **Encoder-only** (BERT, RoBERTa): bidirectional self-attention, **MLM** objective, bidirectional context. Strong at classification/NER/sentiment; **not naturally generative**.
@@ -789,7 +789,7 @@ So EC-1 is **35%, two group assignments**, plan shared around week 2. The handou
 
 ## Lab / build
 
-**536 Lab 1 is at session 1 (module M1): construct and analyse tokenization techniques.** Everything you need is in §12 plus the extra material.
+**536 Lab 1 is at session 1 (module M1): construct and analyse tokenization techniques.** Everything you need is in section 12 plus the extra material.
 
 Minimum useful version, ~15 lines:
 
@@ -803,4 +803,4 @@ for name in ["gpt2", "meta-llama/Llama-2-7b-hf", "meta-llama/Meta-Llama-3-8B"]:
         print(f"{name:35} {text:20} {len(ids):3} tokens  {tok.convert_ids_to_tokens(ids)}")
 ```
 
-That single script makes concrete: SentencePiece vs tiktoken (§12.6), why Llama-3 switched, byte fallback on the emoji, and subword splitting on the novel word. **Run it before session 2** — the compression-ratio argument only lands once you've seen the token counts differ.
+That single script makes concrete: SentencePiece vs tiktoken (section 12.6), why Llama-3 switched, byte fallback on the emoji, and subword splitting on the novel word. **Run it before session 2** — the compression-ratio argument only lands once you've seen the token counts differ.

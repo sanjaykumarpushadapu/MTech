@@ -15,7 +15,7 @@ It matters beyond 549: **you will spend this entire semester calling REST APIs**
 |---|---|
 | **10 minutes** | The closed-book cards — the `>` blockquotes |
 | **1 hour** (your Tuesday slot) | section 5 REST and section 8 the comparison table. Then run the two `curl` commands in section 3 and section 9 |
-| **Before the mid-sem** | All of it. section 7b (north–south vs east–west) is the framing that makes section 8 answerable |
+| **Before the mid-sem** | All of it. Section 7b (north–south vs east–west) is the framing that makes section 8 answerable |
 | **Tonight, 10 minutes** | `curl -X GET "https://jsonplaceholder.typicode.com/posts"` and install Postman |
 
 🔴 **549 has no textbook from session 4 onward.** Sessions 1–3 have R2 and R3 behind them; sessions 4–16 list only *"Web Resources, Lecture Notes."* **Collect every deck and recording, every weekend, without exception** — for this subject they are the syllabus, and a deck you didn't download may be gone.

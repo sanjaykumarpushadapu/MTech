@@ -27,8 +27,8 @@ Her framing: conversational AI is **not a chatbot** but *"a reasoning system tha
 | If you have… | Read |
 |---|---|
 | **10 minutes** | The closed-book cards — the `>` blockquotes |
-| **1 hour** (your Wednesday slot) | §9 the seven-stage lifecycle — then **run the lab**. 521 is build-it, not read-it |
-| **Before the mid-sem** | All of it. §9 is the single most likely structured question |
+| **1 hour** (your Wednesday slot) | section 9 the seven-stage lifecycle — then **run the lab**. 521 is build-it, not read-it |
+| **Before the mid-sem** | All of it. Section 9 is the single most likely structured question |
 | **This week** | Install Ollama, pull `llama3`, get a free Tavily key — the session-1 notebooks need them |
 
 🔴 **521 is the build-it subject and it has ten labs — more than any other.** Her instruction: *"Don't just watch — run the demo code and change one thing."* Reading about an agent is not learning an agent; the concepts click when the loop prints its own reasoning.
@@ -234,9 +234,9 @@ The decision rule:
 | Flexibility and model-driven decisions needed at scale | **Agent** |
 | **Many applications** | **Neither** — a single LLM call with retrieval and in-context examples is usually enough |
 
-And on agents specifically: their autonomy means **higher costs and the potential for compounding errors** — which is exactly the "reliable long-horizon execution" open problem in §12. Test in sandboxed environments with guardrails.
+And on agents specifically: their autonomy means **higher costs and the potential for compounding errors** — which is exactly the "reliable long-horizon execution" open problem in section 12. Test in sandboxed environments with guardrails.
 
-**On frameworks** — worth knowing, because §5 lists eight of them approvingly:
+**On frameworks** — worth knowing, because section 5 lists eight of them approvingly:
 
 > Frameworks make it easy to start by simplifying low-level tasks, but they **often create extra layers of abstraction that obscure the underlying prompts and responses, making them harder to debug.** They can also make it tempting to add complexity when a simpler setup would suffice.
 >
@@ -480,7 +480,7 @@ flowchart LR
 | No memory | **External memory systems** | Remember user preferences |
 | Calculation errors | **Calculator tool, code execution** | Precise math |
 
-**Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (§11) become a topic.
+**Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (section 11) become a topic.
 
 > **Closed-book card**
 > Path: **Transformer (2017) → pre-training → LLM → instruction tuning → + tools/memory/planning → conversational agent.**
@@ -536,7 +536,7 @@ Notice safety appears **twice** — sanitization at stage 1 (input) and validati
 >
 > Map to all seven stages: what entities are extracted? which tools/agents? what's the step-by-step plan? what specific API calls? what should be stored? what validations before acting? how should it communicate?
 
-The interesting stage here is **6 (Safety)** — this request *takes an action in the world*. A booking is not reversible by the agent, so it needs confirmation before execution, not after. That's the human-in-the-loop principle from §11.
+The interesting stage here is **6 (Safety)** — this request *takes an action in the world*. A booking is not reversible by the agent, so it needs confirmation before execution, not after. That's the human-in-the-loop principle from section 11.
 
 **Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing (L11) is for.
 
@@ -712,7 +712,7 @@ def get_weather(city: str) -> str:
     """Get the current weather for a given city by searching the web. Input should be a city name, e.g. 'Paris' or 'New York'."""
 ```
 
-**The docstring is the tool description the model reads to decide when to call it.** That's Anthropic's agent-computer interface point from §3b made concrete — the docstring is prompt engineering, not documentation.
+**The docstring is the tool description the model reads to decide when to call it.** That's Anthropic's agent-computer interface point from section 3b made concrete — the docstring is prompt engineering, not documentation.
 
 Five stages, and the staging is the lesson:
 

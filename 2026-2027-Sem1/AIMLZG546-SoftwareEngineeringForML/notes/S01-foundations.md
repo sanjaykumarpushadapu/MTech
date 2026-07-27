@@ -14,9 +14,9 @@ Three different sources make the same point from three angles. The slides give t
 | If you have… | Read |
 |---|---|
 | **10 minutes** | The closed-book cards — the `>` blockquotes |
-| **1 hour** (your Thursday slot) | §1 (the transcription start-up) and §8 (three ML challenges). Those two carry the course |
+| **1 hour** (your Thursday slot) | section 1 (the transcription start-up) and section 8 (three ML challenges). Those two carry the course |
 | **Before the mid-sem** | All of it — 546 is the least mathematical subject and the most quotable |
-| **For Lab 1** (session 3) | §7's three roles, and the fraud-detection thread running through every section |
+| **For Lab 1** (session 3) | section 7's three roles, and the fraud-detection thread running through every section |
 
 **This subject rewards judgment, not recall.** Every table here is a decision aid: which process model, which role, which risk level. Exam questions ask you to *locate a system* on these axes and justify it — not to recite the axes.
 
@@ -168,7 +168,7 @@ flowchart LR
 
 **Worked example** — Fraud detection. *Planning* — is fraud loss worth a project? *Analysis* — what counts as fraud, what data exists. *Design* — where the scorer sits in the payment flow. *Development* — build it. *Testing* — catches known fraud without blocking good customers. *Deployment* — shadow mode, then live. *Maintenance* — fraud patterns shift, retrain.
 
-**Tradeoff / when the SDLC assumption fails** — The phases are always present; running them **once, in strict order** (Waterfall) only works when requirements are fixed and knowable up front. ML violates that by construction — you cannot specify the accuracy target before seeing whether the data supports it. That is the *lack of specifications* problem, developed in §8.1.
+**Tradeoff / when the SDLC assumption fails** — The phases are always present; running them **once, in strict order** (Waterfall) only works when requirements are fixed and knowable up front. ML violates that by construction — you cannot specify the accuracy target before seeing whether the data supports it. That is the *lack of specifications* problem, developed in section 8.1.
 
 ### 3.2 The machine-learning pipeline
 
@@ -249,7 +249,7 @@ Its opening claim: **"the adoption levels are still far below expectations. Many
 
 Concretely: an Agile team on a 4-week iteration adds an AI pair programmer. Developer productivity rises. Nothing else improves — **unless the subsequent testing and deployment activities are also advanced**, shortening the release cycle at the same bandwidth. Only then does cost saving appear.
 
-*This is a local-optimisation trap, and it's the same shape as 546's central theme: improving one component doesn't improve the system. Compare §1 — Sidney's models were excellent and the business still failed.*
+*This is a local-optimisation trap, and it's the same shape as 546's central theme: improving one component doesn't improve the system. Compare section 1 — Sidney's models were excellent and the business still failed.*
 
 ### The five GenAI capabilities, and where they pay
 
@@ -516,7 +516,7 @@ def transcribe(audio_file):
 
 The first can be implemented by one developer and relied on by another without either seeing the other's code. The second cannot be specified — *we use ML precisely because we don't know how to specify the function.*
 
-The deep shift: **deductive reasoning** (logic-based, applying rules) → **inductive reasoning** (generalising from observation). We can no longer ask whether a component is *correct*, only whether it works *well enough on average* on test data or in the system. And since some answers will be wrong, **the rest of the system must tolerate mistakes** — a design constraint, not an afterthought. This is the concrete reason the SDLC's "run the phases once in order" assumption (§3.1) fails.
+The deep shift: **deductive reasoning** (logic-based, applying rules) → **inductive reasoning** (generalising from observation). We can no longer ask whether a component is *correct*, only whether it works *well enough on average* on test data or in the system. And since some answers will be wrong, **the rest of the system must tolerate mistakes** — a design constraint, not an afterthought. This is the concrete reason the SDLC's "run the phases once in order" assumption (section 3.1) fails.
 
 *But not new:* software engineering has a long history of building safe systems from unreliable components, and comprehensive formal specifications were always rare. Engineers already cope with vague specs via agile methods, cross-team communication, and lots of testing.
 
@@ -673,10 +673,10 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 - [ ] **Are assignments individual or team?** Not decided; he'll confirm later.
 - [ ] Situated Learning format — *"still working on it."*
 - [ ] Is the AWS Console Lab provisioned, or self-provisioned?
-- [ ] Did class cover the ML vocabulary (§2) verbally? The deck's agenda promises it and the slides stop before it — but **T1 ch3 is cited for this session in the handout**, so §2 is in scope regardless of what was said aloud.
+- [ ] Did class cover the ML vocabulary (section 2) verbally? The deck's agenda promises it and the slides stop before it — but **T1 ch3 is cited for this session in the handout**, so section 2 is in scope regardless of what was said aloud.
 
 ## Lab / build
 
 No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blueprint, fraud detection.
 
-**Locked in:** fraud detection is the running example for all sixteen sessions. T1 ch3 uses a credit-card fraud decision tree as its own worked example (§2.2), so the textbook and the running example line up from page one.
+**Locked in:** fraud detection is the running example for all sixteen sessions. T1 ch3 uses a credit-card fraud decision tree as its own worked example (section 2.2), so the textbook and the running example line up from page one.
