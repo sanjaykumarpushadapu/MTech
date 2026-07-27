@@ -41,14 +41,15 @@ Free: https://do1.dr-chuck.com/pythonlearn/EN_us/pythonlearn.pdf · CC licensed
 | 8 | Lists | 103 | ✓ |
 | 9 | Dictionaries | 121 | ✓ |
 | 10 | Tuples | 131 | ✓ |
-| 11 | Regular expressions | 143 | ✗ not listed — skip |
-| 12 | Networked programs | 157 | ✗ not listed — **but relevant to S1 APIs** |
-| 13 | Using Web Services | 171 | ✗ not listed — **directly relevant to S1: JSON, APIs** |
+| 11 | Regular expressions | 143 | ✗ **OUT OF SCOPE** |
+| 12 | Networked programs | 157 | ✗ **OUT OF SCOPE** |
+| 13 | Using Web Services | 171 | ✗ **OUT OF SCOPE** |
 | 14 | Object-oriented programming | 179 | ✓ |
 | 15 | Using Databases and SQL | 193 | ✓ |
 | 16 | Visualizing data | 217 | ✓ |
 
-⚠️ The handout's self-study list skips ch11–13. **Read ch13 (Web Services) anyway** — it covers JSON and calling APIs from Python, which is exactly session 1's material and every lab from 3 onward.
+**Scope:** the handout's Module 0 self-study list names ch1–10 and ch14–16. **Chapters 11–13 are not in the syllabus — do not read them for the course.**
+*(If a lab later needs JSON handling in Python, ch13 is where it's covered — but that would be lab support, not syllabus, and only if a prescribed lab actually requires it.)*
 
 ### R3 · Davis, *Cloud Native Patterns* (Manning 2019, 399 pp) — **S2, S3**
 
@@ -67,7 +68,7 @@ Free: https://do1.dr-chuck.com/pythonlearn/EN_us/pythonlearn.pdf · CC licensed
 | | 11 | Troubleshooting | 295 |
 | | 12 | Cloud-native data: breaking the data monolith | 320 |
 
-Handout cites **R3 ch1 for sessions 2 and 3**. Note ch4 (event-driven microservices) is the natural follow-on from S1's sync-vs-async topic, and ch10 (API gateways) matches the food-delivery diagram in S1.
+**Scope: the handout cites R3 ch1 only, for sessions 2 and 3. Chapters 2–12 are OUT OF SCOPE** — do not read or draw on them, however relevant the titles look. Session 2 and 3 content comes from ch1 plus the lecture slides.
 
 ### Not held
 - **R2** Gough et al., *Mastering API Architecture* — cited for S1 and S2, and the source of the Conference API self-study example.

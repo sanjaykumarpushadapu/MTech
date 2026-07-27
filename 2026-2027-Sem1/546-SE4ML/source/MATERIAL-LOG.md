@@ -41,6 +41,33 @@ Free online: https://mlip-cmu.github.io/book/ · CC BY-NC-ND.
 | 8 | Thinking like a Software Architect | 160–187 | S4–S6 |
 | 9 | Quality Attributes of ML Components | 188– | S4 |
 
+*(Later chapters — 10 Deploying a Model, 11 Automating the Pipeline, 14–19 Quality Assurance, 23–29 Responsible ML — map to S12, S13, S10–S11 and S14. Locate by heading when needed.)*
+
+## T2 · Nelson, *Software Engineering for Data Scientists* (O'Reilly 2024, 249 pp)
+
+Covers **546 sessions 7, 8 and 9** — the implementation and code-sharing block.
+
+| Ch | Title | PDF page | Session |
+|---|---|---|---|
+| 1 | What Is Good Code? | 20 | **S7** |
+| 2 | Analyzing Code (performance) | 30 | **S7** |
+| 3 | Using Data Structures | 50 | **S7** |
+| 4 | Object-Oriented Programming | 65 | **S8** |
+| 5 | Errors, Logging, and Debugging | 76 | **S8** |
+| 6 | Code Formatting, Linting | 90 | **S8** |
+| 7 | Testing Your Code | 103 | ✗ **OUT OF SCOPE** — S10 testing comes from T1 ch14–16 |
+| 8 | Design and Refactoring | 117 | **S9** |
+| 9 | Documentation | 131 | ✗ **OUT OF SCOPE** |
+| 10 | Sharing Your Code: Version Control | 146 | **S9** |
+| 11 | APIs | 163 | **S9** → `_shared/api-design.md`, **549 S1** |
+| 12 | Automation | 177 | ✗ **OUT OF SCOPE** — S13 comes from T1 ch11 |
+| 13 | Security | 190 | ✗ **OUT OF SCOPE** — S11 comes from T1 ch17–19 |
+| 14 | Working in Software Teams | 201 | ✗ **OUT OF SCOPE** |
+| 15 | Next Steps | 213 | ✗ **OUT OF SCOPE** |
+
+**Scope: the handout cites only T2 ch1–3 (S7), ch4–6 (S8) and ch8, 10, 11 (S9). Every other T2 chapter is out of the syllabus.**
+Topics that look like gaps are covered from the *other* textbook instead — testing and security come from **T1 ch14–19** at S10–S11, automation from **T1 ch11** at S13. So nothing is actually missing; T2 simply isn't the source for them.
+
 ## Where things live
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.

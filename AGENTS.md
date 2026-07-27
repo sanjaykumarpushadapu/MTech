@@ -39,6 +39,16 @@ Each master index reproduces this table. Its **Source** column *is* the handout'
 | A paper or public spec (ReAct, DPO, MCP spec, an Anthropic post) | **Fetch it directly** — these are public. Don't make the user upload them |
 | "Web Resources", "Lecture Notes", or blank | **There is no source behind the slides.** The deck and the recording are the entire syllabus for that session. Say so in the note, and treat missing material as unrecoverable rather than reconstructable |
 
+### The handout defines the syllabus boundary — uncited chapters are out of scope
+
+**A textbook chapter that the handout does not cite is not part of this semester.** Textbooks are written for their own purposes and always contain far more than a course uses. The Reference column is the boundary, not a suggestion.
+
+- **Never pull content from an uncited chapter into a session note.** Not as background, not as "useful context", not as a cross-reference that quietly imports its terminology.
+- **Never recommend reading one.** Extra reading is time taken from a semester that is already short, spent on material that cannot be examined.
+- **When mapping a book's chapters, mark the uncited ones explicitly as out of scope** so the map can't be misread later as a reading list.
+- The only legitimate uses of an uncited chapter: the user asks about it directly, or it's needed to *build a lab that the handout does prescribe*. In both cases say plainly that it's outside the syllabus.
+- Judging a chapter "relevant" is not sufficient grounds. Relevance is the instructor's call, already made, and recorded in the Reference column.
+
 **Per-subject reference profile — this semester:**
 
 - **546** — T1 (Kästner) and T2 (Nelson) chapters cover S1–S14. S15–S16 are lecture notes only.

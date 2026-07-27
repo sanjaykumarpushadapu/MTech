@@ -24,6 +24,11 @@ Legend: ✓ have · ✗ missing · — n/a
 | 15 |  |  |  |  | ☐ |
 | 16 |  |  |  |  | ☐ |
 
+
+## Scope rule
+
+521 cites **no textbook chapters** — every reference is a specific public paper or spec, listed per session in `521-master.md`. **The named paper is the scope.** Related work it cites, or later papers by the same authors, are out of the syllabus unless the handout names them.
+
 ## Where things live
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.

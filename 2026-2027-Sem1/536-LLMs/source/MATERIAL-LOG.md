@@ -24,6 +24,13 @@ Legend: ✓ have · ✗ missing · — n/a
 | 15 |  |  |  |  | ☐ |
 | 16 |  |  |  |  | ☐ |
 
+
+## Scope rule
+
+**Only the chapters named in the handout's Reference column are in the syllabus.** For 536 these are: T1 (Jurafsky & Martin) ch2, 7, 8, 10, 11 · T2 (Alammar) ch1, 2, 3, 6, 7, 8, 12 · R1 (Raschka) ch1, 2, 5, 7 · R2 ch7 · R3 ch6. **Every other chapter in those books is out of scope** — not background, not optional extra reading.
+
+Session 1's own slides make the same point internally: slides 61–69 are marked *"Extra slides (Not for exams)"*.
+
 ## Where things live
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.
