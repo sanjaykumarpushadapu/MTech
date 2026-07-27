@@ -121,7 +121,7 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 ## 3. HTTP APIs
 
-*Sources: slides 18–24*
+*Sources: slides 18–24 · transcript Q&A (status-code classes, endpoint anatomy)*
 
 **Intuition** — HTTP APIs are the standard way applications talk over the web, typically browser → server. Three components: **endpoint**, **request**, **response**.
 
@@ -134,6 +134,19 @@ flowchart LR
 
 **Endpoints** — simple URLs representing a collection of objects or a single object. Resources live on the server; each endpoint is a URL designed to perform **a single function**. The deck's phrasing is worth keeping: endpoints are the **"doors" or "paths"** through which a client sends requests.
 
+*A point a student got wrong in class, worth pinning down: an endpoint is **not** just the resource path — it is **host + resource path together**.* Its anatomy:
+
+```
+https://api.amazon.com/products/101
+└─┬──┘   └──────┬─────┘ └───┬────┘ └┬┘
+protocol      host       resource   id
+(HTTPS =    (the server)  (what you  (which one —
+ secure)                   want)      present only
+                                      for a single item)
+```
+
+The collection-vs-item split from §4 lives in that last segment: `/products` (no id) is the collection; `/products/101` (id present) is one item. Same host, same resource name — the presence of the id changes what you're addressing.
+
 **Requests** — every request begins by choosing an HTTP **method** (verb):
 
 | Method | Purpose |
@@ -143,12 +156,28 @@ flowchart LR
 | `PUT` | Update existing data |
 | `DELETE` | Delete data |
 
-**Responses** — data sent back after processing, formatted as **JSON or XML**, with a status code:
+**Responses** — data sent back after processing, formatted as **JSON or XML**, with a status code.
+
+**Read the first digit first.** Every status code falls into one of **five classes**, and the leading digit tells you the class before you know the exact code — the instructor drilled this, so learn the classes, not just the seven codes below:
+
+| Class | Meaning | You'll meet |
+|---|---|---|
+| **1xx** | **Informational** — request received, still working | `100 Continue`, `102 Processing` |
+| **2xx** | **Success** | `200 OK`, `201 Created` |
+| **3xx** | **Redirection** — resource is elsewhere; go there | `301`, `302`, `303` |
+| **4xx** | **Client error** — the request is wrong | `400`, `401`, `403`, `404` |
+| **5xx** | **Server error** — the server broke | `500` |
+
+The codes worth knowing by name:
 
 | Code | Meaning |
 |---|---|
+| **100 Continue** | Server got the headers, asks the client to send the request body |
 | **200 OK** | Successful; server returning the requested data |
 | **201 Created** | Request created a new resource |
+| **301 Moved Permanently** | Resource has a new URL for good (e.g. an old HTTP URL redirected to HTTPS) |
+| **302 Found** | Temporary redirect — resource is elsewhere *for now* |
+| **303 See Other** | After a POST, fetch the result with a `GET` at another URL (the "payment successful / order confirmed" page you land on after checkout) |
 | **400 Bad Request** | Client's request malformed or contains errors |
 | **401 Unauthorized** | Authentication credentials missing or invalid |
 | **403 Forbidden** | Client not allowed to access this resource |
@@ -156,6 +185,8 @@ flowchart LR
 | **500 Internal Server Error** | Unexpected server error |
 
 Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we don't know who you are*. 403 = *we know who you are and you still can't*.
+
+The **3xx family** trips people up because you rarely see it — the browser follows the redirect silently. But it's happening constantly: type an `http://` address and land on `https://` (that's a **301**); finish a checkout and get bounced to an order-confirmation page (that's a **303**). The lesson: a redirect is not an error — *"the work will not stop, but it has to look for another URL."*
 
 **Worked example — run this, it takes ten seconds:**
 
@@ -168,7 +199,8 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 **Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (§7).
 
 > **Closed-book card**
-> HTTP API components: **endpoint** (URL, one function, the "door"), **request** (method + endpoint), **response** (JSON/XML + status). Methods: **GET** retrieve · **POST** submit · **PUT** update · **DELETE** delete. Status: 200 OK · 201 Created · 400 Bad Request · 401 Unauthorized (*who are you?*) · 403 Forbidden (*known, still denied*) · 404 Not Found · 500 Internal Server Error.
+> HTTP API components: **endpoint** (URL = **host + resource path**, one function, the "door"), **request** (method + endpoint), **response** (JSON/XML + status). Methods: **GET** retrieve · **POST** submit · **PUT** update · **DELETE** delete.
+> Status **classes by first digit**: **1xx** informational · **2xx** success · **3xx** redirection · **4xx** client error · **5xx** server error. Codes: 200 OK · 201 Created · **301 Moved Permanently** (HTTP→HTTPS) · **303 See Other** (post-checkout confirmation) · 400 Bad Request · 401 Unauthorized (*who are you?*) · 403 Forbidden (*known, still denied*) · 404 Not Found · 500 Internal Server Error.
 
 ---
 
