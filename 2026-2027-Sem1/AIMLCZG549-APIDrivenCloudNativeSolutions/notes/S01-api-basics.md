@@ -184,6 +184,8 @@ The codes worth knowing by name:
 | **404 Not Found** | Requested resource does not exist |
 | **500 Internal Server Error** | Unexpected server error |
 
+*Which success code when (my clarity — the deck lists both but doesn't pair them to the method):* a `GET` that returns data → **200 OK**; a `POST` that creates a resource → **201 Created**. Both mean "it worked" — 201 adds "…and I made something new," which is why it's the natural reply to POST.
+
 Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we don't know who you are*. 403 = *we know who you are and you still can't*.
 
 The **3xx family** is invisible — the browser follows the redirect silently — but constant: type `http://` and land on `https://` (**301**); finish a checkout and get bounced to a confirmation page (**303**). A redirect is not an error — *"the work doesn't stop, it just looks for another URL."*
@@ -287,6 +289,8 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML ser
 - Each resource is identified by a **URI** (Uniform Resource Identifier).
 - Representations are **JSON or XML**.
 - HTTP methods map onto CRUD: `GET` read, `POST` create, `PUT` update, `DELETE` delete. POST/PUT/DELETE require suitable permissions.
+
+*The deck names REST as "stateless" but never unpacks it — and section 7 leans on the word again, so it's worth pinning down here (my clarity, drawn from R2's REST-vs-RPC point).* **Stateless** means every request carries everything the server needs to handle it — auth token, resource id, body — and the server keeps **no memory of the client between calls**. There is no server-side "session" that request 2 silently depends on from request 1; if the client needs continuity, the client resends the context. Why this earns REST its "mature and ubiquitous" benefit: if the server remembers nothing, **any server instance can answer any request**, so ten identical servers behind a load balancer just work — that's what lets REST scale horizontally. It's also the exact property RPC gives up (see section 7: *"REST is by definition stateless; with RPC state depends on the implementation"*), which is why RPC can be faster but more coupled.
 
 Same resource, two representations:
 
