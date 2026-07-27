@@ -1,7 +1,7 @@
 # 546 · Session 01 · Foundations of ML Systems Engineering
 
 Exam: **mid-sem (closed book)** | Date learned: ____ | Running example: **fraud detection**
-Assembled from: Session 1 slides (Dr. Prashant Vaish, 28 sl) · T1 Kästner ch1 & ch3 · R1 Tech Mahindra ADLC report
+Assembled from: Session 1 slides (Dr. Prashant Vaish, 28 sl, 15 images read) · T1 Kästner ch1 & ch3 · **R1 Tech Mahindra ADLC white paper (12 pp, read in full)**
 
 ## Topics
 
@@ -201,7 +201,69 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
 **Worked example** — Fraud detector under Waterfall: a 60-page spec, then discovering in UAT that the label definition was wrong, then a six-month delay. Under ADLC: AI drafts the spec, generates test data covering fraud edge cases, writes the deployment scripts — so "the label definition is wrong" → corrected and redeployed takes days.
 
-**Tradeoff / when NOT to use** — Read the Impact column downward: every stage reduces *human* dependence and increases *tooling* dependence. ADLC's stated benefit — "reduced dependence on human expertise" — is also its risk. Generated code, tests and specs need a human who can tell correct from plausible, and that judgment is exactly what atrophies when generation is automated. The report lists no ADLC challenges; read that as *unproven*, not *solved*.
+### What the report is actually about
+
+*The slide shows only the evolution table. The paper's real subject is different, and more useful for this course.*
+
+Its opening claim: **"the adoption levels are still far below expectations. Many organizations struggle to realize value by adopting AI in SDLC."** Not because the tools are bad — *"Does this mean these tools lack value? Absolutely not."* — but because **tool adoption is only one step**, and organizations ignore the rest of the ecosystem.
+
+**The example that makes the whole argument, and the one to memorise:**
+
+> A team adopts an **AI Pair Programming** tool. It *will* accelerate the coding phase. But it will **not** reduce overall time-to-market or TCO, **because the overall cycle remains unchanged.**
+
+Concretely: an Agile team on a 4-week iteration adds an AI pair programmer. Developer productivity rises. Nothing else improves — **unless the subsequent testing and deployment activities are also advanced**, shortening the release cycle at the same bandwidth. Only then does cost saving appear.
+
+*This is a local-optimisation trap, and it's the same shape as 546's central theme: improving one component doesn't improve the system. Compare §1 — Sidney's models were excellent and the business still failed.*
+
+### The five GenAI capabilities, and where they pay
+
+| Capability | What it does |
+|---|---|
+| **Generate** | Code, documentation, code explanation, requirements and design documents, test cases, test data |
+| **Recommend** | Analyse context and available options, **with reasoning** |
+| **Review** | Review human-generated artifacts and code |
+| **Summarize** | Consume large documents and code, produce concise artifacts |
+| **Knowledge Search** | Contextual search for high-quality matches |
+
+Claimed productivity improvement, by SDLC phase:
+
+| Phase | Up to | Example applications |
+|---|---|---|
+| **Requirement Analysis** | **20%** | Generate overview/glossary from BRDs; review requirement completeness; find information across documents |
+| **Design** | **15%** | Generate design options from BRDs; find similar designs for reuse; generate architecture/class/sequence diagrams |
+| **Build** | **30%** | Write code from natural-language instructions; AI-generated comments; faster, more accurate code reviews |
+| **Test** | **30%** | Generate test cases (document and code); review coverage against requirements; **generate synthetic test data** |
+
+*Note the shape: **Build and Test gain most (30%), Design least (15%)**. Design is judgment-heavy and hardest to automate — which is precisely why modules 2–3 of this course are about design and not about coding.*
+
+### Why adoption fails — four categories
+
+| Category | Representative failure |
+|---|---|
+| **Planning & Execution** | Narrow focus on tool adoption without holistic replanning; no training environment; poor infosec architecture; weak implementation partners |
+| **Technology** | Insufficient infrastructure investment; **uncontrolled LLM-on-cloud usage driving subscription costs that erode ROI**; leaders lacking technical depth to evaluate tools |
+| **Commercial** | Poor commercial structuring neutralising ROI |
+| **Stakeholder Management** | IT leaders fear **next year's budget cuts** because of this year's savings; inter-departmental barriers; **junior employees fear job loss** |
+
+That last row is worth pausing on. It's an *organisational* failure mode, not a technical one — the efficiency gain is real and gets resisted because of what it implies for budgets and jobs. The report's remedy is to **incentivise leaders for efficiency gains** rather than punish them with reduced budgets.
+
+### The four-stage adoption journey
+
+```mermaid
+flowchart LR
+    E["1 · EXPERIMENT<br/>find what fits<br/>POCs · security & legal vetting<br/>usage guidelines"]
+    O["2 · ONBOARD & PILOT<br/>license management<br/>training, hackathons<br/>establish KPIs, ROI, baseline"]
+    S["3 · SCALE & SOAR<br/>org-level rollout<br/>train champions<br/>publish success stories"]
+    Su["4 · SUSTAIN<br/>maintain >80% usage<br/>remove roadblocks<br/>continuous improvement"]
+    E --> O --> S --> Su
+    Su -.->|feedback| E
+```
+
+Two specifics worth carrying: **KPIs and a baseline must be established at the pilot stage** — you cannot demonstrate ROI without a before-measurement — and the sustain target is **at least 80% active utilisation**, monitored, with roadblocks actively removed.
+
+**Tradeoff / when NOT to use** — Read the Impact column downward: every stage reduces *human* dependence and increases *tooling* dependence. ADLC's stated benefit — "reduced dependence on human expertise" — is also its risk. Generated code, tests and specs need a human who can tell correct from plausible, and that judgment is exactly what atrophies when generation is automated. The report lists no ADLC challenges in its table; read that as *unproven*, not *solved* — and note that the rest of the paper is, in effect, thirteen pages of the challenges the table omits.
+
+**The deeper tradeoff, and the one an exam would reward:** the report's own evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
 
 > **Closed-book card**
 > Waterfall → Iterative → Agile → Scaled Agile → **ADLC** (Scaled Agile + AI infusion). Each rung: faster feedback, more coordination/tooling cost. Waterfall's killer = late defect discovery. ADLC = AI-assisted automation of *all* SDLC activities (docs, design, code, test cases, test data, scripts). Gains: faster TTM, consistent quality, less human dependence. Risk: that last "gain" is the danger — someone must still tell correct from plausible; report lists no challenges = unproven, not solved.

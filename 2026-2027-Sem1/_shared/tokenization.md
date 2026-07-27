@@ -1,7 +1,7 @@
 # Shared · Tokenization & BPE
 
 **Status:** ✅ written 26 Jul 2026
-**Written from:** 521 S1 deck · 536 S1 deck · HuggingFace LLM course ch6.5 (the source both decks copied)
+**Written from:** 521 S1 deck · 536 S1 deck · HuggingFace LLM course ch6.5 (the source both decks copied) · **T1 Jurafsky & Martin ch2 §2.4** · **T2 Alammar ch2**
 **Reused by:** 521 S11 (cost optimisation) · 536 S6 (serving economics)
 
 > 🔴 **Closed-book scope in BOTH subjects** — 521 mid-sem (L1–L8) and 536 mid-sem (S1–8). You must reproduce BPE by hand for two different exams, one day apart. Highest-value shared note of the semester.
@@ -9,6 +9,38 @@
 > **Both decks copied the same source.** 521 and 536 independently reproduce HuggingFace LLM course ch6.5 — identical corpus (`hug/pug/pun/bun/hugs`), identical merges, identical `mug`/`thug`/`unhug` exercises. Learn it once, here.
 
 ---
+
+## 0. Why tokenize at all
+
+*Source: J&M ch2 §2.4 — the framing neither deck gives*
+
+**Intuition** — Tokenization is *"the first stage of natural language processing: segmenting the running input text into tokens."* But why impose a fixed unit at all?
+
+**Two reasons, both examinable:**
+
+1. **Agreement and replicability.** A deterministic fixed set of units means different algorithms and systems can answer simple questions the same way — *How long is this text?* Is *don't* one token or two? Is *New York*? J&M: *"Standardizing is thus essential for replicability in NLP experiments,"* and **perplexity assumes a fixed tokenization** — you cannot compare perplexity across models with different tokenizers.
+2. **Eliminating unknown words.** Tokenizations that include sub-word units remove the OOV problem.
+
+**The unknown-word problem, stated precisely** — J&M's example is cleaner than "mug":
+
+> Training corpus contains **low**, **new**, **newer** — but not **lower**.
+> **lower** appears in the test corpus. A word-level system has no idea what it is.
+
+A subword tokenizer splits `lower` into pieces it has seen, and the model can still work with it.
+
+**Three candidates for the token unit, and why two fail:**
+
+| Unit | Problem |
+|---|---|
+| **Words** | Approximately the right level — consistent meanings — but **challenging to define formally** (*don't*? *New York*?) |
+| **Morphemes** | Also about the right level, same definitional difficulty |
+| **Characters** | **Clear to define, but too small** a unit |
+
+Hence the practical answer: a **data-driven** approach producing units *"about the size of morphemes or words, but occasionally as small as characters."*
+
+> **Closed-book card**
+> **Tokenization** = first stage of NLP; segmenting running text into tokens. Why: **(1) agreement/replicability** — fixed units let systems agree on "how long is this text", "is *don't* one token or two"; **perplexity assumes a fixed tokenization**. **(2) eliminates unknown words** — training has low/new/newer but not *lower*; word-level fails, subword doesn't.
+> Three candidate units: **words** (right level, hard to define formally) · **morphemes** (same) · **characters** (clear but too small). Answer: **data-driven** units ≈ morpheme/word size, occasionally down to characters.
 
 ## 1. Why subwords exist
 
@@ -104,9 +136,57 @@ Now `("h","ug")` is most frequent. Rule: **`("h","ug") → "hug"`** — first th
 Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 Corpus: `("hug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("hug","s",5)`
 
+### A second worked example — where BPE discovers a morpheme
+
+*J&M ch2. Worth doing because it shows what BPE is actually learning, which the hug/pug example doesn't.*
+
+Corpus (spaces shown as `_`, and **whitespace is attached to the start of a word**):
+
+```
+2  _n e w
+2  _r e n e w
+1  _s e t
+1  _r e s e t
+```
+Vocabulary: `_, e, n, r, s, t, w`
+
+| Merge | Pair | Count | New token |
+|---|---|---|---|
+| 1 | `n e` | 4 — in `_new` (2) + `_renew` (2) | `ne` |
+| 2 | `ne w` | 4 | `new` |
+| 3 | `_ r` | 3 | `_r` |
+| 4 | `_r e` | 3 | **`_re`** |
+
+> After merge 4 the system has **essentially induced that there is a word-initial prefix `re-`.**
+
+That's the point. Nobody told it about morphology; it fell out of counting. Continuing gives `_new`, `_renew`, `se`, `set`.
+
+**Why this matters:** those merges *"created knowledge of morphemes like the `re-` prefix, that might appear in perhaps unseen combinations like **revisit** or **rearrange**"*, and of `new` **without** an initial space — word-internal — which lets it handle unseen words like **anew**.
+
+### The algorithm as pseudocode
+
+```
+function BYTE-PAIR-ENCODING(strings C, number of merges k) returns vocab V
+    V ← all unique characters in C          # initial tokens are characters
+    for i = 1 to k do                       # merge k times
+        t_L, t_R ← most frequent pair of adjacent tokens in C
+        t_NEW   ← t_L + t_R                 # concatenate
+        V       ← V + t_NEW                 # update vocabulary
+        replace each occurrence of t_L, t_R in C with t_NEW
+    return V
+```
+
+**`k` is a parameter of the algorithm.** Final vocabulary = the original characters **plus k new symbols**. That's how you get to a target vocabulary size.
+
+### Merges never cross word boundaries
+
+The one practical complication J&M flags. The corpus is first separated at **whitespace and punctuation**, giving one string per word plus its count. **Counts come from the corpus, but merges are only allowed within a word.** And *"the white space is usually attached to the start of the word"* — which is exactly why GPT-2 tokenizes `sun` as `" sun"` with the space glued on (§6).
+
 ### Segmenting new words
 
 **Normalize → pre-tokenize → split into characters → apply merge rules *in learned order*.**
+
+J&M states the encoder rule precisely, and it's a common exam trap: the encoder *"runs on the test data the merges we learned from the training data. It runs them **greedily, in the order we learned them**."* — so **frequencies in the test data play no role whatsoever**. Only training frequencies ever mattered.
 
 | Word | Result | Why |
 |---|---|---|
@@ -123,7 +203,10 @@ Corpus: `("hug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("hug","s",5)`
 **Tradeoff / where BPE fails** — the `mug` case is the whole limitation: **character-level BPE has no fallback**. Any character missing from the base vocabulary becomes `[UNK]` and its meaning is destroyed. HuggingFace notes this is precisely why many NLP models handle emoji badly. Byte-level BPE (§6) fixes it.
 
 > **Closed-book card**
-> **BPE** (Sennrich 2016): pre-tokenize → word-freq dict → uni-character vocab → **merge most frequent adjacent pair** → repeat.
+> **BPE** (Sennrich et al. 2016; earlier Gage 1994): **two parts — a trainer and an encoder.** Trainer: pre-tokenize → word-freq dict → uni-character vocab → **merge most frequent adjacent pair** → repeat **k** times. Final vocab = characters **+ k new symbols**; **k is the parameter**.
+> **Merges never cross word boundaries** — corpus split at whitespace/punctuation first; **whitespace attached to the start of the word** (why GPT-2 emits `" sun"`).
+> **Encoder runs the learned merges greedily, in the order learned — test-data frequencies are irrelevant.**
+> J&M's example: `_new ×2, _renew ×2, _set, _reset` → merges `ne` → `new` → `_r` → **`_re`**, i.e. **BPE induces the `re-` prefix** and can then handle unseen *revisit*, *rearrange*, *anew*.
 > hug10/pug5/pun12/bun4/hugs5: **merge 1 = ("u","g") @20** (beats ("u","n") 16, ("h","u") 15) → **merge 2 = ("u","n") @16** (beats newly-available ("h","ug") @15 — *recount each step*) → **merge 3 = ("h","ug")**, first 3-letter token.
 > Segmenting: normalize → pre-tokenize → chars → merges **in order**. `bug`→[b,ug] · `mug`→**[UNK],ug** · `thug`→[UNK],hug · `unhug`→**[un,hug]**.
 > **+** rare words, smaller vocab, generalisation. **−** fragments complex morphology, weak semantics, **no fallback ⇒ [UNK] destroys meaning** (why models fail on emoji).
@@ -229,6 +312,44 @@ tiktoken BPE (Llama-3):
 
 ---
 
+## 6b. What determines a tokenizer's behaviour — three design choices
+
+*Source: T2 Alammar ch2, "Tokenizer Properties" — the design-level framing no other source gives*
+
+**Intuition** — §3–§6 covered *algorithms*. But two tokenizers using the same algorithm still behave differently. Alammar names **three groups of design choices** that determine the result:
+
+**① Tokenization method** — BPE, unigram LM, WordPiece (§3). The algorithm for choosing which tokens represent a dataset.
+
+**② Tokenizer parameters** — what the designer decides after picking a method:
+
+| Parameter | The decision |
+|---|---|
+| **Vocabulary size** | How many tokens to keep. **30K and 50K are common; increasingly 100K+** |
+| **Special tokens** | Which markers the model tracks: **beginning-of-text (`<s>`), end-of-text, padding, unknown, CLS, masking** — plus domain-specific ones (Galactica adds `<work>`, `[START_REF]`) |
+| **Capitalization** | Lowercase everything, or not? *"Name capitalization often carries useful information, but do we want to waste token vocabulary space on all-caps versions of words?"* |
+
+**③ The domain of the training data** — *"Even if we select the same method and parameters, tokenizer behavior will be different based on the dataset it was trained on."* The methods optimise a vocabulary **to represent a specific dataset**, so a tokenizer trained on prose behaves differently on code and on multilingual text.
+
+**Worked example — why code models need their own tokenizer.** A text-focused tokenizer splits indentation into separate space tokens:
+
+```
+def add_numbers(a, b):
+...."""Add the two numbers `a` and `b`."""
+....return a + b
+```
+
+Every run of four spaces becomes multiple tokens, wasting context and forcing the model to learn that "four spaces" is one meaningful unit. **Code-focused models make different choices** — treating an indentation run as a single token — which *"makes the model's job easier and thus its performance has a higher probability of improving."*
+
+*This is the mechanism behind the Llama-3 switch in §6: it's not that tiktoken is a better algorithm, it's that byte-level plus regex pre-splitting produces a better compression ratio on **English and code specifically** — a domain choice.*
+
+**Tradeoff / the design decision in one line** — every parameter trades **vocabulary space against sequence length**. Keeping all-caps variants costs vocabulary entries; dropping them loses information that names carry. Adding domain-specific special tokens costs entries but saves many tokens per document in that domain. **There's no universally correct tokenizer — only one fitted to a corpus and a use case.**
+
+> **Closed-book card**
+> Three design choices determine tokenizer behaviour: **① method** (BPE / unigram / WordPiece) · **② parameters** — **vocabulary size** (30K, 50K common; 100K+ increasingly), **special tokens** (begin `<s>`, end-of-text, padding, unknown, CLS, masking, + domain-specific), **capitalization** (lowercase everything? costs vocab space vs loses name information) · **③ domain of the training data** — same method + parameters, different corpus, different behaviour.
+> Example: text tokenizers split code indentation into many space tokens; **code-focused models tokenize an indentation run as one token**. No universally correct tokenizer — only one fitted to a corpus.
+
+---
+
 ## 7. Token economics — 521's angle
 
 Why tokenization is a *conversational AI* topic, not just an NLP one:
@@ -299,7 +420,9 @@ for name in ["gpt2", "meta-llama/Llama-2-7b-hf", "meta-llama/Meta-Llama-3-8B"]:
 
 Then add 521's cost layer: multiply token counts by current per-token pricing and reproduce the $100–300/day figure.
 
-## Source
+## Sources
 
+**T2 Alammar ch2** (PDF p59–79) — tokenizer design choices, tokenizer comparison, token types.
+**T1 Jurafsky & Martin ch2 §2.4** (PDF p21–25) — the definitional treatment: why tokenize, the trainer/encoder split, pseudocode, the `re-` morpheme example, the greedy-encoder rule.
 HuggingFace LLM course ch6.5 — https://huggingface.co/learn/llm-course/en/chapter6/5
 Cited directly on 536's reference slide 60; 521 uses the same corpus and exercises without citing it.

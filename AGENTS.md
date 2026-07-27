@@ -104,6 +104,30 @@ The user uploads material session by session and says **subject, session number,
 
 **Auto-generated transcripts are noisy.** Technical terms come through mangled (`RoPE` → "rope", `SwiGLU` → "swiglue", `GQA` → "GQ A"). Reconcile against the slides, which have the correct spellings, and silently use the correct term in the note. Do not ask the user to clean transcripts first.
 
+### Add your own clarity — within the scope the handout sets
+
+The sources define **what** is examinable. They are often poor at making it **understood**. Closing that gap is part of the job, not a liberty.
+
+**Do add, freely:**
+
+- **A clearer explanation** when the source's is compressed, circular or assumes something the reader doesn't have. Slides especially are written to be spoken over, so they routinely state a conclusion without the reasoning.
+- **A better worked example** when the source's is missing, abstract, or doesn't expose the mechanism. Prefer concrete numbers over prose every time.
+- **The tradeoff line**, which sources very often omit. If neither deck nor textbook says when *not* to use something, work it out and say so — that line is where exam marks concentrate.
+- **A connection the sources don't draw** — between two topics in one session, between two subjects, or between a mechanism and the cost it implies.
+- **The trap.** If a step is easy to get wrong (BPE merge 2 looks obvious and isn't; embedding row 5 is the sixth row), say so explicitly.
+- **A diagram** where the source has only prose, per the Mermaid rules above.
+
+**Never add:**
+
+- **New topics.** Clarity operates *inside* the handout's scope; it never widens it. Explaining RoPE better in 536 S3 is right; introducing ALiBi because it's related is not.
+- **Terminology the course doesn't use.** Explain in the instructor's vocabulary. A better word that appears in no exam paper is a worse word.
+- **Silent invention.** If a fact isn't in a source, it is your reasoning — mark it, or make it visibly an explanation rather than a citation. Never let an addition read as though the instructor said it.
+- **Depth beyond the exam.** A derivation the exam will never ask for is time taken from one it will.
+
+**Mark clearly-added material** with a light touch — an italic aside like *"Not in the deck — this is R2 ch1"*, or *"the deck doesn't say why; here's the reason"*. The reader should always be able to tell what came from the course and what came from you, because in a disagreement with an instructor, only the course's version scores.
+
+**The test:** would this addition help someone reproduce the concept, under time pressure, without notes? If yes, add it. If it would only impress, cut it.
+
 ### Organise by topic, never by source
 
 **This is the most important rule in this file.** A note is one person's notebook on a topic, assembled from wherever the information happened to come from. It is not a set of source summaries stacked together.

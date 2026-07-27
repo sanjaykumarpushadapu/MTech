@@ -48,9 +48,19 @@ Free online: https://mlip-cmu.github.io/book/ · CC BY-NC-ND.
 ## R1 · Tech Mahindra, *Moving from SDLC to ADLC* — **S1, S15**
 
 Landing page: https://www.techmahindra.com/insights/whitepapers/moving-sdlc-ai-driven-software-development-lifecycle-adlc-generate-value/
-PDF: `https://insights.techmahindra.com/assets/sdlc-to-adlc.pdf` — ⚠️ **fetch timed out**; download manually if wanted.
+PDF: `sdlc-to-adlc.pdf` (12 pp) — ✅ **read in full**.
 
-**Not blocking.** Slide 19 reproduces the report's core table in full (Waterfall → Iterative → Agile → Scaled Agile → ADLC, with Features / Challenges / Impact for each), and that table is in `notes/S01-foundations.md` §4. The report would add narrative, not new examinable content.
+**Correction to an earlier assumption:** I had guessed the report would "add narrative, not new examinable content." Wrong. Slide 19 reproduces only §1 of five sections. The other four contain the paper's actual argument:
+
+| § | Content | Where it landed |
+|---|---|---|
+| 1 | Evolution of SDLC — the table on slide 19 | S1 §4 |
+| 2 | **Opportunities from AI/GenAI** — five capabilities (Generate, Recommend, Review, Summarize, Knowledge Search); productivity gains by phase (Requirements 20%, Design 15%, Build 30%, Test 30%) | S1 §4 |
+| 3 | **Why adoption fails** — Planning & Execution, Technology, Commercial, Stakeholder Management; the **AI Pair Programming** example | S1 §4 |
+| 4 | **Four-stage adoption journey** — Experiment → Onboard & Pilot → Scale & Soar → Sustain (>80% usage) | S1 §4 |
+| 5 | Benefits and key influencing factors | — |
+
+Also relevant to **S15** (ADLC phases in detail), which is lecture-notes-only in the handout — so this paper is the closest thing to a source for that session.
 
 ## T2 · Nelson, *Software Engineering for Data Scientists* (O'Reilly 2024, 249 pp)
 
