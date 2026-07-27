@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | ✓ **R2 ch1 read** | ✗ | ✗ | ✅ `notes/S01-api-basics.md` (slides + R2) |
+| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | ✓ **R2 ch1 read** | ✓ Teams | ✅ `transcripts/S01-transcript-cleaned.md` | ✅ `notes/S01-api-basics.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |

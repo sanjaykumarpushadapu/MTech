@@ -32,7 +32,7 @@ One view across all four subjects. Update the same weekend the session happens.
 | S | Topic | Deck | Note | Card | Open | Lab |
 |---|---|---|---|---|---|---|
 | 0 | **Python self-study** | ☐ | ☐ | — | — | — |
-| 1 | API basics & OpenAPI | ✅ | ✅ | ✅ | ☐ | — |
+| 1 | API basics & OpenAPI | ✅ | ✅ | ✅ | ☐ | — · *transcript ✅* |
 | 2 | Cloud-native concepts | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 3 | CNCF ecosystem, containers, K8s | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 4 | Data science & ML lifecycle | ☐ | ☐ | ☐ | ☐ | ☐ |
@@ -114,7 +114,7 @@ One view across all four subjects. Update the same weekend the session happens.
 | 549 Python self-study complete | ☐ |
 | Running example chosen for 546 (fraud detection) | ✅ |
 | Transcript workflow confirmed working | ✅ **26 Jul — 536 S1 Teams transcript processed** |
-| **EC-1: 536 ✅ · 546 ✅ (Asgn I BEFORE mid-sem; quiz just before mid-sem)** · 549, 521 ☐ | ☐ |
+| **EC-1 confirmed: 536 ✅ · 546 ✅ · 549 ✅ · 521 ⚠️ (not stated aloud — ask on Canvas)** | ✅ 3 of 4 |
 | Quizzes ×4 taken (by 20 Aug) | ☐ |
 | Crunch deliverables submitted (7 Sep) | ☐ |
 | Mid-sems done (20 Sep) | ☐ |

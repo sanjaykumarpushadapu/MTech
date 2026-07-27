@@ -22,9 +22,9 @@ Weekends = 4 contact sessions (2h each) + a 2–3h lab block. Weekdays = 1h per 
 |---|---|---|---|
 | **P0 · Pre-semester** | now → 31 Jul | 549 Python self-study, repo + tooling setup | Only thing genuinely due before classes |
 | **P1 · Ramp** | 1–9 Aug | Sessions 1–2. Establish the weekly loop | Habit > content. Get the loop working |
-| **P2 · Quiz window** | 10–20 Aug | 4 quizzes, 5–10% each | Cheap marks. Light skim, don't over-invest |
+| **P2 · Quiz window** | 10–20 Aug | ⚠️ **Only 549 (+ maybe 521).** 536 has no quiz; 546's is in September | **Lighter than planned** — use freed evenings for `_shared/` notes |
 | **P3 · First crunch** | 27 Aug – 7 Sep | 549 project 30% + 536 assignment 30% + 546 situated learning 5% | **Three** deliverables in one window. Start day 1 |
-| **P4 · Mid-sem run-up** | 8–18 Sep | Sessions 1–8 consolidation, closed-book | Cards only. No new material after 13 Sep |
+| **P4 · Mid-sem run-up** | 8–18 Sep | Sessions 1–8 consolidation **+ 🔴 546 Assignment I (10%) lands here** | Contested, not clear. 536 & 521 mid-sems cover **7** sessions, not 8 |
 | **P5 · Mid-sems** | 19–20 Sep | 546 Sat EN · 549 FN + 536 EN Sun · 521 in window | Closed book, sessions 1–8 |
 | **P6 · Second half** | 26 Sep – 14 Nov | Sessions 9–16 | Open-book pages, not cards. **Rolling revision of S1–8 starts in October** |
 | **P7 · 546 assignments** | 29 Oct – 11 Nov | 546 Asgn I & II, 20% | Overlaps sessions 14–15. Plan the collision |
@@ -103,7 +103,7 @@ Weekend = contact session number. Sessions 1–8 are mid-sem scope (closed book)
 |---|---|---|---|---|
 | 1 | **1–2 Aug** | S1 all four | 536 S1 foundations & tokenization · 549 S1 API basics · 521 L1 agentic systems · 546 S1 foundations — **choose the running example now**. **Sun block: 536 Lab 1 + 521 Lab 1, both tokenization — do them together, one sitting** | — |
 | 2 | **8–9 Aug** | S2 | 549 cloud-native evolution · 521 L2 embeddings/HNSW/BM25+RRF · start `_shared/retrieval.md` · **Sun block: 521 Lab 2** | **Quiz window opens 10 Aug** |
-| 3 | **15–16 Aug** | S3 | Quizzes: 1 evening each, light skim of S1–S2 first. 521 L3 model landscape ↔ 536 quantization — **write `_shared/quantization.md` once, use twice** · **Sun block: 521 Lab 3 hybrid search** | Quizzes (all 4) by 20 Aug |
+| 3 | **15–16 Aug** | S3 | Quizzes: **549 only** (536 has none, 546's is in Sep) — one evening, light skim of S1–S2 first. 521 L3 model landscape ↔ 536 quantization — **write `_shared/quantization.md` once, use twice** · **Sun block: 521 Lab 3 hybrid search** | Quizzes (all 4) by 20 Aug |
 | 4 | **22–23 Aug** | S4 | 549 DS/ML intro ↔ 546 ML lifecycle — same content, one note. 521 L4 ReAct + function calling · **Sun block: 546 Lab 2 GR4ML** | Watch for project/assignment briefs |
 | 5 | **29–30 Aug** | S5 | **Crunch begins.** 549 project + 536 assignment + 546 situated learning all live. Weekday hours *and* the Sun block go to deliverables; notes drop to bare concept lists — **except 549, whose slides+recording must still be collected (no textbook exists for S4 onward)**. Do 546 situated learning (5%, 3 days) first and clear it | 549 project · 536 assignment · 546 situated learning all open 27 Aug |
 
@@ -165,20 +165,46 @@ Weekend = contact session number. Sessions 1–8 are mid-sem scope (closed book)
 
 ⚠️ **521 has no published dates** — quizzes and both assignments are "announced in class or on Canvas," with **strictly no makeups**. Check Canvas every Wednesday. This is the highest-risk item in the semester and it's a calendar risk, not a knowledge risk.
 
-### 🔴 Every subject's session-1 slides contradict its own handout on EC-1
+### ✅ EC-1 resolved from the session-1 recordings — the handouts were wrong
 
-Discovered while writing the session-1 notes. **The dates in the table above are the handout's; three of four instructors have said something different in class.** Until Taxila/Canvas confirms, treat the EC-1 rows as provisional.
+Three of four instructors stated EC-1 aloud in their first session. **Where handout and instructor disagree, the instructor wins.**
 
-| Subject | Handout says | Session-1 slides say | Effect on this plan |
+| Subject | Handout said | **Actual, from the recording** |
+|---|---|---|
+| **536** | Quiz 5% + Assignment 30% | ❌ **No quizzes at all.** EC-1 = **35%, two GROUP assignments** forming one end-to-end project. Must run on the **BITS remote lab, not your laptop** |
+| **546** | Quiz 10–20 Aug; Assignments I & II both 29 Oct–11 Nov | 🔴 **Assignment I (10%) is BEFORE the mid-sem.** Quiz is **15 min, 15–20 questions, "just before the mid sem"** — *not* in the August window. Individual-vs-team **still undecided** |
+| **549** | Quiz 5% + Project/Assignment 30% | ✅ **Quiz 5% + TWO assignments at 15% each = 35%.** No dates announced yet |
+| **521** | Quiz ×3 best-of-2 10% + Assignments 20% | ⚠️ **Still unresolved** — she said *"let us discuss in the slides"* and moved on without stating numbers. **Ask on Canvas** |
+
+### 🔴 Three changes this forces on the calendar
+
+**1. The August quiz window is nearly empty.** The plan has "4 quizzes, 10–20 Aug" as phase P2. In fact **536 has no quiz at all**, and **546's quiz is in September, just before the mid-sem**. Only 549 and possibly 521 have anything in that window — and 549's date isn't announced. **P2 is now a light phase, not a busy one.** Use the freed evenings for the shared notes.
+
+**2. A 10% deliverable lands inside the mid-sem run-up.** 546's Assignment I falls before 19 Sep with a **two-week** completion window — i.e. somewhere in early-to-mid September, exactly where the plan assumed clear air for closed-book revision. **Treat 8–18 Sep as contested, not clear.**
+
+**3. Mid-sem scope is smaller than the handouts imply.** **536 session 8 and 521 session 8 are both revision sessions** — the instructors said so. So those two closed-book papers cover **seven** sessions of new material, not eight. 546's instructor: *"the mid sem happens after session 7 or session 8."*
+
+### Lab environments — confirmed, and they differ per subject
+
+| Subject | Environment | From when | Cost |
 |---|---|---|---|
-| **546** | Situated learning 27 Aug–7 Sep; Assignments I & II both 29 Oct–11 Nov | Situated learning **after** mid-term; **Assignment I (10%) before mid-term** | Would put a graded deliverable inside the 8–18 Sep mid-sem run-up, which this plan treats as clear |
-| **549** | One Project/Assignment, **30%**, 27 Aug–7 Sep | **Two mini-projects, 15% each**, no dates given | Crunch may be one submission or two; if spread, the crunch is lighter than modelled |
-| **536** | Quiz 5% + Assignment 30% | **No quiz; "Assignments 35%"**, plan promised in week 2 | Quiz window (10–20 Aug) may have nothing in it for 536 |
-| **521** | Quiz ×3 (best 2) 10% + Assignments 20% | *(no session-1 deck yet)* | Unknown |
+| **536** | 🔴 **BITS remote lab — mandatory for assignments.** *"In laptop, no."* Colab only for very small models | manual to be shared | free |
+| **546** | **Virtual lab** for all demos and coding; **AWS Console Lab** from ~sessions 13–14 | virtual lab after session 2 | 💰 **both free — "not chargeable"** |
+| **521** | **Local**: Ollama + `llama3` on your own machine, plus a free Tavily key | now — notebooks already issued | free |
+| **549** | not stated | — | — |
 
-Individually these look like slide sloppiness. Together they're a pattern: **the handouts are the older document, and each instructor is varying EC-1 independently.** The 536 handout permits it explicitly — *"EC-1 consists of either two Assignments or three Quizzes."*
+*Set up 536's remote lab access and 521's Ollama before the crunch, not during it.*
 
-**Action, week 1:** one email per subject asking for EC-1 dates. Until answered, the 27 Aug – 7 Sep crunch load is uncertain in both directions, and that uncertainty is the single biggest source of error in this calendar.
+### Where material actually lives — it differs by subject
+
+| Subject | Materials | Announcements & assignments |
+|---|---|---|
+| 536 | MS Teams | Taxila |
+| 546 | MS Teams + Taxila | **Taxila** — *"everything will be on Taxila only"* |
+| 549 | **MS Teams** — handout, per-session deck, **and the session's code**, in the shared folder | MS Teams |
+| 521 | — | **Canvas** |
+
+**Three different portals.** Check Taxila, Teams and Canvas — not one of them.
 
 ---
 

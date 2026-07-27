@@ -7,13 +7,39 @@
 
 ## Evaluation
 
-| EC | Component | Type | Weight | Date |
+| EC | Component | Marks | Type | When — ✅ **confirmed in the S1 recording** |
 |---|---|---|---|---|
-| EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 (3 days) |
-| EC-1 | **Situated Learning** | Online | 5% | **27 Aug – 7 Sep 2026** ⚠️ handout says this window; **slide 11 says "after mid-term"** — verify on Taxila |
-| EC-1 | Assignment I & II | Online | 20% (10+10) | 29 Oct – 11 Nov 2026 ⚠️ **slide 11 says Assignment I is *before* mid-term** — verify on Taxila |
-| EC-2 | Mid-semester test | **Closed book** | 30% | **19 Sep 2026 (EN)**, 2h |
-| EC-3 | Comprehensive exam | Open book | 40% | **5 Dec 2026 (EN)**, 2½h |
+| **EC-1** | Quiz + Situated Learning + Assignment I + Assignment II | **30** | Online | see below |
+| EC-1 · Quiz | **15–20 questions, ~15 minutes** | 5 | Online | 🔴 **"just before the mid sem"** — *not* 10–20 Aug as the handout says. Covers concepts up to session 8 |
+| EC-1 · Situated Learning | ⚠️ *"we are still working on the situated learning part… I'll explain later once it's finalised"* | 5 | Online | **undecided** |
+| EC-1 · **Assignment I** | 🔴 **BEFORE the mid-sem** | 10 | Online | **2 weeks** to complete |
+| EC-1 · Assignment II | After the mid-sem | 10 | Online | 2 weeks |
+| **EC-2** | Mid-semester test | **30** | **Closed book**, 2h | **19 Sep 2026 (EN)** — *"the mid sem happens after session 7 or session 8"* |
+| **EC-3** | Comprehensive exam | **40** | Open book, 2–2½h | **5 Dec 2026 (EN)** |
+
+✅ **EC-1 RESOLVED from the session-1 recording.** *"Assignment one and assignment two — one will happen before the mid sem, another one will happen after the mid sem."* **The slide was right and the handout was wrong.** Marks confirmed: EC-1 30, EC-2 30, EC-3 40.
+
+🔴 **Two changes to the study plan:**
+
+1. **Assignment I (10%) lands before 19 Sep** — inside the mid-sem run-up the plan treated as clear.
+2. **The quiz is NOT in the 10–20 Aug window.** It's *"15 minutes just before the mid sem"*, covering sessions up to 8. So 546 has nothing due in the August quiz window.
+
+⚠️ **Still undecided:** whether assignments are **individual or team**. *"It may be individual perspective, or it may be a team perspective… still not decided."* He's leaning team, because *"many people are not from an industry background, so it's our job to make sure they upgrade themselves."*
+
+**Open-book exam rules — stated precisely, and they matter for the December binding plan:**
+
+> You may take **watermarked PPT printouts**, plus the **T1 and T2 books** — printouts allowed. Attend at the exam centre or online.
+
+*So printed, watermarked slide decks are explicitly permitted. Confirm whether your own typed notes count before relying on them.*
+
+**Lab environment:**
+
+- **Virtual lab** — enabled *"after the second session"*, roughly sessions 2–3 onward. All demos, Python coding and practice labs run there.
+- **AWS Console Lab** — from around **sessions 13–14**, for production deployment.
+- 💰 **Both free of cost.** *"Whatever runs inside that virtual lab or AWS site will be charged — not chargeable."* Do the work inside the labs; nothing is billed to you.
+- **FastAPI** was chosen for the labs — *"looking at the limitations of the virtual lab or virtual machines, FastAPI looks best for us as of now."*
+
+**Everything is on Taxila** — course materials, announcements, assignments. PPTs and handout also on MS Teams.
 
 ## Session index
 

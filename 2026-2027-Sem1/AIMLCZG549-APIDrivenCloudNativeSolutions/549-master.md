@@ -7,12 +7,22 @@
 
 ## Evaluation
 
-| EC | Component | Type | Weight | Date |
+| EC | Component | Weight | Type | Date |
 |---|---|---|---|---|
-| EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 |
-| EC-1 | Project / Assignment | Online | **30%** | 27 Aug – 7 Sep 2026 ⚠️ **Lecture 1 slide 9 splits this into Mini Project I (15%) + Mini Project II (15%), dates unstated** — confirm on Taxila |
-| EC-2 | Mid-semester test | **Closed book** | 30% | **20 Sep 2026 (FN)**, 2h |
-| EC-3 | Comprehensive exam | Open book | 35% | **6 Dec 2026 (FN)**, 2½h |
+| EC-1 · Quiz ×1 | | **5%** | Online | ⚠️ *"duration, date, session — will let you know before itself"* — **not yet announced** |
+| EC-1 · **Assignment/Mini-Project I** | | **15%** | Online | not yet announced |
+| EC-1 · **Assignment/Mini-Project II** | | **15%** | Online | not yet announced |
+| **EC-1 total** | | **35%** | | |
+| **EC-2** | Mid-semester test | **30%** | **Closed book**, 2h | **20 Sep 2026 (FN)** · scope **contact sessions 1–8** |
+| **EC-3** | Comprehensive exam | **35%** | Open book, 2½h | **6 Dec 2026 (FN)** · scope **all topics, 1–16** |
+
+✅ **EC-1 RESOLVED from the session-1 recording.** *"You will have one quiz and two assignments… one is 15, other is also 15… so this will basically cover 35."* **The slide was right** — the handout's single "Project/Assignment 30%" is actually **two 15% assignments plus a 5% quiz**.
+
+**Her own framing, worth noting:** *"It's a bit different from other courses, where your EC-1 will cover most — a big portion — compared to EC-2 and EC-3. EC-2 is 30 and EC-3 open book is 35%, **instead of 40**."* So 549 weights continuous assessment more heavily and its comprehensive less, relative to 546 and 521.
+
+⚠️ **No dates announced yet for any EC-1 component.** Watch Teams.
+
+**Everything lives in MS Teams** — *"I upload everything in MS Teams. I'll create a folder, and in the course materials everything will be uploaded — the handout, the deck for that particular session, and whatever code will be used for that session."* **Including the code.** Check the shared folder after every session.
 
 ## Session index
 
