@@ -1,30 +1,305 @@
 # Shared · Tokenization & BPE
 
-**Status:** ☐ not started
-**Written from:** 521 S1 + 536 S1 — **both taught it in session 1**
-**Reused by:** 521 L11 (cost), 536 S6 (serving economics)
-**Target date:** 2 Aug 2026
+**Status:** ✅ written 26 Jul 2026
+**Written from:** 521 S1 deck · 536 S1 deck · HuggingFace LLM course ch6.5 (the source both decks copied)
+**Reused by:** 521 S11 (cost optimisation) · 536 S6 (serving economics)
 
-> ⚠️ **Closed-book scope in BOTH subjects** (521 mid-sem L1–L8, 536 mid-sem S1–8). You must be able to reproduce BPE by hand for two different exams. Highest-value shared note of the semester after `rag.md`.
+> 🔴 **Closed-book scope in BOTH subjects** — 521 mid-sem (L1–L8) and 536 mid-sem (S1–8). You must reproduce BPE by hand for two different exams, one day apart. Highest-value shared note of the semester.
 
-## Concepts
+> **Both decks copied the same source.** 521 and 536 independently reproduce HuggingFace LLM course ch6.5 — identical corpus (`hug/pug/pun/bun/hugs`), identical merges, identical `mug`/`thug`/`unhug` exercises. Learn it once, here.
 
-- Why subwords · token types (word / subword / byte) · BPE · SentencePiece · tiktoken · WordPiece · token economics
+---
+
+## 1. Why subwords exist
+
+**Intuition** — BPE sits in the **"Goldilocks" zone** between two failing extremes.
+
+| Approach | Failure |
+|---|---|
+| **Character-based** | Sequences too long, little meaning per token |
+| **Word-based** | Huge vocabulary, and **fails on any word unseen in training** |
+| **Subword** | Common words get their own token; rare words split into known pieces |
+
+Worst case, a word splits into as many subwords as it has characters.
+
+```
+hat, learn          →  common words, one token each
+taa##aaa##sty       →  variations
+la##ern##           →  misspellings
+Transformer##ify    →  novel items
+```
+
+Word tokens fail two ways: they cannot handle words entering after the tokenizer was trained, and they waste vocabulary on near-duplicates — *apology, apologize, apologetic, apologist* become four unrelated entries.
+
+> **Closed-book card**
+> Subword tokenization = **Goldilocks zone**. Character-based → sequences too long, little meaning. Word-based → huge vocab, fails on unseen words, wastes entries on near-duplicates (apology/apologize/apologetic/apologist). Subword → frequent words own token, rare words split; worst case one token per character.
+
+---
+
+## 2. Three token types
+
+| Type | Vocabulary | New words? | Sequence length | Used by |
+|---|---|---|---|---|
+| **Word** (word2vec) | One entry per word | ❌ | Shortest | Legacy |
+| **Subword** | Learned pieces | ✅ splits them | Middle | Everything modern |
+| **Byte** | **256 UTF-8 bytes**, 1 token = 1 byte | ✅ never any OOV | Longest | **ByT5, CANINE** (tokenizer-free) |
+
+Byte example: `"Apple"` → `[65][112][112][108][101]` = **5 tokens**.
+
+> **Closed-book card**
+> **Word**: one per word, can't handle new words, near-duplicate waste. **Subword**: splits unknowns into known pieces — the standard. **Byte**: vocab = **256 UTF-8 bytes**, 1 token = 1 byte, **no OOV ever**, very long sequences ("Apple" = 5 tokens). Tokenizer-free: **ByT5, CANINE**.
+
+---
+
+## 3. The three subword algorithms
+
+All three share the same two-part structure — **definitional and examinable**:
+
+1. **Token learner** — corpus → vocabulary
+2. **Token segmenter** — sentence → tokens, using that vocabulary
+
+| Algorithm | Origin | Merge criterion |
+|---|---|---|
+| **BPE** | Sennrich et al., 2016 | **Most frequent** adjacent pair |
+| **Unigram LM** | Kudo, 2018 | Probabilistic — Viterbi over candidate segmentations |
+| **WordPiece** | Schuster & Nakajima, 2012 | **Highest score** = pair freq ÷ (freq a × freq b) |
+
+Vocabulary is built **dynamically**: frequent words get their own tokens, rare words get split.
+
+---
+
+## 4. BPE — the worked example, reproducible by hand
+
+**Algorithm:** ① pre-tokenize into words ② build a **word-frequency dictionary** ③ start from a **uni-character** vocabulary ④ repeatedly **merge the most frequent adjacent pair** until target size.
+
+**Corpus:** `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
+**Base vocabulary:** `["b", "g", "h", "n", "p", "s", "u"]`
+**Initial split:** `("h","u","g",10) ("p","u","g",5) ("p","u","n",12) ("b","u","n",4) ("h","u","g","s",5)`
+
+### Merge 1 — count every adjacent pair
+
+| Pair | Appears in | Total |
+|---|---|---|
+| **("u","g")** | hug 10 + pug 5 + hugs 5 | **20** ✅ |
+| ("u","n") | pun 12 + bun 4 | 16 |
+| ("h","u") | hug 10 + hugs 5 | 15 |
+
+Rule: **`("u","g") → "ug"`**
+Vocabulary: `[b, g, h, n, p, s, u, ug]`
+Corpus: `("h","ug",10) ("p","ug",5) ("p","u","n",12) ("b","u","n",4) ("h","ug","s",5)`
+
+### Merge 2 — the trap
+
+`("h","ug")` has just become available at **15** and looks like the obvious next merge. It isn't — **`("u","n")` is at 16** and wins.
+
+Rule: **`("u","n") → "un"`**
+Vocabulary: `[b, g, h, n, p, s, u, ug, un]`
+Corpus: `("h","ug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("h","ug","s",5)`
+
+⚠️ **Recount every pair at every step.** Merging changes other pairs' counts, so the previous ranking is stale.
+
+### Merge 3
+
+Now `("h","ug")` is most frequent. Rule: **`("h","ug") → "hug"`** — first three-letter token.
+Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
+Corpus: `("hug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("hug","s",5)`
+
+### Segmenting new words
+
+**Normalize → pre-tokenize → split into characters → apply merge rules *in learned order*.**
+
+| Word | Result | Why |
+|---|---|---|
+| `bug` | `["b", "ug"]` | both in vocabulary |
+| `mug` | **`["[UNK]", "ug"]`** | **"m" was never in the base vocabulary** |
+| `thug` | `["[UNK]", "hug"]` | "t" not in base vocab; then u+g, then h+ug |
+| `unhug` | **`["un", "hug"]`** | `u n h u g` → ug → `u n h ug` → un → `un h ug` → hug → **`un hug`**. All chars in base vocab, no `[UNK]` |
+
+*(`unhug` is the exercise both decks set and neither answers.)*
+
+**Advantages** — efficient handling of rare words; reduced vocabulary size; better generalisation.
+**Limitations** — **fragments morphologically complex languages**; **may not capture semantic meaning** as well as other methods.
+
+**Tradeoff / where BPE fails** — the `mug` case is the whole limitation: **character-level BPE has no fallback**. Any character missing from the base vocabulary becomes `[UNK]` and its meaning is destroyed. HuggingFace notes this is precisely why many NLP models handle emoji badly. Byte-level BPE (§6) fixes it.
+
+> **Closed-book card**
+> **BPE** (Sennrich 2016): pre-tokenize → word-freq dict → uni-character vocab → **merge most frequent adjacent pair** → repeat.
+> hug10/pug5/pun12/bun4/hugs5: **merge 1 = ("u","g") @20** (beats ("u","n") 16, ("h","u") 15) → **merge 2 = ("u","n") @16** (beats newly-available ("h","ug") @15 — *recount each step*) → **merge 3 = ("h","ug")**, first 3-letter token.
+> Segmenting: normalize → pre-tokenize → chars → merges **in order**. `bug`→[b,ug] · `mug`→**[UNK],ug** · `thug`→[UNK],hug · `unhug`→**[un,hug]**.
+> **+** rare words, smaller vocab, generalisation. **−** fragments complex morphology, weak semantics, **no fallback ⇒ [UNK] destroys meaning** (why models fail on emoji).
+
+---
+
+## 5. WordPiece — the contrast that sharpens BPE
+
+*⚠️ 536 marks this **"Extra slides (Not for exams)"**; 521 doesn't teach it. **Out of exam scope for both** — kept for Lab 1, and because the contrast makes BPE's criterion concrete.*
+
+Google's tokenizer, built to pretrain **BERT**. Same training shape as BPE; **tokenization differs**.
+
+**Prefix:** non-initial pieces get `##` — `word` → `w ##o ##r ##d`.
+
+**Merge criterion — score, not raw frequency:**
+
+```
+score(a, b) = freq(a, b) / (freq(a) × freq(b))
+```
+
+This **favours pairs whose individual parts are rare**. Same corpus, initial vocabulary `[b, h, p, ##g, ##n, ##s, ##u]`:
+
+| Pair | Score | Value |
+|---|---|---|
+| `("##u","##g")` | 20 / (36 × 20) | **1/36** |
+| `("##g","##s")` | 5 / (20 × 5) | **1/20** ✅ |
+
+**First merge is `##gs`, not `##ug` — the opposite of BPE on the identical corpus.** That's the point of the example.
+
+**Segmenter:** longest subword from the start of the word, split, repeat. With final vocabulary `[b, h, p, ##g, ##n, ##s, ##u, ##gs, hu, hug]`, `hugs` → **`["hug", "##s"]`**.
+
+> **Reference card (out of scope)**
+> **WordPiece** (Schuster & Nakajima 2012, BERT). `##` on non-initial pieces. Merges by **score = freq(a,b)/(freq(a)×freq(b))** — likelihood-based, favours rare parts, vs BPE's raw frequency. Same corpus → first merge **`##gs`** (1/20) beats `##ug` (1/36), **opposite of BPE**. Segmenter: longest-subword-first. `hugs` → `["hug","##s"]`.
+
+---
+
+## 6. SentencePiece, byte-level BPE, tiktoken
+
+*⚠️ Byte-level BPE sits in 536's "not for exams" section. **SentencePiece and tiktoken are in 521's main deck and ARE examinable for 521.***
+
+### SentencePiece
+
+**Language-independent** — learns from **raw Unicode text**, fixed vocabulary size, **no whitespace pre-tokenizer required**. That's what makes it language-independent: it doesn't assume spaces separate words.
+
+- Supports **BPE and unigram LM** as its two practical algorithms
+- **Preserves whitespace with `▁`** → detokenization is **lossless**: join pieces, replace `▁` with a space
+- **Byte fallback** — anything outside the vocabulary becomes raw UTF-8 bytes, so **no true OOV**; emoji and rare scripts work
+
+`Tokenization matters` → `▁Tokenization▁matters` → pieces.
+
+**Unigram** enumerates candidate segmentations and runs **Viterbi** for the most probable:
+
+```
+"lowering"   chosen:    [lower, ing]
+             alternate: [low, er, ing]
+```
+
+### Byte-level BPE (GPT-2)
+
+UTF-8 encodes each character as **1–4 bytes**, so text is modelled as a **sequence of bytes rather than characters**. Starts with **256** byte tokens, learns to glue them into words. **Zero unknown words** — always falls back to individual bytes.
+
+**GPT-2 vocabulary = 50,257 = 256 byte tokens + 50,000 merges + 1 end-of-text token.** That's where the odd number comes from.
+
+`"Café 🚀"`:
+
+| Tokenizer | Result |
+|---|---|
+| Byte tokens (no merging) | 10 tokens — `é` is 2 bytes, 🚀 is 4 |
+| Character BPE | **3 tokens, one is `[UNK]`** — the failure |
+| Byte-level BPE | **2 tokens** |
+
+`The sun is ☀️` under GPT-2: `The`→464 · ` sun`→6035 (**space glued to the word**) · ` is`→374 · ` `→220 · `☀️`→99321 (**one token** — common emoji, all bytes merged).
+
+### SentencePiece vs tiktoken
+
+They differ in **what unit they merge over** (characters vs bytes) and **whether they pre-split** (no vs regex-yes).
+
+```
+SentencePiece BPE (Llama-2):
+  ▁Hello,▁world!  →  [▁Hello, ,, ▁world, !]
+
+tiktoken BPE (Llama-3):
+  regex chunks: [Hello, ,,  world, !]
+  tokens:       [Hello, ,, ' world', !]     ← space inside " world"
+```
+
+**tiktoken's byte-level + regex-pretokenized design gives better compression, no OOV, and byte-exact reversibility — which is why every frontier model after Llama-2 uses it or something like it.**
+
+| Tokenizer | Vocab | Models |
+|---|---|---|
+| SentencePiece unigram | 32K–250K | T5, mT5 |
+| SentencePiece BPE | 32K | Llama-2, Mistral-7B |
+| SentencePiece BPE | 256K | Gemma-2, Gemma-3 |
+| **tiktoken BPE** | 128K | Llama-3, Llama-4 |
+| tiktoken (o200k) | ~200K | GPT-4o, GPT-5 |
+
+⚠️ **Llama-3 switched SentencePiece → tiktoken** for a better compression ratio — fewer tokens per byte of English and code.
+
+> **Closed-book card**
+> **SentencePiece**: language-independent, raw Unicode, **no whitespace pre-tokenizer**, `▁` marks spaces, **lossless** detokenization, **byte fallback = no OOV**. Algorithms: BPE and **unigram** (**Viterbi** over segmentations — "lowering" → [lower, ing]).
+> **Byte-level BPE (GPT-2)**: bytes not characters, starts at 256, **zero unknown words**. **Vocab 50,257 = 256 + 50,000 merges + 1.** Space glued to the following word.
+> **tiktoken vs SentencePiece**: merges over **bytes**, **regex pre-split** → better compression, no OOV, byte-exact reversibility. **Llama-3 switched SP→tiktoken.**
+
+---
+
+## 7. Token economics — 521's angle
+
+Why tokenization is a *conversational AI* topic, not just an NLP one:
+
+| | Consequence |
+|---|---|
+| 💰 **Cost** | API pricing is **per token** — tokenization sets conversation economics |
+| 🪟 **Context window** | Limits conversation length (200K tokens ≈ 150K words) |
+| ⚡ **Latency** | More tokens = slower response |
+| 🎯 **Quality** | Affects understanding of domain-specific terms |
+
+Counts are unintuitive — measure, don't assume:
+
+| Text | Tokens | Count |
+|---|---|---|
+| "Hello World" | Hello · World | 2 |
+| "artificial intelligence" | art · ificial · intelligence | 3 |
+| **"GPT-4"** | **G · PT · - · 4** | **4** |
+| "Book a flight to NYC" | Book · a · flight · to · NYC | 5 |
+
+**Worked example — a support conversation:**
+
+```
+40–60 turns × 15–25 tokens/turn  ≈  800–1,200 tokens per conversation
+GPT-4o:        ~$0.01–0.03 per conversation
+GPT-3.5 Turbo: ~$0.002–0.005 per conversation
+10,000 conversations/day on GPT-4o:  $100–300/day
+```
+
+> **Model selection and prompt optimisation can cut token costs by 10–20×.**
+
+**Tradeoff — the vocabulary-size dial, which ties the whole note together:** a bigger vocabulary means fewer tokens per document → shorter sequences → cheaper O(n²) attention *and* lower API cost. But it also means a bigger embedding matrix (`|V| × d` parameters) and more rare tokens with undertrained embeddings. Hence real vocabularies cluster between 32K and 256K rather than at either extreme, and **compression ratio (tokens per byte)** is the metric actually optimised.
+
+> **Closed-book card**
+> Matters for ConvAI via **cost** (per-token pricing), **context window** (200K ≈ 150K words), **latency**, **quality**. "GPT-4" = **4 tokens**. Support conversation ≈ **800–1,200 tokens**; GPT-4o ~$0.01–0.03; 10K/day ≈ **$100–300/day**. **Model selection + prompt optimisation cuts cost 10–20×.**
+> Vocab-size tradeoff: bigger vocab → fewer tokens → cheaper attention and API, but bigger `|V|×d` matrix and undertrained rare tokens. Hence 32K–256K; optimise **compression ratio**.
+
+---
 
 ## Course-specific angles
 
-| Course | Session | Emphasis | Extra detail it adds |
+| Course | Session | Emphasis | What it adds |
 |---|---|---|---|
-| **521** | S1 | **Economics and conversation cost** — tokens price the conversation; context window limits dialogue length | `[UNK]` behaviour when a character is absent from base vocab (`mug` → `[UNK], ug`); the `unhug` exercise → `[un, hug]`; per-conversation cost model (~800–1,200 tokens, $0.01–0.03 on GPT-4o) |
-| **536** | S1 | **Mechanism and model design** — vocabulary size vs sequence length; tokenizer choice per model | Byte tokens vs BPE; byte-level BPE (GPT-2 vocab = 256 + 50,000 merges + 1 = **50,257**); SentencePiece vs tiktoken (characters vs bytes, regex pre-split); who uses what in 2026 |
-
-**Both decks use the identical corpus** — `hug 10, pug 5, pun 12, bun 4, hugs 5` — and reach the same three merges (`ug`, `un`, `hug`). Learn it once.
-
-⚠️ **536 marks byte-level BPE and WordPiece as "Extra slides (Not for exams)"**; 521 does not teach them at all. So those are **out of exam scope for both** — keep them here for Lab 1 only.
+| **521** | L1 | **Economics** — tokens price the conversation; context window caps dialogue | `[UNK]` failure case; `unhug` exercise; per-conversation cost model; SentencePiece vs tiktoken |
+| **536** | S1 | **Mechanism** — vocabulary size vs sequence length; tokenizer choice per model | Byte tokens vs BPE on `"Café 🚀"`; byte-level BPE and the 50,257 arithmetic; WordPiece scoring *(both not-for-exams)* |
 
 ## Exam scope
 
-| Course | Mid-sem (closed) | Comprehensive (open) |
-|---|---|---|
-| 521 | ✅ L1 | ✅ |
-| 536 | ✅ S1 | ✅ |
+| Course | Mid-sem (closed) | Comprehensive (open) | Excluded |
+|---|---|---|---|
+| **521** | ✅ L1 | ✅ | — |
+| **536** | ✅ S1 | ✅ | **WordPiece · byte-level BPE · byte-vs-BPE** — "Extra slides (Not for exams)" |
+
+## Lab
+
+**536 Lab 1 and 521 Lab 1 are both tokenization, both at session 1.** One sitting:
+
+```python
+from transformers import AutoTokenizer
+
+for name in ["gpt2", "meta-llama/Llama-2-7b-hf", "meta-llama/Meta-Llama-3-8B"]:
+    tok = AutoTokenizer.from_pretrained(name)
+    for text in ["Tokenization matters", "Café 🚀", "Transformerify",
+                 "The sun is ☀️", "GPT-4", "Book a flight to NYC"]:
+        ids = tok.encode(text)
+        print(f"{name:35} {text:22} {len(ids):3} tokens  {tok.convert_ids_to_tokens(ids)}")
+```
+
+Then add 521's cost layer: multiply token counts by current per-token pricing and reproduce the $100–300/day figure.
+
+## Source
+
+HuggingFace LLM course ch6.5 — https://huggingface.co/learn/llm-course/en/chapter6/5
+Cited directly on 536's reference slide 60; 521 uses the same corpus and exercises without citing it.
