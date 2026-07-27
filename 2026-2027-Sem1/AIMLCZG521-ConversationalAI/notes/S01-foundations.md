@@ -16,9 +16,47 @@ Assembled from: `Session-1-Foundations-of-ConvAI.pdf` (56 sl) · **Teams recordi
 >
 > **Hands-on in every session** — she said it explicitly. 521 is the build-it subject and the labs are not optional extras.
 
+## What this session is
+
+The **map** session. It lays out the entire field — sixty years of history, the six components, the seven-stage agent lifecycle, the protocol landscape — and every later session zooms into one part of it. Unusually for a first lecture, it also covers tokenization and context windows in enough depth to be examinable.
+
+Her framing: conversational AI is **not a chatbot** but *"a reasoning system that happens to speak your language."* The course is about building the reasoning, not the speaking.
+
+## How to use this note
+
+| If you have… | Read |
+|---|---|
+| **10 minutes** | The closed-book cards — the `>` blockquotes |
+| **1 hour** (your Wednesday slot) | §9 the seven-stage lifecycle — then **run the lab**. 521 is build-it, not read-it |
+| **Before the mid-sem** | All of it. §9 is the single most likely structured question |
+| **This week** | Install Ollama, pull `llama3`, get a free Tavily key — the session-1 notebooks need them |
+
+🔴 **521 is the build-it subject and it has ten labs — more than any other.** Her instruction: *"Don't just watch — run the demo code and change one thing."* Reading about an agent is not learning an agent; the concepts click when the loop prints its own reasoning.
+
+**The one thing to notice in Lab 1:** the notebook uses `AgentType.ZERO_SHOT_REACT_DESCRIPTION`, so you're running a **ReAct loop in session 1** — four sessions before it's formally taught. With `verbose=True` it prints its thoughts. Watch that trace; it's the lesson.
+
 ## Topics
 
-1. What conversational AI is · 2. The evolution, 1960s → 2026 · 3. Architecture: traditional vs agentic · 4. The six components · 5. Frameworks · 6. Tokenization · 7. Context windows · 8. LLMs as the brain — capabilities and limits · 9. The seven-stage agent lifecycle · 10. Protocol landscape · 11. Production concerns · 12. Open problems
+**Part 1 — What the field is** *(definitions and history)*
+1. **What conversational AI is** — the definition, the understand/reason/act frame, the bot ladder
+2. **The evolution, 1960s → 2026** — seven eras, each fixing the last one's limitation
+3. **Architecture: traditional vs agentic** — where the orchestration layer appeared
+3b. **Workflows vs agents** — Anthropic's distinction, and **when not to build an agent at all**
+
+**Part 2 — What a system is made of**
+4. **The six components** — NLU, dialogue management, knowledge access, action execution, generation, memory
+5. **Frameworks** — traditional (Rasa, Dialogflow) vs agentic (LangChain, LlamaIndex, AutoGen)
+
+**Part 3 — The model layer** *(mechanism; shared with 536)*
+6. **Tokenization** — BPE, the `[UNK]` failure, and the token economics that price a conversation
+7. **Context windows** — and the "lost in the middle" problem that motivates RAG
+8. **LLMs as the brain** — what they do well, where they fail, and how each failure maps to a fix
+
+**Part 4 — How an agent actually runs** *(the spine of the course)*
+9. **The seven-stage lifecycle** — Request → Routing → Reasoning → Tool → Memory → Safety → Response
+10. **Protocol landscape** — MCP, A2A, ANP, and why standards matter
+11. **Production concerns** — observability, cost, latency budgets, layered safety
+12. **Open problems** — where the field is still stuck
 
 ---
 
@@ -625,37 +663,33 @@ Market context from slide 6: **$41.39B** Conv-AI market by 2030 (Grand View Rese
 
 ---
 
-## ⚠️ Admin — conflicts with the handout
+## Admin — ✅ resolved
 
-Slide 26 **disagrees with the course handout**, completing the pattern across all four subjects.
-
-| Component | Handout | Slide 26 |
+| Component | Weight | Detail |
 |---|---|---|
-| Quizzes | **×3, best 2 of 3**, 10% | **×2**, 10%, "announced in class", open book |
-| Assignments | ×2, 20%, **~15 days each** | ×2, 20%, **~3 weeks each**, open book |
-| Mid-term | 30%, closed book, L1–L8 | 30%, closed book (L1–L8) ✓ |
-| End semester | 40%, open book, L1–L16 | 40%, open book (L1–L16) ✓ |
+| **Quiz ×3, best 2 count** | 10% | Open book. **One bad quiz is free** — but sit all three; you can't know in advance which is your worst |
+| Assignment 1 & 2 | 20% | Open book, **~15 days each** |
+| Mid-term | 30% | Closed book, **L1–L8** — but **L8 is revision**, so seven sessions of new material |
+| End semester | 40% | Open book, L1–L16 |
 
-**Two quizzes, not three** — so there's no "drop your worst" cushion if only two run and both count. Confirm which it is; it changes how much a bad quiz costs you.
+⚠️ **Strictly no makeups** for quizzes and assignments. All assignments plagiarism-checked.
 
-**Three weeks per assignment, not two.** More room than the handout implied, though the deck's own advice is blunt: *"No extensions. 3 weeks sounds long until it isn't."*
+**521 uses Canvas** — not Taxila (546, 549) or Teams (536). Check it weekly.
 
-⚠ Also on the slide: **no deadline extensions · no make-ups for quizzes/assignments · plagiarism = nullified marks + disciplinary action.**
+**Instructor's own study advice** (slide 27):
 
-**521 uses Canvas** (slide 27: "Ask on Canvas"), unlike 546 and 549 which use **Taxila**. Two portals to check, not one.
-
-**Instructor's own study advice** (slide 27), worth following:
-
-1. **Code every lecture** — "don't just watch — run the demo code and change one thing."
-2. **Use the references** — ReAct, DPR, DPO papers: read the abstract + results at minimum.
-3. **Get an API key early** — OpenAI or Anthropic; free tiers cover all demos.
+1. **Code every lecture** — *"don't just watch — run the demo code and change one thing."*
+2. **Use the references** — ReAct, DPR, DPO papers: abstract + results at minimum.
+3. **Get an API key early.** *(Note: session 1's lab actually runs locally on Ollama, no paid key needed — see below.)*
 4. **Start assignments early** — no extensions.
 5. **Ask on Canvas** — peer discussion encouraged.
 
+📌 *The handout held is labelled `(S2-25_…)`, the April–May cohort; recordings are `S1-26`. The evaluation scheme carried over unchanged. The session plan below is inherited from that document and matches the current deck's architecture slide — worth a quick diff if an S1-26 handout appears.*
+
 ## Confusions to resolve
 
-- [ ] **Quizzes: two, or three-best-of-two?** ⚠️ The recording did *not* settle this — she said *"the evaluation scheme for EC1… let us discuss in the slides"* and then moved into content without stating numbers. **Ask on Canvas.**
-- [ ] Assignments: 15 days or 3 weeks? Also not stated aloud.
+- [x] ~~Quizzes: two or three-best-of-two?~~ ✅ **Resolved 27 Jul — the handout is right: ×3, best 2 count. Slide 26's "×2" is wrong.**
+- [x] ~~Assignments: 15 days or 3 weeks?~~ ✅ **Plan for 15 days** (handout). The slide said 3 weeks but was already shown wrong on quizzes.
 - [ ] Deck says protocols are covered in "Lectures 14–15"; the handout puts MCP at L13 and A2A at L14. Minor, but check before revising.
 
 ## Lab / build

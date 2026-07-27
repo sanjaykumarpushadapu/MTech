@@ -3,9 +3,45 @@
 Exam: **mid-sem (closed book)** | Date learned: ____ | Running example: **fraud detection**
 Assembled from: Session 1 slides (Dr. Prashant Vaish, 28 sl, 15 images read) · T1 Kästner ch1 & ch3 · **R1 Tech Mahindra ADLC white paper (12 pp, read in full)**
 
+## What this session is
+
+The **why-this-course-exists** session. It sets up the argument the other fifteen sessions elaborate: **the model is rarely the problem — everything around it is.**
+
+Three different sources make the same point from three angles. The slides give the process history (SDLC, roles, ADLC). Kästner gives the failure evidence (87% of ML projects fail). The Tech Mahindra paper gives the local-optimisation trap (an AI pair programmer speeds coding and changes nothing else). Read them as one argument, not three.
+
+## How to use this note
+
+| If you have… | Read |
+|---|---|
+| **10 minutes** | The closed-book cards — the `>` blockquotes |
+| **1 hour** (your Thursday slot) | §1 (the transcription start-up) and §8 (three ML challenges). Those two carry the course |
+| **Before the mid-sem** | All of it — 546 is the least mathematical subject and the most quotable |
+| **For Lab 1** (session 3) | §7's three roles, and the fraud-detection thread running through every section |
+
+**This subject rewards judgment, not recall.** Every table here is a decision aid: which process model, which role, which risk level. Exam questions ask you to *locate a system* on these axes and justify it — not to recite the axes.
+
+**Running example:** **fraud detection**, locked in at session 1 and used in every section. Kästner's own worked example in ch3 is also a credit-card fraud decision tree, so the textbook and your example align from page one.
+
 ## Topics
 
-1. Why this course exists · 2. ML vocabulary · 3. Two lifecycles: SDLC and the ML pipeline · 4. From Waterfall to ADLC · 5. How software and data got here · 6. What data science is · 7. Who builds these systems · 8. What ML changes about engineering · 9. The risk spectrum · 10. Foundation models and prompting · 11. MLOps and responsible ML
+**Part 1 — The argument** *(read these two first)*
+1. **Why this course exists** — Sidney's transcription start-up; excellent models, failing business; 87% / 53%
+2. **ML vocabulary** — algorithm vs model, parameters vs hyperparameters, the compiler analogy
+
+**Part 2 — Process** *(what engineering already knows)*
+3. **Two lifecycles** — the SDLC and the ML pipeline, and how they nest
+4. **From Waterfall to ADLC** — five stages, each fixing the last one's pain; and why AI-in-SDLC adoption keeps failing
+
+**Part 3 — Context** *(landscape — tables, not prose)*
+5. **How software and data got here** — two parallel evolutions
+6. **What data science is** — the three-way overlap, and the hierarchy of needs
+
+**Part 4 — People and judgment** *(where the marks are)*
+7. **Who builds these systems** — SDLC roles, the three data roles, and the DS↔SE friction
+8. **What ML changes about engineering** — three challenges, each "harder but not new"
+9. **The risk spectrum** — the course's actual thesis, and the five enduring principles
+10. **Foundation models and prompting** — when the general answer is the wrong one
+11. **MLOps and responsible ML** — why both are cross-cutting and can't be scheduled late
 
 ---
 
@@ -601,29 +637,41 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 
 ---
 
-## ⚠️ Admin — conflicts to resolve
+## Admin — ✅ resolved from the recording
 
-Slide 11's evaluation table **disagrees with the course handout**. Verify on Taxila.
-
-| Component | Handout says | Slide 11 says |
+| Component | Marks | Detail |
 |---|---|---|
-| Quiz 5% | 10–20 Aug 2026 | "Before mid-term" ✓ |
-| Situated Learning 5% | **27 Aug – 7 Sep** (before mid-term) | **"After mid-term"** ✗ |
-| Assignment I 10% | *(bundled I & II, 29 Oct – 11 Nov)* | **"Before mid-term"** ✗ |
-| Assignment II 10% | 29 Oct – 11 Nov | "After mid-term" ✓ |
+| EC-1 · Quiz | 5 | 🔴 **"15–20 questions, ~15 minutes, just before the mid sem"** — *not* the 10–20 Aug window the handout gives. Covers concepts up to session 8 |
+| EC-1 · Situated Learning | 5 | ⚠️ *"We are still working on the situated learning part… I'll explain later once it's finalised"* |
+| EC-1 · **Assignment I** | 10 | 🔴 **BEFORE the mid-sem.** 2 weeks to complete |
+| EC-1 · Assignment II | 10 | After the mid-sem. 2 weeks |
+| **EC-2** mid-semester | **30** | Closed book, 2h — *"the mid sem happens after session 7 or session 8"* |
+| **EC-3** comprehensive | **40** | Open book, 2–2½h |
 
-If the slides are right, **Assignment I (10%) lands before 19 Sep** — inside the mid-sem run-up the study plan treats as clear. Biggest single change to the semester plan. Resolve in week 1.
+**The slide was right and the handout was wrong** about Assignment I's timing.
 
-Other admin from the deck:
+⚠️ **Individual or team? Not decided.** *"It may be individual perspective, or it may be a team perspective… still not decided."* He leans team, because *"many people are not from an industry background, so it's our job to make sure they upgrade themselves."*
 
-- Sessions on **MS Teams**, online. Assignments on the **Taxila portal** — not Canvas, not eLearn. Material on both Teams and Taxila.
-- Taxila announcements cover assignments released, class rescheduling, exam syllabus, and **scheme + solution documents after each exam** — collect these; they show how marks are actually allocated.
-- Instructor: prashant.vaish@pilani.bits-pilani.ac.in — course code in the subject line.
-- Environment: Virtual Lab + **AWS Console Lab**.
+**🔵 Open-book exam rules — matters for the December binding plan:**
+
+> You may take **watermarked PPT printouts**, plus the **T1 and T2 books** — printouts allowed. Attend at the exam centre or online.
+
+*Watermarked slide printouts are explicitly permitted. Confirm whether your own typed notes count before relying on them.*
+
+**Lab environment:**
+
+- **Virtual lab** — enabled *"after the second session"*. All demos, Python coding and practice labs run there.
+- **AWS Console Lab** — from ~**sessions 13–14**, for production deployment.
+- 💰 **Both free.** *"Whatever runs inside that virtual lab or AWS site will be charged — not chargeable."*
+- **FastAPI** chosen for the labs — *"looking at the limitations of the virtual lab, FastAPI looks best for us."*
+
+**Everything is on Taxila** — course materials, announcements, assignments. PPTs and handout also on MS Teams. Instructor: prashant.vaish@pilani.bits-pilani.ac.in, course code in the subject line.
 
 ## Confusions to resolve
 
-- [ ] Situated Learning and Assignment I timing — slides vs handout
+- [x] ~~Situated Learning and Assignment I timing~~ ✅ **Resolved — Assignment I is BEFORE the mid-sem.**
+- [ ] **Are assignments individual or team?** Not decided; he'll confirm later.
+- [ ] Situated Learning format — *"still working on it."*
 - [ ] Is the AWS Console Lab provisioned, or self-provisioned?
 - [ ] Did class cover the ML vocabulary (§2) verbally? The deck's agenda promises it and the slides stop before it — but **T1 ch3 is cited for this session in the handout**, so §2 is in scope regardless of what was said aloud.
 

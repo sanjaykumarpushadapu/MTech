@@ -22,7 +22,7 @@ Weekends = 4 contact sessions (2h each) + a 2–3h lab block. Weekdays = 1h per 
 |---|---|---|---|
 | **P0 · Pre-semester** | now → 31 Jul | 549 Python self-study, repo + tooling setup | Only thing genuinely due before classes |
 | **P1 · Ramp** | 1–9 Aug | Sessions 1–2. Establish the weekly loop | Habit > content. Get the loop working |
-| **P2 · Quiz window** | 10–20 Aug | ⚠️ **Only 549 (+ maybe 521).** 536 has no quiz; 546's is in September | **Lighter than planned** — use freed evenings for `_shared/` notes |
+| **P2 · Quiz window** | 10–20 Aug | ⚠️ **549 + 521 only.** 536 has no quiz; 546's is in September | **Lighter than planned** — use freed evenings for `_shared/` notes |
 | **P3 · First crunch** | 27 Aug – 7 Sep | 549 project 30% + 536 assignment 30% + 546 situated learning 5% | **Three** deliverables in one window. Start day 1 |
 | **P4 · Mid-sem run-up** | 8–18 Sep | Sessions 1–8 consolidation **+ 🔴 546 Assignment I (10%) lands here** | Contested, not clear. 536 & 521 mid-sems cover **7** sessions, not 8 |
 | **P5 · Mid-sems** | 19–20 Sep | 546 Sat EN · 549 FN + 536 EN Sun · 521 in window | Closed book, sessions 1–8 |
@@ -174,7 +174,7 @@ Three of four instructors stated EC-1 aloud in their first session. **Where hand
 | **536** | Quiz 5% + Assignment 30% | ❌ **No quizzes at all.** EC-1 = **35%, two GROUP assignments** forming one end-to-end project. Must run on the **BITS remote lab, not your laptop** |
 | **546** | Quiz 10–20 Aug; Assignments I & II both 29 Oct–11 Nov | 🔴 **Assignment I (10%) is BEFORE the mid-sem.** Quiz is **15 min, 15–20 questions, "just before the mid sem"** — *not* in the August window. Individual-vs-team **still undecided** |
 | **549** | Quiz 5% + Project/Assignment 30% | ✅ **Quiz 5% + TWO assignments at 15% each = 35%.** No dates announced yet |
-| **521** | Quiz ×3 best-of-2 10% + Assignments 20% | ⚠️ **Still unresolved** — she said *"let us discuss in the slides"* and moved on without stating numbers. **Ask on Canvas** |
+| **521** | Quiz ×3 best-of-2 10% + Assignments 20% | ✅ **Handout is correct — ×3, best 2 of 3.** Slide 26's "×2" is wrong. One bad quiz is free; sit all three |
 
 ### 🔴 Three changes this forces on the calendar
 

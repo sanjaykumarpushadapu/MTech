@@ -11,28 +11,24 @@
 
 | EC | Component | Type | Weight | Timing |
 |---|---|---|---|---|
-| EC-1 | Quiz ×3 (best 2) | Open book | 10% | ⚠️ **STILL UNRESOLVED.** Handout says ×3 best-of-2; L1 slide 26 says ×2. In the S1 recording she said *"the evaluation scheme for EC1 — what about the quiz and what about the assignments, let us discuss in the slides"* and then moved straight into content **without stating the numbers**. Ask directly on Canvas |
-| EC-1 | Assignment 1 & 2 | Open book | 20% | ⚠️ handout ~15 days each; **L1 slide 26 says ~3 weeks each** |
-| EC-2 | Mid-term | **Closed book** | 30% | ~19–20 Sep 2026 |
-| EC-3 | End semester | Open book | 40% | ~early Dec 2026 |
+| EC-1 | **Quiz ×3 — best 2 of 3** ✅ | Open book | 10% | Announced in class / **Canvas** |
+| EC-1 | Assignment 1 & 2 | Open book | 20% | ~15 days each *(slide 26 says ~3 weeks — take the longer figure as optimistic)* |
+| EC-2 | Mid-term | **Closed book** | 30% | ~19–20 Sep 2026 · scope **L1–L8** |
+| EC-3 | End semester | Open book | 40% | ~early Dec 2026 · scope **L1–L16** |
 
-🔴 **THE HANDOUT WE HOLD IS FOR THE WRONG COHORT.**
+✅ **Quizzes: three, best two count — confirmed 27 Jul.** The handout is right; **slide 26's "×2" is wrong.**
 
-`Conversational_AI_Course_Handout (S2-25_AIMLCZG521) - April 2026.pdf` · Version 2.0 · dated **25/02/2025**.
-**S2-25** = Second Semester 2025-26, the **April–May cohort**. Your recordings are all labelled **S1-26** (First Semester 2026-27). Prof. Mavani confirmed the pattern in 536's session 1: *"The first offering was in the April–May cohort, which is still going on."*
+**Why that matters, in your favour:** one bad quiz costs nothing. Sit all three; the worst is dropped. Don't skip any on the assumption it's the droppable one — you can't know which until you've taken all three.
 
-**Consequence: where this handout and the current deck disagree, the deck wins** — the deck is this cohort's, the handout isn't.
+⚠️ **Where slide 26 and the handout still disagree: assignment duration** — handout ~15 days, slide ~3 weeks. Since the slide was wrong on quizzes, **plan for 15 days.** Being early costs nothing; being late is uncorrectable — *strictly no makeups*.
 
-| | S2-25 handout (old) | **L1 slide 26 (current)** |
-|---|---|---|
-| Quizzes | 3, best 2 of 3 | **2** ✅ use this |
-| Assignments | ~15 days each | **~3 weeks each** ✅ use this |
-| Mid-term | 30%, closed, L1–L8 | same |
-| End semester | 40%, open, L1–L16 | same |
+> ### 📌 Note on the handout's cohort
+>
+> The handout held is `(S2-25_AIMLCZG521) - April 2026.pdf`, Version 2.0, dated 25/02/2025 — labelled for the **April–May** cohort, while your recordings are labelled **S1-26**. The evaluation scheme evidently carried over unchanged, so this is not a live problem.
+>
+> It does mean the **session plan below is inherited from that document**. It matches the current deck's course-architecture slide, so it's very likely still accurate — but if an S1-26 handout appears on Canvas, worth a two-minute diff.
 
-⚠️ **Get the S1-26 handout from Canvas.** Until then, session topics and references in the table below are taken from the old handout and may have changed. The deck's own course-architecture slide (24) matches the old module structure, so the session plan is probably stable — but "probably" isn't good enough for exam scope.
-
-Strictly no makeups for quizzes and assignments. Check Canvas every Wednesday.
+Strictly **no makeups** for quizzes and assignments. All assignments are plagiarism-checked.
 
 ## Session index
 

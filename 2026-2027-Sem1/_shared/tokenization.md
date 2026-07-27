@@ -8,6 +8,36 @@
 
 > **Both decks copied the same source.** 521 and 536 independently reproduce HuggingFace LLM course ch6.5 — identical corpus (`hug/pug/pun/bun/hugs`), identical merges, identical `mug`/`thug`/`unhug` exercises. Learn it once, here.
 
+## What this note is
+
+The one place tokenization lives. Both 521 and 536 taught it in session 1 from the same source, so instead of two half-notes there is this: one topic, assembled from five sources, deep enough for both exams.
+
+**Why tokenization is worth this much space** — it sits under everything. Context limits are counted in tokens. API bills are priced in tokens. Prompt-injection tricks exploit token boundaries. When a model "can't count the r's in strawberry," the tokenizer is why. It is the least glamorous topic in the degree and the one that explains the most surprising behaviour.
+
+## How to use this note
+
+| If you have… | Read |
+|---|---|
+| **10 minutes** | The eight closed-book cards — the `>` blockquotes |
+| **45 minutes** | §3 — and **work the BPE merge table by hand, on paper, twice** |
+| **The night before either mid-sem** | §3 and §4 only. The rest is context |
+| **Pricing a real system** | §7, token economics |
+
+🔴 **This is a doing note, not a reading note.** Both exams can ask you to *perform* BPE on a small corpus. The test is: given `hug, pug, pun, bun, hugs` with counts, can you produce the merge list in order from a blank page? If not, you have read §3 but you do not have it.
+
+**Two worked corpora, deliberately.** The HuggingFace one (§3) is what both decks use — learn it because it's what they'll examine. The J&M one (§3, second pass) is more interesting: BPE independently discovers the English prefix `re-` from raw frequency counts, with nobody telling it that prefixes exist. That's the point of the algorithm in one example.
+
+## Sections
+
+0. **Why tokenize at all** — replicability, and the unknown-word problem stated precisely
+1. **What a subword is** — the middle ground between characters and words
+2. **Token types** — whole words, subwords, characters, special tokens, and byte fallback
+3. **The three algorithms** — BPE (worked twice), WordPiece, Unigram
+4. **WordPiece** — ⚠️ marked out of scope for both handouts; read only if time is free
+5. **SentencePiece and tiktoken** — what production systems actually ship
+6. **Tokenizer design choices** — vocabulary size, casing, whitespace, and what each costs
+7. **Token economics** — how a tokenizer decision shows up on an invoice
+
 ---
 
 ## 0. Why tokenize at all

@@ -3,25 +3,47 @@
 Exam: **mid-sem (closed book)** | Date learned: ____ | Instructor: Dr. Monali Mavani
 Assembled from: `CS-1 Intro to LLM.pptx` (69 sl, **47 embedded images extracted and read**) · **T1 Jurafsky & Martin ch2, 7, 8** · **T2 Alammar & Grootendorst ch1–3** · **R1 Raschka ch1–2** · HuggingFace LLM course ch6.5 · **Teams recording transcript, 2h 05m** — *all sources held*
 
+## What this session is
+
+The **vocabulary and machinery** session. Everything in 536 after this assumes you can say precisely what a model is, what training does, and how attention computes. Nothing here is optional background — it's the language the other fifteen sessions are written in.
+
+**Her framing of the whole course:** *"Before mid-semester we cover all these things; post mid-semester will be mainly from the **application engineering point of view**."* Sessions 1–7 are mechanism. Sessions 9–16 are application. That split is also the closed-book/open-book split.
+
+## How to use this note
+
+| If you have… | Read |
+|---|---|
+| **10 minutes** | The closed-book cards only — the `>` blockquotes at the end of each topic |
+| **1 hour** (your Monday slot) | §4 and §5 — self-attention and multi-head — and **reproduce the shape tables by hand** |
+| **Before the mid-sem** | Everything except the "not for exams" section at the end |
+| **Looking something up in December** | The topic list below is the index; each topic is self-contained |
+
+🔴 **This is the one subject where reading is not enough.** The mechanism topics (§4, §5, §6, §9, §10) have worked examples with real numbers. If you cannot reproduce the multi-head shape table from a blank page, you do not have §5 — regardless of how clear it felt to read.
+
+**Running example for 536:** she uses **Llama-3 8B** (d = 4096, 32 heads, d_k = 128) throughout. Anchor new numbers to it, the way 546 anchors everything to fraud detection.
+
 ## Topics
 
-1. What a language model is · 2. What makes it *large* · 3. Generation as prediction · 4. Self-attention · 5. Multi-head attention · 6. The transformer block · 7. Positional encoding · 8. Text → tokens → embeddings · 9. The LM head and weight tying · 10. Context length · 11. Architectures · 12. Tokenization algorithms · 13. The LLM landscape
+**Part 1 — What a language model is** *(the conceptual base; ~20 min of her class time, the longest stretch)*
+1. **What a language model is** — P(W) and P(next word); why word order emerges from counting
+2. **What makes it "large"** — three different things, each with its own cost
+3. **Generation as prediction** — the idea the whole field rests on; why any NLP task can be next-word prediction
 
-> ### What the instructor actually emphasised
-> *From the 2h 05m recording. The deck can't show this; the transcript can.*
->
-> **Time spent (instructor, minute-marked):** ~19 min course admin and handout walkthrough · **~20 min on what a language model is and conditional generation** (22:04–39:21, the longest continuous technical stretch) · **~17 min on self-attention worked step by step with matrix shapes** (42:17–59:43) · tokenization and architectures covered but briefly.
->
-> **Her framing of the whole course, worth carrying:**
-> *"Before mid-semester we will cover all these things, and post mid-semester will be mainly from the **application engineering point of view**."* So S1–S8 are mechanism; S9–S16 are application. That matches the closed/open-book split exactly.
->
-> **On architectures — sharper than the deck:** *"Decoder-only LLMs have become so powerful that **encoder-only models are used only in specialised cases**, like when you want to deploy on an **edge device**, because they are very lightweight."* The deck's three-way table (§11) is even-handed; the instructor is not. If asked to compare, note the asymmetry.
->
-> **Her worked example is Llama-3 8B** — *"8 billion parameter model, where model dimensionality or embedding dimensionality is 4096."* Same numbers as §4's shapes table. Use Llama-3 8B as the running example for 536, the way fraud detection runs through 546.
->
-> **Post-mid-sem order she stated:** prompt engineering and reasoning first, then evaluation. Matches the handout's S10–S11 then S14.
+**Part 2 — How the machinery works** *(mechanism; ~17 min on attention alone, worked by hand)*
+4. **Self-attention** — Q/K/V, the three-step computation, and the shape table
+5. **Multi-head attention** — why h heads cost the same as one; the worked N=4, d=512 example
+6. **The transformer block** — the equations, two residuals, pre-norm
+7. **Positional encoding** — attention has no sense of order; learned vs sinusoidal vs RoPE
 
-> ⚠️ **Slides 61–69 are explicitly marked "Extra slides (Not for exams)"** — byte tokens vs BPE, byte-level BPE, and WordPiece. Kept at the end of this note because **Lab 1 is tokenization** and you'll want them there, but they are **out of exam scope**. Don't spend closed-book revision time on them.
+**Part 3 — Text in, text out** *(the pipeline around the model)*
+8. **Text → tokens → embeddings** — special tokens, the embedding lookup with real numbers, positional addition
+9. **The LM head and weight tying** — three shapes, and a 13%-of-model parameter decision
+10. **Context length** — why it's capped by O(n²) and KV-cache, not ambition
+
+**Part 4 — The landscape** *(comparison tables only — do not over-invest)*
+11. **Architectures** — encoder-only vs decoder-only vs encoder-decoder, and why decoder-only won
+12. **Tokenization** — → mostly lives in `_shared/tokenization.md`; **Lab 1 is here**
+13. **The LLM landscape** — the causal chain, and the three levels of openness
 
 ---
 
@@ -763,6 +785,7 @@ So EC-1 is **35%, two group assignments**, plan shared around week 2. The handou
 - [ ] Remote lab access — manual not yet shared.
 - [ ] Does the deck's `MultipleResponse`/`MultiplyResponse`-style sloppiness appear elsewhere — check slide 21's arithmetic against your own working.
 - [ ] Slide 41 is blank in the export — check whether something was on it.
+- [x] ~~Evaluation~~ ✅ **No quizzes; 35% two group assignments; remote lab mandatory.**
 
 ## Lab / build
 

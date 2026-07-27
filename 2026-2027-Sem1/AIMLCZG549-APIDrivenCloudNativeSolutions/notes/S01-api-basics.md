@@ -3,11 +3,44 @@
 Exam: **mid-sem (closed book)** | Date learned: 25 Jul 2026 | Instructor: Nithya Ramachandran
 Assembled from: `API driven_Lecture 1_25Jul.pptx` (72 sl, 21 images read) · **R2 Gough, Bryant & Auburn ch1** · web references
 
+## What this session is
+
+The **contract** session. An API is a promise between a service and its clients, and this session covers how that promise is written down (OpenAPI), what shapes it can take (REST, GraphQL, gRPC), and how it changes without breaking people (versioning).
+
+It matters beyond 549: **you will spend this entire semester calling REST APIs** — Hugging Face, OpenAI, LangChain, Prefect, Amazon Bedrock. This is the session that makes the rest of the degree's tooling legible.
+
+## How to use this note
+
+| If you have… | Read |
+|---|---|
+| **10 minutes** | The closed-book cards — the `>` blockquotes |
+| **1 hour** (your Tuesday slot) | §5 REST and §8 the comparison table. Then run the two `curl` commands in §3 and §9 |
+| **Before the mid-sem** | All of it. §7b (north–south vs east–west) is the framing that makes §8 answerable |
+| **Tonight, 10 minutes** | `curl -X GET "https://jsonplaceholder.typicode.com/posts"` and install Postman |
+
+🔴 **549 has no textbook from session 4 onward.** Sessions 1–3 have R2 and R3 behind them; sessions 4–16 list only *"Web Resources, Lecture Notes."* **Collect every deck and recording, every weekend, without exception** — for this subject they are the syllabus, and a deck you didn't download may be gone.
+
+**How to study 549 generally:** breadth, not depth. Build **one layer-map** — containers → orchestration → serverless → observability — and hang each new tool on a layer with one line about what it does. Never study internals. The CNCF landscape has hundreds of logos; you need the layers, not the logos.
+
 ## Topics
 
-1. What an API is · 2. Synchronous vs asynchronous · 3. HTTP APIs · 4. OpenAPI and the API lifecycle · 5. REST · 6. GraphQL · 7. gRPC · 8. Choosing between them · 9. API versioning
+**Part 1 — What an API is** *(the contract)*
+1. **What an API is** — a contract between a service and its clients; the API-first premise
+2. **Synchronous vs asynchronous** — blocked vs non-blocked; REST/gRPC/GraphQL vs message brokers
 
-> ⚠️ **549 reference profile.** Only sessions 1–3 have a book behind them (this one is R2 ch1). From session 4 the handout lists "Web Resources, Lecture Notes" only. These decks are the syllabus — keep every one.
+**Part 2 — HTTP and specification**
+3. **HTTP APIs** — endpoints, methods, status codes; the 401-vs-403 distinction
+4. **OpenAPI and the API lifecycle** — the seven steps, worked through a Books API in FastAPI
+
+**Part 3 — The three API styles** *(the heart of the session)*
+5. **REST** — architectural style, resources and URIs, the **Richardson Maturity Model**, benefits and drawbacks
+6. **GraphQL** — Facebook 2015, one call instead of three, schema-first, and where it loses (caching)
+7. **gRPC** — RPC, stubs, Protocol Buffers, HTTP/2 multiplexing, `.proto` files
+7b. **North–south vs east–west** — the framing that decides which style to use, and why
+8. **Choosing between them** — the comparison table, close to guaranteed exam material
+
+**Part 4 — Evolution**
+9. **API versioning** — when to version, what counts as a breaking change, semantic versioning `X.Y.Z`
 
 ---
 
@@ -620,40 +653,29 @@ AsyncAPI is the one to actually look at: it closes the loop on §2 by showing th
 
 ---
 
-## ⚠️ Admin — conflicts with the handout
+## Admin — ✅ resolved from the recording
 
-**The 30% deliverable is actually two 15% deliverables.** Slide 9 splits what the handout calls a single "Project / Assignment 30%":
-
-| | Handout | Slide 9 |
+| Component | Weight | Detail |
 |---|---|---|
-| Quiz | 5% | Quiz I, 5% |
-| Project / Assignment | **30%, one component**, 27 Aug – 7 Sep | **Lab Assignment I [Mini Project I] 15%** + **Lab Assignment II [Mini Project II] 15%** |
-| Mid-term | 30%, closed book, 20 Sep FN | 30%, closed book, 2h |
-| End semester | 35%, open book, 6 Dec FN | 35%, open book, 2.5h |
+| Quiz ×1 | **5%** | ⚠️ date not announced |
+| **Assignment / Mini-Project I** | **15%** | ⚠️ date not announced |
+| **Assignment / Mini-Project II** | **15%** | ⚠️ date not announced |
+| **EC-1 total** | **35%** | |
+| Mid-semester test | **30%** | Closed book, 2h, **20 Sep FN** · scope contact sessions **1–8** |
+| Comprehensive | **35%** | Open book, 2½h, **6 Dec FN** · scope **1–16** |
 
-Slide 9 gives **no dates** for the two mini-projects. If they're spread across the semester rather than both landing 27 Aug – 7 Sep, the crunch is lighter than planned; if they're both in that window, it's unchanged but is two submissions, not one. **Ask in class or check Taxila.**
+The handout's single *"Project/Assignment 30%"* is actually **two 15% assignments plus a 5% quiz**. Her framing: *"It's a bit different from other courses — EC-1 covers a big portion compared to EC-2 and EC-3. EC-2 is 30 and EC-3 open book is 35%, **instead of 40**."*
 
-**Session coverage differs slightly too** — slide 7 says **CS02 = "API Basics + Cloud Native Application"**, where the handout gives session 2 to Cloud Native alone. So API basics spill into next session. Slide 7 also splits CS14 (APIs for IoT) and CS15 (serverless + case study), where the handout merges 14 & 15.
+🔴 **Everything lives in MS Teams** — *"I upload everything in MS Teams. I'll create a folder, and in the course materials everything will be uploaded — the handout, the deck for that particular session, and **whatever code will be used for that session**."* Check the shared folder after every session; the code is there and appears nowhere else.
 
-**Lab tools, more specific than the handout:**
-
-| Lab | Session | Tools named on slide 8 |
-|---|---|---|
-| 1 | 5 | **Prefect, Airflow** |
-| 2 | 7 | **AWS SageMaker, MLflow** |
-| 3 | 8 | HuggingFace APIs and/or AWS APIs or OpenAI APIs |
-| 4 | 11 | **Flowise** (flowiseai.com), LangChain, OpenAI APIs, Python |
-| 5 | **14 or 15** | **OpenRemote, ThingsBoard** |
-
-**Logistics** — sessions on **MS Teams**; assignments on **Taxila**; course material on **MS Teams**. Instructor: nithyaramachandran@wilp.bits-pilani.ac.in, course code in the subject line. Taxila carries assignment releases, rescheduling, exam syllabus, and **scheme + solution documents after each exam**.
-
-*(Same portal split as 546 — Teams for material, Taxila for assignments and announcements.)*
+**Lab tools per the deck (slide 8):** L1 Prefect/Airflow · L2 AWS SageMaker, MLflow · L3 HuggingFace/AWS/OpenAI APIs · L4 Flowise, LangChain, OpenAI · L5 OpenRemote, ThingsBoard.
 
 ## Confusions to resolve
 
-- [ ] Are Mini Project I and II both in the 27 Aug – 7 Sep window, or spread across the semester?
+- [x] ~~One 30% project or two mini-projects?~~ ✅ **Resolved from the recording — quiz 5% + two assignments at 15% each = 35%.**
+- [x] ~~Does R2 need buying?~~ ✅ **Held in `/_library/549-R2-Gough-MasteringAPIArchitecture.pdf`.** Ch1 read; ch2–10 out of scope.
+- [ ] **EC-1 dates — not yet announced.** *"Duration, date, session — will let you know before itself."* Watch MS Teams.
 - [ ] Is Lab 5 at session 14 or 15?
-- [ ] Does R2 (*Mastering API Architecture*) need buying, or is the Conference API example enough?
 
 ## Lab / build
 
