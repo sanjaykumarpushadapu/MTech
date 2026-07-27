@@ -1,4 +1,4 @@
-# 546-SE4ML · Source material
+# AIMLZG546-SoftwareEngineeringForML · Source material
 
 **Nothing lives here.** Textbook PDFs, slide decks and datasets stay in Google Drive —
 they are large and copyrighted, and `.gitignore` blocks them from this repo.

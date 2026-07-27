@@ -5,6 +5,8 @@ Fill this in **when you get the material**, not when you process it — the gap 
 
 Legend: ✓ have · ✗ missing · — n/a
 
+> 🔴 **Slides are mandatory.** No deck → **no note is written** for that session. The handout is too coarse to define scope and the textbook is too broad; only the deck shows what this instructor taught and what they emphasised. Collect the deck for every session the same weekend, without exception.
+
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
 | 1 | ✓ `Session 1- Intro.pptx` (28 sl) | ✓ T1 ch1 + ch3 (read) | ✗ | ✗ | ✅ `notes/S01-foundations.md` (slides + textbook) |

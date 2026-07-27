@@ -6,7 +6,7 @@ Notes, labs and study material for the whole degree. One folder per semester.
 
 | Folder | Term | Subjects |
 |---|---|---|
-| [`2026-2027-Sem1/`](2026-2027-Sem1/) | Aug–Dec 2026 | 536 LLMs · 549 Cloud Native · 521 Conversational AI · 546 SE4ML |
+| [`2026-2027-Sem1/`](2026-2027-Sem1/) | Aug–Dec 2026 | AIML ZG536 Large Language Models for Generative AI · AIML ZG546 Software Engineering for Machine Learning · AIMLC ZG549 API-driven Cloud Native Solutions · AIMLCZG521 Conversational AI |
 
 ## Rules
 
@@ -20,7 +20,7 @@ Notes, labs and study material for the whole degree. One folder per semester.
 ```
 2026-2027-Sem1/
 ├── STUDY-PLAN.md            ← the semester plan: phases, calendar, deadlines
-├── <subject>/
+├── <CODE>-<CourseTitle>/    ← folder name = course code + handout's course title
 │   ├── <code>-master.md     ← running index; revision homepage; open-book front index in Dec
 │   ├── notes/               ← one file per session
 │   └── source/              ← pointer to Drive only

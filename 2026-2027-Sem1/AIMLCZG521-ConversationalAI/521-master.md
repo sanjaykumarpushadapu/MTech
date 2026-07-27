@@ -9,8 +9,8 @@
 
 | EC | Component | Type | Weight | Timing |
 |---|---|---|---|---|
-| EC-1 | Quiz ×3 (best 2) | Open book | 10% | ⚠️ announced in class / Canvas |
-| EC-1 | Assignment 1 & 2 | Open book | 20% | ⚠️ ~15 days each, announced |
+| EC-1 | Quiz ×3 (best 2) | Open book | 10% | ⚠️ **L1 slide 26 says ×2, not ×3 best-of-3** — no cushion if so. Announced in class / **Canvas** |
+| EC-1 | Assignment 1 & 2 | Open book | 20% | ⚠️ handout ~15 days each; **L1 slide 26 says ~3 weeks each** |
 | EC-2 | Mid-term | **Closed book** | 30% | ~19–20 Sep 2026 |
 | EC-3 | End semester | Open book | 40% | ~early Dec 2026 |
 
@@ -20,7 +20,7 @@
 
 | S | Topic | Sub-topics | Source | Exam | Note file | Shared |
 |---|---|---|---|---|---|---|
-| L1 | Foundations of Conversational AI | Chatbots → agentic systems; system lifecycle & architecture | *The Landscape of AI Agents* (2024), arXiv:2404.11584 | mid | `notes/S01-foundations.md` | → `_shared/agents.md` |
+| L1 | Foundations of Conversational AI | Chatbots → agentic systems; **7-stage lifecycle**; architecture; **tokenization/BPE**; context windows; protocols; production concerns | *The Landscape of AI Agents* (2024), arXiv:2404.11584 | mid | `notes/S01-foundations.md` | → `_shared/agents.md` |
 | L2 | Embeddings, Vector Search & Hybrid Retrieval | Semantic vs keyword; vector DB architecture (HNSW, ANN); BM25 + dense + RRF | Dense Passage Retrieval (Karpukhin 2020) | mid | `notes/S02-retrieval.md` | → `_shared/retrieval.md` |
 | L3 | Model Landscape & Cost Engineering | LLM/MoE/SLM/SSM comparison; quantization; KV-cache; prompt caching; model routing | QLoRA (Dettmers 2023) | mid | `notes/S03-model-landscape.md` | → `_shared/quantization.md` · **536** |
 | L4 | Structured Outputs & Function Calling | Native function-calling APIs (OpenAI, Anthropic); ReAct (thought-action-observation); error handling & validation | ReAct (Yao 2023) | mid | `notes/S04-function-calling.md` | → `_shared/function-calling.md` |

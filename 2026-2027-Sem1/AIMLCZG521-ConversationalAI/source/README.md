@@ -1,4 +1,4 @@
-# 536-LLMs · Source material
+# AIMLCZG521-ConversationalAI · Source material
 
 **Nothing lives here.** Textbook PDFs, slide decks and datasets stay in Google Drive —
 they are large and copyrighted, and `.gitignore` blocks them from this repo.

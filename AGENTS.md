@@ -6,7 +6,16 @@ Rules for any AI agent working in the `MTech` repo. Read this before producing a
 
 Study notes for an MTech at BITS Pilani WILP. One folder per semester (`2026-2027-Sem1/`, then siblings). The notes exist to pass two kinds of exam and to survive a full-time job alongside them. Every rule below comes from that constraint.
 
-**Current semester:** Aug–Dec 2026. Four subjects: 536 LLMs · 549 Cloud Native · 521 Conversational AI · 546 SE4ML.
+**Current semester:** Aug–Dec 2026. Four subjects — folder name = **course code + course title exactly as the handout states it**:
+
+| Folder | Code | Course title (handout) |
+|---|---|---|
+| `AIMLZG536-LLMForGenerativeAI` | AIML ZG536 | Large Language Models for Generative AI |
+| `AIMLZG546-SoftwareEngineeringForML` | AIML ZG546 | Software Engineering for Machine Learning |
+| `AIMLCZG549-APIDrivenCloudNativeSolutions` | AIMLC ZG549 | API-driven Cloud Native Solutions |
+| `AIMLCZG521-ConversationalAI` | AIMLCZG521 | Conversational AI |
+
+Note the prefix differs: **536 and 546 are `AIML`; 549 and 521 are `AIMLC`.** Take it from the handout, don't assume.
 Read `2026-2027-Sem1/STUDY-PLAN.md` for phases, calendar and deadlines before planning any work.
 
 ## Hard rules
@@ -55,6 +64,27 @@ Each master index reproduces this table. Its **Source** column *is* the handout'
 - **536** — T1/T2/R1 chapters plus research papers cover most sessions. S6, S15, S16 are papers and web only.
 - **521** — no textbook chapters at all; every reference is a **public paper or spec**, so fetch rather than ask.
 - **549** — ⚠️ **only S1–S3 have book references (R2, R3). S4–S16 are "Web Resources, Lecture Notes."** Thirteen of sixteen sessions have nothing behind the slides. 549 decks and recordings are the highest-value artifacts of the semester; a missed 549 session cannot be reconstructed from a book.
+
+## The slides are mandatory — no deck, no note
+
+**A session note is never written without that session's slide deck (PDF or PPT).** The deck is not one source among several; it is the only artifact that says what *this instructor* actually taught.
+
+Why the other sources cannot substitute:
+
+- **The handout is too coarse.** Its Sub-Topics column is two or three lines per session. 521's entry for L1 reads "Chatbots → Agentic Systems; System Lifecycle & Architecture" — the real deck also covered tokenization with a full BPE worked example, context windows, the seven-stage lifecycle, the protocol landscape and production concerns. A note built from the handout would have missed most of the session and misjudged the weighting of the rest.
+- **The textbook is too broad.** It covers what the author thought important, in the author's order, at the author's depth. The instructor selected from it, reordered it, and added material that isn't in it at all.
+- **Neither shows emphasis.** Only the deck reveals that an instructor gave one topic twelve slides and another a single bullet.
+
+**If the deck is missing:**
+
+- Say so plainly, and **do not write the note.**
+- Do not offer to "write a provisional version and revise later." A provisional note built on the wrong scope is worse than no note — it gets revised into, rather than replaced, and its errors persist.
+- What you *may* do: fetch and read the session's public references so they're ready, and record their status in `source/MATERIAL-LOG.md`. That's preparation, not a note.
+- Mark the session's Slides column `✗` in `source/MATERIAL-LOG.md` so the gap stays visible.
+
+**The minimum bar for writing a session note is: the deck.** Everything else — textbook chapters, papers, transcripts — deepens a note that the deck defines. They never define one themselves.
+
+**Corollary for the user:** the single most important thing to collect each weekend is the deck for every session. Chapters can be obtained later; a deck that was never downloaded from Teams/Taxila/Canvas may not be recoverable at all — and for 549, where thirteen of sixteen sessions have no textbook behind them, the deck plus recording *is* the syllabus.
 
 ## Intake — what arrives, and what to do with it
 
@@ -178,7 +208,7 @@ MTech/
 └── 2026-2027-Sem1/
     ├── STUDY-PLAN.md            ← phases, week-by-week calendar, deadlines
     ├── PROGRESS.md              ← one dashboard: 64 sessions × note/card/open/lab
-    ├── 536-LLMs/
+    ├── AIMLZG536-LLMForGenerativeAI/
     │   ├── 536-master.md        ← session index; open-book front index in Dec
     │   ├── notes/S01-….md       ← one file per session
     │   ├── labs/S05-…/          ← lab code
@@ -186,9 +216,9 @@ MTech/
     │       ├── README.md        ← Drive links only
     │       ├── MATERIAL-LOG.md  ← what material exists per session
     │       └── transcripts/     ← plain-text transcripts (committable)
-    ├── 549-CloudNative/
-    ├── 521-ConversationalAI/
-    ├── 546-SE4ML/
+    ├── AIMLCZG549-APIDrivenCloudNativeSolutions/
+    ├── AIMLCZG521-ConversationalAI/
+    ├── AIMLZG546-SoftwareEngineeringForML/
     ├── _shared/                 ← cross-subject master notes + README index
     └── _templates/SESSION-TEMPLATE.md
 ```
