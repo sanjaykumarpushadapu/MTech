@@ -111,6 +111,7 @@ One view across all four subjects. Update the same weekend the session happens.
 | 549 Python self-study complete | ☐ |
 | Running example chosen for 546 (fraud detection) | ✅ |
 | Transcript workflow confirmed working | ☐ |
+| **EC-1 dates confirmed with all four instructors** | ☐ |
 | Quizzes ×4 taken (by 20 Aug) | ☐ |
 | Crunch deliverables submitted (7 Sep) | ☐ |
 | Mid-sems done (20 Sep) | ☐ |

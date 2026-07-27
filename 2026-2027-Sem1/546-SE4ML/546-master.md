@@ -19,22 +19,22 @@
 
 | S | Topic | Sub-topics | Source | Exam | Note file | Shared |
 |---|---|---|---|---|---|---|
-| 1 | Foundations of ML Systems Engineering | Introduction; SE process models & roles; data science pipeline & roles; ML terminology, ML pipeline, foundation models, ML domains | T1 ch1,3 · R1 | mid | `notes/S01-foundations.md` | → `ml-lifecycle.md` · **549 S4** |
+| 1 | Foundations of ML Systems Engineering | Introduction; SE process models & roles; data science pipeline & roles; ML terminology, ML pipeline, foundation models, ML domains | T1 ch1,3 · R1 | mid | `notes/S01-foundations.md` | → `_shared/ml-lifecycle.md` · **549 S4** |
 | 2 | Foundations (cont.) | ML in production: scope & challenges; **from models to systems**; ML and non-ML components; AI paradigms (predictive, generative, agentic); cloud-native ML systems; case studies | T1 ch1,2 · R2–R5 | mid | `notes/S02-models-to-systems.md` | → **549 S2–3** |
 | 3 | Requirements Engineering for ML | Requirements engineering; when to use ML (ML as predictions); setting & measuring goals; goals → requirements; **GR4ML notation**. **Lab 1** | T1 ch4–7 · R6 | mid | `notes/S03-requirements.md` | — |
 | 4 | Requirements / Architecture | Defining, composing & evaluating measures; **quality attributes of ML components**; thinking like a software architect. **Lab 2** | T1 ch8,9 | mid | `notes/S04-measures-quality.md` | — |
-| 5 | Architecture & Design | Architectural design challenges for ML-enabled systems; common system architectures; architectural patterns for ML; **microservices pattern**; heartbeat tactic | T1 ch8 | mid | `notes/S05-architecture.md` | → `docker-k8s.md` · **549 S3** |
-| 6 | Architecture & Design | Design patterns for ML systems; **feature store pattern**; **RAG model for LLMs**. **Lab 3** | T1 ch8 | mid | `notes/S06-patterns.md` | → `rag.md` · **521 L7–8, 536 S12** |
+| 5 | Architecture & Design | Architectural design challenges for ML-enabled systems; common system architectures; architectural patterns for ML; **microservices pattern**; heartbeat tactic | T1 ch8 | mid | `notes/S05-architecture.md` | → `_shared/docker-k8s.md` · **549 S3** |
+| 6 | Architecture & Design | Design patterns for ML systems; **feature store pattern**; **RAG model for LLMs**. **Lab 3** | T1 ch8 | mid | `notes/S06-patterns.md` | → `_shared/rag.md` · **521 L7–8, 536 S12** |
 | 7 | Implementation & Code Sharing | Coding practices; what is good code; analysing code performance; using data structures effectively | T2 ch1–3 | mid | `notes/S07-coding.md` | — |
 | 8 | Implementation & Code Sharing | OOP & functional programming; errors, logging & debugging; formatting & linting; **research code vs production code** | T2 ch4–6 | mid | `notes/S08-production-code.md` | — |
-| 9 | Implementation & Code Sharing | Design & refactoring; **designing APIs for ML services**; version control, dependencies, packaging. **Lab 4** | T2 ch8,10,11 | comp | `notes/S09-apis-packaging.md` | → `api-design.md` · **549 S1** |
-| 10 | Quality Assurance | Types of tests; testing for ML; testing model training; testing model inference; **model quality**; **data quality** | T1 ch14–16 | comp | `notes/S10-testing.md` | → `evaluation.md` |
-| 11 | Quality Assurance | Pipeline quality; system quality; testing & experimentation in production; **security for ML**. **Lab 5** | T1 ch17–19 | comp | `notes/S11-production-qa.md` | → `evaluation.md` · **521 L12** |
-| 12 | Deployment | Docker & Kubernetes basics; deployment strategies (batch, real-time, edge); deploying a model; inference function; feature encoding & feature stores; serving infrastructure | T1 ch10 | comp | `notes/S12-deployment.md` | → `docker-k8s.md` · **549 S12** |
-| 13 | Deployment | Types of deployment models; **model cards**; stages of the ML pipeline; automating the pipeline; automation & infrastructure design; code quality & observability. **Lab 6** | T1 ch11 | comp | `notes/S13-automation.md` | → `ml-lifecycle.md` · **549 S6–7** |
+| 9 | Implementation & Code Sharing | Design & refactoring; **designing APIs for ML services**; version control, dependencies, packaging. **Lab 4** | T2 ch8,10,11 | comp | `notes/S09-apis-packaging.md` | → `_shared/api-design.md` · **549 S1** |
+| 10 | Quality Assurance | Types of tests; testing for ML; testing model training; testing model inference; **model quality**; **data quality** | T1 ch14–16 | comp | `notes/S10-testing.md` | → `_shared/evaluation.md` |
+| 11 | Quality Assurance | Pipeline quality; system quality; testing & experimentation in production; **security for ML**. **Lab 5** | T1 ch17–19 | comp | `notes/S11-production-qa.md` | → `_shared/evaluation.md` · **521 L12** |
+| 12 | Deployment | Docker & Kubernetes basics; deployment strategies (batch, real-time, edge); deploying a model; inference function; feature encoding & feature stores; serving infrastructure | T1 ch10 | comp | `notes/S12-deployment.md` | → `_shared/docker-k8s.md` · **549 S12** |
+| 13 | Deployment | Types of deployment models; **model cards**; stages of the ML pipeline; automating the pipeline; automation & infrastructure design; code quality & observability. **Lab 6** | T1 ch11 | comp | `notes/S13-automation.md` | → `_shared/ml-lifecycle.md` · **549 S6–7** |
 | 14 | Responsible ML Engineering | Responsible engineering; versioning, provenance & reproducibility; **explainability**; **fairness**; safety; security & privacy | T1 ch23–29 | comp | `notes/S14-responsible-ml.md` | → **521 L15–16, 536 S15** |
-| 15 | SE Principles for Agentic AI | Phases of the AI-Driven Software Development Life Cycle (**ADLC**); applying SE principles to agentic AI | Lecture notes | comp | `notes/S15-agentic-se.md` | → `agents.md` |
-| 16 | Agentic AI & Course Review | Important agentic AI patterns; wrap-up and review | Lecture notes | comp | `notes/S16-review.md` | → `agents.md` |
+| 15 | SE Principles for Agentic AI | Phases of the AI-Driven Software Development Life Cycle (**ADLC**); applying SE principles to agentic AI | Lecture notes | comp | `notes/S15-agentic-se.md` | → `_shared/agents.md` |
+| 16 | Agentic AI & Course Review | Important agentic AI patterns; wrap-up and review | Lecture notes | comp | `notes/S16-review.md` | → `_shared/agents.md` |
 
 ## Labs (6)
 

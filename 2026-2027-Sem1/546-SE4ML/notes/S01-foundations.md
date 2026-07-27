@@ -563,7 +563,7 @@ Other admin from the deck:
 
 - [ ] Situated Learning and Assignment I timing — slides vs handout
 - [ ] Is the AWS Console Lab provisioned, or self-provisioned?
-- [ ] Did class cover the ML vocabulary (§2) verbally? The deck's agenda promises it but the slides stop before it; T1 ch3 covers it, so §2 is written either way.
+- [ ] Did class cover the ML vocabulary (§2) verbally? The deck's agenda promises it and the slides stop before it — but **T1 ch3 is cited for this session in the handout**, so §2 is in scope regardless of what was said aloud.
 
 ## Lab / build
 
