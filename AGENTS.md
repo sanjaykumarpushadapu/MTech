@@ -4,7 +4,9 @@ Rules for any AI agent working in the `MTech` repo. Read this before producing a
 
 ## What this repo is
 
-Study notes for an MTech at BITS Pilani WILP. One folder per semester (`2026-2027-Sem1/`, then siblings). The notes exist to pass two kinds of exam and to survive a full-time job alongside them. Every rule below comes from that constraint.
+Study notes for an MTech at BITS Pilani WILP. One folder per semester (`2026-2027-Sem1/`, then siblings).
+
+**Primary purpose: a durable career knowledge base.** These notes are the user's long-term reference for the field — meant to build real understanding they carry into their work, not to cram for a test and forget. **Depth, real-world context and clear structure are the goal.** The exams (mid-sem closed-book, comprehensive open-book) are a real but *secondary* constraint: every note must still serve them, but it does so through a **folded exam layer** (collapsed closed-book recall cards under each concept, plus an *Exam layer* section at the end for scope/dates/logistics) so the knowledge leads and the exam scaffolding never dominates the read. When career depth and exam brevity pull apart, keep both — the note reads for knowledge and folds down to the cards. Every rule below serves this.
 
 **Current semester:** Aug–Dec 2026. Four subjects — folder name = **course code + course title exactly as the handout states it**:
 
@@ -119,17 +121,18 @@ The sources define **what** is examinable. They are often poor at making it **un
 - **A connection the sources don't draw** — between two topics in one session, between two subjects, or between a mechanism and the cost it implies.
 - **The trap.** If a step is easy to get wrong (BPE merge 2 looks obvious and isn't; embedding row 5 is the sixth row), say so explicitly.
 - **A diagram** where the source has only prose, per the Mermaid rules above.
+- **Career depth beyond the course**, in dedicated ***In practice*** and ***Going deeper*** blocks (see the note structure below). How the concept is used on the job, the real tools, failure modes, industry conventions, deeper mechanism — the material that makes this a knowledge base rather than an exam crib. This is now expected, not optional, wherever a concept has real-world weight.
 
 **Never add:**
 
-- **New topics.** Clarity operates *inside* the handout's scope; it never widens it. Explaining RoPE better in 536 S3 is right; introducing ALiBi because it's related is not.
-- **Terminology the course doesn't use.** Explain in the instructor's vocabulary. A better word that appears in no exam paper is a worse word.
+- **New topics *into the exam-scoped body*.** The four-part concept body stays bounded by the handout — clarity there never silently widens scope (explaining RoPE better in 536 S3 is right; weaving ALiBi into the body because it's related is not). Genuinely useful material beyond the course is welcome, but it lives in clearly-marked ***In practice*** / ***Going deeper*** blocks, never blended into the examinable explanation where it could be mistaken for scope.
+- **Course terminology, replaced.** In the exam-scoped body, explain in the instructor's vocabulary — a better word that appears in no exam paper scores nothing there. Career-depth blocks *may* introduce real industry terms (idempotency, BFF, circuit breaker), as long as they're marked as beyond-course and actually defined.
 - **Silent invention.** If a fact isn't in a source, it is your reasoning — mark it, or make it visibly an explanation rather than a citation. Never let an addition read as though the instructor said it.
-- **Depth beyond the exam.** A derivation the exam will never ask for is time taken from one it will.
+- **Padding.** Depth must earn its place: real understanding or real job-relevance. A derivation that serves neither the exam nor the work is still cut — "gain more knowledge" means useful knowledge, not volume.
 
-**Mark clearly-added material** with a light touch — an italic aside like *"Not in the deck — this is R2 ch1"*, or *"the deck doesn't say why; here's the reason"*. The reader should always be able to tell what came from the course and what came from you, because in a disagreement with an instructor, only the course's version scores.
+**Mark clearly-added material** with a light touch — an italic aside like *"Not in the deck — this is R2 ch1"*, *"beyond the deck — what this looks like on the job"*, or *"the deck doesn't say why; here's the reason"*. The reader should always be able to tell course material from your addition, because in a disagreement with an instructor, only the course's version scores in the exam.
 
-**The test:** would this addition help someone reproduce the concept, under time pressure, without notes? If yes, add it. If it would only impress, cut it.
+**The test (two halves now):** would this help the reader (1) *reproduce the concept under exam pressure*, or (2) *use it competently on the job*? If either, add it — put exam-scoped material in the body, job-scoped material in an ***In practice*** / ***Going deeper*** block. If it would only impress, cut it.
 
 ### Organise by topic, never by source
 
@@ -187,18 +190,35 @@ Rules for the conversion:
 
 ## How notes must be written
 
-Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. Every concept gets four parts, in this order:
+Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge-base document that folds down to an exam aid**, in this order:
+
+**Note structure (top to bottom):**
+
+1. **Title** + a one-line identity aside (date learned · instructor · sources · "exam layer folded at the end").
+2. **Why this matters** — what this is and why it's worth knowing *for a career*, not just the syllabus. Lead with the knowledge, not the exam.
+3. **How to use this note** — a small table routing the reader by *goal* (learn end-to-end · look up · build · revise for exam).
+4. **Topics** — the numbered index.
+5. **The concept body** — each concept in four parts, then optional depth blocks (below).
+6. **Self-study / Lab / build** — career-useful, stays in the body.
+7. **🎓 Exam layer** — a collapsed `<details>` at the very end holding exam scope, weights, dates, course logistics and confusions. The exam scaffolding lives here so it never dominates the read.
+
+**Every concept gets four parts, in this order:**
 
 **Intuition** → **Mechanism/formula** → **Worked example** → **Tradeoff / when NOT to use**
 
-- **The tradeoff line is mandatory.** Never leave it blank, never write "depends on the use case." Name the specific situation where the simpler alternative wins. Exam questions concentrate here.
+- **The tradeoff line is mandatory.** Never leave it blank, never write "depends on the use case." Name the specific situation where the simpler alternative wins.
 - **The worked example must be reproducible by hand or in ≤30 lines.** A described example is not an example. For mechanism topics (attention, RoPE, KV-cache, quantization, LoRA, DPO) show the actual arithmetic on small numbers.
 - **Landscape topics get a comparison table, not prose.** Decoding strategies, serving patterns, CNCF tools, benchmarks — table, one row each, columns for what/when/cost.
 
-Every note carries **both** exam formats:
+**Then, where the concept has real-world weight, add depth blocks** (blockquote, italic-marked as beyond-course):
 
-- **Closed-book card** (blockquote) — fewest words that trigger full recall. For sessions 1–8 only; that's the mid-sem scope in all four subjects.
-- **Open-book detail** (collapsed `<details>`) — organised for *lookup speed under time pressure*, not for reading start to finish. All 16 sessions.
+- ***In practice*** — how it's actually used on the job: the tools, the auth/rate-limit/retry realities, the conventions, what production adds that the slide omits.
+- ***Going deeper*** — deeper mechanism or a genuinely useful adjacent concept the course skips (e.g. HTTP idempotency, why √d_k). Marked clearly, kept out of the examinable body.
+
+**Exam formats — folded, not removed:**
+
+- **Closed-book recall card** — the fewest words that trigger full recall, wrapped in a collapsed `<details><summary>📄 Closed-book recall card</summary>` under each concept. Present for sessions 1–8 (mid-sem scope); the knowledge reads on top, the card is one click away.
+- **Exam layer** (the `<details>` at the note's end) — scope, dates, weights, logistics, confusions. For all 16 sessions.
 
 ## Shared topics — the main rule
 

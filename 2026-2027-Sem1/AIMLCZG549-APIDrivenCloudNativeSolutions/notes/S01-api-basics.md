@@ -1,26 +1,23 @@
 # 549 · Session 01 · API Basics
 
-Exam: **mid-sem (closed book)** | Date learned: 25 Jul 2026 | Instructor: Nithya Ramachandran
-Assembled from: `API driven_Lecture 1_25Jul.pptx` (72 sl, 21 images read) · **R2 Gough, Bryant & Auburn ch1** · web references
+*Learned 25 Jul 2026 · Instructor Nithya Ramachandran · built from `API driven_Lecture 1_25Jul.pptx` (72 sl, 21 images) + **R2 Gough, Bryant & Auburn ch1** + web. Exam scope, dates and study logistics are folded into the **Exam layer** at the very end.*
 
-## What this session is
+## Why this matters
 
-The **contract** session. An API is a promise between a service and its clients, and this session covers how that promise is written down (OpenAPI), what shapes it can take (REST, GraphQL, gRPC), and how it changes without breaking people (versioning).
+An API is a **promise between a service and its clients**: send a request shaped like *this*, get a response shaped like *that* — and neither side needs to know how the other is built. Get the promise right and other teams build on you for years without ever reading your code; get it wrong and every change breaks someone.
 
-It matters beyond 549: **you will spend this entire semester calling REST APIs** — Hugging Face, OpenAI, LangChain, Prefect, Amazon Bedrock. This is the session that makes the rest of the degree's tooling legible.
+This is career-load-bearing, not just coursework. **Every backend, every cloud service, every ML model you deploy is reached through an API** — Hugging Face, OpenAI, LangChain, Prefect and Amazon Bedrock are all REST. The design calls in this note — REST vs gRPC, how to version without breaking clients, sync vs async — are ones you will actually make on the job. The note builds the vocabulary (contract, sync/async, HTTP), then the three shapes the promise can take, then how you evolve it over time.
 
 ## How to use this note
 
-| If you have… | Read |
+| Goal | Where to go |
 |---|---|
-| **10 minutes** | The closed-book cards — the `>` blockquotes |
-| **1 hour** (your Tuesday slot) | section 5 REST and section 8 the comparison table. Then run the two `curl` commands in section 3 and section 9 |
-| **Before the mid-sem** | All of it. Section 7b (north–south vs east–west) is the framing that makes section 8 answerable |
-| **Tonight, 10 minutes** | `curl -X GET "https://jsonplaceholder.typicode.com/posts"` and install Postman |
+| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** and ***Going deeper*** blocks where the real-world detail earns its place |
+| **Look something up later** | The topic list below is the index; every concept is self-contained |
+| **Build something tonight** | Section 3's `curl` and Section 4's Books API — ~30 lines of real, running code |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates live in the collapsed *Exam layer* at the end |
 
-🔴 **549 has no textbook from session 4 onward.** Sessions 1–3 have R2 and R3 behind them; sessions 4–16 list only *"Web Resources, Lecture Notes."* **Collect every deck and recording, every weekend, without exception** — for this subject they are the syllabus, and a deck you didn't download may be gone.
-
-**How to study 549 generally:** breadth, not depth. Build **one layer-map** — containers → orchestration → serverless → observability — and hang each new tool on a layer with one line about what it does. Never study internals. The CNCF landscape has hundreds of logos; you need the layers, not the logos.
+> **Depth vs breadth for 549 — how to hold both.** For the *closed-book mid-sem*, breadth wins: you need the layer-map (containers → orchestration → serverless → observability) and one line per tool, not internals. For *your career*, depth is the whole point — so this note deliberately goes deeper than the exam needs and marks where it does (***Going deeper***). Read for knowledge now; fold down to the recall cards when the exam is close.
 
 ## Topics
 
@@ -62,8 +59,18 @@ It matters beyond 549: **you will spend this entire semester calling REST APIs**
 
 **Tradeoff / the cost of the contract** — Once published, the contract binds you. Clients build against it and break when it changes, which is why section 9 (versioning) exists as a topic at all. An internal function can be refactored freely; a published API cannot. **Publishing an API is a commitment, not a feature.**
 
+> ***In practice*** *(beyond the deck — what calling an API actually looks like on the job):*
+> - You almost never write raw HTTP. You call an **SDK** — `openai`, `boto3`, `huggingface_hub` — and every one of those is a thin wrapper that builds the HTTP request for you. Knowing the contract underneath is exactly what lets you debug when the SDK does something surprising (a 400 you didn't expect, a field it won't send).
+> - Real APIs are gated by an **API key or token** in a header (`Authorization: Bearer sk-…`). The contract includes *who's allowed*, not just *what's allowed* — authentication (section 3, `401`) and authorization (`403`) are part of the promise.
+> - Providers enforce **rate limits** (e.g. "60 requests/min"). Exceed one and you get `429 Too Many Requests`, so production code wraps calls in **retry-with-backoff**. This is the "contract binds *you*" cost made concrete: the provider can throttle, version, or deprecate, and your system has to absorb it.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > API = **a contract between a service and its clients**. Rules and protocols letting systems exchange data and integrate function without the user knowing the underlying code. **API-first** = the app is designed as a set of APIs. Cost: a published contract binds you — hence versioning.
+
+</details>
 
 Cross-link: → `_shared/api-design.md` · **546 S9**
 
@@ -114,8 +121,13 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 **Tradeoff / when NOT to go async** — Asynchronous buys availability (the consumer service can be down and the message waits) and decoupling, and charges you a broker to operate, eventual consistency, harder debugging, and no simple "what did it return?" answer. Use sync when the caller genuinely needs the answer to proceed — a payment authorisation. Use async for work that can complete later — sending the confirmation email.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Synchronous** = caller blocked until the previous task finishes. Ex: **REST, gRPC, GraphQL**. **Asynchronous** = second task starts without waiting, non-blocking. Ex: message brokers — **RabbitMQ, Kafka, SQS**. Async buys availability + decoupling; costs a broker to operate, eventual consistency, harder debugging. Sync when the caller needs the answer to proceed.
+
+</details>
 
 ---
 
@@ -200,9 +212,26 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 **Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (section 7).
 
+> ***Going deeper*** *(beyond the deck — safe vs idempotent methods, the property that makes retries safe):*
+> The deck lists the four verbs by purpose. In practice the property that matters is what happens when you **repeat** a call — because networks drop responses and clients retry.
+>
+> | Method | **Safe?** (no change) | **Idempotent?** (same result if repeated) |
+> |---|---|---|
+> | `GET` | ✅ yes | ✅ yes |
+> | `PUT` | ❌ no | ✅ yes — "set resource 5 to *this*" lands the same however many times it runs |
+> | `DELETE` | ❌ no | ✅ yes — deleting twice leaves it deleted |
+> | `POST` | ❌ no | ❌ **no** — "create a new order" twice makes **two orders** |
+>
+> This is why a failed `PUT` is safe to blindly retry but a failed `POST` isn't — retrying a charge could double-bill. Real payment APIs (Stripe) solve it with an **idempotency key**: you send a unique key with the `POST`, and the server dedupes repeats. This is also the deeper reason `POST`→`201` and `PUT`→`200` (section 3, *which success code when*): `POST` makes something new each time; `PUT` converges on one state.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > HTTP API components: **endpoint** (URL = **host + resource path**, one function, the "door"), **request** (method + endpoint), **response** (JSON/XML + status). Methods: **GET** retrieve · **POST** submit · **PUT** update · **DELETE** delete.
 > Status **classes by first digit**: **1xx** informational · **2xx** success · **3xx** redirection · **4xx** client error · **5xx** server error. Codes: 200 OK · 201 Created · **301 Moved Permanently** (HTTP→HTTPS) · **303 See Other** (post-checkout confirmation) · 400 Bad Request · 401 Unauthorized (*who are you?*) · 403 Forbidden (*known, still denied*) · 404 Not Found · 500 Internal Server Error.
+
+</details>
 
 ---
 
@@ -268,10 +297,15 @@ Note the shape: collection endpoint `/books` for list and create; item endpoint 
 
 **Tradeoff / the cost of spec-first** — Writing the spec before the code is deliberate friction, and it's wasted if the API is internal, single-consumer, and changing weekly. The value scales with the number of consumers who need to agree, and with how expensive it is to renegotiate later. For a public API it's essential; for a script's helper endpoint it's ceremony.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **OpenAPI** (formerly **Swagger**) = formal standard for describing HTTP APIs, mainly REST. Buys: shared understanding · **client code generation** · **test creation** · design standards.
 > Lifecycle: **Requirements → Design → Configure → Publish → Develop → Test → Deploy.**
 > REST endpoint shape: collection `/books` (GET list, POST create) + item `/books/{id}` (GET, PUT, DELETE). Stack in the example: **FastAPI + Uvicorn**, docs auto-generated at `/docs`, tested with pytest.
+
+</details>
 
 Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML services)
 
@@ -331,8 +365,13 @@ Same resource, two representations:
 
 **Tradeoff / why level 3 is rare** — R2 is blunt: *"in practical terms level 3 is rarely used in modern RESTful HTTP services."* HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Richardson Maturity Model** (Richardson, QCon 2008; popularised by Fowler): **L0** HTTP + single URI, no verbs = *RPC over REST* · **L1 Resources** — resource URIs, adds *identity* (`GET /attendees/1`) · **L2 Verbs** — multiple methods per URI by effect on server, `GET` guaranteed side-effect-free · **L3 Hypermedia Controls = HATEOAS**, response carries available actions. **Target level 2**; L3 rare — chatty, poor fit for interservice calls.
+
+</details>
 
 **A whole system built this way** — the deck's food-delivery architecture, and the best single diagram in the deck because it's a preview of microservices (S3):
 
@@ -373,10 +412,24 @@ The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetc
 
 **Tradeoff / when NOT to use REST** — When one screen needs data from many resources, REST's one-resource-per-call shape produces chatty clients and slow mobile screens (→ GraphQL). When two internal services exchange huge volumes and you control both ends, REST's text payloads and HTTP/1.1 overhead are pure waste (→ gRPC).
 
+> ***In practice*** *(beyond the deck — what a real REST endpoint has that `GET /students` doesn't show; R2 ch1 covers these as "REST standards & structure"):*
+> A production collection endpoint is never just "return everything." Four things you'll build every time:
+> - **Pagination** — `GET /students?page=2&limit=50` (or cursor-based `?after=<id>`). Returning 10,000 rows in one response is how you take down your own service.
+> - **Filtering & sorting** — `GET /students?branch=CS&sort=-gpa`. The query string is where "which subset" lives.
+> - **A consistent error envelope** — not just a `400`, but a JSON body like `{"error": {"code": "invalid_branch", "message": "…"}}` so clients can handle failures programmatically. Consistency across every endpoint is what makes an API pleasant to build against.
+> - **Auth on every mutating call** — `Authorization` header checked before `POST`/`PUT`/`DELETE`; the deck's "requires suitable permissions" is this.
+>
+> Naming conventions that mark a REST API as well-designed: **plural nouns** (`/students` not `/getStudent`), **no verbs in the path** (the HTTP method *is* the verb), and **nesting for relationships** (`/students/123/courses`). Get these right and the API is self-explanatory; get them wrong and every consumer needs the docs open constantly.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **REST** = architectural style (**Roy Fielding, 2000**), the architecture of the web. Every content item is a **resource**, identified by a **URI**, represented as **JSON/XML**, manipulated by HTTP verbs = CRUD. Collection URI for list/create, item URI (`/x/123`) for read/update/delete.
 > **Benefits**: mature & ubiquitous, simple to test, sync request-response, **no broker**, wide language support. **Drawbacks**: **reduced availability**; **fetching multiple resources needs multiple calls** (profile + posts + comments = 3 calls).
 > Microservices rule: *services have APIs; a service's data is private.*
+
+</details>
 
 ---
 
@@ -462,9 +515,14 @@ query {
 
 **Tradeoff / when NOT to use GraphQL** — The deck's own comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **GraphQL** — **Facebook, 2015**, to fix REST's multiple-round-trips. Client specifies exactly what it wants across multiple sources in **one call**; single-request/all-inclusive-reply. **Schema in SDL** = blueprint, defined up front. Request = **HTTP POST** to `/graphql` → **validate against schema → execute → form JSON**. **`query`** to fetch, **`mutation`** to insert/update/delete. Response mirrors query shape. AWS: **AppSync** (managed) or self-managed.
 > Loses to REST on **caching** (one URL, POST, so HTTP caching breaks).
+
+</details>
 
 ---
 
@@ -555,9 +613,14 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 **Tradeoff / when NOT to use gRPC** — The disadvantages column is the answer, and it's sharp: gRPC is for **service-to-service** traffic where you control both ends. Put it on a public, browser-facing edge and you've chosen a protocol browsers can't natively speak, for consumers who can't debug it with `curl`. The usual architecture is REST or GraphQL at the edge, gRPC behind it.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **RPC** = remote call made to look local, via **client stub → network → server stub**. **gRPC** — **Google, 2015**, open-source RPC framework: **Protocol Buffers** not JSON, **HTTP/2** not HTTP, **`.proto`** file as the API definition, **`protoc`** compiler generates message classes + client and server stubs for **10+ languages**.
 > **Advantages**: well-defined schema, polyglot, lightweight and fast, **best for inter-service communication**. **Disadvantages**: **poor fit for external-facing services**; **browser/mobile support primitive** (grpc-Web, limited). Rule of thumb: REST/GraphQL at the edge, gRPC behind it.
+
+</details>
 
 ---
 
@@ -590,11 +653,16 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 **Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the deck's "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **North–south** = traffic from outside, over the internet: high, **compounding** latency; you don't control the consumer → favour REST/GraphQL (ubiquity, caching, stability). **East–west** = service-to-service, you control both ends → can trade readability for efficiency → gRPC.
 > Multiplier: **one north–south request usually triggers multiple east–west exchanges**, so east–west inefficiency cascades.
 > Weigh: **high-traffic services** (payload size and protocol overhead compound), **large payloads** (JSON verbose; *"human readability" is a weak argument given modern tracing*; parsing cost varies by language), **vintage formats**.
 > Rule: **gRPC when bandwidth is a cumulative concern or volumes are large**; REST at the edge.
+
+</details>
 
 ## 8. Choosing between REST, GraphQL and gRPC
 
@@ -613,8 +681,13 @@ The deck's comparison table, which is close to guaranteed exam material:
 
 **The one-line summary worth carrying into the exam:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > REST → web standard, **caching**, browser support, JSON & XML, Swagger (3rd-party codegen). GraphQL → **data fetch** in one call, browser support, JSON, GraphQL Code Generator (3rd party). gRPC → **native code generation for 10+ languages**, **Protocol Buffers**, inter-service. All three synchronous.
+
+</details>
 
 ---
 
@@ -668,9 +741,25 @@ Each version reachable at its own endpoint:
 
 **Tradeoff / when NOT to version** — Every live major version is a codebase you maintain, test and secure. Version too eagerly and you're running four APIs; version too late and you break your consumers. The deck's guidance — version only on breaking changes — is the balance point, and it implies the cheaper move is usually **designing the change to be non-breaking** (add an optional field rather than a required one).
 
+> ***In practice*** *(beyond the deck — where the version actually goes, and how big APIs handle it):*
+> The deck shows the version in the **URL path** (`/api/v2.0.0/movies`). That's the most common style — visible, easy to route, easy to test in a browser — but real APIs use two other schemes you'll meet:
+>
+> | Where the version lives | Example | Trade |
+> |---|---|---|
+> | **URL path** | `GET /v2/movies` | Simplest, most visible; but the URL for "the same resource" changes, which purists dislike |
+> | **Header** | `Accept: application/vnd.api+json; version=2` | URL stays clean; but invisible in a browser and easy to forget |
+> | **Date-based** (Stripe) | `Stripe-Version: 2024-06-20` | Each account pins a date; Stripe transforms old-shaped responses so you upgrade on your own schedule |
+>
+> Two career habits the exam won't test but the job will: **deprecation policy** — announce, give a window (6–12 months), monitor who's still on the old version, then sunset — and **most changes should be non-breaking by design**, so you add far fewer major versions than the semver table suggests. In modern practice, teams version **`v1`/`v2`** at the *major* level only and ship minor/patch changes silently — full `X.Y.Z` in the path is rarer than the deck implies.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Versioning** = managing API change without disrupting clients; lets consumers upgrade **at their own pace**. Costly — version only on a **breaking change**: format change (JSON→XML), data type change, resource rename, removing resources/properties/methods, **adding a new required field**.
 > **Semantic versioning `X.Y.Z`**: **X major** = incompatible, new API, routed by URI · **Y minor** = new functionality, backward compatible · **Z patch** = bug fixes, backward compatible. Endpoints per version: `/api/v2.0.0/movies`. Real: Google Maps JS API 3.63.10a.
+
+</details>
 
 ---
 
@@ -689,30 +778,6 @@ AsyncAPI is the one to actually look at: it closes the loop on section 2 by show
 
 ---
 
-## Admin — ✅ resolved from the recording
-
-| Component | Weight | Detail |
-|---|---|---|
-| Quiz ×1 | **5%** | ⚠️ date not announced |
-| **Assignment / Mini-Project I** | **15%** | ⚠️ date not announced |
-| **Assignment / Mini-Project II** | **15%** | ⚠️ date not announced |
-| **EC-1 total** | **35%** | |
-| Mid-semester test | **30%** | Closed book, 2h, **20 Sep FN** · scope contact sessions **1–8** |
-| Comprehensive | **35%** | Open book, 2½h, **6 Dec FN** · scope **1–16** |
-
-The handout's single *"Project/Assignment 30%"* is actually **two 15% assignments plus a 5% quiz**. Her framing: *"It's a bit different from other courses — EC-1 covers a big portion compared to EC-2 and EC-3. EC-2 is 30 and EC-3 open book is 35%, **instead of 40**."*
-
-🔴 **Everything lives in MS Teams** — *"I upload everything in MS Teams. I'll create a folder, and in the course materials everything will be uploaded — the handout, the deck for that particular session, and **whatever code will be used for that session**."* Check the shared folder after every session; the code is there and appears nowhere else.
-
-**Lab tools per the deck (slide 8):** L1 Prefect/Airflow · L2 AWS SageMaker, MLflow · L3 HuggingFace/AWS/OpenAI APIs · L4 Flowise, LangChain, OpenAI · L5 OpenRemote, ThingsBoard.
-
-## Confusions to resolve
-
-- [x] ~~One 30% project or two mini-projects?~~ ✅ **Resolved from the recording — quiz 5% + two assignments at 15% each = 35%.**
-- [x] ~~Does R2 need buying?~~ ✅ **Held in `/_library/549-R2-Gough-MasteringAPIArchitecture.pdf`.** Ch1 read; ch2–10 out of scope.
-- [ ] **EC-1 dates — not yet announced.** *"Duration, date, session — will let you know before itself."* Watch MS Teams.
-- [ ] Is Lab 5 at session 14 or 15?
-
 ## Lab / build
 
 No lab this session — **549 Lab 1 is at session 5**. But two things are worth doing tonight, both under ten minutes:
@@ -721,3 +786,44 @@ No lab this session — **549 Lab 1 is at session 5**. But two things are worth 
 2. Install **Postman**, repeat the same call. You'll need it from lab 3 onward.
 
 Then, if the hour allows: build the Books API from section 4 in FastAPI. It's ~30 lines, it produces auto-generated docs at `/docs`, and it makes every abstract term in this session concrete.
+
+---
+
+## 🎓 Exam layer & course logistics
+
+*Everything below is for passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
+
+<details>
+<summary><b>Exam scope, weights, dates & study strategy</b> — fold out</summary>
+
+**Exam status.** 549 mid-sem is **closed book**, scope **contact sessions 1–8**, **20 Sep 2026 (FN)**. Comprehensive is **open book**, scope **1–16**, **6 Dec 2026 (FN)**.
+
+**How to study 549 *for the exam*:** breadth, not depth. Build one layer-map — containers → orchestration → serverless → observability — and hang each tool on a layer with one line of what it does. The CNCF landscape has hundreds of logos; for the exam you need the layers, not the logos. *(This does not conflict with the career depth above — the ***Going deeper*** and ***In practice*** blocks are a separate, deeper pass. Read for knowledge now; drill the layer-map and the recall cards when the exam is close.)*
+
+🔴 **Collect every deck and recording, every weekend.** 549 has **no textbook from session 4 onward** — sessions 1–3 have R2/R3 behind them; 4–16 list only *"Web Resources, Lecture Notes."* For this subject the deck and recording **are** the syllabus, and a deck you didn't download may be gone.
+
+### Evaluation
+
+| Component | Weight | Detail |
+|---|---|---|
+| Quiz ×1 | **5%** | ⚠️ date not announced |
+| Assignment / Mini-Project I | **15%** | ⚠️ date not announced |
+| Assignment / Mini-Project II | **15%** | ⚠️ date not announced |
+| **EC-1 total** | **35%** | |
+| Mid-semester test | **30%** | Closed book, 2h · **20 Sep FN** · scope sessions **1–8** |
+| Comprehensive | **35%** | Open book, 2½h · **6 Dec FN** · scope **1–16** |
+
+The handout's single *"Project/Assignment 30%"* is actually **two 15% assignments plus a 5% quiz**. Her framing: *"EC-1 covers a big portion compared to EC-2 and EC-3. EC-2 is 30 and EC-3 open book is 35%, **instead of 40**."*
+
+🔴 **Everything lives in MS Teams** — the handout, each session's deck, and **whatever code is used** for that session. Check the shared folder after every session; the code appears nowhere else.
+
+**Lab tools per the deck (slide 8):** L1 Prefect/Airflow · L2 AWS SageMaker, MLflow · L3 HuggingFace/AWS/OpenAI APIs · L4 Flowise, LangChain, OpenAI · L5 OpenRemote, ThingsBoard.
+
+### Confusions to resolve
+
+- [x] ~~One 30% project or two mini-projects?~~ ✅ quiz 5% + two assignments at 15% each = 35%.
+- [x] ~~Does R2 need buying?~~ ✅ Held in `/_library/549-R2-Gough-MasteringAPIArchitecture.pdf`. Ch1 read; ch2–10 out of scope.
+- [ ] **EC-1 dates — not yet announced.** *"Duration, date, session — will let you know before itself."* Watch MS Teams.
+- [ ] Is Lab 5 at session 14 or 15?
+
+</details>
