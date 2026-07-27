@@ -216,7 +216,7 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge 
 
 **Exam formats — folded, not removed:**
 
-- **Closed-book recall card** — the fewest words that trigger full recall, wrapped in a collapsed `<details><summary>📄 Closed-book recall card</summary>` under each concept. Present for sessions 1–8 (mid-sem scope); the knowledge reads on top, the card is one click away.
+- **Closed-book recall card** — the fewest words that trigger full recall, wrapped in a collapsed `<details><summary>📄 Closed-book recall card</summary>` under each concept. **Sessions 1–8 only** (the closed-book mid-sem scope), because a no-notes memory trigger is only useful when you sit the exam without notes. **Sessions 9–16 get NO recall card** — they are examined solely in the open-book comprehensive, where you have the note itself, so a compressed card serves nothing; the knowledge body *is* the open-book aid.
 - **Exam-scope footer** (one line at the note's end) — this session's scope + a link to the master. Weights, dates, evaluation and logistics are **not** duplicated here; they live once in the `<code>-master.md`.
 
 ## Shared topics — the main rule
