@@ -175,8 +175,13 @@ flowchart TD
 | Pair | Appears in | Total |
 |---|---|---|
 | **("u","g")** | hug 10 + pug 5 + hugs 5 | **20** ✅ |
+| ("p","u") | pug 5 + pun 12 | **17** ← *the runner-up; watch it at merge 2* |
 | ("u","n") | pun 12 + bun 4 | 16 |
 | ("h","u") | hug 10 + hugs 5 | 15 |
+| ("g","s") | hugs 5 | 5 |
+| ("b","u") | bun 4 | 4 |
+
+*All six pairs, not just the top three — if you work this by hand you will find `("p","u") = 17`, and a table that omits it looks like you made an arithmetic error.*
 
 Rule: **`("u","g") → "ug"`**
 Vocabulary: `[b, g, h, n, p, s, u, ug]`
@@ -190,7 +195,20 @@ Rule: **`("u","n") → "un"`**
 Vocabulary: `[b, g, h, n, p, s, u, ug, un]`
 Corpus: `("h","ug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("h","ug","s",5)`
 
-⚠️ **Recount every pair at every step.** Merging changes other pairs' counts, so the previous ranking is stale.
+**The complete recount, which is where the real lesson is:**
+
+| Pair | Total | vs before merge 1 |
+|---|---|---|
+| ("u","n") | **16** ✅ | 16 — unchanged |
+| ("h","ug") | 15 | *newly available* |
+| **("p","u")** | **12** | **was 17 — collapsed** |
+| ("p","ug") | 5 | newly available |
+| ("ug","s") | 5 | newly available |
+| ("b","u") | 4 | 4 — unchanged |
+
+⚠️ **Look at `("p","u")`.** Before merge 1 it was the **second-highest pair at 17**. Merging `u+g` consumed the `p·u` inside `pug`, turning it into `p·ug` — so `("p","u")` now survives only in `pun`, and drops to 12. **It didn't lose a ranking contest; it was silently eaten by an unrelated merge.**
+
+That is the actual reason you must recount from scratch at every step: a merge doesn't just add one token, it **destroys every overlapping pair**. Carrying merge 1's ranking forward gives the wrong answer, and the pair it misleads you about isn't even the one you merged.
 
 ### Merge 3
 
@@ -269,7 +287,7 @@ J&M states the encoder rule precisely, and it's a common exam trap: the encoder 
 > **Merges never cross word boundaries** — corpus split at whitespace/punctuation first; **whitespace attached to the start of the word** (why GPT-2 emits `" sun"`).
 > **Encoder runs the learned merges greedily, in the order learned — test-data frequencies are irrelevant.**
 > J&M's example: `_new ×2, _renew ×2, _set, _reset` → merges `ne` → `new` → `_r` → **`_re`**, i.e. **BPE induces the `re-` prefix** and can then handle unseen *revisit*, *rearrange*, *anew*.
-> hug10/pug5/pun12/bun4/hugs5: **merge 1 = ("u","g") @20** (beats ("u","n") 16, ("h","u") 15) → **merge 2 = ("u","n") @16** (beats newly-available ("h","ug") @15 — *recount each step*) → **merge 3 = ("h","ug")**, first 3-letter token.
+> hug10/pug5/pun12/bun4/hugs5: **merge 1 = ("u","g") @20** (runners-up: **("p","u") 17**, ("u","n") 16, ("h","u") 15) → **merge 2 = ("u","n") @16** — and `("p","u")` has *collapsed 17 → 12*, because `pug`'s `p+u` became `p+ug`. **Merging one pair silently re-counts every pair that overlapped it.** → **merge 3 = ("h","ug") @15**, the first 3-letter token.
 > Segmenting: normalize → pre-tokenize → chars → merges **in order**. `bug`→[b,ug] · `mug`→**[UNK],ug** · `thug`→[UNK],hug · `unhug`→**[un,hug]**.
 > **+** rare words, smaller vocab, generalisation. **−** fragments complex morphology, weak semantics, **no fallback ⇒ [UNK] destroys meaning** (why models fail on emoji).
 

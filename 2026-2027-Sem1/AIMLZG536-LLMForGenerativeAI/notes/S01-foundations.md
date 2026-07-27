@@ -809,9 +809,14 @@ Corpus: `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
 
 | Pair | Where it appears | Total |
 |---|---|---|
-| **("u","g")** | hug (10) + pug (5) + hugs (5) | **20** ✅ most frequent |
-| ("u","n") | pun (12) + bun (4) | 16 |
-| ("h","u") | hug (10) + hugs (5) | 15 |
+| **("u","g")** | hug 10 + pug 5 + hugs 5 | **20** ✅ most frequent |
+| ("p","u") | pug 5 + pun 12 | **17** ← *the runner-up; watch it at merge 2* |
+| ("u","n") | pun 12 + bun 4 | 16 |
+| ("h","u") | hug 10 + hugs 5 | 15 |
+| ("g","s") | hugs 5 | 5 |
+| ("b","u") | bun 4 | 4 |
+
+*All six pairs, not just the top three — if you work this by hand you will find `("p","u") = 17`, and a table that omits it looks like you made an arithmetic error.*
 
 So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vocabulary.
 
