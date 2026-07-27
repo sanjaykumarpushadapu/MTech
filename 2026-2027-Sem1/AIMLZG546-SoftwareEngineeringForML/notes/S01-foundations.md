@@ -117,6 +117,21 @@ flowchart LR
 
 The nesting, stated flatly in T1: **AI ⊃ machine learning ⊃ deep learning**, with **foundation models** a kind of large model typically produced by deep learning. Supervised ML learns from *(data, label)* pairs, where the label is the expected output.
 
+**Mechanism — what "training" actually does.** The algorithm searches for the function that best fits the examples, then freezes it:
+
+| # | Step | Concretely |
+|---|---|---|
+| 1 | Take a **hypothesis space** — the set of functions this algorithm can express | all decision trees up to depth 2 |
+| 2 | Take a **loss** — a number saying how wrong a candidate is on the training data | misclassified transactions |
+| 3 | **Search** that space for low loss, by whatever procedure the algorithm defines | greedy split selection · gradient descent |
+| 4 | **Freeze** the winner. Its numbers are now **parameters** | the chosen thresholds and branches |
+
+Three consequences follow directly, and each drives a later session:
+
+- **Step 1 bounds what is achievable.** A depth-2 tree cannot express a rule needing three conditions, no matter how much data you supply. Under-fitting is a hypothesis-space problem, not a data problem.
+- **Step 2 is where your values enter.** "Best" means whatever the loss says. If the loss counts every error equally, the model will happily trade one missed fraud for one false alarm — a business decision made accidentally, in a line of library code. That is session 4's subject.
+- **Step 3 is a search, so it is not deterministic.** Different random seeds, different data order, or different hardware give a different model from identical inputs. This is exactly why you cannot test an ML system by comparing to an expected output, and why session 10's testing is statistical rather than exact.
+
 **Worked example** — `sklearn.tree.DecisionTreeClassifier` is the *algorithm*. `.fit(transactions, is_fraud)` is *training*. The fitted tree — a specific set of if-then-else conditions — is the *model*. `.predict(new_transaction)` is *inference*. Only the model ships to production; sklearn's training code needn't be there at all.
 
 **Tradeoff / when the distinction bites** — Software engineers routinely conflate the two and then reason wrongly about deployment: shipping the whole training environment to production "because we need sklearn", inflating the container and the attack surface. This distinction is what makes model serving a separate architectural concern (S12).

@@ -527,6 +527,31 @@ flowchart LR
 | 6 | 🛡️ **Safety** | Guardrails & output validation · check toxic content · verify factual accuracy · **PII redaction** |
 | 7 | 📤 **Response** | Final output delivered · NLG · format for channel (text/voice/UI) · send to user |
 
+**Mechanism — it is a loop, not a pipeline.** The diagram draws seven boxes left to right, which is the one misleading thing about it. Stages 3 → 4 → 5 **cycle** until the agent decides it has enough to answer:
+
+```
+1 Request  ─→  2 Routing  ─→  ┌─→ 3 Reasoning ─→ 4 Tool ─→ 5 Memory ─┐
+                              └────────── not done yet ──────────────┘
+                                              │ done
+                                              ▼
+                                   6 Safety ─→ 7 Response
+```
+
+What actually passes between stages:
+
+| Boundary | What crosses it |
+|---|---|
+| 1 → 2 | Sanitised text + extracted entities |
+| 2 → 3 | An intent label and a **candidate tool list** — routing narrows what stage 3 may consider |
+| 3 → 4 | A **structured tool call**: name + arguments (this is function calling, session 4) |
+| 4 → 5 | The tool's raw return value, which becomes an **observation** |
+| 5 → 3 | Observations + retrieved context, appended to the running scratchpad |
+| 3 → 6 | A draft answer, once reasoning stops requesting tools |
+
+**The loop is the agent.** Remove it — run each stage exactly once — and you have a *workflow* (section 3b): cheaper, predictable, and unable to recover from a tool returning something unexpected. The loop is what buys adaptability and what makes cost unpredictable, because nothing guarantees how many times it turns.
+
+**Two exit conditions matter in production:** the model stops asking for tools (the good one), and a **step limit** fires (the guard). Without the second, a confused agent bills you indefinitely — which is the 100-step compounding-error problem from section 12.
+
 **Worked example — banking agent.** User: *"What's my account balance and recent transactions?"*
 
 | Stage | What the agent does |

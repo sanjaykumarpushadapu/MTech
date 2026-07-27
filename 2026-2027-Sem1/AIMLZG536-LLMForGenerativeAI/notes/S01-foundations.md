@@ -134,6 +134,55 @@ flowchart LR
     O -.->|append, feed back| M
 ```
 
+**Mechanism — the chain rule, then a loop.** A language model scores a whole sequence by factorising it into next-token predictions:
+
+```
+P(w₁ … w_n) = ∏  P(w_i | w₁ … w_{i−1})
+              i=1..n
+```
+
+Generation runs that factorisation *forward*. Four steps, repeated until a stop condition:
+
+| Step | What happens | Shape |
+|---|---|---|
+| 1 | Feed the context through the model → **logits**, one raw score per vocabulary entry | `[1 × \|V\|]` |
+| 2 | **softmax** turns logits into a probability distribution: `p_i = e^{z_i} / Σ_j e^{z_j}` | `[1 × \|V\|]` |
+| 3 | **Select** a token — `argmax` (greedy) or sample from `p` | one ID |
+| 4 | **Append** it to the context and return to step 1 | context grows by 1 |
+
+The loop stops at an end-of-sequence token or a length cap. Step 3 is the only place randomness enters — which is why the *same* model gives different answers on different runs, and why `temperature=0` makes it deterministic.
+
+**Worked example — generate two tokens by hand.** Vocabulary of five: `the, cat, sat, mat, <eos>`. Prompt: `"The"`.
+
+*Step 1 — the model emits logits, softmax converts them:*
+
+| Token | logit z | e^z | p = e^z / 13.345 |
+|---|---|---|---|
+| the | 2.0 | 7.389 | **0.554** |
+| cat | 1.0 | 2.718 | **0.204** |
+| sat | 0.5 | 1.649 | 0.124 |
+| mat | 0.2 | 1.221 | 0.092 |
+| `<eos>` | −1.0 | 0.368 | 0.028 |
+| | | Σ = 13.345 | Σ = 1.000 |
+
+Greedy decoding would pick `the` (0.554) and loop forever. **Sampling** picks `cat` often enough that the sentence goes somewhere — the first concrete reason decoding strategy matters, which is the whole of S5.
+
+Say we sample **`cat`**. Context is now `"The cat"`.
+
+*Step 2 — feed the longer context back in:*
+
+| Token | p |
+|---|---|
+| the | 0.064 |
+| cat | 0.078 |
+| **sat** | **0.702** |
+| mat | 0.086 |
+| `<eos>` | 0.070 |
+
+The distribution **sharpened** — 0.204 → 0.702 for the winner. More context means less uncertainty. That is the entire mechanism behind "prompting works": you are not instructing the model, you are conditioning the distribution.
+
+⚠️ **The reframe that matters:** nothing in these two steps knows what a sentence *is*. There is no grammar module and no plan. Fluency is what a good conditional distribution looks like from the outside.
+
 **The consequence that makes LLMs general** — *almost any NLP task can be modelled as word prediction.* The deck's two examples:
 
 **Sentiment classification** becomes a comparison of two probabilities:
@@ -269,6 +318,17 @@ Cross-link: → **521 S1 section 8** (self-attention → multi-turn coherence) �
 
 **Intuition** — One attention head learns one notion of relevance. Run several in parallel with **their own K, Q, V weight matrices** and each can specialise — syntax, coreference, topic. Concatenate, project back down, and the output is the same size as the input, **so layers can be stacked**.
 
+**Mechanism — four steps.** For h heads on an input `X [N × d]`:
+
+| Step | Operation | Result |
+|---|---|---|
+| 1 · **Project** | For each head i, compute `Q_i = X·W_Qi`, `K_i = X·W_Ki`, `V_i = X·W_Vi`, where each `W ∈ ℝ^{d × d_k}` | h sets of `[N × d_k]` |
+| 2 · **Attend** | Run the section-4 computation independently in each head: `softmax(Q_iK_iᵀ / √d_k)·V_i` | h outputs of `[N × d_k]` |
+| 3 · **Concatenate** | Stack the h head outputs side by side along the feature axis | `[N × h·d_k] = [N × d]` |
+| 4 · **Project out** | One final multiply by `W_O ∈ ℝ^{h·d_v × d}` to mix what the heads found | `[N × d]` |
+
+Step 4 is the one people skip. Without `W_O` the heads never talk to each other — the concatenation would just be h separate results parked next to one another. **`W_O` is what makes it multi-*head* attention rather than h independent attentions.**
+
 **The key economy** — because each head works in a *reduced* dimension d_k = d_v = d/h, **the total computational cost is similar to single-head attention at full dimensionality.** You get multiple views for roughly the price of one. That sentence is a likely exam question.
 
 **Worked example — reproduce this by hand.** Input length N = 4, d = 512, heads A = 8, so d_k = d_v = 512/8 = **64**.
@@ -357,6 +417,40 @@ Three things to read off it, all examinable:
 2. **LayerNorm comes *before* each sublayer, not after** — `LayerNorm(X)` feeds attention, and the residual adds the *un*-normalised `X`. This is **pre-norm**, and it's why deep transformers train stably.
 3. **H has the same shape as X**, which is what makes blocks stackable.
 
+**Worked example — one token through the block.** Take `d = 4`, `d_ff = 16`, and follow a single token's vector. Every step below is `[1 × 4]` unless stated.
+
+Suppose the token's incoming vector is `X = [2, 4, 4, 6]`.
+
+*T¹ = LayerNorm(X)* — normalise **across the 4 features of this one token**:
+
+```
+mean μ = (2+4+4+6)/4                = 4.0
+var  σ² = ((−2)²+0²+0²+2²)/4        = 2.0
+std  σ  = √2                        ≈ 1.414
+
+T¹ = (X − μ)/σ = [−1.414, 0, 0, +1.414]
+```
+
+(then scaled by the learnable `γ` and shifted by `β`, both `[1 × 4]`, initialised to 1 and 0)
+
+*The rest of the block, by shape:*
+
+| Step | Operation | Shape | Note |
+|---|---|---|---|
+| T¹ | LayerNorm(X) | `[1 × 4]` | computed above |
+| T² | MultiHeadAttention(T¹) | `[1 × 4]` | mixes across tokens — the only step that looks sideways |
+| T³ | T² **+ X** | `[1 × 4]` | residual adds the **un-normalised** input |
+| T⁴ | LayerNorm(T³) | `[1 × 4]` | |
+| T⁵ | FFN(T⁴): `[1×4]·[4×16] → [1×16]` then `[1×16]·[16×4]` | `[1 × 4]` | **expand 4× then contract** |
+| H | T⁵ **+ T³** | `[1 × 4]` | residual 2 — same shape as X ✅ |
+
+**Two things to notice, both examinable:**
+
+1. **The residual adds `X`, not `T¹`.** If it added the normalised version, the block would have no clean gradient path back to the original input — that's the whole point of pre-norm.
+2. **Only step T² looks at other tokens.** LayerNorm is per-token, the FFN is per-token. A transformer block is *one* mixing operation wrapped in a lot of per-token processing — which is why the FFN can be sharded across devices trivially and attention cannot.
+
+**Parameter count for this toy block:** attention `4 × (4×4) = 64` (W_Q, W_K, W_V, W_O) · FFN `4×16 + 16×4 = 128` · LayerNorm `2 × 2 × 4 = 16`. **The FFN is 2× the attention** — at real scale it stays roughly 2:1, which is the arithmetic behind the tradeoff below.
+
 **The components:**
 
 **Layer normalisation** — applied **independently to each token's hidden vector**, normalising **across the feature dimension** (not across the batch or the sequence — that's the distinction that gets examined). Has **two learnable parameters, γ and β**.
@@ -388,13 +482,33 @@ Cross-link: → **536 S3** (architecture advances — what modern blocks change 
 | **Sinusoidal encodings** | **Fixed sine/cosine functions at multiple frequencies** | Preserves **relative distance**; no parameters |
 | **RoPE** (Rotary Positional Embeddings) | Encodes position by **rotating Q and K in ℂ space** | Embeds **relative phase relationships**; **scales better for long and sliding-window contexts** |
 
-**Sinusoidal, made concrete** *(my own — the deck says "sine/cosine at multiple frequencies" without ever showing it).* With model dim `d = 4`, the formula pairs dimensions — even dim = sin, odd dim = cos — and the **frequency shrinks** as you climb the dimensions. `PE(pos, 0..3)`:
+**Mechanism — the sinusoidal formula.** *(The deck says "sine/cosine at multiple frequencies" and never writes it down.)* For position `pos` and dimension index `i`:
+
+```
+PE(pos, 2i)   = sin( pos / 10000^(2i/d) )     ← even dimensions
+PE(pos, 2i+1) = cos( pos / 10000^(2i/d) )     ← odd dimensions
+```
+
+Read the denominator as a **wavelength dial**. At `i = 0` it is `10000⁰ = 1`, so the sine completes a cycle every ~6 positions. As `i` climbs toward `d/2` the denominator grows to 10000, so the wave stretches until it barely moves across the whole sequence. The vector at each position is therefore a stack of clock hands turning at geometrically-spaced speeds.
+
+The result is **added elementwise** to the token embedding — position is not concatenated, it is summed into the same `d` dimensions the meaning lives in.
+
+**Worked example — compute it by hand.** With `d = 4` there are two frequency bands:
+
+```
+i = 0  →  10000^(0/4)  = 1        → fast:  sin(pos/1),   cos(pos/1)
+i = 1  →  10000^(2/4)  = 100      → slow:  sin(pos/100), cos(pos/100)
+```
+
+`PE(pos, 0..3)`:
 
 | pos | dim0 = sin(pos·1) | dim1 = cos(pos·1) | dim2 = sin(pos·0.01) | dim3 = cos(pos·0.01) |
 |---|---|---|---|---|
 | 0 | 0.00 | 1.00 | 0.00 | 1.00 |
 | 1 | 0.84 | 0.54 | 0.01 | 1.00 |
 | 2 | 0.91 | −0.42 | 0.02 | 1.00 |
+
+**Tradeoff / where sinusoidal breaks** — it preserves *relative* distance beautifully but the model has to infer that relationship from a sum; nothing enforces it. Adding position into the same dimensions as meaning also means the two compete for representational space. RoPE's answer is to **rotate** Q and K instead — position then acts on the *angle* between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it.
 
 Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91), the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Each position gets a unique multi-frequency "fingerprint" — like clock hands turning at different speeds — and because it's the *same fixed function at every position*, the model can encode a position it never saw in training, which learned embeddings cannot. RoPE keeps this multi-frequency idea but **rotates** Q and K rather than **adding** to the embedding.
 
@@ -424,6 +538,18 @@ flowchart LR
 ```
 
 **Special context tokens** are added at this stage — end-of-text, unknown, padding and similar markers the model needs but the raw text doesn't contain.
+
+**Mechanism — the four stages, in order.** The exam can ask for this sequence:
+
+| # | Stage | In → out |
+|---|---|---|
+| 1 | **Vocabulary building** | corpus → a fixed set of tokens (done once, before training) |
+| 2 | **Tokenization** | raw text → token strings, plus any special tokens |
+| 3 | **ID lookup** | token strings → integers, via the vocabulary dictionary |
+| 4 | **Embedding lookup** | integers → dense vectors, by selecting **rows** of `E ∈ ℝ^{\|V\| × d}` |
+| 5 | **Positional addition** | token embedding **+** positional embedding, elementwise, same `d` |
+
+Stage 4 is a *lookup, not a matrix multiply* — mathematically it's one-hot × E, but no implementation does that; it's an indexing operation, which is why it costs nothing at inference.
 
 **The embedding layer**, precisely as the deck describes it:
 
@@ -635,9 +761,20 @@ Every one has **two parts** — this is the definitional split, and it's examina
 
 The vocabulary is built **dynamically**: frequent words get their own tokens, rare words get split.
 
-#### 12.4 BPE — worked example, reproduce this by hand
+#### 12.4 BPE — the algorithm and a worked example
 
-The algorithm: **pre-tokenize** into words (rule-based), build a **word dictionary with frequency counts**, start from a **uni-character vocabulary**, then **merge the most frequent adjacent pair** repeatedly until the target vocabulary size is reached.
+**Mechanism — the token learner, in four steps:**
+
+| # | Step |
+|---|---|
+| 1 | **Pre-tokenize** the corpus into words with a rule-based splitter (whitespace and punctuation) |
+| 2 | Build a **word dictionary with frequency counts** |
+| 3 | Start from a **uni-character vocabulary** — every character that appears |
+| 4 | **Merge the most frequent adjacent pair**, record the merge, repeat until the target vocabulary size is reached |
+
+The matching **token segmenter** replays the recorded merges **greedily, in the learned order**, on new text. Test-set frequencies never matter — only the order learned at training time.
+
+**Worked example — reproduce this by hand.**
 
 Corpus: `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
 

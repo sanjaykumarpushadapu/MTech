@@ -86,6 +86,20 @@ Cross-link: → `_shared/api-design.md` · **546 S9**
 | Coupling | Caller needs the callee up *now* | Caller only needs the broker up |
 | Shape | Request → response | Publish → channel → consume |
 
+**Worked example — the same order, timed both ways.** Placing an order needs three downstream calls: verify the consumer (200 ms), check the restaurant is open (150 ms), reserve payment (400 ms).
+
+| | Synchronous (REST) | Asynchronous (broker) |
+|---|---|---|
+| **Wall time the user waits** | 200 + 150 + 400 = **750 ms** | Publish to the channel = **~5 ms** |
+| **What the user sees** | The finished order, confirmed | `202 Accepted` — *"order received"*, with an ID to poll |
+| **If payment is down** | The whole request fails; user sees an error | Message sits in the queue; processed when payment recovers |
+| **If traffic spikes 10×** | Every caller waits 750 ms; threads exhaust; cascading failure | Queue depth grows; consumers drain it at their own rate |
+| **Can the user be told "confirmed"?** | ✅ Yes, immediately and truthfully | ❌ Not yet — confirmation arrives later, by push or polling |
+
+**The trade in one line:** synchronous buys you a **truthful immediate answer**; asynchronous buys you **survival under load and partial failure**, and pays for it with a more complicated client that must handle "not done yet."
+
+That last row is why real systems are usually both. The user-facing read (`GET /orders/123`) stays synchronous because the user needs an answer now; the fulfilment pipeline behind it goes async because nothing there benefits from making anyone wait.
+
 **Mechanism — the deck's own example, an order service, both ways.**
 
 Synchronous (REST): the order service calls each downstream service directly and waits.
@@ -137,6 +151,27 @@ flowchart LR
     EP --> SRV[API server]
     SRV -->|"HTTP response<br/>status code + JSON/XML"| CL
 ```
+
+**Mechanism — what one HTTP exchange actually contains.** Four parts on the way out, three on the way back:
+
+| | Part | Example | Purpose |
+|---|---|---|---|
+| **Request** | Method | `GET` | The verb — what you want done |
+| | Endpoint | `https://api.amazon.com/products/101` | The noun — what you want it done to |
+| | Headers | `Authorization: Bearer …`<br/>`Accept: application/json` | Metadata: who you are, what format you'll take |
+| | Body | `{"name": "Widget"}` | The payload — **only for POST/PUT/PATCH**; GET and DELETE carry none |
+| **Response** | Status code | `200`, `404`, `500` | Did it work, and whose fault if not |
+| | Headers | `Content-Type: application/json`<br/>`Cache-Control: max-age=3600` | How to interpret and cache the body |
+| | Body | `{"id": 101, "name": "Widget"}` | The result |
+
+**The method carries meaning the URL doesn't.** `GET /products/101` and `DELETE /products/101` are the same endpoint and opposite intentions. Two properties follow, and both get examined:
+
+| Property | Means | Which methods |
+|---|---|---|
+| **Safe** | Doesn't change server state | `GET`, `HEAD`, `OPTIONS` |
+| **Idempotent** | Calling it five times = calling it once | `GET`, `PUT`, `DELETE` — **but not `POST`** |
+
+That `POST` exception is the practical one: a retried `POST` can create two orders, which is why payment APIs make you send an idempotency key. `PUT /products/101` with the same body is harmless to repeat; `POST /products` is not.
 
 **Endpoints** — simple URLs representing a collection of objects or a single object. Resources live on the server; each endpoint is a URL designed to perform **a single function**. The deck's phrasing is worth keeping: endpoints are the **"doors" or "paths"** through which a client sends requests.
 
@@ -729,6 +764,27 @@ Cross-link: → `_shared/api-design.md` — *written once; 546 S9 reaches the sa
 - **Adding a new required field** to client requests
 
 That last one catches people — *adding* something can be a breaking change if clients must now supply it.
+
+**Mechanism — where the version actually goes.** Four schemes, and the choice is visible in every request:
+
+| Scheme | Looks like | Trade |
+|---|---|---|
+| **URI path** | `GET /v2/products/101` | Most common, most visible, easiest to route and cache. But the version is now baked into every client URL, and strictly the resource didn't change — only its representation |
+| **Query parameter** | `GET /products/101?version=2` | Easy to default (omit = latest). Clutters the query string and complicates caching |
+| **Custom header** | `X-API-Version: 2` | Keeps URLs clean and versions the *representation*, which is more correct. Invisible in a browser address bar and easy to forget |
+| **Date-based** | `Stripe-Version: 2024-06-20` | Pins a client to the API as it behaved on a date; the server maintains compatibility shims. Powerful, and the most work to run |
+
+**The rollout sequence** — versioning is a *process*, not a number:
+
+```
+1  Ship v2 alongside v1        both live, clients unchanged
+2  Announce deprecation        with a date, in docs and response headers
+3  Monitor v1 traffic          who is still calling, and how much
+4  Contact the stragglers      this is why API keys are per-consumer
+5  Sunset v1                   only when traffic is near zero
+```
+
+Step 3 is the one teams skip and then regret. If you cannot answer *"who is still on v1?"* you can never safely turn it off, and you maintain both forever.
 
 **Semantic versioning** — a scheme for meaningful version numbers. Form **`X.Y.Z`**, all non-negative integers, no leading zeroes, each element increasing numerically.
 
