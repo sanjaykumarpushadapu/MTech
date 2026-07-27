@@ -19,17 +19,6 @@
 
 Conversational AI — agents — is one of the most employable specialisations in the field right now, and this session is the **map of the whole territory**. It's **not chatbots**: in the instructor's words, *"a reasoning system that happens to speak your language."* Here you get the sixty-year arc that explains why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that is the spine of the course, and the **protocol landscape** (MCP, A2A) being standardised as you read this. Get this and you can architect an agent, reason about its cost and failure modes, and talk fluently about where the field is heading — plus it covers tokenization and context windows deeply enough to build on.
 
-## How to use this note
-
-| Goal | Where to go |
-|---|---|
-| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
-| **The one thing to master** | Section 9, the **seven-stage lifecycle** — the spine of the whole course. Then **run the lab** |
-| **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
-
-🔴 **521 is the build-it subject — ten labs, more than any other.** *"Don't just watch — run the demo code and change one thing."* Reading about an agent is not learning an agent; the concepts click when the loop prints its own reasoning. **Lab 1 already runs a ReAct loop** (`AgentType.ZERO_SHOT_REACT_DESCRIPTION`, `verbose=True`) — four sessions before it's formally taught. Watch that trace; it's the lesson. *(Setup this week: install Ollama, pull `llama3`, get a free Tavily key — the session-1 notebooks need them.)*
-
 ## Topics
 
 **Part 1 — What the field is** *(definitions and history)*
@@ -518,6 +507,22 @@ flowchart LR
 | Calculation errors | **Calculator tool, code execution** | Precise math |
 
 **Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (section 11) become a topic.
+
+> ***Going deeper*** *(my own knowledge, beyond the deck — RAG in one picture, since it's named as the fix all through this note but never drawn):*
+> **RAG = Retrieval-Augmented Generation.** Instead of hoping the model *memorised* a fact, you **fetch** the relevant text and hand it to the model in the prompt:
+>
+> ```mermaid
+> flowchart LR
+>     Q[user question] --> EMB[embed the question]
+>     EMB --> VS[(vector store —<br/>your docs, pre-embedded)]
+>     VS -->|top-k similar chunks| CTX[relevant context]
+>     Q --> P["prompt =<br/>question + retrieved context"]
+>     CTX --> P
+>     P --> LLM[LLM]
+>     LLM --> A[grounded answer]
+> ```
+>
+> Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8 and `_shared/rag.md`.
 
 <details>
 <summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>

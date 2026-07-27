@@ -8,17 +8,6 @@ This is the session that makes you fluent in how modern AI actually works under 
 
 **Running example throughout:** **Llama-3 8B** (d = 4096, 32 heads, d_k = 128). Anchor every new number to it.
 
-## How to use this note
-
-| Goal | Where to go |
-|---|---|
-| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
-| **Actually understand attention** | Sections 4–5 — and **reproduce the shape tables from a blank page.** Reading them is not the same as being able to write them |
-| **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
-
-> **This is the one subject where reading is not enough** — for your career as much as the exam. The mechanism topics (sections 4, 5, 6, 9, 10) have worked examples with real numbers. If you can't reproduce the multi-head shape table from a blank page, you don't have section 5 yet. The course framing (*"before mid-sem: mechanism; after: application engineering"*) maps onto sections 1–7 vs 9–16, and onto closed-book vs open-book.
-
 ## Topics
 
 **Part 1 — What a language model is** *(the conceptual base; ~20 min of her class time, the longest stretch)*
@@ -41,6 +30,26 @@ This is the session that makes you fluent in how modern AI actually works under 
 11. **Architectures** — encoder-only vs decoder-only vs encoder-decoder, and why decoder-only won
 12. **Tokenization** — → mostly lives in `_shared/tokenization.md`; **Lab 1 is here**
 13. **The LLM landscape** — the causal chain, and the three levels of openness
+
+---
+
+## The whole thing in one picture
+
+*My own synthesis (not from one slide) — how the numbered sections below snap together into a single forward pass. Every decoder-only LLM is this loop:*
+
+```mermaid
+flowchart LR
+    T[text] --> TOK["tokenizer<br/>(sec 12)"]
+    TOK --> ID[token IDs]
+    ID --> EM["+ token & positional<br/>embeddings (sec 7–8)"]
+    EM --> BL["N× transformer block<br/>attention (sec 4–5) + FFN (sec 6)"]
+    BL --> HN[final hidden state]
+    HN --> LMH["LM head / unembedding<br/>(sec 9)"]
+    LMH --> PR[distribution over vocab<br/>= P（next token）]
+    PR -.->|sample a token, append, repeat| ID
+```
+
+One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture and every section below is "what happens at this one box." The **context length** (section 10) is just how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives entirely in the attention inside the block.
 
 ---
 
@@ -850,5 +859,3 @@ That single script makes concrete: SentencePiece vs tiktoken (section 12.6), why
 ---
 
 *Exam: this session is in scope for the **closed-book mid-sem** (sessions 1–8). Full evaluation, weights, dates and course logistics live once in [`536-master.md`](../536-master.md) — not repeated per session.*
-
-*Loose ends for this deck: check slide 21's arithmetic against your own working; slide 41 is blank in the export.*

@@ -190,17 +190,16 @@ Rules for the conversion:
 
 ## How notes must be written
 
-Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge-base document that folds down to an exam aid**, in this order:
+Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge document that folds down to an exam aid**.
 
-**Note structure (top to bottom):**
+**A session file is about the subject's knowledge — nothing else.** No document-navigation tables ("how to use this note"), no admin, no course logistics, no deck-errata to-dos. Everything in the file should teach the topic or help the reader *understand and use* it. When in doubt, ask: "is this knowledge, or is it *about the note / the course*?" If the latter, it doesn't belong in the session file. The structure, top to bottom:
 
 1. **Title** — `<Subject Name> · Session NN · <Topic>`, leading with the subject **name** (e.g. "Conversational AI"), not the code. Then a one-line identity aside: **just** `*Learned <date>*` — no instructor, sources or other metadata (per-concept `*Reference:*` lines carry provenance; the master index carries logistics).
-2. **Why this matters** — what this is and why it's worth knowing *for a career*, not just the syllabus. Lead with the knowledge, not the exam.
-3. **How to use this note** — a small table routing the reader by *goal* (learn end-to-end · look up · build · revise for exam).
-4. **Topics** — the numbered index.
-5. **The concept body** — each concept in four parts, then optional depth blocks (below).
-6. **Self-study / Lab / build** — career-useful, stays in the body.
-7. **Exam-scope footer** — the note ends with a single italic line: this session's exam scope (which exam, closed/open book) + a link to the subject `<code>-master.md`. **Course logistics — weights, dates, evaluation, lab environment, platform, study strategy — live ONCE in the master index, never per session.** Only genuinely session-specific loose ends (a to-do about *this* deck) may be added as a short line.
+2. **Why this matters** — 2–4 sentences: what this is and why it's worth knowing *for a career*. The one bit of orientation that earns its place, because it frames the knowledge.
+3. **Topics** — the numbered index of concepts.
+4. **The concept body** — each concept in four parts, plus depth blocks and diagrams (below). This is the note.
+5. **Self-study / Lab / build** — career-useful, stays in the body.
+6. **Exam-scope footer** — one italic line: this session's exam scope + a link to the subject `<code>-master.md`. **Course logistics — weights, dates, evaluation, lab environment, platform, study strategy — live ONCE in the master index, never per session.**
 
 **Every concept gets four parts, in this order:**
 

@@ -4,23 +4,15 @@
 
 *Learned ____*
 
-<!-- A note is a KNOWLEDGE BASE that folds down to an exam aid. Lead with knowledge;
-     the exam scaffolding is collapsed so it never dominates the read. -->
+<!-- A session file is about the SUBJECT'S KNOWLEDGE — nothing else. No "how to use
+     this note" navigation, no admin, no logistics. Add your own knowledge and
+     diagrams freely (marked as beyond-course) to build real understanding. -->
 
 ## Why this matters
 
-<2–4 sentences: what this is and why it's worth knowing *for a career*, not just the syllabus. Name the real-world payoff — what you can do once you have this. Lead with the knowledge, not the exam.>
+<2–4 sentences: what this is and why it's worth knowing *for a career*. Name the real-world payoff — what you can do once you have this.>
 
 **Running example (if any):** <the concrete thread used throughout>.
-
-## How to use this note
-
-| Goal | Where to go |
-|---|---|
-| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
-| **The one thing to master** | <the single highest-value section> |
-| **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates are in the collapsed *Exam layer* at the end |
 
 ## Topics
 

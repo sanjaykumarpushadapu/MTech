@@ -10,17 +10,6 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 
 **Running example throughout:** **fraud detection**, used in every section — and it's Kästner's own ch3 example too, so book and note align from page one.
 
-## How to use this note
-
-| Goal | Where to go |
-|---|---|
-| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
-| **Get the core argument fast** | Section 1 (the transcription start-up) and section 8 (three ML challenges) — those two carry the course |
-| **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
-
-> **This subject rewards judgment, not recall** — which is exactly what makes it career-load-bearing rather than exam-trivia. Every table here is a decision aid: which process model, which role, which risk level. The skill is to *locate a system* on these axes and justify it — on the job and in the exam alike.
-
 ## Topics
 
 **Part 1 — The argument** *(read these two first)*
@@ -690,6 +679,16 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 > - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. You can reproduce "the model from March" only if both are versioned alongside the code.
 > - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
 > - **Monitoring for drift** — the loop the S07 diagram shows: compare live predictions against ground truth as it arrives (Evidently AI), alert when recall slides, trigger retraining. This is the part that has no equivalent in traditional software, and it's where "ML engineer" and "MLOps engineer" spend most of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
+
+> ***Going deeper*** *(my own knowledge, beyond the deck — the three ways a model actually serves predictions; picking the wrong one is a classic mistake):*
+>
+> | Pattern | How | When |
+> |---|---|---|
+> | **Batch / offline** | Score a whole dataset on a schedule, write results to a table | Predictions can be precomputed — churn scores overnight, recommendations refreshed hourly |
+> | **Online / real-time** | A service (FastAPI behind a load balancer) scores one request at a time, low latency | The answer is needed *now* — fraud check at checkout, search ranking |
+> | **Streaming** | Score events as they flow through a queue (Kafka) | Continuous event data — clickstreams, IoT, live anomaly detection |
+>
+> The running example makes the choice concrete: **fraud detection is online** (the score gates a live payment, ~200 ms budget); a monthly churn report is **batch**. Building a heavy real-time service for something a nightly batch job would do — or vice-versa — is the same "match the machinery to the need" judgment as the risk spectrum in section 9.
 
 <details>
 <summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>

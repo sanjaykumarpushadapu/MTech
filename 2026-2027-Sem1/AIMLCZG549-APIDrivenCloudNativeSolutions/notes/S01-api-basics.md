@@ -8,17 +8,6 @@ An API is a **promise between a service and its clients**: send a request shaped
 
 This is career-load-bearing, not just coursework. **Every backend, every cloud service, every ML model you deploy is reached through an API** — Hugging Face, OpenAI, LangChain, Prefect and Amazon Bedrock are all REST. The design calls in this note — REST vs gRPC, how to version without breaking clients, sync vs async — are ones you will actually make on the job. The note builds the vocabulary (contract, sync/async, HTTP), then the three shapes the promise can take, then how you evolve it over time.
 
-## How to use this note
-
-| Goal | Where to go |
-|---|---|
-| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** and ***Going deeper*** blocks where the real-world detail earns its place |
-| **Look something up later** | The topic list below is the index; every concept is self-contained |
-| **Build something tonight** | Section 3's `curl` and Section 4's Books API — ~30 lines of real, running code |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
-
-> **Depth vs breadth for 549 — how to hold both.** For the *closed-book mid-sem*, breadth wins: you need the layer-map (containers → orchestration → serverless → observability) and one line per tool, not internals. For *your career*, depth is the whole point — so this note deliberately goes deeper than the exam needs and marks where it does (***Going deeper***). Read for knowledge now; fold down to the recall cards when the exam is close.
-
 ## Topics
 
 **Part 1 — What an API is** *(the contract)*
@@ -199,6 +188,36 @@ The codes worth knowing by name:
 *Which success code when (my clarity — the deck lists both but doesn't pair them to the method):* a `GET` that returns data → **200 OK**; a `POST` that creates a resource → **201 Created**. Both mean "it worked" — 201 adds "…and I made something new," which is why it's the natural reply to POST.
 
 Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we don't know who you are*. 403 = *we know who you are and you still can't*.
+
+> ***Going deeper*** *(my own knowledge, beyond the deck — how a request actually proves who it is; `401`/`403` are where you meet this):*
+> Three auth schemes you'll use constantly:
+>
+> | Scheme | How it works | Where you'll see it |
+> |---|---|---|
+> | **API key** | A long secret string in a header (`Authorization: Bearer sk-…` or `X-API-Key`). Simple; identifies the *app*, not a user. | OpenAI, most cloud APIs |
+> | **OAuth 2.0** | The user authorises your app **without handing over their password**; your app receives a short-lived **access token**. | "Sign in with Google", any API acting *on a user's behalf* |
+> | **JWT** (JSON Web Token) | A signed, self-contained token carrying claims (who · scope · expiry). The server verifies the *signature* — no database lookup. | Stateless microservice auth — ties straight back to REST being stateless (section 5) |
+>
+> The OAuth flow in one picture — the pattern behind every "Sign in with…" button:
+>
+> ```mermaid
+> sequenceDiagram
+>     participant U as User
+>     participant A as Your App
+>     participant Auth as Auth Server
+>     participant API as Resource API
+>     U->>A: click "Sign in with Google"
+>     A->>Auth: redirect to authorise
+>     Auth->>U: "Allow this app to access X?"
+>     U->>Auth: approve
+>     Auth->>A: authorisation code
+>     A->>Auth: code + app secret
+>     Auth->>A: short-lived access token
+>     A->>API: request + Bearer token
+>     API->>A: data (200) — or 401 if token bad/expired
+> ```
+>
+> The line that connects it all: **authentication (*who are you?*) → `401`; authorization (*are you allowed?*) → `403`.** OAuth **scopes** are exactly how a `403` gets decided — the token says *what* the app may do, not just *who* it is.
 
 The **3xx family** is invisible — the browser follows the redirect silently — but constant: type `http://` and land on `https://` (**301**); finish a checkout and get bounced to a confirmation page (**303**). A redirect is not an error — *"the work doesn't stop, it just looks for another URL."*
 
