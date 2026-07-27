@@ -95,7 +95,7 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | Note | Status | Due |
 |---|---|---|
-| `tokenization.md` | ☐ | **2 Aug — 521 S1 + 536 S1 both taught it** |
+| `tokenization.md` | ✅ | done 26 Jul — 521 S1 + 536 S1, both closed-book |
 | `retrieval.md` | ☐ | 9 Aug |
 | `api-design.md` | ☐ | 9 Aug |
 | `quantization.md` | ☐ | 16 Aug |

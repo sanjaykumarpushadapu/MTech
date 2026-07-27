@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | R2 ch1 ✗ not held | ✗ | ✗ | ✅ `notes/S01-api-basics.md` |
+| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | ✓ **R2 ch1 read** | ✗ | ✗ | ✅ `notes/S01-api-basics.md` (slides + R2) |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
@@ -72,8 +72,27 @@ Free: https://do1.dr-chuck.com/pythonlearn/EN_us/pythonlearn.pdf · CC licensed
 
 **Scope: the handout cites R3 ch1 only, for sessions 2 and 3. Chapters 2–12 are OUT OF SCOPE** — do not read or draw on them, however relevant the titles look. Session 2 and 3 content comes from ch1 plus the lecture slides.
 
+### R2 · Gough, Bryant & Auburn, *Mastering API Architecture* (O'Reilly 2023, 289 pp) — **S1, S2**
+
+| Part | Ch | Title | PDF page | Session |
+|---|---|---|---|---|
+| I · Designing, building, testing | 1 | Design, Build, and Specify APIs | **41** | **S1 ✅ · S2** |
+| | 2 | Testing APIs | 65 | ✗ **OUT OF SCOPE** |
+| II · API traffic management | 3 | API Gateways: Ingress Traffic Management | 93 | ✗ **OUT OF SCOPE** |
+| | 4 | Service Mesh: Service-to-Service Traffic Management | 125 | ✗ **OUT OF SCOPE** |
+| III · Operations and security | 5 | Deploying and Releasing APIs | 163 | ✗ **OUT OF SCOPE** |
+| | 6 | Operational Security: Threat Modeling for APIs | 183 | ✗ **OUT OF SCOPE** |
+| | 7 | API Authentication and Authorization | 205 | ✗ **OUT OF SCOPE** |
+| IV · Evolutionary architecture | 8 | Redesigning Applications to API-Driven Architectures | 229 | ✗ **OUT OF SCOPE** |
+| | 9 | Using API Infrastructure to Evolve Toward Cloud Platforms | 247 | ✗ **OUT OF SCOPE** |
+| | 10 | Wrap-up | 263 | ✗ **OUT OF SCOPE** |
+
+**Scope: the handout cites R2 ch1 only** (sessions 1 and 2). Chapters 2–10 are outside the syllabus, however relevant the titles look — API gateways and service mesh are covered in 549 **S3** from R3 and lecture notes, not from R2.
+
+Ch1 contents (all in scope): intro to REST · **Richardson Maturity Model** · REST standards & structure · collections, pagination, filtering · error handling · OpenAPI specification, code generation, validation, mocking, detecting changes · **API versioning & semantic versioning** · implementing RPC with gRPC · **modeling exchanges and choosing an API format** (north–south vs east–west, high-traffic services, large payloads, vintage formats) · multiple specifications.
+The **Conference API** running example the deck names as self-study lives here.
+
 ### Not held
-- **R2** Gough et al., *Mastering API Architecture* — cited for S1 and S2, and the source of the Conference API self-study example.
 - **R4** Treveil, *Introducing MLOps* — cited for S6.
 
 ## Where things live

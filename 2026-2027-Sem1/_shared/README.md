@@ -6,7 +6,7 @@ When a second course reaches a topic that already has a file here, do not write 
 
 | File | Topic | First taught | Also in | Due |
 |---|---|---|---|---|
-| `tokenization.md` | Subwords, BPE, SentencePiece, tiktoken, token economics | **521 S1 + 536 S1** | 521 S11 · 536 S6 | **2 Aug** |
+| `tokenization.md` ✅ | Subwords, BPE, SentencePiece, tiktoken, token economics | **521 S1 + 536 S1** | 521 S11 · 536 S6 | ✅ done |
 | `retrieval.md` | Embeddings, ANN/HNSW, BM25, RRF | 521 S2 | 536 S12 · 549 S10–11 | 9 Aug |
 | `api-design.md` | REST, OpenAPI, GraphQL, gRPC | 549 S1 | 546 S9 | 9 Aug |
 | `quantization.md` | Quantization, KV-cache, inference cost | 536 S5–6 · 521 S3 | 521 S11 | 16 Aug |

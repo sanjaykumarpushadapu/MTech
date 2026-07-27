@@ -1,7 +1,7 @@
 # 549 · Session 01 · API Basics
 
 Exam: **mid-sem (closed book)** | Date learned: 25 Jul 2026 | Instructor: Nithya Ramachandran
-Assembled from: `API driven_Lecture 1_25Jul.pptx` (72 sl) · R2 Gough et al. ch1 · web references
+Assembled from: `API driven_Lecture 1_25Jul.pptx` (72 sl, 21 images read) · **R2 Gough, Bryant & Auburn ch1** · web references
 
 ## Topics
 
@@ -247,6 +247,24 @@ Same resource, two representations:
 | `PUT` | `/institute/students/123` | Update student 123 |
 | `DELETE` | `/institute/students/123` | Delete student 123 |
 
+### How RESTful is it? The Richardson Maturity Model
+
+*Not in the deck — this is R2 ch1, and it's the standard way to grade a REST API.*
+
+**Intuition** — Leonard Richardson (QCon 2008) reviewed many REST APIs and found teams adopt REST in **levels**, not all-or-nothing. Martin Fowler popularised them. Most real APIs sit at level 2.
+
+| Level | Name | What it means | Example |
+|---|---|---|---|
+| **0** | — | Built on HTTP with a **single URI**, no verb conveying intent. Essentially **RPC over the REST protocol** | one `/attendees` endpoint for everything |
+| **1** | **Resources** | Introduces resources and models them in the URI — Fowler's analogy: adding **identity** | `GET /attendees/1` |
+| **2** | **Verbs (Methods)** | Multiple resource URIs accessed by **different request methods**, chosen by their effect on the server. Guarantees `GET` doesn't change state | adding `PUT /attendees/1`, `DELETE /attendees/1` |
+| **3** | **Hypermedia Controls** | **HATEOAS** — Hypertext As The Engine Of Application State. The response carries the actions now possible on the returned object | `GET /attendees/1` returns the update/delete links |
+
+**Tradeoff / why level 3 is rare** — R2 is blunt: *"in practical terms level 3 is rarely used in modern RESTful HTTP services."* HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
+
+> **Closed-book card**
+> **Richardson Maturity Model** (Richardson, QCon 2008; popularised by Fowler): **L0** HTTP + single URI, no verbs = *RPC over REST* · **L1 Resources** — resource URIs, adds *identity* (`GET /attendees/1`) · **L2 Verbs** — multiple methods per URI by effect on server, `GET` guaranteed side-effect-free · **L3 Hypermedia Controls = HATEOAS**, response carries available actions. **Target level 2**; L3 rare — chatty, poor fit for interservice calls.
+
 **A whole system built this way** — the deck's food-delivery architecture, and the best single diagram in the deck because it's a preview of microservices (S3):
 
 ```mermaid
@@ -447,6 +465,16 @@ Run `protoc` on this and you get, in your language of choice: the message classe
 
 *(The numbers `= 1`, `= 2` are field tags identifying fields on the wire, not default values — a common first-read confusion. Note also the deck's own typo: `MultiplyResponse` is declared as `MultipleResponse`.)*
 
+**The difference that matters most, from R2 — state:**
+
+> *"A key difference between REST and RPC is state. **REST is by definition stateless** — with RPC **state depends on the implementation**."*
+
+RPC exchanges can accumulate state, which buys **high performance at the potential cost of reliability and routing complexity**. RPC also conveys **exact functionality at a method level**, so producer and consumer end up **more coupled**. R2's judgement is worth quoting: *"Coupling is not always a bad thing, especially in east–west services where performance is a key consideration."*
+
+**Why HTTP/2 actually helps** — the deck lists it as a feature; R2 says why. HTTP/2 adds **binary compression and framing**: a transparent binary framing layer splits and compresses messages into chunks, enabling **full request/response multiplexing over a single connection**. Fetching 20 attendees over HTTP/1 needs **20 new TCP connections**; over HTTP/2 it's **20 requests on one connection**. gRPC uses HTTP/2 by default and shrinks payloads with a binary protocol.
+
+*(R2 also notes HTTP/3 is coming, built on **QUIC** over UDP.)*
+
 **Advantages and disadvantages — from the deck:**
 
 | Advantages | Disadvantages |
@@ -463,6 +491,41 @@ Run `protoc` on this and you get, in your language of choice: the message classe
 > **Advantages**: well-defined schema, polyglot, lightweight and fast, **best for inter-service communication**. **Disadvantages**: **poor fit for external-facing services**; **browser/mobile support primitive** (grpc-Web, limited). Rule of thumb: REST/GraphQL at the edge, gRPC behind it.
 
 ---
+
+## 7b. North–south vs east–west — how to actually choose
+
+*Sources: R2 ch1 (absent from the deck, and it's the framing that makes the comparison table usable)*
+
+**Intuition** — Which API format is right depends less on the format's features than on **where the traffic comes from**:
+
+| | **North–south** | **East–west** |
+|---|---|---|
+| Origin | Outside the ecosystem, over the internet | Inside, service-to-service |
+| Latency | High, and **compounding** across services | Low, controllable |
+| Control | You don't control the consumer | You control **both ends** |
+| Implication | Prioritise ubiquity, caching, stability | Can trade readability for **efficiency** |
+
+**The multiplier that makes this matter:** *"In a microservices-based architecture it is likely that **one north–south request will involve multiple east–west exchanges**."* So east–west inefficiency doesn't stay local — it cascades back to the user.
+
+**Three factors R2 says to weigh:**
+
+**High-traffic services** — if exchange frequency is high, payload size and protocol overhead compound, showing up as either transfer cost or total latency.
+
+**Large payloads** — JSON over REST is verbose compared with a fixed or binary representation. And R2 attacks the usual defence directly:
+
+> A common misconception is that **"human readability" is quoted as a primary reason to use JSON**. The number of times a developer will need to read a message, versus the performance consideration, is not a strong case with modern tracing tools… Better logging and error handling can mitigate the human-readable argument.
+
+Also weigh **parsing cost** — turning payloads into language-level objects varies vastly by language, and many traditional server-side languages struggle with JSON versus a binary format.
+
+**Vintage formats** — not every service is modern; older components are an active consideration when evolving an architecture.
+
+**Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the deck's "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
+
+> **Closed-book card**
+> **North–south** = traffic from outside, over the internet: high, **compounding** latency; you don't control the consumer → favour REST/GraphQL (ubiquity, caching, stability). **East–west** = service-to-service, you control both ends → can trade readability for efficiency → gRPC.
+> Multiplier: **one north–south request usually triggers multiple east–west exchanges**, so east–west inefficiency cascades.
+> Weigh: **high-traffic services** (payload size and protocol overhead compound), **large payloads** (JSON verbose; *"human readability" is a weak argument given modern tracing*; parsing cost varies by language), **vintage formats**.
+> Rule: **gRPC when bandwidth is a cumulative concern or volumes are large**; REST at the edge.
 
 ## 8. Choosing between REST, GraphQL and gRPC
 

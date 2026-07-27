@@ -45,6 +45,13 @@ Free online: https://mlip-cmu.github.io/book/ · CC BY-NC-ND.
 
 *(Later chapters — 10 Deploying a Model, 11 Automating the Pipeline, 14–19 Quality Assurance, 23–29 Responsible ML — map to S12, S13, S10–S11 and S14. Locate by heading when needed.)*
 
+## R1 · Tech Mahindra, *Moving from SDLC to ADLC* — **S1, S15**
+
+Landing page: https://www.techmahindra.com/insights/whitepapers/moving-sdlc-ai-driven-software-development-lifecycle-adlc-generate-value/
+PDF: `https://insights.techmahindra.com/assets/sdlc-to-adlc.pdf` — ⚠️ **fetch timed out**; download manually if wanted.
+
+**Not blocking.** Slide 19 reproduces the report's core table in full (Waterfall → Iterative → Agile → Scaled Agile → ADLC, with Features / Challenges / Impact for each), and that table is in `notes/S01-foundations.md` §4. The report would add narrative, not new examinable content.
+
 ## T2 · Nelson, *Software Engineering for Data Scientists* (O'Reilly 2024, 249 pp)
 
 Covers **546 sessions 7, 8 and 9** — the implementation and code-sharing block.
