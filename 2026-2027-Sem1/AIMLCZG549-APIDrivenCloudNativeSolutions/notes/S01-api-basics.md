@@ -134,18 +134,16 @@ flowchart LR
 
 **Endpoints** — simple URLs representing a collection of objects or a single object. Resources live on the server; each endpoint is a URL designed to perform **a single function**. The deck's phrasing is worth keeping: endpoints are the **"doors" or "paths"** through which a client sends requests.
 
-*A point a student got wrong in class, worth pinning down: an endpoint is **not** just the resource path — it is **host + resource path together**.* Its anatomy:
+*A point a student got wrong in class, worth pinning down: an endpoint is **not** just the resource path — it is **host + resource path together**.* Take `https://api.amazon.com/products/101` and split it into its four parts:
 
-```
-https://api.amazon.com/products/101
-└─┬──┘   └──────┬─────┘ └───┬────┘ └┬┘
-protocol      host       resource   id
-(HTTPS =    (the server)  (what you  (which one —
- secure)                   want)      present only
-                                      for a single item)
-```
+| Part | In the example | What it is |
+|---|---|---|
+| Protocol | `https://` | How to talk to the server — HTTPS = the secure form |
+| Host | `api.amazon.com` | Which server to reach |
+| Resource | `/products` | What kind of thing you want |
+| Id | `/101` | Which specific one — present **only** when addressing a single item |
 
-The collection-vs-item split from §4 lives in that last segment: `/products` (no id) is the collection; `/products/101` (id present) is one item. Same host, same resource name — the presence of the id changes what you're addressing.
+The collection-vs-item split from §4 lives in that last part: `/products` (no id) is the collection; `/products/101` (id present) is one item. Same host, same resource name — the presence of the id changes what you're addressing.
 
 **Requests** — every request begins by choosing an HTTP **method** (verb):
 
