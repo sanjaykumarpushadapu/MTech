@@ -16,7 +16,25 @@
 
 ## Topics
 
-<numbered index of the concepts below, grouped into parts>
+<!-- The index is a MAP, not a list. One table per Part. The two columns that earn
+     their place are Depth and "Comes back in": Depth says how hard to work the
+     concept, "Comes back in" makes the note a node in a network rather than a
+     standalone document. Numbers here MUST match the ### N. headings below. -->
+
+**Part 1 · <part title>** — *<what this part is for, in a clause>*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 1 | **<Concept>** | <the one-line summary> | 🔧 | <session / `_shared` file> |
+| 2 | **<Concept>** | <the one-line summary> | 🗺️ | <session / `_shared` file> |
+
+**Part 2 · <part title>** — *<what this part is for>*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 3 | **<Concept>** | <the one-line summary> | ⚖️ | <session / `_shared` file> |
+
+**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
 
 <!-- BODY HIERARCHY: group the numbered concepts under Part headings, matching the
      Topics index. Parts are ## , concepts are ### N. , sub-sections are #### N.M .

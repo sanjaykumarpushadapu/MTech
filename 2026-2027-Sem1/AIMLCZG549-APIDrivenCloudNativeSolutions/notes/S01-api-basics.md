@@ -10,23 +10,37 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 ## Topics
 
-**Part 1 — What an API is** *(the contract)*
-1. **What an API is** — a contract between a service and its clients; the API-first premise
-2. **Synchronous vs asynchronous** — blocked vs non-blocked; REST/gRPC/GraphQL vs message brokers
+**Part 1 · What an API is** — *the contract, and how it's called*
 
-**Part 2 — HTTP and specification**
-3. **HTTP APIs** — endpoints, methods, status codes; the 401-vs-403 distinction
-4. **OpenAPI and the API lifecycle** — the seven steps, worked through a Books API in FastAPI
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 1 | **What an API is** | A contract between a service and its clients; the API-first premise | 🗺️ | `api-design` · 549 S5 |
+| 2 | **Synchronous vs asynchronous** | Blocked vs non-blocked; the three styles vs message brokers | 🔧 | 549 S5 · 546 S5 |
 
-**Part 3 — The three API styles** *(the heart of the session)*
-5. **REST** — architectural style, resources and URIs, the **Richardson Maturity Model**, benefits and drawbacks
-6. **GraphQL** — Facebook 2015, one call instead of three, schema-first, and where it loses (caching)
-7. **gRPC** — RPC, stubs, Protocol Buffers, HTTP/2 multiplexing, `.proto` files
-7b. **North–south vs east–west** — the framing that decides which style to use, and why
-8. **Choosing between them** — the comparison table, close to guaranteed exam material
+**Part 2 · HTTP and specification** — *the wire format everything else sits on*
 
-**Part 4 — Evolution**
-9. **API versioning** — when to version, what counts as a breaking change, semantic versioning `X.Y.Z`
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 3 | **HTTP APIs** | Endpoints, methods, status codes; the 401-vs-403 distinction | 🔧 | 549 S8 · `api-design` |
+| 4 | **OpenAPI and the API lifecycle** | Seven steps, worked through a Books API in FastAPI | 🔧 | 549 S5, S7 |
+
+**Part 3 · The three API styles** — *the heart of the session*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 5 | **REST** | Resources and URIs, the **Richardson Maturity Model**, benefits and drawbacks | 🔧 | 546 S9 · 549 S8 |
+| 6 | **GraphQL** | One call instead of three, schema-first — and where it loses (caching) | 🔧 | `api-design` |
+| 7 | **gRPC** | Stubs, Protocol Buffers, HTTP/2 multiplexing, `.proto` files | 🔧 | 546 S5 · 549 S12 |
+| 7b | **North–south vs east–west** | The framing that decides which style to use | ⚖️ | 546 S5 · `docker-k8s` |
+| 8 | **Choosing between them** | Three questions in order — who calls it, what shape, what a mistake costs | ⚖️ | 546 S9 · `api-design` |
+
+**Part 4 · Evolution** — *changing a contract without breaking people*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 9 | **API versioning** | What counts as a breaking change; semantic versioning `X.Y.Z` | 🔧 | 546 S9 · `api-design` |
+
+**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
 
 ---
 

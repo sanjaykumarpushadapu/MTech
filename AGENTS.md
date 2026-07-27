@@ -220,6 +220,21 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge 
 
 **Exam-scope footer** — one line at the note's end: this session's scope + a link to the master. Weights, dates, evaluation and logistics are **not** duplicated here; they live once in the `<code>-master.md`.
 
+## The Topics index is a map, not a list
+
+Every session note opens with a `## Topics` index. It is **one table per Part**, and it carries two columns beyond the concept name:
+
+| Column | Why it's there |
+|---|---|
+| **Depth** | 🔧 *Mechanism* — reproduce from a blank page · 🗺️ *Landscape* — recognise and compare · ⚖️ *Judgment* — form a defensible opinion |
+| **Comes back in** | The later session or `_shared/` file where the concept reappears |
+
+**Depth is a study instruction, not a difficulty rating.** It answers "how hard do I work this?" — a 🗺️ concept that gets memorised is wasted effort, and a 🔧 concept that only gets read is a mark lost. Set it from what the concept *is*: if it has a mechanism and a worked example it is 🔧; if it's a comparison table it is 🗺️; if the answer is "it depends, and here's how to decide" it is ⚖️.
+
+**"Comes back in" must match the concept's own `Cross-link:` line.** The index summarises the links; the body carries them in full. If they disagree, the body wins and the index is wrong.
+
+**The numbers in the index must match the `### N.` headings exactly** — same count, same order, including sub-numbers like `3b`. An index that has drifted from its body is worse than no index.
+
 ## Shared topics — the main rule
 
 RAG, retrieval, agents, fine-tuning, function-calling, quantization, Docker/K8s, evaluation, ML lifecycle and API design each appear in **two to four** of the four subjects.

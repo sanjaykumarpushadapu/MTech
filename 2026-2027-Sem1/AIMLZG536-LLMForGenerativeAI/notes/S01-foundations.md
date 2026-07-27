@@ -10,26 +10,40 @@ This is the session that makes you fluent in how modern AI actually works under 
 
 ## Topics
 
-**Part 1 — What a language model is** *(the conceptual base; ~20 min of her class time, the longest stretch)*
-1. **What a language model is** — P(W) and P(next word); why word order emerges from counting
-2. **What makes it "large"** — three different things, each with its own cost
-3. **Generation as prediction** — the idea the whole field rests on; why any NLP task can be next-word prediction
+**Part 1 · What a language model is** — *the conceptual base, and the longest stretch of her class time*
 
-**Part 2 — How the machinery works** *(mechanism; ~17 min on attention alone, worked by hand)*
-4. **Self-attention** — Q/K/V, the three-step computation, and the shape table
-5. **Multi-head attention** — why h heads cost the same as one; the worked N=4, d=512 example
-6. **The transformer block** — the equations, two residuals, pre-norm
-7. **Positional encoding** — attention has no sense of order; learned vs sinusoidal vs RoPE
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 1 | **What a language model is** | P(W) and P(next word); why word order emerges from counting | 🔧 | 521 S1 |
+| 2 | **What makes it "large"** | Three different things, each with its own cost | 🗺️ | 536 S5–6 · `quantization` |
+| 3 | **Generation as prediction** | Why any NLP task can be recast as next-word prediction | 🔧 | 521 S1 · `rag` |
 
-**Part 3 — Text in, text out** *(the pipeline around the model)*
-8. **Text → tokens → embeddings** — special tokens, the embedding lookup with real numbers, positional addition
-9. **The LM head and weight tying** — three shapes, and a 13%-of-model parameter decision
-10. **Context length** — why it's capped by O(n²) and KV-cache, not ambition
+**Part 2 · How the machinery works** — *worked by hand; ~17 minutes on attention alone*
 
-**Part 4 — The landscape** *(comparison tables only — do not over-invest)*
-11. **Architectures** — encoder-only vs decoder-only vs encoder-decoder, and why decoder-only won
-12. **Tokenization** — → mostly lives in `_shared/tokenization.md`; **Lab 1 is here**
-13. **The LLM landscape** — the causal chain, and the three levels of openness
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 4 | **Self-attention** | Q/K/V, the three-step computation, and the shape table | 🔧 | 536 S4, S5 · 521 S1 |
+| 5 | **Multi-head attention** | Why h heads cost the same as one; the N=4, d=512 example | 🔧 | 536 S3, S4 |
+| 6 | **The transformer block** | The equations, two residuals, pre-norm | 🔧 | 536 S3 |
+| 7 | **Positional encoding** | Attention has no sense of order; learned vs sinusoidal vs RoPE | 🔧 | 536 S3, S5 |
+
+**Part 3 · Text in, text out** — *the pipeline wrapped around the model*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 8 | **Text → tokens → embeddings** | Special tokens, the lookup with real numbers, positional addition | 🔧 | `tokenization` · 521 S1 |
+| 9 | **LM head and weight tying** | Three shapes, and a 13%-of-parameters decision | 🔧 | 536 S5, S6 |
+| 10 | **Context length** | Why it's capped by O(n²) and KV-cache, not ambition | 🗺️ | 521 S1 · `quantization` · `rag` |
+
+**Part 4 · The landscape** — *comparison tables; recognise, don't over-invest*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 11 | **Architectures** | Encoder-only vs decoder-only vs encoder-decoder, and why decoder-only won | 🗺️ | 536 S3 · 521 S1 |
+| 12 | **Tokenization** | The full treatment lives in `_shared/`; **Lab 1 is here** | 🔧 | `tokenization` · 521 S1 |
+| 13 | **The LLM landscape** | The causal chain, and the three levels of openness | 🗺️ | 521 S3 · 546 S10 |
+
+**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
 
 ---
 

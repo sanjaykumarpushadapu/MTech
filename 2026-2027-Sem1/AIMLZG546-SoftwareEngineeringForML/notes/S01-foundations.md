@@ -12,24 +12,38 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 
 ## Topics
 
-**Part 1 — The argument** *(read these two first)*
-1. **Why this course exists** — Sidney's transcription start-up; excellent models, failing business; 87% / 53%
-2. **ML vocabulary** — algorithm vs model, parameters vs hyperparameters, the compiler analogy
+**Part 1 · The argument** — *read these two first; they carry the course*
 
-**Part 2 — Process** *(what engineering already knows)*
-3. **Two lifecycles** — the SDLC and the ML pipeline, and how they nest
-4. **From Waterfall to ADLC** — five stages, each fixing the last one's pain; and why AI-in-SDLC adoption keeps failing
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 1 | **Why this course exists** | Sidney's transcription start-up: excellent models, failing business | ⚖️ | 546 S2 · 521 S1 |
+| 2 | **ML vocabulary** | Algorithm vs model, parameters vs hyperparameters, the compiler analogy | 🔧 | 549 S4 · `ml-lifecycle` |
 
-**Part 3 — Context** *(landscape — tables, not prose)*
-5. **How software and data got here** — two parallel evolutions
-6. **What data science is** — the three-way overlap, and the hierarchy of needs
+**Part 2 · Process** — *what engineering already knows*
 
-**Part 4 — People and judgment** *(where the marks are)*
-7. **Who builds these systems** — SDLC roles, the three data roles, and the DS↔SE friction
-8. **What ML changes about engineering** — three challenges, each "harder but not new"
-9. **The risk spectrum** — the course's actual thesis, and the five enduring principles
-10. **Foundation models and prompting** — when the general answer is the wrong one
-11. **MLOps and responsible ML** — why both are cross-cutting and can't be scheduled late
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 3 | **Two lifecycles** | The SDLC and the ML pipeline, and how they nest | 🗺️ | 549 S4, S6 · `ml-lifecycle` |
+| 4 | **From Waterfall to ADLC** | Five stages, each fixing the last one's pain | 🗺️ | 546 S15 |
+
+**Part 3 · Context** — *landscape; tables, not prose*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 5 | **How software and data got here** | Two parallel evolutions that met | 🗺️ | 549 S2–3 · `docker-k8s` |
+| 6 | **What data science is** | The three-way overlap, and the hierarchy of needs | 🗺️ | 549 S4 · `ml-lifecycle` |
+
+**Part 4 · People and judgment** — *the half of the course that isn't recall*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 7 | **Who builds these systems** | SDLC roles, the three data roles, and the DS↔SE friction | ⚖️ | 546 S3 · `ml-lifecycle` |
+| 8 | **What ML changes about engineering** | Three challenges, each "harder but not new" — and where that breaks | ⚖️ | 546 S10–11 · 521 S1 |
+| 9 | **The risk spectrum** | The course's actual thesis, and the five enduring principles | ⚖️ | 546 S14 · 521 S12 |
+| 10 | **Foundation models and prompting** | When the general answer is the wrong one | ⚖️ | 536 S10 · `rag` |
+| 11 | **MLOps and responsible ML** | Why both are cross-cutting and can't be scheduled late | 🗺️ | 546 S13–14 · 549 S6 |
+
+**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
 
 ---
 

@@ -16,26 +16,40 @@ Conversational AI — agents — is one of the most employable specialisations i
 
 ## Topics
 
-**Part 1 — What the field is** *(definitions and history)*
-1. **What conversational AI is** — the definition, the understand/reason/act frame, the bot ladder
-2. **The evolution, 1960s → 2026** — seven eras, each fixing the last one's limitation
-3. **Architecture: traditional vs agentic** — where the orchestration layer appeared
-3b. **Workflows vs agents** — Anthropic's distinction, and **when not to build an agent at all**
+**Part 1 · What the field is** — *definitions and sixty years of history*
 
-**Part 2 — What a system is made of**
-4. **The six components** — NLU, dialogue management, knowledge access, action execution, generation, memory
-5. **Frameworks** — traditional (Rasa, Dialogflow) vs agentic (LangChain, LlamaIndex, AutoGen)
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 1 | **What conversational AI is** | The definition, the understand/reason/act frame, the bot ladder | 🗺️ | 546 S2 |
+| 2 | **The evolution, 1960s → 2026** | Seven eras, each fixing the last one's limitation | 🗺️ | 536 S1 · `agents` |
+| 3 | **Traditional vs agentic architecture** | Where the orchestration layer appeared, and why | 🗺️ | 536 S13 · 546 S15–16 |
+| 3b | **Workflows vs agents** | Anthropic's distinction — and when not to build an agent at all | ⚖️ | 521 S9 · `agents` |
 
-**Part 3 — The model layer** *(mechanism; shared with 536)*
-6. **Tokenization** — BPE, the `[UNK]` failure, and the token economics that price a conversation
-7. **Context windows** — and the "lost in the middle" problem that motivates RAG
-8. **LLMs as the brain** — what they do well, where they fail, and how each failure maps to a fix
+**Part 2 · What a system is made of** — *the component checklist you diagnose failures with*
 
-**Part 4 — How an agent actually runs** *(the spine of the course)*
-9. **The seven-stage lifecycle** — Request → Routing → Reasoning → Tool → Memory → Safety → Response
-10. **Protocol landscape** — MCP, A2A, ANP, and why standards matter
-11. **Production concerns** — observability, cost, latency budgets, layered safety
-12. **Open problems** — where the field is still stuck
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 4 | **The six components** | NLU, dialogue, knowledge, action, generation, memory | 🗺️ | 521 S6 · `rag` · `function-calling` |
+| 5 | **Frameworks** | Rasa/Dialogflow vs LangChain/LlamaIndex/AutoGen | 🗺️ | 549 S9 · `agents` |
+
+**Part 3 · The model layer** — *mechanism; shared with 536*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 6 | **Tokenization** | BPE, the `[UNK]` failure, and what prices a conversation | 🔧 | `tokenization` · 536 S1 |
+| 7 | **Context windows** | And the "lost in the middle" problem that motivates RAG | 🗺️ | 536 S1 s10 · `rag` |
+| 8 | **LLMs as the brain** | What they do well, where they fail, and the fix for each failure | 🗺️ | 536 S1 s1,3 · `rag` |
+
+**Part 4 · How an agent actually runs** — *the spine of the whole course*
+
+| # | Concept | In one line | Depth | Comes back in |
+|---|---|---|---|---|
+| 9 | **The seven-stage lifecycle** | Request → Routing → Reasoning → Tool → Memory → Safety → Response | 🔧 | every session after this · `agents` |
+| 10 | **Protocol landscape** | MCP, A2A, ANP, and why standards matter | 🗺️ | 521 S13–14 · `api-design` |
+| 11 | **Production concerns** | Observability, cost, latency budgets, layered safety | ⚖️ | 521 S11–12 · 546 S11 · 549 S7 |
+| 12 | **Open problems** | Where the field is stuck — and which walls are really workarounds | ⚖️ | 546 S8.1 · `agents` |
+
+**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
 
 ---
 
