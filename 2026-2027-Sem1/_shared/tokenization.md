@@ -42,6 +42,15 @@ Tokenization sits under everything else in the degree. Context limits are counte
 1. **Agreement and replicability.** A deterministic fixed set of units means different algorithms and systems can answer simple questions the same way — *How long is this text?* Is *don't* one token or two? Is *New York*? J&M: *"Standardizing is thus essential for replicability in NLP experiments,"* and **perplexity assumes a fixed tokenization** — you cannot compare perplexity across models with different tokenizers.
 2. **Eliminating unknown words.** Tokenizations that include sub-word units remove the OOV problem.
 
+```mermaid
+flowchart TD
+    TR["Training corpus<br/>low · new · newer"] --> V["Word-level vocabulary<br/>low, new, newer"]
+    TEST(["Test word: <b>lower</b>"]) --> V
+    V --> UNK["❌ UNK<br/>meaning destroyed"]
+    TEST --> SUB["Subword tokenizer"]
+    SUB --> OK["✅ low + er<br/>both pieces already known"]
+```
+
 **The unknown-word problem, stated precisely** — J&M's example is cleaner than "mug":
 
 > Training corpus contains **low**, **new**, **newer** — but not **lower**.
@@ -66,6 +75,16 @@ Hence the practical answer: a **data-driven** approach producing units *"about t
 ## 1. Why subwords exist
 
 **Intuition** — BPE sits in the **"Goldilocks" zone** between two failing extremes.
+
+```mermaid
+flowchart LR
+    CH["Character<br/>vocab ~100"] --> SW["SUBWORD<br/>vocab 30k-100k"]
+    WD["Word<br/>vocab 500k+"] --> SW
+    CH -.->|"sequences far too long"| CH
+    WD -.->|"breaks on unseen words"| WD
+```
+
+*Going left to right across the middle: vocabulary grows, sequence length shrinks. Subword is where that trade is least bad.*
 
 | Approach | Failure |
 |---|---|
@@ -111,6 +130,17 @@ All three share the same two-part structure — **definitional and examinable**:
 1. **Token learner** — corpus → vocabulary
 2. **Token segmenter** — sentence → tokens, using that vocabulary
 
+```mermaid
+flowchart TD
+    C[(Raw training corpus)] --> TL["TOKEN LEARNER<br/>runs ONCE, at training time"]
+    TL --> VOC[["Vocabulary<br/>+ ordered merge list"]]
+    NEW(["New sentence, at inference"]) --> TS["TOKEN SEGMENTER<br/>runs on EVERY input"]
+    VOC --> TS
+    TS --> OUT([Tokens])
+```
+
+⚠️ **The trap this diagram prevents:** the segmenter replays the learner's merges **in the order they were learned**. Frequencies in the *test* data play no part whatsoever — only training frequencies ever mattered.
+
 | Algorithm | Origin | Merge criterion |
 |---|---|---|
 | **BPE** | Sennrich et al., 2016 | **Most frequent** adjacent pair |
@@ -124,6 +154,17 @@ Vocabulary is built **dynamically**: frequent words get their own tokens, rare w
 ## 4. BPE — the worked example, reproducible by hand
 
 **Algorithm:** ① pre-tokenize into words ② build a **word-frequency dictionary** ③ start from a **uni-character** vocabulary ④ repeatedly **merge the most frequent adjacent pair** until target size.
+
+```mermaid
+flowchart TD
+    A["① Pre-tokenize into words"] --> B["② Word-frequency dictionary"]
+    B --> C["③ Base vocabulary<br/>every single character"]
+    C --> D["④ Count every adjacent pair"]
+    D --> E["Merge the MOST FREQUENT pair<br/>record it in the merge list"]
+    E --> F{"Vocabulary<br/>at target size?"}
+    F -->|no| D
+    F -->|yes| G([Done: vocab + ordered merges])
+```
 
 **Corpus:** `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
 **Base vocabulary:** `["b", "g", "h", "n", "p", "s", "u"]`
@@ -242,6 +283,16 @@ Google's tokenizer, built to pretrain **BERT**. Same training shape as BPE; **to
 
 **Prefix:** non-initial pieces get `##` — `word` → `w ##o ##r ##d`.
 
+```mermaid
+flowchart TD
+    CORP["Identical corpus<br/>hug 10 · pug 5 · pun 12<br/>bun 4 · hugs 5"]
+    CORP --> BPE["<b>BPE</b><br/>pick the most FREQUENT pair"]
+    CORP --> WP["<b>WordPiece</b><br/>pick the highest SCORE<br/>freq ab ÷ freq a × freq b"]
+    BPE --> B1["first merge: <b>ug</b><br/>count 20, the commonest"]
+    WP --> W1["first merge: <b>##gs</b><br/>score 1/20, parts are rare"]
+    B1 -.->|"opposite answers,<br/>same input"| W1
+```
+
 **Merge criterion — score, not raw frequency:**
 
 ```
@@ -339,6 +390,14 @@ tiktoken BPE (Llama-3):
 
 **Intuition** — sections 3–6 covered *algorithms*. But two tokenizers using the same algorithm still behave differently. Alammar names **three groups of design choices** that determine the result:
 
+```mermaid
+flowchart TD
+    T["Two tokenizers,<br/>same algorithm,<br/>different behaviour"] --> A["① Tokenization METHOD<br/>BPE · unigram LM · WordPiece"]
+    T --> B["② Tokenizer PARAMETERS<br/>vocabulary size<br/>special tokens<br/>capitalisation handling"]
+    T --> C["③ Training DOMAIN<br/>English text · code<br/>multilingual · maths"]
+    C -.->|"the one people forget —<br/>it is why code models<br/>need their own tokenizer"| C
+```
+
 **① Tokenization method** — BPE, unigram LM, WordPiece (section 3). The algorithm for choosing which tokens represent a dataset.
 
 **② Tokenizer parameters** — what the designer decides after picking a method:
@@ -390,6 +449,19 @@ Counts are unintuitive — measure, don't assume:
 | "artificial intelligence" | art · ificial · intelligence | 3 |
 | **"GPT-4"** | **G · PT · - · 4** | **4** |
 | "Book a flight to NYC" | Book · a · flight · to · NYC | 5 |
+
+```mermaid
+flowchart TD
+    TXT["Conversation text"] --> TK["Tokenizer<br/>~4 chars ≈ 1 token"]
+    TK --> IN["INPUT tokens<br/>system prompt + history<br/>+ retrieved context"]
+    TK --> OUT["OUTPUT tokens<br/>the reply"]
+    IN --> BILL["Bill = in × price_in<br/>+ out × price_out"]
+    OUT --> BILL
+    IN -.->|"grows every turn —<br/>history is re-sent<br/>on EVERY request"| IN
+    OUT -.->|"typically 3-5×<br/>the input price"| OUT
+```
+
+**The two dashed notes are where the money goes.** History is resent in full on every turn, so a 20-turn conversation pays for turn 1 twenty times — which is what prompt caching (521 S11) exists to fix.
 
 **Worked example — a support conversation:**
 

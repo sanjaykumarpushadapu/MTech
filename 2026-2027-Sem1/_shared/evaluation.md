@@ -15,6 +15,14 @@
 
 **Intuition** —
 
+```mermaid
+flowchart TD
+    A["first step"] --> B["second step"]
+```
+
+<!-- Every concept gets a diagram. `flowchart TD` unless it is a short linear
+     pipeline of <=5 short boxes. Validate: cd tools && npm run check -->
+
 **Mechanism** —
 
 **Worked example** —

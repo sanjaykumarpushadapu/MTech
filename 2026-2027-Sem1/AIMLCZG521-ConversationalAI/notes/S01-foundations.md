@@ -111,30 +111,34 @@ Cross-link: → `_shared/agents.md` · **536 S1** (same landscape, model-side fr
 
 **Intuition** — The old pipeline classified then responded. The new one plans then acts. Everything else follows from that.
 
-**Traditional (pre-2020)**
+*Both pipelines, side by side — the contrast is the content, so read across rather than down:*
 
 ```mermaid
-flowchart TD
-    U[User input] --> SR[Speech recognition<br/>if voice]
-    SR --> NLU["NLU<br/>intent classification<br/>entity extraction"]
-    NLU --> DM["Dialogue manager<br/>state tracking<br/>policy: rules / ML"]
-    DM --> NLG["NLG<br/>template-based<br/>rule-based"]
-    NLG --> TTS[Text-to-speech<br/>if voice]
-    TTS --> R[Response]
+flowchart LR
+    subgraph T["TRADITIONAL · pre-2020"]
+        direction TB
+        U1([User input]) --> SR["Speech recognition<br/>if voice"]
+        SR --> NLU["NLU<br/>intent classification<br/>+ entity extraction<br/>two separate models"]
+        NLU --> DM["Dialogue manager<br/>state tracking<br/>policy: rules / ML"]
+        DM --> NLG["NLG<br/>template- or rule-based"]
+        NLG --> TTS["Text-to-speech<br/>if voice"]
+        TTS --> R1([Response])
+    end
+    subgraph A["AGENTIC · 2023+"]
+        direction TB
+        U2([User input]) --> LLM["LLM understanding<br/>intent + entities<br/>in ONE pass"]
+        LLM --> ORC["ORCHESTRATION LAYER<br/>planning · tool selection<br/>· memory retrieval"]
+        ORC --> TOOL["Tool invocation<br/>APIs · DB · code"]
+        TOOL --> MEM["Memory update<br/>context · user profile"]
+        MEM --> GEN["LLM generation<br/>contextual response"]
+        GEN --> SAFE["Safety & validation"]
+        SAFE --> R2([Response])
+    end
+    NLU -.->|"collapses into"| LLM
+    DM -.->|"replaced by"| ORC
 ```
 
-**Modern agentic (2023+)**
-
-```mermaid
-flowchart TD
-    U[User input] --> LLM["LLM-based understanding<br/>intent + entities in one pass"]
-    LLM --> ORC["Agentic orchestration layer<br/>planning · tool selection · memory retrieval"]
-    ORC --> TOOL["Tool invocation<br/>API calls · database queries · code execution"]
-    TOOL --> MEM["Memory update<br/>store context · update user profile"]
-    MEM --> GEN["LLM-based generation<br/>contextual response"]
-    GEN --> SAFE[Safety & validation]
-    SAFE --> R[Response]
-```
+Read the two dashed arrows — they are the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
 
 **Two structural differences to be able to name:**
 

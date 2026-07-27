@@ -220,26 +220,6 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge 
 
 **Exam-scope footer** — one line at the note's end: this session's scope + a link to the master. Weights, dates, evaluation and logistics are **not** duplicated here; they live once in the `<code>-master.md`.
 
-## Every concept gets a diagram
-
-**All 47 session-1 concepts have at least one Mermaid diagram. Keep it that way.** A concept with no picture is a concept you will re-read three times and still not hold.
-
-Sources of diagrams, in order of preference:
-
-1. **Convert the deck's own figure.** Extract images from the deck (`python-pptx`: `shape.image.blob`; PDFs: `pdfplumber`/`PyMuPDF`) and *look at them*. Slide text alone routinely omits what the figure shows — 536's transformer equations, embedding numbers and LM-head shapes existed only as images.
-2. **Convert a textbook figure** the deck reproduces, citing it (`Raschka 2.18`, `Alammar 1-27`).
-3. **Draw your own** where neither source has one, and mark it `(my own)`. A comparison table often hides a structure worth drawing — the point is usually the *relationship*, not the cells.
-
-Use `flowchart LR/TD/BT` for structure, `timeline` for eras, `sequenceDiagram` for protocols. Tables stay tables — don't force a comparison into a graph.
-
-**Validate before committing.** A diagram that fails to parse renders as raw text:
-
-```bash
-node tools/check-mermaid.mjs 2026-2027-Sem1/AIML*/notes/*.md 2026-2027-Sem1/_shared/*.md
-```
-
-⚠️ **Mermaid label gotchas found the hard way:** wrap any label containing `(`, `)`, `:`, `,` or `#` in double quotes · `end` is reserved and cannot be a node id · `<br/>` works inside quoted labels but HTML tags like `<b>` do not render in every viewer, so prefer plain text.
-
 ## No hand-written index — the headings are the index
 
 **Session notes have no `## Topics` block.** The `## Part N ·` and `### N.` headings already form an outline that every Markdown viewer renders as a navigable table of contents, always in sync with the document because it *is* the document.
@@ -255,7 +235,7 @@ What replaced it: **each `## Part` heading carries a one-line italic gloss** say
 
 ## Every concept gets a diagram
 
-**All 47 session-1 concepts have at least one Mermaid diagram. Keep it that way.** A concept with no picture is a concept you will re-read three times and still not hold.
+**Every concept in every note — session notes AND `_shared/` notes — has at least one Mermaid diagram. Keep it that way.** A concept with no picture is a concept you will re-read three times and still not hold.
 
 Sources of diagrams, in order of preference:
 
@@ -263,29 +243,31 @@ Sources of diagrams, in order of preference:
 2. **Convert a textbook figure** the deck reproduces, citing it (`Raschka 2.18`, `Alammar 1-27`).
 3. **Draw your own** where neither source has one, and mark it `(my own)`. A comparison table often hides a structure worth drawing — the point is usually the *relationship*, not the cells.
 
-Use `flowchart LR/TD/BT` for structure, `timeline` for eras, `sequenceDiagram` for protocols. Tables stay tables — don't force a comparison into a graph.
+### Pick the direction deliberately
 
-**Validate before committing.** A diagram that fails to parse renders as raw text:
+`LR` is **not** the default. It is for short pipelines only — up to about five boxes with short labels, where left-to-right reads as "and then". Everything else is `TD`.
+
+| Use | When | Examples in these notes |
+|---|---|---|
+| **`flowchart TD`** | 6+ boxes in a chain · anything that **branches or converges** · labels over ~25 characters | the seven-stage lifecycle · self-attention (X splits into Q/K/V) · the GraphQL request path |
+| **`flowchart LR`** | ≤5 boxes, short labels, strictly linear | the Goldilocks zone · the sync-vs-async order flow |
+| **`flowchart BT`** | Something is *built up* from parts | token + positional embeddings summing to the input embedding |
+| **`timeline`** | Eras or dated evolution | 521's 1960s → 2026 |
+| **`sequenceDiagram`** | A protocol handshake with named participants | 549's OAuth exchange |
+
+**Why it matters:** a wide LR diagram scrolls horizontally on screen and is simply **cut off** on the printed open-book file. Of the diagrams here, 15 were written LR and had to be flipped.
+
+**Inside a `subgraph`, `direction TB` overrides the parent** — the escape hatch when the overall layout is LR but one group should stack.
+
+Tables stay tables — don't force a comparison into a graph.
+
+**Validate before committing.** A diagram that fails to parse renders as a wall of raw text; a too-wide one gets cut off in print. The checker catches both — it warns on any LR flowchart estimated wider than ~1100px, so direction is enforced rather than eyeballed:
 
 ```bash
-node tools/check-mermaid.mjs 2026-2027-Sem1/AIML*/notes/*.md 2026-2027-Sem1/_shared/*.md
+cd tools && npm run check
 ```
 
 ⚠️ **Mermaid label gotchas found the hard way:** wrap any label containing `(`, `)`, `:`, `,` or `#` in double quotes · `end` is reserved and cannot be a node id · `<br/>` works inside quoted labels but HTML tags like `<b>` do not render in every viewer, so prefer plain text.
-
-## The Topics index is a map, not a list
-
-Every session note opens with a `## Topics` index. It is **one table per Part**, and it carries two columns beyond the concept name:
-
-| Column | Why it's there |
-|---|---|
-| **Depth** | 🔧 *Mechanism* — reproduce from a blank page · 🗺️ *Landscape* — recognise and compare · ⚖️ *Judgment* — form a defensible opinion |
-
-**Depth is a study instruction, not a difficulty rating.** It answers "how hard do I work this?" — a 🗺️ concept that gets memorised is wasted effort, and a 🔧 concept that only gets read is a mark lost. Set it from what the concept *is*: if it has a mechanism and a worked example it is 🔧; if it's a comparison table it is 🗺️; if the answer is "it depends, and here's how to decide" it is ⚖️.
-
-**Do not add a "where it's used later" column.** It was tried and reverted. Every concept already carries a `Cross-link:` line in its body, with the *reason* for the link attached — which an index cell can't fit. A second copy drifted from the first within a day: 4 of 23 rows disagreed before the change was even committed. One fact, one place.
-
-**The numbers in the index must match the `### N.` headings exactly** — same count, same order, including sub-numbers like `3b`. An index that has drifted from its body is worse than no index.
 
 ## Shared topics — the main rule
 
@@ -331,6 +313,7 @@ Rules for the ask:
 - [ ] `source/MATERIAL-LOG.md` updated with what material was received
 - [ ] Cross-links to `_shared/` are correct and bidirectional
 - [ ] Every concept has a non-empty tradeoff line
+- [ ] Every concept has at least one diagram, and `cd tools && npm run check` passes
 - [ ] No PDFs, slides, datasets or secrets staged for commit
 - [ ] Dates and weights match the handout, or are marked `⚠️`
 
