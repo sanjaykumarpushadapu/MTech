@@ -6,7 +6,7 @@ Rules for any AI agent working in the `MTech` repo. Read this before producing a
 
 Study notes for an MTech at BITS Pilani WILP. One folder per semester (`2026-2027-Sem1/`, then siblings).
 
-**Primary purpose: a durable career knowledge base.** These notes are the user's long-term reference for the field — meant to build real understanding they carry into their work, not to cram for a test and forget. **Depth, real-world context and clear structure are the goal.** The exams (mid-sem closed-book, comprehensive open-book) are a real but *secondary* constraint: every note must still serve them, but it does so through a **folded exam layer** (collapsed closed-book recall cards under each concept, plus an *Exam layer* section at the end for scope/dates/logistics) so the knowledge leads and the exam scaffolding never dominates the read. When career depth and exam brevity pull apart, keep both — the note reads for knowledge and folds down to the cards. Every rule below serves this.
+**Primary purpose: a durable career knowledge base.** These notes are the user's long-term reference for the field — meant to build real understanding they carry into their work, not to cram for a test and forget. **Depth, real-world context and clear structure are the goal.** The exams (mid-sem closed-book, comprehensive open-book) are a real but *secondary* constraint: every note serves them through **collapsed closed-book recall cards under each concept**, plus a **one-line exam-scope footer** linking to the master — so the knowledge leads and the exam scaffolding never dominates the read. **Course logistics (weights, dates, evaluation, lab environment, platform) live ONCE in the subject master index, never repeated per session note.** When career depth and exam brevity pull apart, keep both — the note reads for knowledge and folds down to the cards. Every rule below serves this.
 
 **Current semester:** Aug–Dec 2026. Four subjects — folder name = **course code + course title exactly as the handout states it**:
 
@@ -194,13 +194,13 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge-
 
 **Note structure (top to bottom):**
 
-1. **Title** — `<Subject Name> · Session NN · <Topic>`, leading with the subject **name** (e.g. "Conversational AI"), not the code. Then a one-line identity aside: **just** `*Learned <date>*` — no instructor, sources or other metadata (per-concept `*Reference:*` lines carry provenance; the exam layer carries logistics).
+1. **Title** — `<Subject Name> · Session NN · <Topic>`, leading with the subject **name** (e.g. "Conversational AI"), not the code. Then a one-line identity aside: **just** `*Learned <date>*` — no instructor, sources or other metadata (per-concept `*Reference:*` lines carry provenance; the master index carries logistics).
 2. **Why this matters** — what this is and why it's worth knowing *for a career*, not just the syllabus. Lead with the knowledge, not the exam.
 3. **How to use this note** — a small table routing the reader by *goal* (learn end-to-end · look up · build · revise for exam).
 4. **Topics** — the numbered index.
 5. **The concept body** — each concept in four parts, then optional depth blocks (below).
 6. **Self-study / Lab / build** — career-useful, stays in the body.
-7. **🎓 Exam layer** — a collapsed `<details>` at the very end holding exam scope, weights, dates, course logistics and confusions. The exam scaffolding lives here so it never dominates the read.
+7. **Exam-scope footer** — the note ends with a single italic line: this session's exam scope (which exam, closed/open book) + a link to the subject `<code>-master.md`. **Course logistics — weights, dates, evaluation, lab environment, platform, study strategy — live ONCE in the master index, never per session.** Only genuinely session-specific loose ends (a to-do about *this* deck) may be added as a short line.
 
 **Every concept gets four parts, in this order:**
 
@@ -218,7 +218,7 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge-
 **Exam formats — folded, not removed:**
 
 - **Closed-book recall card** — the fewest words that trigger full recall, wrapped in a collapsed `<details><summary>📄 Closed-book recall card</summary>` under each concept. Present for sessions 1–8 (mid-sem scope); the knowledge reads on top, the card is one click away.
-- **Exam layer** (the `<details>` at the note's end) — scope, dates, weights, logistics, confusions. For all 16 sessions.
+- **Exam-scope footer** (one line at the note's end) — this session's scope + a link to the master. Weights, dates, evaluation and logistics are **not** duplicated here; they live once in the `<code>-master.md`.
 
 ## Shared topics — the main rule
 

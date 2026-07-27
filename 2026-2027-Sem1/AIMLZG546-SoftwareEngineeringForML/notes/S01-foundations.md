@@ -17,7 +17,7 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 | **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
 | **Get the core argument fast** | Section 1 (the transcription start-up) and section 8 (three ML challenges) — those two carry the course |
 | **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates are in the collapsed *Exam layer* at the end |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
 
 > **This subject rewards judgment, not recall** — which is exactly what makes it career-load-bearing rather than exam-trivia. Every table here is a decision aid: which process model, which role, which risk level. The skill is to *locate a system* on these axes and justify it — on the job and in the exam alike.
 
@@ -710,36 +710,4 @@ No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blue
 
 ---
 
-## 🎓 Exam layer & course logistics
-
-*For passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
-
-<details>
-<summary><b>Exam scope, weights, dates, lab environment & confusions</b> — fold out</summary>
-
-| Component | Marks | Detail |
-|---|---|---|
-| EC-1 · Quiz | 5 | 🔴 **"15–20 questions, ~15 minutes, just before the mid sem"** — *not* the 10–20 Aug window the handout gives. Covers concepts up to session 8 |
-| EC-1 · Situated Learning | 5 | ⚠️ *"still working on the situated learning part… I'll explain later"* |
-| EC-1 · **Assignment I** | 10 | 🔴 **BEFORE the mid-sem.** 2 weeks to complete |
-| EC-1 · Assignment II | 10 | After the mid-sem. 2 weeks |
-| **EC-2** mid-semester | **30** | Closed book, 2h · **19 Sep 2026 (EN)** · *"after session 7 or 8"* |
-| **EC-3** comprehensive | **40** | Open book, 2–2½h · **5 Dec 2026 (EN)** |
-
-**The slide was right and the handout was wrong** about Assignment I's timing (it's before the mid-sem).
-
-⚠️ **Individual or team? Not decided.** He leans team — *"many people are not from an industry background, so it's our job to make sure they upgrade."*
-
-**🔵 Open-book rules (matters for the December binding plan):** you may take **watermarked PPT printouts** plus the **T1 and T2 books**. Confirm whether your own typed notes count before relying on them.
-
-**Lab environment:** **Virtual lab** enabled after session 2 (all demos/coding). **AWS Console Lab** from ~sessions 13–14. 💰 Both free. **FastAPI** chosen for labs. **Everything is on Taxila** (PPTs + handout also on MS Teams). Instructor: prashant.vaish@pilani.bits-pilani.ac.in.
-
-### Confusions to resolve
-
-- [x] ~~Situated Learning and Assignment I timing~~ ✅ Assignment I is BEFORE the mid-sem.
-- [ ] **Are assignments individual or team?** Not decided.
-- [ ] Situated Learning format — *"still working on it."*
-- [ ] Is the AWS Console Lab provisioned, or self-provisioned?
-- [ ] Did class cover the ML vocabulary (section 2) verbally? The deck stops before it — but **T1 ch3 is cited for this session**, so section 2 is in scope regardless.
-
-</details>
+*Exam: this session is in scope for the **closed-book mid-sem** (sessions 1–8). Full evaluation, weights, dates and course logistics live once in [`546-master.md`](../546-master.md) — not repeated per session.*

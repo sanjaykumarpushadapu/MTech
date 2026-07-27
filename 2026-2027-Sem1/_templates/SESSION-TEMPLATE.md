@@ -72,21 +72,10 @@ Cross-link: → `_shared/<topic>.md` · <other subjects/sessions>
 
 ---
 
-## 🎓 Exam layer & course logistics
+*Exam: this session is in scope for the **<closed-book mid-sem | open-book comprehensive>** (<scope>). Full evaluation, weights, dates and course logistics live once in [`<code>-master.md`](../<code>-master.md) — not repeated per session.*
 
-*For passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
+<!-- Course logistics belong ONLY in the master index. This footer is a one-liner.
+     Optionally add ONE short line for genuinely session-specific loose ends (a to-do
+     about this deck), e.g.:
+     *Loose ends for this deck: <thing to check>.* -->
 
-<details>
-<summary><b>Exam scope, weights, dates, logistics & confusions</b> — fold out</summary>
-
-**Exam status.** <closed/open book · scope · date>.
-
-### Evaluation
-
-<weights table>
-
-### Confusions to resolve
-
-- [ ] <thing that didn't land in class — carry to the weekday hour>
-
-</details>

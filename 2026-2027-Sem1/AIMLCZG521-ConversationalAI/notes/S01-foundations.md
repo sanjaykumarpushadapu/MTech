@@ -26,7 +26,7 @@ Conversational AI — agents — is one of the most employable specialisations i
 | **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
 | **The one thing to master** | Section 9, the **seven-stage lifecycle** — the spine of the whole course. Then **run the lab** |
 | **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates are in the collapsed *Exam layer* at the end |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
 
 🔴 **521 is the build-it subject — ten labs, more than any other.** *"Don't just watch — run the demo code and change one thing."* Reading about an agent is not learning an agent; the concepts click when the loop prints its own reasoning. **Lab 1 already runs a ReAct loop** (`AgentType.ZERO_SHOT_REACT_DESCRIPTION`, `verbose=True`) — four sessions before it's formally taught. Watch that trace; it's the lesson. *(Setup this week: install Ollama, pull `llama3`, get a free Tavily key — the session-1 notebooks need them.)*
 
@@ -771,30 +771,4 @@ Target interaction in the deck: *"What's the weather like in Mumbai?"* — the n
 
 ---
 
-## 🎓 Exam layer & course logistics
-
-*For passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
-
-<details>
-<summary><b>Exam scope, weights, study advice & confusions</b> — fold out</summary>
-
-| Component | Weight | Detail |
-|---|---|---|
-| **Quiz ×3, best 2 count** | 10% | Open book. **One bad quiz is free** — but sit all three; you can't know which is your worst |
-| Assignment 1 & 2 | 20% | Open book, **~15 days each** |
-| Mid-term | 30% | Closed book, **L1–L8** — but **L8 is revision**, so seven sessions of new material |
-| End semester | 40% | Open book, L1–L16 |
-
-⚠️ **Strictly no makeups** for quizzes and assignments; all plagiarism-checked. ⚠️ **521 publishes no fixed dates** — announced in class / on Canvas. **521 uses Canvas** (not Taxila or Teams); check it weekly.
-
-**Instructor's study advice:** ① code every lecture ② read the references (ReAct, DPR, DPO — abstract + results) ③ get an API key early *(session-1 lab actually runs locally on Ollama)* ④ start assignments early, no extensions ⑤ ask on Canvas.
-
-📌 *The handout held is `(S2-25_…)`, the April–May cohort; recordings are `S1-26`. Evaluation carried over unchanged; session plan matches the current deck — worth a quick diff if an S1-26 handout appears.*
-
-### Confusions to resolve
-
-- [x] ~~Quizzes: ×2 or ×3-best-2?~~ ✅ handout is right: **×3, best 2 count**. Slide 26's "×2" is wrong.
-- [x] ~~Assignments: 15 days or 3 weeks?~~ ✅ **15 days** (handout).
-- [ ] Deck says protocols are in "Lectures 14–15"; handout puts MCP at L13, A2A at L14. Check before revising.
-
-</details>
+*Exam: this session is in scope for the **closed-book mid-sem** (sessions 1–8). Full evaluation, weights, dates and course logistics live once in [`521-master.md`](../521-master.md) — not repeated per session.*

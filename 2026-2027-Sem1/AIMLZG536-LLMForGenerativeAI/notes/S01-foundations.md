@@ -15,7 +15,7 @@ This is the session that makes you fluent in how modern AI actually works under 
 | **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
 | **Actually understand attention** | Sections 4–5 — and **reproduce the shape tables from a blank page.** Reading them is not the same as being able to write them |
 | **Look something up later** | The topic list below is the index; each concept is self-contained |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates are in the collapsed *Exam layer* at the end |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
 
 > **This is the one subject where reading is not enough** — for your career as much as the exam. The mechanism topics (sections 4, 5, 6, 9, 10) have worked examples with real numbers. If you can't reproduce the multi-head shape table from a blank page, you don't have section 5 yet. The course framing (*"before mid-sem: mechanism; after: application engineering"*) maps onto sections 1–7 vs 9–16, and onto closed-book vs open-book.
 
@@ -849,36 +849,6 @@ That single script makes concrete: SentencePiece vs tiktoken (section 12.6), why
 
 ---
 
-## 🎓 Exam layer & course logistics
+*Exam: this session is in scope for the **closed-book mid-sem** (sessions 1–8). Full evaluation, weights, dates and course logistics live once in [`536-master.md`](../536-master.md) — not repeated per session.*
 
-*For passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
-
-<details>
-<summary><b>Exam scope, weights, evaluation & confusions</b> — fold out</summary>
-
-**The handout is superseded.** The instructor confirmed in class, repeatedly:
-
-> *"I'm repeating — there are **no quizzes** for this course."*
-> *"EC2 will be closed book 30 marks and EC3 will be 35 marks."*
-
-So **EC-1 = 35%, two group assignments** (plan shared ~week 2); **EC-2 mid-sem = 30%, closed book**, scope sessions **1–8** (S8 is revision, so ~7 sessions of new content); **EC-3 comprehensive = 35%, open book**, all sessions. The handout's "Quiz 5% + Assignment 30%" split never applied.
-
-**Assignment design (from the recording):**
-- **Group work** — you form your own groups; Ops creates a placeholder.
-- **Assignments 1 and 2 combine into one end-to-end project** — plan them together.
-- Each has **two problem statements** + **5–6 enterprise case-study options**; you choose.
-- Everything assigned **is taught first**. Lab sheets are notebooks with **80–90% of the code already written**.
-
-🔴 **The remote lab is mandatory for assignments** — *"in laptop, no."* Manual to be shared; expect slowdowns near deadlines. Colab handles only very small models. *Study-plan consequence:* two group assignments, not one solo 30% piece — lighter per person, but with coordination overhead.
-
-**References:** T1 Jurafsky & Martin (3rd ed. draft, Jan 2026) ch2/7/8 · T2 Alammar ch1/2/3 · R1 Raschka ch1/2 · HuggingFace LLM course ch6.5 · paper *Neural Machine Translation with Byte-Level Subwords*.
-
-### Confusions to resolve
-
-- [x] ~~Is the quiz replaced by assignments?~~ ✅ no quizzes; 35% two group assignments; remote lab mandatory.
-- [ ] Which two problem statements, and which enterprise case studies? (~week 2)
-- [ ] Remote lab access — manual not yet shared.
-- [ ] Does the deck's `MultiplyResponse`-style sloppiness appear elsewhere — check slide 21's arithmetic.
-- [ ] Slide 41 is blank in the export — check whether something was on it.
-
-</details>
+*Loose ends for this deck: check slide 21's arithmetic against your own working; slide 41 is blank in the export.*

@@ -15,7 +15,7 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 | **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** and ***Going deeper*** blocks where the real-world detail earns its place |
 | **Look something up later** | The topic list below is the index; every concept is self-contained |
 | **Build something tonight** | Section 3's `curl` and Section 4's Books API — ~30 lines of real, running code |
-| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates live in the collapsed *Exam layer* at the end |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; exam scope, weights & dates live in the subject **master index** |
 
 > **Depth vs breadth for 549 — how to hold both.** For the *closed-book mid-sem*, breadth wins: you need the layer-map (containers → orchestration → serverless → observability) and one line per tool, not internals. For *your career*, depth is the whole point — so this note deliberately goes deeper than the exam needs and marks where it does (***Going deeper***). Read for knowledge now; fold down to the recall cards when the exam is close.
 
@@ -789,41 +789,4 @@ Then, if the hour allows: build the Books API from section 4 in FastAPI. It's ~3
 
 ---
 
-## 🎓 Exam layer & course logistics
-
-*Everything below is for passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
-
-<details>
-<summary><b>Exam scope, weights, dates & study strategy</b> — fold out</summary>
-
-**Exam status.** 549 mid-sem is **closed book**, scope **contact sessions 1–8**, **20 Sep 2026 (FN)**. Comprehensive is **open book**, scope **1–16**, **6 Dec 2026 (FN)**.
-
-**How to study 549 *for the exam*:** breadth, not depth. Build one layer-map — containers → orchestration → serverless → observability — and hang each tool on a layer with one line of what it does. The CNCF landscape has hundreds of logos; for the exam you need the layers, not the logos. *(This does not conflict with the career depth above — the ***Going deeper*** and ***In practice*** blocks are a separate, deeper pass. Read for knowledge now; drill the layer-map and the recall cards when the exam is close.)*
-
-🔴 **Collect every deck and recording, every weekend.** 549 has **no textbook from session 4 onward** — sessions 1–3 have R2/R3 behind them; 4–16 list only *"Web Resources, Lecture Notes."* For this subject the deck and recording **are** the syllabus, and a deck you didn't download may be gone.
-
-### Evaluation
-
-| Component | Weight | Detail |
-|---|---|---|
-| Quiz ×1 | **5%** | ⚠️ date not announced |
-| Assignment / Mini-Project I | **15%** | ⚠️ date not announced |
-| Assignment / Mini-Project II | **15%** | ⚠️ date not announced |
-| **EC-1 total** | **35%** | |
-| Mid-semester test | **30%** | Closed book, 2h · **20 Sep FN** · scope sessions **1–8** |
-| Comprehensive | **35%** | Open book, 2½h · **6 Dec FN** · scope **1–16** |
-
-The handout's single *"Project/Assignment 30%"* is actually **two 15% assignments plus a 5% quiz**. Her framing: *"EC-1 covers a big portion compared to EC-2 and EC-3. EC-2 is 30 and EC-3 open book is 35%, **instead of 40**."*
-
-🔴 **Everything lives in MS Teams** — the handout, each session's deck, and **whatever code is used** for that session. Check the shared folder after every session; the code appears nowhere else.
-
-**Lab tools per the deck:** L1 Prefect/Airflow · L2 AWS SageMaker, MLflow · L3 HuggingFace/AWS/OpenAI APIs · L4 Flowise, LangChain, OpenAI · L5 OpenRemote, ThingsBoard.
-
-### Confusions to resolve
-
-- [x] ~~One 30% project or two mini-projects?~~ ✅ quiz 5% + two assignments at 15% each = 35%.
-- [x] ~~Does R2 need buying?~~ ✅ Held in `/_library/549-R2-Gough-MasteringAPIArchitecture.pdf`. Ch1 read; ch2–10 out of scope.
-- [ ] **EC-1 dates — not yet announced.** *"Duration, date, session — will let you know before itself."* Watch MS Teams.
-- [ ] Is Lab 5 at session 14 or 15?
-
-</details>
+*Exam: this session is in scope for the **closed-book mid-sem** (sessions 1–8). Full evaluation, weights, dates and course logistics live once in [`549-master.md`](../549-master.md) — not repeated per session.*
