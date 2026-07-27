@@ -1,26 +1,25 @@
 # 546 · Session 01 · Foundations of ML Systems Engineering
 
-Exam: **mid-sem (closed book)** | Date learned: ____ | Running example: **fraud detection**
-Assembled from: Session 1 slides (Dr. Prashant Vaish, 28 sl, 15 images read) · T1 Kästner ch1 & ch3 · **R1 Tech Mahindra ADLC white paper (12 pp, read in full)**
+*Learned ____ · Instructor Dr. Prashant Vaish · built from Session-1 slides (28 sl, 15 images) + T1 Kästner ch1 & ch3 + R1 Tech Mahindra ADLC white paper (12 pp). Exam scope & logistics folded into the **Exam layer** at the end.*
 
-## What this session is
+## Why this matters
 
-The **why-this-course-exists** session. It sets up the argument the other fifteen sessions elaborate: **the model is rarely the problem — everything around it is.**
+This is the session that separates people who can *train* a model from people who can *ship* one — the difference that defines an ML **engineer**. Its central claim, which you'll spend a career proving true: **the model is rarely the problem; everything around it is.** Data quality, latency, cost, monitoring, fairness, the handoff between data scientists and engineers — that's where ML products actually live or die. This note gives you the vocabulary (algorithm vs model, parameters vs hyperparameters), the process (SDLC, ML pipeline, MLOps), and the judgment (the risk spectrum, when the general answer is the wrong one) to reason about real systems.
 
-Three different sources make the same point from three angles. The slides give the process history (SDLC, roles, ADLC). Kästner gives the failure evidence (87% of ML projects fail). The Tech Mahindra paper gives the local-optimisation trap (an AI pair programmer speeds coding and changes nothing else). Read them as one argument, not three.
+Three sources, one argument: the slides give the process history, Kästner (T1) gives the failure evidence (**87% of ML projects fail**), the Tech Mahindra paper gives the local-optimisation trap. Read them as one.
+
+**Running example throughout:** **fraud detection**, used in every section — and it's Kästner's own ch3 example too, so book and note align from page one.
 
 ## How to use this note
 
-| If you have… | Read |
+| Goal | Where to go |
 |---|---|
-| **10 minutes** | The closed-book cards — the `>` blockquotes |
-| **1 hour** (your Thursday slot) | section 1 (the transcription start-up) and section 8 (three ML challenges). Those two carry the course |
-| **Before the mid-sem** | All of it — 546 is the least mathematical subject and the most quotable |
-| **For Lab 1** (session 3) | section 7's three roles, and the fraud-detection thread running through every section |
+| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
+| **Get the core argument fast** | Section 1 (the transcription start-up) and section 8 (three ML challenges) — those two carry the course |
+| **Look something up later** | The topic list below is the index; each concept is self-contained |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates are in the collapsed *Exam layer* at the end |
 
-**This subject rewards judgment, not recall.** Every table here is a decision aid: which process model, which role, which risk level. Exam questions ask you to *locate a system* on these axes and justify it — not to recite the axes.
-
-**Running example:** **fraud detection**, locked in at session 1 and used in every section. Kästner's own worked example in ch3 is also a credit-card fraud decision tree, so the textbook and your example align from page one.
+> **This subject rewards judgment, not recall** — which is exactly what makes it career-load-bearing rather than exam-trivia. Every table here is a decision aid: which process model, which role, which risk level. The skill is to *locate a system* on these axes and justify it — on the job and in the exam alike.
 
 ## Topics
 
@@ -47,7 +46,7 @@ Three different sources make the same point from three angles. The slides give t
 
 ## 1. Why this course exists
 
-*Sources: T1 ch1 · slide 5 (course description)*
+*Reference: T1 Kästner, *Machine Learning in Production* ch1 (Introduction) — free online at mlip-cmu.github.io.*
 
 **Intuition** — You can train a good model and still have no product. The gap between "the model works in my notebook" and "customers pay for this and it doesn't fall over" is the entire subject of this course, and it's an engineering gap, not an ML gap.
 
@@ -71,14 +70,19 @@ Three different sources make the same point from three angles. The slides give t
 
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Gap between working model and working product = engineering, not ML. **87% of ML projects fail; 53% never reach production.** T1's transcription start-up: great models, failing business — noisy real data, infeasible latency, inference cost vs margin, unwanted web/payments work, DS↔engineer communication breakdown, manual scripts and a botched model update, fairness failures *with high confidence*, no monitoring except complaints. Point: everything around the model failed, not the model.
+
+</details>
 
 ---
 
 ## 2. Machine learning vocabulary
 
-*Sources: T1 ch3 (the ML terminology the slide agenda promised; the deck stops before it)*
+*Reference: T1 Kästner ch3 — the ML terminology the deck's agenda promised but stopped short of.*
 
 ### 2.1 Algorithm vs model, training vs inference
 
@@ -97,6 +101,11 @@ The nesting, stated flatly in T1: **AI ⊃ machine learning ⊃ deep learning**,
 **Worked example** — `sklearn.tree.DecisionTreeClassifier` is the *algorithm*. `.fit(transactions, is_fraud)` is *training*. The fitted tree — a specific set of if-then-else conditions — is the *model*. `.predict(new_transaction)` is *inference*. Only the model ships to production; sklearn's training code needn't be there at all.
 
 **Tradeoff / when the distinction bites** — Software engineers routinely conflate the two and then reason wrongly about deployment: shipping the whole training environment to production "because we need sklearn", inflating the container and the attack surface. This distinction is what makes model serving a separate architectural concern (S12).
+
+> ***In practice*** *(beyond the deck — how "the model ships, not the algorithm" actually works):*
+> - The model is **serialized** to a file and loaded by a runtime. Formats you'll meet: **pickle/joblib** (sklearn — convenient but unsafe to load from untrusted sources, and version-brittle), **ONNX** (framework-neutral, for cross-runtime serving), **safetensors** (the safe standard for deep-learning weights). "Which format" is a real deployment decision.
+> - Trained models live in a **model registry** (MLflow Model Registry, SageMaker) — versioned, staged (staging → production), and rolled back like any other artifact. The registry is to models what git is to code.
+> - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what S14's provenance section is about.
 
 ### 2.2 Parameters, hyperparameters, and the compiler analogy
 
@@ -138,16 +147,21 @@ T1 devotes a section to this, which signals it can be asked.
 | performance | *prediction accuracy* vs *inference latency* |
 | parameter | *model parameter* (learned) vs *hyperparameter* (chosen) |
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Algorithm** (sklearn/TF) + training data → *training* → **model** (learned function); model + input → *inference* → prediction. AI ⊃ ML ⊃ deep learning; foundation models = large DL models. Supervised = (data, label) pairs.
 > **Parameters** learned from data; **hyperparameters** chosen by you (depth, learning rate, stopping; architecture counts). Analogy: source→compiler→executable ≈ data→algorithm→model, **hyperparameters = compiler options**, algorithm absent at runtime, model stored *pickled* ≈ bytecode+JVM. Breaks because compiler output is deterministic and specified; ML training is neither — though the trained model itself is deterministic.
 > Never say bare "performance" (accuracy vs latency), bare "model" (learned vs architecture), bare "parameter".
 
+</details>
+
 ---
 
 ## 3. Two lifecycles: the SDLC and the ML pipeline
 
-*Sources: slides 16–17 (SDLC, roles, shift-left) · T1 ch3 (ML pipeline) · T1 ch1 (why the SDLC assumption breaks)*
+*Reference: T1 Kästner ch1 (why the SDLC assumption breaks) & ch3 (the ML pipeline); for the SDLC itself, any SE text (Sommerville, *Software Engineering*).*
 
 ### 3.1 The Software Development Life Cycle
 
@@ -212,10 +226,15 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 
 **Tradeoff / when NOT to automate the pipeline** — Full pipeline automation is the goal (S13), but automating *early*, before you know which steps you'll keep changing, builds infrastructure around a design you're about to throw away. Data scientists work notebook-cell-by-cell during exploration for good reason. The engineering judgment is knowing when exploration has stabilised enough to be worth automating.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **SDLC**: Planning → Analysis → Design → Development → Testing → Deployment → Maintenance → loop. Phases universal; rigid *sequencing* is the Waterfall choice and breaks for ML (requirements unknowable up front). **Shift-left** = test early; defect cost rises the later you catch it.
 > **ML pipeline**: model requirements → data collection → labeling → cleaning & feature engineering → training → evaluation → deployment → monitoring. **Highly iterative** — failed evaluation loops back to data, prep, algorithm or hyperparameters. Most steps are little code; **deployment and monitoring carry the infrastructure**.
 > Relation: pipeline sits *inside* the SDLC (≈ design–development–testing), driven by requirements *and data*, "done" = good enough on average not spec-conformant, and adds a continuous monitoring loop.
+
+</details>
 
 Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
@@ -223,7 +242,7 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
 ## 4. From Waterfall to ADLC
 
-*Sources: slides 18–19 · R1 Tech Mahindra white paper*
+*Reference: R1 Tech Mahindra ADLC white paper (held in `/_library/`).*
 
 **Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, which the report calls **ADLC** (AI-Driven Development Life Cycle) and names as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
 
@@ -301,8 +320,13 @@ Two specifics worth carrying: **KPIs and a baseline must be established at the p
 
 **The deeper tradeoff, and the one an exam would reward:** the report's own evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Waterfall → Iterative → Agile → Scaled Agile → **ADLC** (Scaled Agile + AI infusion). Each rung: faster feedback, more coordination/tooling cost. Waterfall's killer = late defect discovery. ADLC = AI-assisted automation of *all* SDLC activities (docs, design, code, test cases, test data, scripts). Gains: faster TTM, consistent quality, less human dependence. Risk: that last "gain" is the danger — someone must still tell correct from plausible; report lists no challenges = unproven, not solved.
+
+</details>
 
 Cross-link: → **546 S15** (ADLC phases in detail)
 
@@ -310,7 +334,7 @@ Cross-link: → **546 S15** (ADLC phases in detail)
 
 ## 5. How software and data got here
 
-*Sources: slides 18, 21*
+*Reference: deck only for the framing; cloud-native evolution is developed in 549 S2–S3 and `_shared/docker-k8s.md`.*
 
 ### 5.1 Evolution of software development
 
@@ -347,9 +371,14 @@ timeline
 
 **The through-line** — storage → compute → algorithms → data volume, each unlock enabling the next. Transformers didn't arrive because someone had a clever idea in 2018; they arrived because the 2010–2015 data deluge and cloud compute made them trainable.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Software: ~1980–90 Waterfall/monolith/physical server/datacenter → ~2000 Agile/N-tier/virtual/hosted → ~2010 DevOps/microservices/containers/cloud. **Cloud native = Agile + DevOps + Microservices + Containers + Cloud.** Not a maturity score — a monolith is right for small teams.
 > Data: 1960s files → 1970 Codd relational → 1989 KDD/data mining → early 2000s warehousing/ETL/BI → mid 2000s social media + supervised ML → 2006–08 cloud → 2010–15 big data + deep learning → 2018 transformers. Driver chain: storage → compute → algorithms → data volume.
+
+</details>
 
 Cross-link: → `_shared/docker-k8s.md` · **549 S2–S3** · **536 S1–S2**
 
@@ -357,7 +386,7 @@ Cross-link: → `_shared/docker-k8s.md` · **549 S2–S3** · **536 S1–S2**
 
 ## 6. What data science is
 
-*Sources: slides 22–23, 28*
+*Reference: deck; the DS Venn and the "hierarchy of needs" are standard framings (Monica Rogati, "The AI Hierarchy of Needs").*
 
 **Intuition** — The study of data: turning it into a *story* that produces insight, and insight that produces a decision. If no decision changes, it wasn't data science — it was reporting. Scope runs collection → preprocessing → analysis → prediction → visualisation (storytelling) → insight.
 
@@ -394,15 +423,20 @@ flowchart BT
 
 **Tradeoff / how NOT to read the pyramid** — It's a *dependency* claim, not a *sequencing mandate*. Read literally it says "spend two years on data infrastructure before touching ML," which kills projects. Honest reading: cut a thin vertical slice through all six layers for one use case, then widen. Note also that simple ML sits *below* deep learning — A/B tests and logistic regression solve a large share of problems pitched as AI.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > DS = Math/Stats ∩ Domain ∩ CS/IT. Pairwise: stats+domain = research; stats+CS = software dev; **domain+CS = machine learning**. Deliverable is a *decision*, not a chart. Scope: collection → preprocessing → analysis → prediction → visualisation → insight.
 > Hierarchy of needs, bottom→top: Collect (instrumentation, logging) → Move/Store (pipelines, ETL) → Explore/Transform (cleaning, anomaly detection) → Aggregate/Label (metrics, features, training data) → Learn/Optimize (A/B tests, simple ML) → AI/Deep Learning. Dependency claim, not a two-year plan — cut a thin vertical slice.
+
+</details>
 
 ---
 
 ## 7. Who builds these systems
 
-*Sources: slide 17 (SDLC roles) · slides 25–28 (data roles, hierarchy role map) · T1 ch1 (data scientists vs software engineers, T-shaped, unicorns)*
+*Reference: T1 Kästner ch1 (data scientists vs software engineers; T-shaped people; unicorns).*
 
 **Intuition** — Roles exist because different failures need different specialists watching for them. In ML systems the roles come from two different traditions that were trained differently and mean different things by "done" — which is where the friction lives.
 
@@ -480,11 +514,16 @@ T1's evidence on the reverse direction is worth sitting with, since it describes
 
 **Tradeoff / how NOT to use this contrast** — T1 calls it "oversimplified and overgeneralized" itself. As a lens on why a handover failed, useful. As a hiring stereotype, wrong — the point is complementarity, not superiority. And in a small team one person wears four hats, where the risk flips from coordination overhead to blind spots: whoever wrote the code also decides whether it's tested enough.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > SDLC roles: BA · PM · PO · Team Lead · Architect · Developers · QA (shift-left) · Testers · Scrum Master · UX/UI.
 > Data roles by handover: **data engineer** → reliable data flow (ETL: source → staging → warehouse → BI); **data scientist** → model + *one-time forecast*; **ML engineer** → *continuous loop* (client + additional data → model → predictions → vs ground truth → monitoring → retrain).
 > DS vs SE: DS = stats background, exploratory notebooks, evaluates by **accuracy on held-out test data**, ignores latency/cost. SE = delivers to budget/time, evaluates by **trade-offs**, rarely tests generalisation. **Unicorns** (deep in both) are rare — don't plan on them. Goal = **T-shaped**: deep in one, broad across others.
 > Failure mode the course targets: notebook promoted to production without the ground-truth loop.
+
+</details>
 
 Cross-link: → `_shared/ml-lifecycle.md` · **546 M1 Interdisciplinary Teams** · **549 S4**
 
@@ -492,7 +531,7 @@ Cross-link: → `_shared/ml-lifecycle.md` · **546 M1 Interdisciplinary Teams** 
 
 ## 8. What ML changes about engineering
 
-*Sources: T1 ch1*
+*Reference: T1 Kästner ch1 (the three challenges, each "harder but not new").*
 
 **Intuition** — There's an open debate about whether ML fundamentally changes engineering or just demands that we finally apply existing practice rigorously. T1 gives three challenges, and for each argues the challenge is *harder* but *not new*. That two-part shape — challenge, then "but we've seen this before" — is what makes it exam-friendly, and you should reproduce both halves.
 
@@ -537,17 +576,22 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 *But not new:* cloud operation and large-scale data management (warehouses, batch, streaming) predate ML by a decade. The demands are simply higher.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Three ML challenges, each "harder but not new":
 > **(1) Lack of specifications** — can't spec `transcribe()`; **deductive → inductive** reasoning; no "correct", only "good enough on average"; **system must tolerate mistakes**. Not new: SE has always built safe systems from unreliable parts with vague specs.
 > **(2) Interacting with the real world** — bias in/bias out; **feedback loops** (YouTube conspiracy videos, fixed by hard-coded rules not better ML); users adapt and game (adversarial attacks); drift. Not new: hazard analysis, threat modelling, requirements engineering — needed *more*.
 > **(3) Data-focused and scalable** — data beyond one machine, distributed serving, **ML flywheel**, foundation models need expensive inference hardware. Not new: cloud and big data predate ML.
 
+</details>
+
 ---
 
 ## 9. The risk spectrum
 
-*Sources: T1 ch1*
+*Reference: T1 Kästner ch1 (the risk/rigour argument and the enduring principles).*
 
 **Intuition** — T1's actual thesis, and the sentence most likely to be quoted at you: it isn't that ML *is* riskier, it's that we *attempt riskier things* with ML.
 
@@ -571,14 +615,19 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 4. Planning a responsible testing strategy
 5. Designing systems that can be updated rapidly and monitored in production
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Risk spectrum: low (restaurant site) → medium (medical records, payments) → high (aircraft, nuclear). Rigour is already calibrated to risk. **Conjecture: ML products skew toward the complex/risky end, so need more rigorous engineering** — not because ML is inherently riskier, but because we attempt more ambitious things with it. Symmetric error: don't over-engineer low-risk ML; locate the system first. Five enduring principles: (1) customer priorities & mistake tolerance, (2) safe systems from unreliable components, (3) navigate conflicting qualities, (4) responsible testing strategy, (5) rapid update + monitoring.
+
+</details>
 
 ---
 
 ## 10. Foundation models and prompting
 
-*Sources: T1 ch3 · slide 10 (the course's RAG tool stack)*
+*Reference: T1 Kästner ch3 (foundation models & prompting); the RAG stack is built hands-on in 546 S6.*
 
 **Intuition** — Instead of training a model per task, a few organisations train one enormous general-purpose model and everyone else *instructs* it with a prompt. Customisation moves from training data to prompt text.
 
@@ -610,8 +659,13 @@ Providing *internal data* in the prompt is the case T1 flags forward to **retrie
 
 **Tradeoff / when NOT to use** — T1 is direct: foundation models "do not have access to proprietary or recent information that was not part of the training data," and "model size and inference costs can become a challenge." Use them where the task is language-shaped, varied, and hard to specify. Don't use them for a high-volume, low-latency, narrow, well-specified task with plenty of labelled data — fraud scoring at 10,000 transactions/second being exactly that. **A foundation model is the expensive general answer to a question you might be able to specify cheaply.**
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Foundation model = large general-purpose model (umbrella incl. LLMs), trained by a few orgs on huge data, usually via API. Customise two ways: **fine-tuning** (train a copy — expensive, must host) or **in-context learning** (info/examples in the prompt — cheap, costs tokens/context). Few-shot = in-context with examples. Internal data in the prompt → **RAG**. Limits: no proprietary or recent data; size and inference cost. Don't use for high-volume, low-latency, well-specified tasks with labelled data.
+
+</details>
 
 Cross-link: → `_shared/rag.md` · **546 S6** · **536 S10, S12** · **521 S7–8**
 
@@ -619,7 +673,7 @@ Cross-link: → `_shared/rag.md` · **546 S6** · **536 S10, S12** · **521 S7�
 
 ## 11. MLOps and responsible ML
 
-*Sources: T1 ch1 · slide 10 (tool stack)*
+*Reference: T1 Kästner ch1 (MLOps & responsible ML as cross-cutting concerns).*
 
 **Intuition** — T1 treats both as *cross-cutting concerns*, not as chapters. That framing is itself examinable, because it's the argument against believing a tool can solve either.
 
@@ -631,52 +685,61 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 
 **Tradeoff** — the practical implication of "cross-cutting" is that you cannot schedule either as a phase. A team that plans to "do the fairness work in sprint 12" has already lost, because the decisions that determine fairness — what data, what labels, what the system does with a low-confidence prediction — were made in sprints 1 through 11.
 
+> ***In practice*** *(beyond the deck — what MLOps actually looks like as a job):*
+> MLOps is **CI/CD extended to data and models**. On top of the usual code pipeline (git, tests, containers), an ML pipeline adds three things software CI/CD never had:
+> - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. You can reproduce "the model from March" only if both are versioned alongside the code.
+> - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
+> - **Monitoring for drift** — the loop the S07 diagram shows: compare live predictions against ground truth as it arrives (Evidently AI), alert when recall slides, trigger retraining. This is the part that has no equivalent in traditional software, and it's where "ML engineer" and "MLOps engineer" spend most of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **MLOps** = automating ML pipelines for reliable deploy/update/monitor/operate. Tools: Kubeflow, Great Expectations, MLflow, Evidently AI, SageMaker. **Cross-cutting, not a phase** — closest coverage: Planning for Operations (tooling) + Interdisciplinary Teams (culture: joint goals, vocabulary, tools).
 > **Responsible ML** = safety, security, fairness, explainability. **No magic tool makes a model fair or secure** — requires holistic system + environment view. Without it, fairness/safety work is "narrow, naive, and ineffective." Can't be scheduled late: the decisions that determine it were made earlier.
 
+</details>
+
 ---
-
-## Admin — ✅ resolved from the recording
-
-| Component | Marks | Detail |
-|---|---|---|
-| EC-1 · Quiz | 5 | 🔴 **"15–20 questions, ~15 minutes, just before the mid sem"** — *not* the 10–20 Aug window the handout gives. Covers concepts up to session 8 |
-| EC-1 · Situated Learning | 5 | ⚠️ *"We are still working on the situated learning part… I'll explain later once it's finalised"* |
-| EC-1 · **Assignment I** | 10 | 🔴 **BEFORE the mid-sem.** 2 weeks to complete |
-| EC-1 · Assignment II | 10 | After the mid-sem. 2 weeks |
-| **EC-2** mid-semester | **30** | Closed book, 2h — *"the mid sem happens after session 7 or session 8"* |
-| **EC-3** comprehensive | **40** | Open book, 2–2½h |
-
-**The slide was right and the handout was wrong** about Assignment I's timing.
-
-⚠️ **Individual or team? Not decided.** *"It may be individual perspective, or it may be a team perspective… still not decided."* He leans team, because *"many people are not from an industry background, so it's our job to make sure they upgrade themselves."*
-
-**🔵 Open-book exam rules — matters for the December binding plan:**
-
-> You may take **watermarked PPT printouts**, plus the **T1 and T2 books** — printouts allowed. Attend at the exam centre or online.
-
-*Watermarked slide printouts are explicitly permitted. Confirm whether your own typed notes count before relying on them.*
-
-**Lab environment:**
-
-- **Virtual lab** — enabled *"after the second session"*. All demos, Python coding and practice labs run there.
-- **AWS Console Lab** — from ~**sessions 13–14**, for production deployment.
-- 💰 **Both free.** *"Whatever runs inside that virtual lab or AWS site will be charged — not chargeable."*
-- **FastAPI** chosen for the labs — *"looking at the limitations of the virtual lab, FastAPI looks best for us."*
-
-**Everything is on Taxila** — course materials, announcements, assignments. PPTs and handout also on MS Teams. Instructor: prashant.vaish@pilani.bits-pilani.ac.in, course code in the subject line.
-
-## Confusions to resolve
-
-- [x] ~~Situated Learning and Assignment I timing~~ ✅ **Resolved — Assignment I is BEFORE the mid-sem.**
-- [ ] **Are assignments individual or team?** Not decided; he'll confirm later.
-- [ ] Situated Learning format — *"still working on it."*
-- [ ] Is the AWS Console Lab provisioned, or self-provisioned?
-- [ ] Did class cover the ML vocabulary (section 2) verbally? The deck's agenda promises it and the slides stop before it — but **T1 ch3 is cited for this session in the handout**, so section 2 is in scope regardless of what was said aloud.
 
 ## Lab / build
 
 No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blueprint, fraud detection.
 
 **Locked in:** fraud detection is the running example for all sixteen sessions. T1 ch3 uses a credit-card fraud decision tree as its own worked example (section 2.2), so the textbook and the running example line up from page one.
+
+---
+
+## 🎓 Exam layer & course logistics
+
+*For passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
+
+<details>
+<summary><b>Exam scope, weights, dates, lab environment & confusions</b> — fold out</summary>
+
+| Component | Marks | Detail |
+|---|---|---|
+| EC-1 · Quiz | 5 | 🔴 **"15–20 questions, ~15 minutes, just before the mid sem"** — *not* the 10–20 Aug window the handout gives. Covers concepts up to session 8 |
+| EC-1 · Situated Learning | 5 | ⚠️ *"still working on the situated learning part… I'll explain later"* |
+| EC-1 · **Assignment I** | 10 | 🔴 **BEFORE the mid-sem.** 2 weeks to complete |
+| EC-1 · Assignment II | 10 | After the mid-sem. 2 weeks |
+| **EC-2** mid-semester | **30** | Closed book, 2h · **19 Sep 2026 (EN)** · *"after session 7 or 8"* |
+| **EC-3** comprehensive | **40** | Open book, 2–2½h · **5 Dec 2026 (EN)** |
+
+**The slide was right and the handout was wrong** about Assignment I's timing (it's before the mid-sem).
+
+⚠️ **Individual or team? Not decided.** He leans team — *"many people are not from an industry background, so it's our job to make sure they upgrade."*
+
+**🔵 Open-book rules (matters for the December binding plan):** you may take **watermarked PPT printouts** plus the **T1 and T2 books**. Confirm whether your own typed notes count before relying on them.
+
+**Lab environment:** **Virtual lab** enabled after session 2 (all demos/coding). **AWS Console Lab** from ~sessions 13–14. 💰 Both free. **FastAPI** chosen for labs. **Everything is on Taxila** (PPTs + handout also on MS Teams). Instructor: prashant.vaish@pilani.bits-pilani.ac.in.
+
+### Confusions to resolve
+
+- [x] ~~Situated Learning and Assignment I timing~~ ✅ Assignment I is BEFORE the mid-sem.
+- [ ] **Are assignments individual or team?** Not decided.
+- [ ] Situated Learning format — *"still working on it."*
+- [ ] Is the AWS Console Lab provisioned, or self-provisioned?
+- [ ] Did class cover the ML vocabulary (section 2) verbally? The deck stops before it — but **T1 ch3 is cited for this session**, so section 2 is in scope regardless.
+
+</details>

@@ -1,7 +1,6 @@
 # 521 · Session 01 · Foundations of Conversational AI
 
-Exam: **mid-sem (closed book)** | Date learned: ____ | Instructor: Dr Bharathi R
-Assembled from: `Session-1-Foundations-of-ConvAI.pdf` (56 sl) · **Teams recording transcript** · *The Landscape of AI Agents* (Masterman, Besen, Sawtell & Chao, arXiv:2404.11584) · HuggingFace BPE course
+*Learned ____ · Instructor Dr Bharathi R · built from `Session-1-Foundations-of-ConvAI.pdf` (56 sl) + Teams recording + *The Landscape of AI Agents* (Masterman et al., arXiv:2404.11584) + HF BPE course. Exam scope & logistics folded into the **Exam layer** at the end.*
 
 > ### What the instructor emphasised
 > *From the session-1 recording, 26 Jul.*
@@ -16,24 +15,20 @@ Assembled from: `Session-1-Foundations-of-ConvAI.pdf` (56 sl) · **Teams recordi
 >
 > **Hands-on in every session** — she said it explicitly. 521 is the build-it subject and the labs are not optional extras.
 
-## What this session is
+## Why this matters
 
-The **map** session. It lays out the entire field — sixty years of history, the six components, the seven-stage agent lifecycle, the protocol landscape — and every later session zooms into one part of it. Unusually for a first lecture, it also covers tokenization and context windows in enough depth to be examinable.
-
-Her framing: conversational AI is **not a chatbot** but *"a reasoning system that happens to speak your language."* The course is about building the reasoning, not the speaking.
+Conversational AI — agents — is one of the most employable specialisations in the field right now, and this session is the **map of the whole territory**. It's **not chatbots**: in the instructor's words, *"a reasoning system that happens to speak your language."* Here you get the sixty-year arc that explains why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that is the spine of the course, and the **protocol landscape** (MCP, A2A) being standardised as you read this. Get this and you can architect an agent, reason about its cost and failure modes, and talk fluently about where the field is heading — plus it covers tokenization and context windows deeply enough to build on.
 
 ## How to use this note
 
-| If you have… | Read |
+| Goal | Where to go |
 |---|---|
-| **10 minutes** | The closed-book cards — the `>` blockquotes |
-| **1 hour** (your Wednesday slot) | section 9 the seven-stage lifecycle — then **run the lab**. 521 is build-it, not read-it |
-| **Before the mid-sem** | All of it. Section 9 is the single most likely structured question |
-| **This week** | Install Ollama, pull `llama3`, get a free Tavily key — the session-1 notebooks need them |
+| **Learn it end to end** | Top to bottom. Each concept runs **Intuition → Mechanism → Worked example → Tradeoff**, with ***In practice*** / ***Going deeper*** blocks where the real-world detail earns its place |
+| **The one thing to master** | Section 9, the **seven-stage lifecycle** — the spine of the whole course. Then **run the lab** |
+| **Look something up later** | The topic list below is the index; each concept is self-contained |
+| **Revise for the exam** | Fold out the **Closed-book recall card** under each concept; scope and dates are in the collapsed *Exam layer* at the end |
 
-🔴 **521 is the build-it subject and it has ten labs — more than any other.** Her instruction: *"Don't just watch — run the demo code and change one thing."* Reading about an agent is not learning an agent; the concepts click when the loop prints its own reasoning.
-
-**The one thing to notice in Lab 1:** the notebook uses `AgentType.ZERO_SHOT_REACT_DESCRIPTION`, so you're running a **ReAct loop in session 1** — four sessions before it's formally taught. With `verbose=True` it prints its thoughts. Watch that trace; it's the lesson.
+🔴 **521 is the build-it subject — ten labs, more than any other.** *"Don't just watch — run the demo code and change one thing."* Reading about an agent is not learning an agent; the concepts click when the loop prints its own reasoning. **Lab 1 already runs a ReAct loop** (`AgentType.ZERO_SHOT_REACT_DESCRIPTION`, `verbose=True`) — four sessions before it's formally taught. Watch that trace; it's the lesson. *(Setup this week: install Ollama, pull `llama3`, get a free Tavily key — the session-1 notebooks need them.)*
 
 ## Topics
 
@@ -62,7 +57,7 @@ Her framing: conversational AI is **not a chatbot** but *"a reasoning system tha
 
 ## 1. What conversational AI is
 
-*Sources: slides 4, 17–19*
+*Reference: deck — the definition and the understand/reason/act frame are the instructor's own.*
 
 **Intuition** — Her spoken version first, because it's the sharper one: *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
 
@@ -86,14 +81,19 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Conversational AI** = any AI system engaging humans through **natural language** to **understand intent, retain context, retrieve knowledge, and deliver information or take real-world action**. Frame: **Understand** (NLU: intent, entities, sentiment) · **Reason** (plan, chain thoughts, decompose) · **Act** (APIs, code, docs, orchestrate). Ladder: chatbot (keyword) → task bot (slot filling) → FAQ bot (context-aware) → generative → plans+acts.
+
+</details>
 
 ---
 
 ## 2. The evolution, 1960s → 2026
 
-*Sources: slides 7–14*
+*Reference: deck; for the agent era, Masterman et al. 2024, [The Landscape of AI Agents](https://arxiv.org/abs/2404.11584).*
 
 **Intuition** — Seven eras, each fixing the previous one's fatal limitation and introducing a new one. Learn it by the **Limitations** column: that's what drives the next row.
 
@@ -120,9 +120,14 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 **Tradeoff** — notice that each era's limitation is *architectural*, not a matter of effort. Rule-based systems didn't need more rules; they needed learning. LLMs don't need bigger models to take actions; they need tools. Recognising which kind of problem you have — "needs more of the same" vs "needs a different architecture" — is the judgment this table teaches.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Seven eras: **rule-based** (1960s–90s, ELIZA — no learning/context) → **statistical ML** (2000–10, SVM/CRF/HMM — hand-crafted features) → **deep learning** (2010–17, RNN/LSTM/Seq2Seq/attention — data hungry, task-specific) → **transformers** (2017–20, BERT/GPT-2/T5 — still needs fine-tuning) → **LLMs** (2020–23, GPT-3/ChatGPT — hallucinations, no real-time data, no actions) → **agentic** (2023–25, LLM+tools+memory+planning — orchestration, scaling, cost) → **on-device & multimodal** (2025–26, SLMs — hardware limits, fragmented).
 > **Key driver: Transformer (2017) + affordable GPU compute + internet-scale data. Remove any one and we're still in the chatbot era.**
+
+</details>
 
 Cross-link: → `_shared/agents.md` · **536 S1** (same landscape, model-side framing)
 
@@ -130,7 +135,7 @@ Cross-link: → `_shared/agents.md` · **536 S1** (same landscape, model-side fr
 
 ## 3. Architecture: traditional vs agentic
 
-*Sources: slides 15, 23*
+*Reference: deck; Anthropic, [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents).*
 
 **Intuition** — The old pipeline classified then responded. The new one plans then acts. Everything else follows from that.
 
@@ -178,16 +183,21 @@ flowchart TD
 
 **Tradeoff / what the old architecture was better at** — the traditional pipeline is *inspectable*. When it misfires you can point at the intent classifier or the dialogue policy and see exactly what went wrong. The agentic version replaces those legible stages with an LLM making decisions you cannot fully audit, which is precisely why safety (stage 6) and observability become their own topics rather than afterthoughts. **You trade debuggability for capability.**
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Traditional (pre-2020)**: input → speech recognition → NLU (intent classification + entity extraction) → dialogue manager (state tracking + policy) → NLG (templates/rules) → TTS → response. Frameworks: Rasa, Dialogflow, MS Bot Framework, Amazon Lex.
 > **Modern agentic (2023+)**: input → LLM understanding (intent+entities **one pass**) → **agentic orchestration** (planning · tool selection · memory retrieval) → tool invocation → memory update → LLM generation → safety/validation → response. Frameworks: LangChain, LlamaIndex, AutoGPT, CrewAI.
 > Shift: single-turn→multi-step planning · no tools→tool calling · fixed cutoff→real-time RAG · no memory→persistent (vector+SQL) · one task→multi-agent. **LLM is the brain; needs tools, memory, planning.** Cost: you lose inspectability.
 
+</details>
+
 ---
 
 ## 3b. Workflows vs agents — and when not to build one
 
-*Sources: T1 Anthropic, *Building Effective Agents* (Dec 2024) — the course's primary textbook*
+*Reference: Anthropic, [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Dec 2024) — the course's primary text.*
 
 **Intuition** — The deck says "agentic AI" as though it were one thing. Anthropic's guide draws a sharper line inside it, and this distinction is the most useful single idea in the primary textbook:
 
@@ -252,6 +262,9 @@ That is a direct argument for the instructor's own advice ("code every lecture�
 
 On that third: the guide's rule of thumb is to invest as much effort in the **ACI** as teams normally invest in HCI. Building their SWE-bench agent, they *"spent more time optimising our tools than the overall prompt."*
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Agentic systems** = umbrella. **Workflows** = LLMs + tools orchestrated through **predefined code paths**. **Agents** = LLM **dynamically directs its own process and tool use**. Dividing question: who decides the step sequence — code, or the model at runtime?
 > Building block = **augmented LLM** (LLM + retrieval + tools + memory, model-driven).
@@ -259,13 +272,15 @@ On that third: the guide's rule of thumb is to invest as much effort in the **AC
 > Frameworks: obscure prompts, harder to debug, tempt complexity — **start with LLM APIs directly**.
 > **Three principles: simplicity · transparency (show planning steps) · well-crafted agent-computer interface (ACI).** Invest in ACI as much as in HCI.
 
+</details>
+
 Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer) come in **L9**
 
 ---
 
 ## 4. The six components of modern conversational AI
 
-*Sources: slides 17–19*
+*Reference: deck — the six-component taxonomy is standard conversational-AI architecture.*
 
 | # | Component | Role | Contains | Modern approach |
 |---|---|---|---|---|
@@ -289,9 +304,14 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 
 **Tradeoff** — components 3, 4 and 6 are where the cost and risk live. Knowledge access needs a vector store to run and keep fresh; action execution means the agent can do real damage; memory means you're now storing user data with everything that implies. Components 1, 2 and 5 come almost free with the LLM. **The expensive half of the system is the half that touches the outside world.**
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Six components: **1 NLU** (intent, entities, sentiment — LLM single pass) · **2 Dialogue management** (state tracking, context, turn-taking, error handling — LLM + memory) · **3 Knowledge access** (vector DBs, semantic search, RAG — embeddings + hybrid retrieval) · **4 Action execution** (tool/function calling, APIs, DB ops — agentic tool use) · **5 Response generation** (contextual, tone, multi-modal — LLM with control) · **6 Memory** (short-term, long-term, episodic, semantic — vector + SQL hybrid).
 > Banking evolution: rule-based "press 1" → intent-based "which card?" → LLM "let me help you block it" (no action) → **agentic: actually blocks it, cites transactions, offers replacement.** 15 min → 2 min; CSAT +40%.
+
+</details>
 
 Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (RAG as architecture pattern)
 
@@ -299,7 +319,7 @@ Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (R
 
 ## 5. Frameworks
 
-*Sources: slides 20–21*
+*Reference: deck; each framework's own docs (langchain.com, llamaindex.ai, microsoft.github.io/autogen).*
 
 **Traditional (2015–2020)**
 
@@ -324,16 +344,21 @@ Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (R
 
 **Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Traditional**: Rasa (intent+entity+policies, on-prem) · Dialogflow (intent, ML NLU, Google) · MS Bot Framework (enterprise, Azure) · Amazon Lex (Alexa, AWS).
 > **Modern agentic**: **LangChain/LangGraph** (orchestration + tools + memory + workflows) · **LlamaIndex** (data-centric, RAG) · **Semantic Kernel** (Microsoft SDK) · **Haystack** (end-to-end NLP, production RAG) · **AutoGen** (multi-agent conversation).
 > Shift: intent-based dialogue → LLM-powered agentic with tool use and planning.
 
+</details>
+
 ---
 
 ## 6. Tokenization
 
-*Sources: slides 32–38 · HuggingFace BPE course*
+*Reference: [HuggingFace NLP course ch6](https://huggingface.co/learn/nlp-course/chapter6); BPE — Sennrich et al. 2016. Shared with 536 S1/S12 and `_shared/tokenization.md`.*
 
 **Intuition** — Breaking text into subword units that LLMs process. BPE sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
@@ -399,6 +424,9 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 **Tradeoff / where BPE fails** — the `mug` case is the whole limitation in one line: **character-level BPE has no fallback**. Any character absent from the base vocabulary becomes `[UNK]` and its meaning is lost entirely. That's what byte-level tokenizers fix, and it's why every frontier model after Llama-2 moved to byte-level (tiktoken). For conversational AI specifically, `[UNK]` on a customer's name or a product code is a silent failure that degrades the whole turn.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Tokenization** = breaking text into subword units. BPE = **"Goldilocks" zone** between character-based (too long) and word-based (huge vocab, fails on unknown words).
 > Matters for ConvAI: **cost** (priced per token) · **context window** (200K ≈ 150K words) · **latency** · **quality**. "GPT-4" = **4 tokens** (G·PT·-·4). Conversation ≈ 800–1,200 tokens; GPT-4o ~$0.01–0.03; 10K/day = $100–300/day. **Model selection + prompt optimisation cuts cost 10–20×.**
@@ -406,13 +434,15 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 > Segmenting: `bug`→[b,ug] · `mug`→**[UNK],ug** ("m" not in base vocab) · `thug`→[UNK],hug · `unhug`→**[un, hug]**.
 > Limitation: no byte fallback ⇒ unknown characters become `[UNK]` and their meaning is lost.
 
+</details>
+
 Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subjects teach BPE on this same corpus, both closed-book scope. One note, two exams.*
 
 ---
 
 ## 7. Context windows
 
-*Sources: slide 39*
+*Reference: "lost in the middle" — Liu et al. 2023, [arXiv:2307.03172](https://arxiv.org/abs/2307.03172).*
 
 **Intuition** — The maximum tokens a model can hold, which for a conversation means how much history it can see at once.
 
@@ -431,14 +461,19 @@ Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subject
 
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Context window = max tokens processed. GPT-4 Turbo **128K** (~96K words) · Claude 3.5 Sonnet **200K** (~150K) · Gemini 1.5 Pro **1M** (~750K) · emerging 2M+. **Problem: "lost in the middle"** — models struggle with info in the middle of long contexts, so effective ≠ nominal context. **Fix: RAG + memory systems**, i.e. retrieve the right 4K rather than stuffing 200K.
+
+</details>
 
 ---
 
 ## 8. LLMs as the brain — capabilities and limits
 
-*Sources: slides 40–42*
+*Reference: deck — the capability→consequence mapping is the deck's own.*
 
 **The path from architecture to agent:**
 
@@ -484,17 +519,22 @@ flowchart LR
 
 **Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (section 11) become a topic.
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Path: **Transformer (2017) → pre-training → LLM → instruction tuning → + tools/memory/planning → conversational agent.**
 > Capability → consequence: self-attention → multi-turn coherence · contextual understanding → intent understanding · long-range dependencies → natural responses · parallel processing → ambiguity handling.
 > **Limits**: no real-time data · hallucinations · can't act · no memory past context window · calculation errors · inconsistency · no verification.
 > **Fixes (= the course)**: real-time → **tool calling** · hallucination → **RAG** · can't act → **function calling** · no memory → **external memory** · math → **calculator/code execution**.
 
+</details>
+
 ---
 
 ## 9. The seven-stage agent lifecycle
 
-*Sources: slides 43–46*
+*Reference: deck — the seven-stage framing is the instructor's own (deck only).*
 
 **Intuition** — The spine of the whole course. Every later lecture deepens one stage. **Learn this cold; it's the single most likely structured question on the mid-sem.**
 
@@ -542,10 +582,20 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing (L11) is for.
 
+> ***In practice*** *(beyond the deck — how you actually build these seven stages):*
+> - In real code the lifecycle is a **state machine**, and **LangGraph** is the tool the course uses for exactly this: each stage is a **node**, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Drawing the seven stages as a LangGraph is Lab-4-and-beyond work.
+> - Stages 1 and 6 (**safety**) are usually not your own code — you wire in **guardrails libraries** (NeMo Guardrails, Guardrails AI, Llama Guard) for prompt-injection defence, PII redaction and output filtering. "Never rely on a single safety layer" (section 11) means both ends, plus these.
+> - Stage 4 (**tool invocation**) is the one that acts on the world, so anything irreversible — a payment, a booking, a delete — gets a **human-in-the-loop** confirmation before execution, not after. This is the single most important production habit in the whole lifecycle.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **7 stages: Request → Routing → Reasoning → Tool Invocation → Memory → Safety → Response.**
 > ① Request: receive/validate, parse intent, extract entities, **input sanitization** ② Routing: classify intent, determine tools, route to sub-agent ③ Reasoning: break into steps, **identify information gaps**, plan tool sequence ④ Tool invocation: API calls, DB queries, code execution ⑤ Memory: store history, update preferences, session state ⑥ Safety: toxicity check, factual verification, **PII redaction** ⑦ Response: NLG, format for channel, deliver.
 > **Safety brackets the pipeline** — sanitization at 1, validation at 6. Simple requests short-circuit stages 2, 4, 5.
+
+</details>
 
 Cross-link: → `_shared/agents.md`
 
@@ -553,7 +603,7 @@ Cross-link: → `_shared/agents.md`
 
 ## 10. Protocol landscape
 
-*Sources: slides 48–49*
+*Reference: MCP — [modelcontextprotocol.io](https://modelcontextprotocol.io) (Anthropic 2024); A2A — Google's spec.*
 
 **Intuition** — As agents proliferate they need standard ways to talk to tools, data, each other and UIs. The argument for standards, stated as a contrast:
 
@@ -577,10 +627,18 @@ Cross-link: → `_shared/agents.md`
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
 
+> ***In practice*** *(beyond the deck — MCP is the one to actually know right now):*
+> **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** (549 S1) — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.
+
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Why protocols: without → custom APIs per vendor, no interoperability, lock-in, duplicated effort. With → plug-and-play, multi-agent collaboration, vendor flexibility, ecosystem growth.
 > **MCP** (Anthropic 2024) — LLM ↔ **data sources and tools** · **A2A** (Google) — **inter-agent** communication · **OpenAI Assistant API** — built-in tools, files, code interpreter · **LangGraph** — graph-based workflows + state · **ANP** — peer-to-peer agent **discovery**, decentralised · **custom REST/GraphQL** — legacy/enterprise.
 > Caveat: **many production systems still use custom APIs.** Detail in L13–L14.
+
+</details>
 
 Cross-link: → `_shared/agents.md`, `_shared/api-design.md` · **549 S1** (REST/GraphQL/gRPC)
 
@@ -588,7 +646,7 @@ Cross-link: → `_shared/agents.md`, `_shared/api-design.md` · **549 S1** (REST
 
 ## 11. Production concerns
 
-*Sources: slides 50–51*
+*Reference: deck; the tools' own docs (LangSmith, Arize Phoenix, OpenTelemetry).*
 
 **Intuition** — the deck's framing: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
 
@@ -617,6 +675,9 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 **Tradeoff** — these four pull against each other, and naming the tension is what a good exam answer does. Every safety layer adds latency. Cheaper model routing costs quality. Prompt caching saves 50–90% but constrains how you structure prompts. There is no configuration that maximises all four; production work is **choosing which to sacrifice for this particular product.**
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > **Observability**: conversation flows, tool invocations, **token usage per conversation**, latencies, error traces. Tools: LangSmith, Arize Phoenix, OpenTelemetry.
 > **Cost**: **prompt caching (50–90% reduction)**, model routing, token budgets, efficient retrieval. ≈$0.02–0.10 per support conversation.
@@ -624,11 +685,13 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 > **Safety layers**: input validation (prompt injection), PII detection/redaction, output filtering (toxicity, hallucination), human-in-the-loop for critical actions. **Never rely on a single safety layer.**
 > The four trade against each other — safety costs latency, routing costs quality, caching constrains prompt structure.
 
+</details>
+
 ---
 
 ## 12. Open problems
 
-*Sources: slide 29*
+*Reference: deck; each research direction is its own paper (MemGPT, Titans, GAIA, SWE-bench, Constitutional AI).*
 
 Where research is active — useful for essay-style questions asking "what are the limitations of current systems?"
 
@@ -641,14 +704,19 @@ Where research is active — useful for essay-style questions asking "what are t
 | **Safety & alignment at scale** | More autonomy → harder to ensure agents follow human intent without side-effects | Constitutional AI, RLAIF, interpretability |
 | **Compute & energy efficiency** | SOTA models need enormous infrastructure; efficient inference is an open engineering problem | Mamba, QLoRA, mixture-of-experts |
 
+<details>
+<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
+
 > **Closed-book card**
 > Six open problems: **multi-step reasoning** (fails outside training distribution; CoT partial) · **cross-session memory** (starts blank; external memory lossy/expensive/fragile — MemGPT, Titans) · **grounded accuracy** (hallucination; RAG reduces, doesn't eliminate) · **long-horizon execution** (drift, stuck, **compounding errors** — GAIA, SWE-bench) · **safety/alignment at scale** (Constitutional AI, RLAIF) · **compute efficiency** (Mamba, QLoRA, MoE).
+
+</details>
 
 ---
 
 ## State of the art — 2026 (landscape, table only)
 
-*Sources: slides 22, 6*
+*Reference: deck; vendor model cards (these numbers date within months).*
 
 | Model | Provider | Context | Strength | Best for |
 |---|---|---|---|---|
@@ -664,35 +732,6 @@ Market context from slide 6: **$41.39B** Conv-AI market by 2030 (Grand View Rese
 *Landscape material — comparison table only, per the subject's study rule. Specific model names date within months; the openness/context/cost axes don't.*
 
 ---
-
-## Admin — ✅ resolved
-
-| Component | Weight | Detail |
-|---|---|---|
-| **Quiz ×3, best 2 count** | 10% | Open book. **One bad quiz is free** — but sit all three; you can't know in advance which is your worst |
-| Assignment 1 & 2 | 20% | Open book, **~15 days each** |
-| Mid-term | 30% | Closed book, **L1–L8** — but **L8 is revision**, so seven sessions of new material |
-| End semester | 40% | Open book, L1–L16 |
-
-⚠️ **Strictly no makeups** for quizzes and assignments. All assignments plagiarism-checked.
-
-**521 uses Canvas** — not Taxila (546, 549) or Teams (536). Check it weekly.
-
-**Instructor's own study advice** (slide 27):
-
-1. **Code every lecture** — *"don't just watch — run the demo code and change one thing."*
-2. **Use the references** — ReAct, DPR, DPO papers: abstract + results at minimum.
-3. **Get an API key early.** *(Note: session 1's lab actually runs locally on Ollama, no paid key needed — see below.)*
-4. **Start assignments early** — no extensions.
-5. **Ask on Canvas** — peer discussion encouraged.
-
-📌 *The handout held is labelled `(S2-25_…)`, the April–May cohort; recordings are `S1-26`. The evaluation scheme carried over unchanged. The session plan below is inherited from that document and matches the current deck's architecture slide — worth a quick diff if an S1-26 handout appears.*
-
-## Confusions to resolve
-
-- [x] ~~Quizzes: two or three-best-of-two?~~ ✅ **Resolved 27 Jul — the handout is right: ×3, best 2 count. Slide 26's "×2" is wrong.**
-- [x] ~~Assignments: 15 days or 3 weeks?~~ ✅ **Plan for 15 days** (handout). The slide said 3 weeks but was already shown wrong on quizzes.
-- [ ] Deck says protocols are covered in "Lectures 14–15"; the handout puts MCP at L13 and A2A at L14. Minor, but check before revising.
 
 ## Lab / build
 
@@ -729,3 +768,33 @@ Target interaction in the deck: *"What's the weather like in Mumbai?"* — the n
 **Do stage 1 before stage 2.** Watching the model fail without tools is what makes function calling land — skip it and you're just copying a schema.
 
 > **Note:** 536's Lab 1 is *also* tokenization, also at session 1, also using `tiktoken`. Do them in one sitting — the token-counting script serves both.
+
+---
+
+## 🎓 Exam layer & course logistics
+
+*For passing the course, not for building knowledge — folded here so the note reads as a knowledge base first. Open it when the exam is close.*
+
+<details>
+<summary><b>Exam scope, weights, study advice & confusions</b> — fold out</summary>
+
+| Component | Weight | Detail |
+|---|---|---|
+| **Quiz ×3, best 2 count** | 10% | Open book. **One bad quiz is free** — but sit all three; you can't know which is your worst |
+| Assignment 1 & 2 | 20% | Open book, **~15 days each** |
+| Mid-term | 30% | Closed book, **L1–L8** — but **L8 is revision**, so seven sessions of new material |
+| End semester | 40% | Open book, L1–L16 |
+
+⚠️ **Strictly no makeups** for quizzes and assignments; all plagiarism-checked. ⚠️ **521 publishes no fixed dates** — announced in class / on Canvas. **521 uses Canvas** (not Taxila or Teams); check it weekly.
+
+**Instructor's study advice (slide 27):** ① code every lecture ② read the references (ReAct, DPR, DPO — abstract + results) ③ get an API key early *(session-1 lab actually runs locally on Ollama)* ④ start assignments early, no extensions ⑤ ask on Canvas.
+
+📌 *The handout held is `(S2-25_…)`, the April–May cohort; recordings are `S1-26`. Evaluation carried over unchanged; session plan matches the current deck — worth a quick diff if an S1-26 handout appears.*
+
+### Confusions to resolve
+
+- [x] ~~Quizzes: ×2 or ×3-best-2?~~ ✅ handout is right: **×3, best 2 count**. Slide 26's "×2" is wrong.
+- [x] ~~Assignments: 15 days or 3 weeks?~~ ✅ **15 days** (handout).
+- [ ] Deck says protocols are in "Lectures 14–15"; handout puts MCP at L13, A2A at L14. Check before revising.
+
+</details>
