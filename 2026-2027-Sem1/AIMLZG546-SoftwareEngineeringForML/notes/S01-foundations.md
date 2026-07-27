@@ -135,7 +135,43 @@ Three consequences follow directly, and each drives a later session:
 
 **Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. T1's precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
 
-#### 2.3 Terminology traps
+#### 2.3 Types of ML domains
+
+⚠️ *The deck's own agenda (slide 14) promises "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but **the deck runs out at slide 28 on "Data Science — Hierarchy of Needs" and never reaches it**, and the recording doesn't cover it either. Filled in here because it is a named syllabus item. Expect it to reappear in session 2, which is titled "Foundations (cont.)".*
+
+**Intuition** — "ML domain" gets used for two different cuts, and both are worth holding because they answer different engineering questions.
+
+**Cut 1 — by what the model learns from.** This decides what *data* you need:
+
+```mermaid
+flowchart TD
+    ML["Machine learning"] --> SUP["Supervised<br/>learns from (input, label) pairs"]
+    ML --> UNS["Unsupervised<br/>finds structure, no labels"]
+    ML --> RL["Reinforcement<br/>learns from reward signal"]
+    SUP --> S1["classification · regression<br/>fraud detection lives here"]
+    UNS --> U1["clustering · anomaly detection<br/>dimensionality reduction"]
+    RL --> R1["control · game playing<br/>RLHF for LLMs"]
+    SUP -.->|"labels are the<br/>expensive part"| SUP
+```
+
+The engineering consequence is the dashed note: **supervised learning makes labelling a first-class cost**, which is why the ML pipeline (section 3) has a *Data labeling* stage that no traditional SDLC has.
+
+**Cut 2 — by what kind of data it acts on.** This decides your *tooling and failure modes*:
+
+| Domain | Typical input | What breaks in production |
+|---|---|---|
+| **Tabular / structured** | Rows and columns — transactions, records | Schema drift; a column silently changes meaning upstream |
+| **Computer vision** | Images, video | Camera changes, lighting, resolution — the model never sees the same distribution twice |
+| **NLP / text** | Documents, chat, tickets | Vocabulary drift, new slang, language mix |
+| **Speech / audio** | Recordings, streams | Accent and channel mismatch — Sidney's start-up in section 1 |
+| **Time series** | Sensor and metric streams | Seasonality, and the leakage trap of shuffling before splitting |
+| **Recommender** | Interaction logs | **Feedback loops** — the model shapes the data it is next trained on (section 8.2) |
+
+**Worked example** — fraud detection is **supervised** (labels come from confirmed chargebacks) on **tabular** data (transaction rows) with a **time-series** flavour (order matters, so a random train/test split leaks the future into the past). Naming all three tells you what to build: a labelling pipeline fed by chargebacks, schema validation on the transaction feed, and a **time-based** split rather than a random one.
+
+**Tradeoff / why this taxonomy is worth less than it looks** — a real system usually spans several boxes, and the boxes don't dictate the engineering on their own. The useful move is not to file your project under one heading but to ask **which failure mode from the right-hand column applies to me** — and often more than one does. Foundation models blur it further: one model now serves NLP, vision and speech, which is exactly the shift section 10 is about.
+
+#### 2.4 Terminology traps
 
 T1 devotes a section to this, which signals it can be asked.
 

@@ -297,6 +297,38 @@ Cross-link: → `_shared/api-design.md` · **549 S8** (calling AI/cognitive serv
 3. **Create tests**
 4. **Apply design standards**
 
+#### 4.1 Mocking — building against a contract that has no implementation yet
+
+⚠️ *The handout lists **mocking** under this session ("OpenAPI spec, mocking, semantic versioning, tools") and the instructor read it out in class, but **the deck has no slide on it**. Filled in here from the OpenAPI toolchain, because it is named in the syllabus and is the practical payoff of writing the spec first.*
+
+**Intuition** — Once the contract exists, it can be *served* before anyone writes the code behind it. A **mock server** reads the OpenAPI document and returns responses that match the schema — right shape, right status codes, fake data. The front-end team starts immediately instead of waiting for the back-end.
+
+**Mechanism** — the spec is the single input; three things get generated from it:
+
+```mermaid
+flowchart TD
+    SPEC[["openapi.yaml<br/>the contract"]] --> MOCK["Mock server<br/>Prism · WireMock · Postman"]
+    SPEC --> CLIENT["Client SDKs<br/>openapi-generator"]
+    SPEC --> TESTS["Contract tests<br/>Dredd · Schemathesis"]
+    MOCK --> FE["Front-end team<br/>builds against fake responses"]
+    CLIENT --> CONS["Consumers<br/>typed calls, no hand-written HTTP"]
+    TESTS --> BE["Back-end team<br/>proves the real API matches"]
+    FE -.->|"both sides converge on<br/>the SAME document"| BE
+```
+
+**Worked example** — `openapi.yaml` declares `GET /books/{id}` returning `{id, title, author}`. Run a mock:
+
+```bash
+npx @stoplight/prism-cli mock openapi.yaml     # serves on :4010
+curl http://localhost:4010/books/1             # → {"id":1,"title":"string","author":"string"}
+```
+
+The front-end now builds real screens. When the back-end ships, the URL changes and nothing else does — *if* it honours the contract, which is what the contract tests check.
+
+**Tradeoff / where mocking misleads** — a mock is **schema-shaped, not behaviour-shaped**. It returns the right *fields*; it does not reproduce latency, pagination limits, rate limiting, partial failures, or the awkward real data (empty strings, nulls, 40-character titles). Teams that build entirely against mocks discover all of that on integration day. Use mocks to unblock, then test against something real as early as you can.
+
+**This is what "API-first" actually means in practice.** Design-first isn't a philosophical preference — it's the thing that lets three teams work in parallel off one document instead of serially off each other.
+
 **Mechanism — the seven-step lifecycle the deck walks through**, built around a Books API:
 
 ```mermaid

@@ -91,3 +91,18 @@ Topics that look like gaps are covered from the *other* textbook instead — tes
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.
 Transcripts are **raw source, not committed** — `source/transcripts/` is gitignored. Read a transcript to build or update the note, fold the important content (instructor quotes, emphasis, off-slide clarifications) into it, then it's done. The note is the record.
+
+## Deck vs its own agenda — session 1
+
+⚠️ The deck's agenda (slide 14) promises four blocks. **It delivers three.** The deck ends at
+slide 28, *Data Science — Hierarchy of Needs*, and never reaches:
+
+> Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**
+
+The recording does not cover it either (every transcript hit for "domain" is about students own
+industry backgrounds). Terminology, pipeline and foundation models were written from **T1 Kästner
+ch1/ch3**; **Types of ML Domains** was written from the syllabus line itself and is marked as such
+in the note (section 2.3).
+
+**Watch session 2** — it is titled *Foundations (cont.)*, so this material most likely lands there.
+If the S2 deck covers ML domains, reconcile section 2.3 against it rather than duplicating.

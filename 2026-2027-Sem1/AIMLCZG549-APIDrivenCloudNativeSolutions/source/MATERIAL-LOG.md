@@ -99,3 +99,12 @@ The **Conference API** running example the deck names as self-study lives here.
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.
 Transcripts are **raw source, not committed** — `source/transcripts/` is gitignored. Read a transcript to build or update the note, fold the important content (instructor quotes, emphasis, off-slide clarifications) into it, then it's done. The note is the record.
+
+## Handout topic with no deck slide — session 1
+
+⚠️ The handout lists **mocking** for session 1 (*"OpenAPI spec, mocking, semantic versioning,
+tools"*) and the instructor read the line aloud in class, but **no slide covers it** — the only
+occurrence of "mock" anywhere in the deck is *To Kill a Mockingbird* in a GraphQL sample response.
+
+Written up in note section 4.1 from the OpenAPI toolchain (Prism, openapi-generator, contract
+tests), flagged in the note as filled-in. It is a named syllabus item, so treat it as examinable.
