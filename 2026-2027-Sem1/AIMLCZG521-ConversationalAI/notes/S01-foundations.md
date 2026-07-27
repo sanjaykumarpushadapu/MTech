@@ -14,46 +14,9 @@
 
 Conversational AI — agents — is one of the most employable specialisations in the field right now, and this session is the **map of the whole territory**. It's **not chatbots**: in the instructor's words, *"a reasoning system that happens to speak your language."* Here you get the sixty-year arc that explains why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that is the spine of the course, and the **protocol landscape** (MCP, A2A) being standardised as you read this. Get this and you can architect an agent, reason about its cost and failure modes, and talk fluently about where the field is heading — plus it covers tokenization and context windows deeply enough to build on.
 
-## Topics
-
-**Part 1 · What the field is** — *definitions and sixty years of history*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 1 | **What conversational AI is** | The definition, the understand/reason/act frame, the bot ladder | 🗺️ | 546 S2 |
-| 2 | **The evolution, 1960s → 2026** | Seven eras, each fixing the last one's limitation | 🗺️ | 536 S1 · `agents` |
-| 3 | **Traditional vs agentic architecture** | Where the orchestration layer appeared, and why | 🗺️ | 536 S13 · 546 S15–16 |
-| 3b | **Workflows vs agents** | Anthropic's distinction — and when not to build an agent at all | ⚖️ | 521 S9 · `agents` |
-
-**Part 2 · What a system is made of** — *the component checklist you diagnose failures with*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 4 | **The six components** | NLU, dialogue, knowledge, action, generation, memory | 🗺️ | 521 S6 · `rag` · `function-calling` |
-| 5 | **Frameworks** | Rasa/Dialogflow vs LangChain/LlamaIndex/AutoGen | 🗺️ | 549 S9 · `agents` |
-
-**Part 3 · The model layer** — *mechanism; shared with 536*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 6 | **Tokenization** | BPE, the `[UNK]` failure, and what prices a conversation | 🔧 | `tokenization` · 536 S1 |
-| 7 | **Context windows** | And the "lost in the middle" problem that motivates RAG | 🗺️ | 536 S1 s10 · `rag` |
-| 8 | **LLMs as the brain** | What they do well, where they fail, and the fix for each failure | 🗺️ | 536 S1 s1,3 · `rag` |
-
-**Part 4 · How an agent actually runs** — *the spine of the whole course*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 9 | **The seven-stage lifecycle** | Request → Routing → Reasoning → Tool → Memory → Safety → Response | 🔧 | every session after this · `agents` |
-| 10 | **Protocol landscape** | MCP, A2A, ANP, and why standards matter | 🗺️ | 521 S13–14 · `api-design` |
-| 11 | **Production concerns** | Observability, cost, latency budgets, layered safety | ⚖️ | 521 S11–12 · 546 S11 · 549 S7 |
-| 12 | **Open problems** | Where the field is stuck — and which walls are really workarounds | ⚖️ | 546 S8.1 · `agents` |
-
-**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
-
----
-
 ## Part 1 · What the field is
+
+*Definitions and sixty years of history.*
 
 ### 1. What conversational AI is
 
@@ -78,7 +41,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 **The bot ladder** — a progression of sophistication, from the same slide:
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Chatbot<br/>keyword match"] --> B["Task Bot<br/>slot filling"]
     B --> C["FAQ Bot<br/>context-aware"]
     C --> D["Generative<br/>fluent, open-ended"]
@@ -90,7 +53,6 @@ flowchart LR
 Every step rightward buys coverage of a wider query space and pays for it in predictability. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
-
 
 Cross-link: → **546 S2** (models → systems: the same "it's not the model" argument, from the engineering side)
 
@@ -193,7 +155,6 @@ flowchart TD
 
 **Tradeoff / what the old architecture was better at** — the traditional pipeline is *inspectable*. When it misfires you can point at the intent classifier or the dialogue policy and see exactly what went wrong. The agentic version replaces those legible stages with an LLM making decisions you cannot fully audit, which is precisely why safety (stage 6) and observability become their own topics rather than afterthoughts. **You trade debuggability for capability.**
 
-
 Cross-link: → `_shared/agents.md` · **536 S13** (agentic AI) · **546 S15–16** (SE for agentic systems)
 
 ---
@@ -270,6 +231,8 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 ---
 
 ## Part 2 · What a system is made of
+
+*The component checklist you diagnose failures with.*
 
 ### 4. The six components of modern conversational AI
 
@@ -382,12 +345,13 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 **Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
 
-
 Cross-link: → `_shared/agents.md` · **549 S9** (LangChain from the API-integration angle)
 
 ---
 
 ## Part 3 · The model layer
+
+*Mechanism; shared with 536.*
 
 ### 6. Tokenization
 
@@ -502,7 +466,6 @@ Accuracy is U-shaped, not flat. A fact placed halfway through a long context is 
 
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
-
 Cross-link: → **536 S1 section 10** (why the window is capped — O(n²) and KV-cache) · `_shared/rag.md` — *"lost in the middle" is the argument for retrieval*
 
 ---
@@ -563,7 +526,7 @@ flowchart LR
 > **RAG = Retrieval-Augmented Generation.** Instead of hoping the model *memorised* a fact, you **fetch** the relevant text and hand it to the model in the prompt:
 >
 > ```mermaid
-> flowchart LR
+> flowchart TD
 >     Q[user question] --> EMB[embed the question]
 >     EMB --> VS[(vector store —<br/>your docs, pre-embedded)]
 >     VS -->|top-k similar chunks| CTX[relevant context]
@@ -575,12 +538,13 @@ flowchart LR
 >
 > Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8 and `_shared/rag.md`.
 
-
 Cross-link: → **536 S1 sections 1, 3** (the mechanism behind every capability in this table) · `_shared/rag.md` (the fix for the first limitation)
 
 ---
 
 ## Part 4 · How an agent actually runs
+
+*The spine of the whole course.*
 
 ### 9. The seven-stage agent lifecycle
 
@@ -589,7 +553,7 @@ Cross-link: → **536 S1 sections 1, 3** (the mechanism behind every capability 
 **Intuition** — The spine of the whole course. Every later lecture deepens one stage. **Learn this cold; it's the single most likely structured question on the mid-sem.**
 
 ```mermaid
-flowchart LR
+flowchart TD
     R["1 · REQUEST<br/>receive & validate"] --> RT["2 · ROUTING<br/>classify intent"]
     RT --> RS["3 · REASONING<br/>plan steps"]
     RS --> TI["4 · TOOL INVOCATION<br/>execute calls"]
@@ -761,7 +725,6 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 **Tradeoff** — these four pull against each other, and naming the tension is what a good exam answer does. Every safety layer adds latency. Cheaper model routing costs quality. Prompt caching saves 50–90% but constrains how you structure prompts. There is no configuration that maximises all four; production work is **choosing which to sacrifice for this particular product.**
 
-
 Cross-link: → `_shared/evaluation.md` · **546 S11** (pipeline and system quality) · **549 S7** (deployment and tooling)
 
 ---
@@ -806,7 +769,6 @@ Where research is active — useful for essay-style questions asking "what are t
 | Cost | Route easy queries to a small model; cache aggressively (session 11) |
 
 The honest summary: **none of these are solved, and all of them are survivable.** Production systems ship on top of every limitation in this table — by constraining the problem until the model's reliability is enough for it, which is the real design skill this course teaches.
-
 
 Cross-link: → **546 S8.1** (the specification problem, reached from software engineering) · `_shared/agents.md`
 

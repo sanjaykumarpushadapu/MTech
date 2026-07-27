@@ -240,6 +240,39 @@ node tools/check-mermaid.mjs 2026-2027-Sem1/AIML*/notes/*.md 2026-2027-Sem1/_sha
 
 ⚠️ **Mermaid label gotchas found the hard way:** wrap any label containing `(`, `)`, `:`, `,` or `#` in double quotes · `end` is reserved and cannot be a node id · `<br/>` works inside quoted labels but HTML tags like `<b>` do not render in every viewer, so prefer plain text.
 
+## No hand-written index — the headings are the index
+
+**Session notes have no `## Topics` block.** The `## Part N ·` and `### N.` headings already form an outline that every Markdown viewer renders as a navigable table of contents, always in sync with the document because it *is* the document.
+
+This was built and removed. It had one-line summaries and a **Depth** column (🔧 mechanism / 🗺️ landscape / ⚖️ judgment). Two findings killed it:
+
+- **All 19 🔧 concepts were exactly the 19 with a Mechanism block and a worked example** — 100% overlap. The marker restated what the section visibly contained.
+- **About half the one-liners restated the concept's own opening `**Intuition**` line.**
+
+What replaced it: **each `## Part` heading carries a one-line italic gloss** saying what the part is for. That's the orientation the index was really providing, and it lives next to the thing it describes.
+
+**The general rule this is an instance of — one fact, one place.** The same reasoning removed the index's "where it's used later" column: every concept already carries a `Cross-link:` line with the reason attached, and the duplicate disagreed with the original within a day. Before adding any summary, ask whether the thing being summarised is already visible.
+
+## Every concept gets a diagram
+
+**All 47 session-1 concepts have at least one Mermaid diagram. Keep it that way.** A concept with no picture is a concept you will re-read three times and still not hold.
+
+Sources of diagrams, in order of preference:
+
+1. **Convert the deck's own figure.** Extract images from the deck (`python-pptx`: `shape.image.blob`; PDFs: `pdfplumber`/`PyMuPDF`) and *look at them*. Slide text alone routinely omits what the figure shows — 536's transformer equations, embedding numbers and LM-head shapes existed only as images.
+2. **Convert a textbook figure** the deck reproduces, citing it (`Raschka 2.18`, `Alammar 1-27`).
+3. **Draw your own** where neither source has one, and mark it `(my own)`. A comparison table often hides a structure worth drawing — the point is usually the *relationship*, not the cells.
+
+Use `flowchart LR/TD/BT` for structure, `timeline` for eras, `sequenceDiagram` for protocols. Tables stay tables — don't force a comparison into a graph.
+
+**Validate before committing.** A diagram that fails to parse renders as raw text:
+
+```bash
+node tools/check-mermaid.mjs 2026-2027-Sem1/AIML*/notes/*.md 2026-2027-Sem1/_shared/*.md
+```
+
+⚠️ **Mermaid label gotchas found the hard way:** wrap any label containing `(`, `)`, `:`, `,` or `#` in double quotes · `end` is reserved and cannot be a node id · `<br/>` works inside quoted labels but HTML tags like `<b>` do not render in every viewer, so prefer plain text.
+
 ## The Topics index is a map, not a list
 
 Every session note opens with a `## Topics` index. It is **one table per Part**, and it carries two columns beyond the concept name:
@@ -247,11 +280,10 @@ Every session note opens with a `## Topics` index. It is **one table per Part**,
 | Column | Why it's there |
 |---|---|
 | **Depth** | 🔧 *Mechanism* — reproduce from a blank page · 🗺️ *Landscape* — recognise and compare · ⚖️ *Judgment* — form a defensible opinion |
-| **Comes back in** | The later session or `_shared/` file where the concept reappears |
 
 **Depth is a study instruction, not a difficulty rating.** It answers "how hard do I work this?" — a 🗺️ concept that gets memorised is wasted effort, and a 🔧 concept that only gets read is a mark lost. Set it from what the concept *is*: if it has a mechanism and a worked example it is 🔧; if it's a comparison table it is 🗺️; if the answer is "it depends, and here's how to decide" it is ⚖️.
 
-**"Comes back in" must match the concept's own `Cross-link:` line.** The index summarises the links; the body carries them in full. If they disagree, the body wins and the index is wrong.
+**Do not add a "where it's used later" column.** It was tried and reverted. Every concept already carries a `Cross-link:` line in its body, with the *reason* for the link attached — which an index cell can't fit. A second copy drifted from the first within a day: 4 of 23 rows disagreed before the change was even committed. One fact, one place.
 
 **The numbers in the index must match the `### N.` headings exactly** — same count, same order, including sub-numbers like `3b`. An index that has drifted from its body is worse than no index.
 

@@ -14,31 +14,13 @@
 
 **Running example (if any):** <the concrete thread used throughout>.
 
-## Topics
-
-<!-- The index is a MAP, not a list. One table per Part. The two columns that earn
-     their place are Depth and "Comes back in": Depth says how hard to work the
-     concept, "Comes back in" makes the note a node in a network rather than a
-     standalone document. Numbers here MUST match the ### N. headings below. -->
-
-**Part 1 · <part title>** — *<what this part is for, in a clause>*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 1 | **<Concept>** | <the one-line summary> | 🔧 | <session / `_shared` file> |
-| 2 | **<Concept>** | <the one-line summary> | 🗺️ | <session / `_shared` file> |
-
-**Part 2 · <part title>** — *<what this part is for>*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 3 | **<Concept>** | <the one-line summary> | ⚖️ | <session / `_shared` file> |
-
-**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
-
-<!-- BODY HIERARCHY: group the numbered concepts under Part headings, matching the
-     Topics index. Parts are ## , concepts are ### N. , sub-sections are #### N.M .
-     End-matter (Self-study / Lab / build) stays at ## . -->
+<!-- NO "## Topics" index. The `## Part N ·` and `### N.` headings below already
+     form an outline that GitHub, Obsidian and VS Code render as a navigable table
+     of contents — always in sync, zero maintenance. A hand-written index duplicates
+     that and drifts from it. This was built with one-line summaries and a Depth
+     column, then removed: 19 of 19 "mechanism" concepts turned out to be exactly
+     the ones with a Mechanism block and a worked example, so the column restated
+     what the section already showed. -->
 
 ---
 
@@ -55,6 +37,18 @@
 **Worked example** — one concrete instance, done by hand or in ≤30 lines of code. If you can't produce this without looking, you don't have the concept yet.
 
 **Tradeoff / when NOT to use** — the cost, the failure mode, the situation where a simpler option wins. *(Mandatory — never blank.)*
+
+<!-- DIAGRAM: every concept gets at least one. Convert the deck's figure if there
+     is one (look at the extracted images, not just the slide text), else a
+     textbook figure, else draw your own and mark it "(my own)".
+     Direction: `flowchart TD` unless it is a short linear pipeline of <=5 short
+     boxes, in which case `flowchart LR`. Wide LR diagrams scroll off the page and
+     are cut off in print. Validate with `cd tools && npm run check`. -->
+
+```mermaid
+flowchart TD
+    A["first step"] --> B["second step"]
+```
 
 <!-- OPTIONAL depth blocks — add where the concept has real-world weight. Marked as beyond-course. -->
 

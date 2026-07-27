@@ -49,3 +49,7 @@ Thumbs.db
 # into the session note, then don't commit. The note is the record, not the transcript.
 2026-2027-Sem1/*/source/transcripts/*
 !2026-2027-Sem1/*/source/transcripts/.gitkeep
+
+# Tool dependencies — reinstall with `cd tools && npm install`
+tools/node_modules/
+tools/package-lock.json

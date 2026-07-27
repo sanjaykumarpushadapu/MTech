@@ -7,17 +7,21 @@ reports any that won't render. A diagram that fails to parse renders as a wall o
 raw text in the note — worse than having no diagram at all — and nothing in a
 plain Markdown preview warns you.
 
-**Setup** (once):
+**Setup** (once) — `package.json` is committed, so this is just:
 
 ```bash
-cd tools && npm init -y && npm install mermaid jsdom
+cd tools && npm install
 ```
 
-**Run** (from the repo root):
+**Run:**
 
 ```bash
-node tools/check-mermaid.mjs 2026-2027-Sem1/AIML*/notes/*.md 2026-2027-Sem1/_shared/*.md
+cd tools && npm run check
 ```
+
+⚠️ It must run from `tools/`, because that's where `node_modules` lives. Running
+`node tools/check-mermaid.mjs` from the repo root fails with a module-not-found
+error, not a diagram error — don't mistake one for the other.
 
 Exits non-zero if any diagram fails, so it can be wired into a pre-commit hook.
 

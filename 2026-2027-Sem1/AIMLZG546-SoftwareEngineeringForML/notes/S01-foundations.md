@@ -10,44 +10,9 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 
 **Running example throughout:** **fraud detection**, used in every section — and it's Kästner's own ch3 example too, so book and note align from page one.
 
-## Topics
-
-**Part 1 · The argument** — *read these two first; they carry the course*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 1 | **Why this course exists** | Sidney's transcription start-up: excellent models, failing business | ⚖️ | 546 S2 · 521 S1 |
-| 2 | **ML vocabulary** | Algorithm vs model, parameters vs hyperparameters, the compiler analogy | 🔧 | 549 S4 · `ml-lifecycle` |
-
-**Part 2 · Process** — *what engineering already knows*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 3 | **Two lifecycles** | The SDLC and the ML pipeline, and how they nest | 🗺️ | 549 S4, S6 · `ml-lifecycle` |
-| 4 | **From Waterfall to ADLC** | Five stages, each fixing the last one's pain | 🗺️ | 546 S15 |
-
-**Part 3 · Context** — *landscape; tables, not prose*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 5 | **How software and data got here** | Two parallel evolutions that met | 🗺️ | 549 S2–3 · `docker-k8s` |
-| 6 | **What data science is** | The three-way overlap, and the hierarchy of needs | 🗺️ | 549 S4 · `ml-lifecycle` |
-
-**Part 4 · People and judgment** — *the half of the course that isn't recall*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 7 | **Who builds these systems** | SDLC roles, the three data roles, and the DS↔SE friction | ⚖️ | 546 S3 · `ml-lifecycle` |
-| 8 | **What ML changes about engineering** | Three challenges, each "harder but not new" — and where that breaks | ⚖️ | 546 S10–11 · 521 S1 |
-| 9 | **The risk spectrum** | The course's actual thesis, and the five enduring principles | ⚖️ | 546 S14 · 521 S12 |
-| 10 | **Foundation models and prompting** | When the general answer is the wrong one | ⚖️ | 536 S10 · `rag` |
-| 11 | **MLOps and responsible ML** | Why both are cross-cutting and can't be scheduled late | 🗺️ | 546 S13–14 · 549 S6 |
-
-**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
-
----
-
 ## Part 1 · The argument
+
+*Read these two first; they carry the course.*
 
 ### 1. Why this course exists
 
@@ -93,7 +58,6 @@ flowchart LR
 The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
 
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
-
 
 Cross-link: → **521 S1 section 1** (the same "it's a system, not a model" point from the agent side)
 
@@ -181,12 +145,13 @@ T1 devotes a section to this, which signals it can be asked.
 | performance | *prediction accuracy* vs *inference latency* |
 | parameter | *model parameter* (learned) vs *hyperparameter* (chosen) |
 
-
 Cross-link: → `_shared/ml-lifecycle.md` · **549 S4** (data science and the ML lifecycle)
 
 ---
 
-## Part 2 · Process — what engineering already knows
+## Part 2 · Process
+
+*What engineering already knows.*
 
 ### 3. Two lifecycles: the SDLC and the ML pipeline
 
@@ -218,7 +183,7 @@ flowchart LR
 **Intuition** — Training is one step of many. Everything before it is making data fit to learn from; everything after is deciding whether it's good enough and keeping it alive.
 
 ```mermaid
-flowchart LR
+flowchart TD
     R[Model requirements] --> DC[Data collection]
     DC --> DL[Data labeling]
     DL --> CL[Data cleaning &<br/>feature engineering]
@@ -324,7 +289,7 @@ That last row is worth pausing on. It's an *organisational* failure mode, not a 
 #### The four-stage adoption journey
 
 ```mermaid
-flowchart LR
+flowchart TD
     E["1 · EXPERIMENT<br/>find what fits<br/>POCs · security & legal vetting<br/>usage guidelines"]
     O["2 · ONBOARD & PILOT<br/>license management<br/>training, hackathons<br/>establish KPIs, ROI, baseline"]
     S["3 · SCALE & SOAR<br/>org-level rollout<br/>train champions<br/>publish success stories"]
@@ -344,6 +309,8 @@ Cross-link: → **546 S15** (ADLC phases in detail)
 ---
 
 ## Part 3 · Context
+
+*Landscape; tables, not prose.*
 
 ### 5. How software and data got here
 
@@ -427,12 +394,13 @@ flowchart BT
 
 **Tradeoff / how NOT to read the pyramid** — It's a *dependency* claim, not a *sequencing mandate*. Read literally it says "spend two years on data infrastructure before touching ML," which kills projects. Honest reading: cut a thin vertical slice through all six layers for one use case, then widen. Note also that simple ML sits *below* deep learning — A/B tests and logistic regression solve a large share of problems pitched as AI.
 
-
 Cross-link: → `_shared/ml-lifecycle.md` · **549 S4**
 
 ---
 
 ## Part 4 · People and judgment
+
+*The half of the course that isn't recall.*
 
 ### 7. Who builds these systems
 
@@ -591,7 +559,6 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 **The concrete risk** — "not new" can license doing nothing differently. Every one of the three challenges needs a *specific* new practice: model-behaviour testing rather than unit tests (session 10), monitoring for drift rather than for crashes (session 11), and documenting intended use rather than trusting an API contract (session 13, model cards). The reassurance is about the *discipline* being available, not about the *work* being already done.
 
-
 Cross-link: → **521 S1 section 12** (open problems — the same limits, named from the research side) · **546 S10–11** (testing and quality, the practices these three challenges demand)
 
 ---
@@ -631,7 +598,6 @@ flowchart LR
 3. Navigating conflicting qualities — accuracy, operating cost, latency, time to release
 4. Planning a responsible testing strategy
 5. Designing systems that can be updated rapidly and monitored in production
-
 
 Cross-link: → **546 S14** (responsible ML engineering) · **521 S12** (security and prompt injection)
 
@@ -740,7 +706,6 @@ Both touch **every** phase. A team that plans to "do the fairness work in sprint
 > | **Streaming** | Score events as they flow through a queue (Kafka) | Continuous event data — clickstreams, IoT, live anomaly detection |
 >
 > The running example makes the choice concrete: **fraud detection is online** (the score gates a live payment, ~200 ms budget); a monthly churn report is **batch**. Building a heavy real-time service for something a nightly batch job would do — or vice-versa — is the same "match the machinery to the need" judgment as the risk spectrum in section 9.
-
 
 Cross-link: → `_shared/ml-lifecycle.md` · `_shared/evaluation.md` · **549 S6** (ML pipelines & MLOps) · **546 S13–14**
 

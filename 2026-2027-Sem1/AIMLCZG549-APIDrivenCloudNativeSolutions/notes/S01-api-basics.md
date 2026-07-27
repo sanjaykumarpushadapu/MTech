@@ -8,43 +8,9 @@ An API is a **promise between a service and its clients**: send a request shaped
 
 This is career-load-bearing, not just coursework. **Every backend, every cloud service, every ML model you deploy is reached through an API** — Hugging Face, OpenAI, LangChain, Prefect and Amazon Bedrock are all REST. The design calls in this note — REST vs gRPC, how to version without breaking clients, sync vs async — are ones you will actually make on the job. The note builds the vocabulary (contract, sync/async, HTTP), then the three shapes the promise can take, then how you evolve it over time.
 
-## Topics
-
-**Part 1 · What an API is** — *the contract, and how it's called*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 1 | **What an API is** | A contract between a service and its clients; the API-first premise | 🗺️ | `api-design` · 549 S5 |
-| 2 | **Synchronous vs asynchronous** | Blocked vs non-blocked; the three styles vs message brokers | 🔧 | 549 S5 · 546 S5 |
-
-**Part 2 · HTTP and specification** — *the wire format everything else sits on*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 3 | **HTTP APIs** | Endpoints, methods, status codes; the 401-vs-403 distinction | 🔧 | 549 S8 · `api-design` |
-| 4 | **OpenAPI and the API lifecycle** | Seven steps, worked through a Books API in FastAPI | 🔧 | 549 S5, S7 |
-
-**Part 3 · The three API styles** — *the heart of the session*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 5 | **REST** | Resources and URIs, the **Richardson Maturity Model**, benefits and drawbacks | 🔧 | 546 S9 · 549 S8 |
-| 6 | **GraphQL** | One call instead of three, schema-first — and where it loses (caching) | 🔧 | `api-design` |
-| 7 | **gRPC** | Stubs, Protocol Buffers, HTTP/2 multiplexing, `.proto` files | 🔧 | 546 S5 · 549 S12 |
-| 7b | **North–south vs east–west** | The framing that decides which style to use | ⚖️ | 546 S5 · `docker-k8s` |
-| 8 | **Choosing between them** | Three questions in order — who calls it, what shape, what a mistake costs | ⚖️ | 546 S9 · `api-design` |
-
-**Part 4 · Evolution** — *changing a contract without breaking people*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 9 | **API versioning** | What counts as a breaking change; semantic versioning `X.Y.Z` | 🔧 | 546 S9 · `api-design` |
-
-**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
-
----
-
 ## Part 1 · What an API is
+
+*The contract, and how it's called.*
 
 ### 1. What an API is
 
@@ -124,7 +90,7 @@ flowchart LR
 Asynchronous (message broker): every hop becomes a channel, and nothing blocks.
 
 ```mermaid
-flowchart LR
+flowchart TD
     C[Client] -->|create order request| ORC[[Order request channel]]
     ORC --> OS[Order Service]
     OS --> CRC[[Consumer request channel]]
@@ -142,12 +108,13 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 **Tradeoff / when NOT to go async** — Asynchronous buys availability (the consumer service can be down and the message waits) and decoupling, and charges you a broker to operate, eventual consistency, harder debugging, and no simple "what did it return?" answer. Use sync when the caller genuinely needs the answer to proceed — a payment authorisation. Use async for work that can complete later — sending the confirmation email.
 
-
 Cross-link: → `_shared/api-design.md` · **549 S5** (API-driven data pipelines) · **546 S5** (microservices)
 
 ---
 
 ## Part 2 · HTTP and specification
+
+*The wire format everything else sits on.*
 
 ### 3. HTTP APIs
 
@@ -313,7 +280,6 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 >
 > This is why a failed `PUT` is safe to blindly retry but a failed `POST` isn't — retrying a charge could double-bill. Real payment APIs (Stripe) solve it with an **idempotency key**: you send a unique key with the `POST`, and the server dedupes repeats. This is also the deeper reason `POST`→`201` and `PUT`→`200` (section 3, *which success code when*): `POST` makes something new each time; `PUT` converges on one state.
 
-
 Cross-link: → `_shared/api-design.md` · **549 S8** (calling AI/cognitive service APIs — all of them are HTTP APIs shaped like this)
 
 ---
@@ -386,6 +352,8 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML ser
 
 ## Part 3 · The three API styles
 
+*The heart of the session.*
+
 ### 5. REST
 
 *Reference: Roy Fielding's 2000 dissertation, ch5 (the origin of REST); R2 ch1.*
@@ -443,7 +411,7 @@ Same resource, two representations:
 **A whole system built this way** — the deck's food-delivery architecture, and the best single diagram in the deck because it's a preview of microservices (S3):
 
 ```mermaid
-flowchart LR
+flowchart TD
     Courier[Courier<br/>mobile] --> GW[API Gateway]
     Consumer[Consumer<br/>mobile] --> GW
     Restaurant[Restaurant<br/>web UI] --> RUI[Restaurant Web UI]
@@ -488,7 +456,6 @@ The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetc
 >
 > Naming conventions that mark a REST API as well-designed: **plural nouns** (`/students` not `/getStudent`), **no verbs in the path** (the HTTP method *is* the verb), and **nesting for relationships** (`/students/123/courses`). Get these right and the API is self-explanatory; get them wrong and every consumer needs the docs open constantly.
 
-
 Cross-link: → `_shared/api-design.md` · **546 S9** (APIs and packaging) · **549 S8**
 
 ---
@@ -502,7 +469,7 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (APIs and packaging) · **
 **Mechanism**
 
 ```mermaid
-flowchart LR
+flowchart TD
     C[Client] -->|HTTP POST to /graphql| S[GraphQL Server]
     S --> V{Validate against schema}
     V -->|invalid| E[Error]
@@ -574,7 +541,6 @@ query {
 | **Self-managed GraphQL** | You run the server yourself |
 
 **Tradeoff / when NOT to use GraphQL** — The deck's own comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
-
 
 Cross-link: → `_shared/api-design.md`
 
@@ -679,7 +645,6 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 **Tradeoff / when NOT to use gRPC** — The disadvantages column is the answer, and it's sharp: gRPC is for **service-to-service** traffic where you control both ends. Put it on a public, browser-facing edge and you've chosen a protocol browsers can't natively speak, for consumers who can't debug it with `curl`. The usual architecture is REST or GraphQL at the edge, gRPC behind it.
 
-
 Cross-link: → `_shared/api-design.md` · **546 S5** (microservices — gRPC is the east–west default there) · **549 S12**
 
 ---
@@ -776,12 +741,13 @@ The lesson: **one system, three correct answers.** Anyone who says "we're a Grap
 
 **The trap in the table above:** it compares styles on *features*, which invites picking the one with the most ticks. Features don't decide this — consumers do. gRPC's superior speed is worth nothing if the caller is a browser.
 
-
 Cross-link: → `_shared/api-design.md` — *written once; 546 S9 reaches the same material from the packaging side*
 
 ---
 
 ## Part 4 · Evolution
+
+*Changing a contract without breaking people.*
 
 ### 9. API versioning
 
@@ -821,7 +787,6 @@ flowchart LR
     S3 --> S5["5 · Sunset v1<br/>only when traffic ≈ 0"]
     S3 -.->|"skip this and you<br/>maintain v1 forever"| S3
 ```
-
 
 ```
 1  Ship v2 alongside v1        both live, clients unchanged
@@ -875,7 +840,6 @@ Each version reachable at its own endpoint:
 > | **Date-based** (Stripe) | `Stripe-Version: 2024-06-20` | Each account pins a date; Stripe transforms old-shaped responses so you upgrade on your own schedule |
 >
 > Two career habits the exam won't test but the job will: **deprecation policy** — announce, give a window (6–12 months), monitor who's still on the old version, then sunset — and **most changes should be non-breaking by design**, so you add far fewer major versions than the semver table suggests. In modern practice, teams version **`v1`/`v2`** at the *major* level only and ship minor/patch changes silently — full `X.Y.Z` in the path is rarer than the deck implies.
-
 
 Cross-link: → `_shared/api-design.md` · **546 S9** (versioning a model API is versioning an API, plus the model)
 

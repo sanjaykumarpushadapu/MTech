@@ -1,0 +1,7 @@
+{
+  "name": "mtech-notes-tools",
+  "private": true,
+  "type": "module",
+  "scripts": { "check": "node check-mermaid.mjs ../2026-2027-Sem1/AIML*/notes/*.md ../2026-2027-Sem1/_shared/*.md" },
+  "dependencies": { "jsdom": "^27.0.0", "mermaid": "^11.12.0" }
+}

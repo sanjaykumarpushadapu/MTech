@@ -8,51 +8,12 @@ This is the session that makes you fluent in how modern AI actually works under 
 
 **Running example throughout:** **Llama-3 8B** (d = 4096, 32 heads, d_k = 128). Anchor every new number to it.
 
-## Topics
-
-**Part 1 · What a language model is** — *the conceptual base, and the longest stretch of her class time*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 1 | **What a language model is** | P(W) and P(next word); why word order emerges from counting | 🔧 | 521 S1 |
-| 2 | **What makes it "large"** | Three different things, each with its own cost | 🗺️ | 536 S5–6 · `quantization` |
-| 3 | **Generation as prediction** | Why any NLP task can be recast as next-word prediction | 🔧 | 521 S1 · `rag` |
-
-**Part 2 · How the machinery works** — *worked by hand; ~17 minutes on attention alone*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 4 | **Self-attention** | Q/K/V, the three-step computation, and the shape table | 🔧 | 536 S4, S5 · 521 S1 |
-| 5 | **Multi-head attention** | Why h heads cost the same as one; the N=4, d=512 example | 🔧 | 536 S3, S4 |
-| 6 | **The transformer block** | The equations, two residuals, pre-norm | 🔧 | 536 S3 |
-| 7 | **Positional encoding** | Attention has no sense of order; learned vs sinusoidal vs RoPE | 🔧 | 536 S3, S5 |
-
-**Part 3 · Text in, text out** — *the pipeline wrapped around the model*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 8 | **Text → tokens → embeddings** | Special tokens, the lookup with real numbers, positional addition | 🔧 | `tokenization` · 521 S1 |
-| 9 | **LM head and weight tying** | Three shapes, and a 13%-of-parameters decision | 🔧 | 536 S5, S6 |
-| 10 | **Context length** | Why it's capped by O(n²) and KV-cache, not ambition | 🗺️ | 521 S1 · `quantization` · `rag` |
-
-**Part 4 · The landscape** — *comparison tables; recognise, don't over-invest*
-
-| # | Concept | In one line | Depth | Comes back in |
-|---|---|---|---|---|
-| 11 | **Architectures** | Encoder-only vs decoder-only vs encoder-decoder, and why decoder-only won | 🗺️ | 536 S3 · 521 S1 |
-| 12 | **Tokenization** | The full treatment lives in `_shared/`; **Lab 1 is here** | 🔧 | `tokenization` · 521 S1 |
-| 13 | **The LLM landscape** | The causal chain, and the three levels of openness | 🗺️ | 521 S3 · 546 S10 |
-
-**Depth** — 🔧 *Mechanism*: reproduce it from a blank page · 🗺️ *Landscape*: recognise and compare, don't memorise · ⚖️ *Judgment*: form an opinion you can defend
-
----
-
 ## The whole thing in one picture
 
 *My own synthesis (not from one slide) — how the numbered sections below snap together into a single forward pass. Every decoder-only LLM is this loop:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     T[text] --> TOK["tokenizer<br/>(sec 12)"]
     TOK --> ID[token IDs]
     ID --> EM["+ token & positional<br/>embeddings (sec 7–8)"]
@@ -68,6 +29,8 @@ One pass turns the whole prompt into **one** probability distribution over the n
 ---
 
 ## Part 1 · What a language model is
+
+*The conceptual base, and the longest stretch of her class time.*
 
 ### 1. What a language model is
 
@@ -106,7 +69,6 @@ Same words, different order. A language model that has learned English assigns f
 
 **Tradeoff / what this framing costs** — Defining a model purely by next-word probability means there is **no notion of truth in the objective**. A fluent falsehood scores well; that's not a bug in the training, it's what the objective asked for. Hallucination is downstream of this definition, which is why S14 needs separate faithfulness metrics.
 
-
 Cross-link: → **521 S1 section 8** (the same object seen from the application side — what it lets an agent do, and how each capability has a matching failure)
 
 ---
@@ -138,7 +100,6 @@ flowchart LR
 **Read the right-hand column, not the left.** Only the parameter axis charges you forever; data and compute are sunk costs. That asymmetry is the reason S6 compression attacks parameters and nothing else.
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
-
 
 Cross-link: → `_shared/quantization.md` · **536 S5–6** — *every one of the three "large" axes becomes a serving cost later; scale is the thing compression exists to undo*
 
@@ -228,12 +189,13 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 **Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration. This is the same tradeoff 546 draws in its foundation-models section — the expensive general answer versus the cheap specific one.
 
-
 Cross-link: → **521 S1 section 8** · `_shared/rag.md` — *"plausible continuation" is the mechanism; hallucination is that mechanism running without evidence*
 
 ---
 
 ## Part 2 · How the machinery works
+
+*Worked by hand; ~17 minutes on attention alone.*
 
 ### 4. Self-attention
 
@@ -254,7 +216,7 @@ It builds a matrix comparing each token with every token before it, weighted by 
 **The computation, in three steps:**
 
 ```mermaid
-flowchart LR
+flowchart TD
     X[Token embeddings X] --> Q[Q = X·WQ]
     X --> K[K = X·WK]
     X --> V[V = X·WV]
@@ -333,7 +295,6 @@ That last line **is** attention: each token's output is a **weighted average of 
 > - At **inference** the trick that makes generation fast is the **KV-cache**: keys and values for past tokens are cached so each new token is O(n) not O(n²). This is why the *first* token of a long prompt is slow ("prefill") and later tokens are fast ("decode") — a distinction you'll meet the moment you look at latency metrics.
 > - Practical consequence: **long prompts cost real money and time.** "Just paste the whole document in" runs straight into this quadratic. It's the reason retrieval (RAG) exists — fetch the relevant 4K tokens instead of paying for 100K.
 
-
 Cross-link: → **521 S1 section 8** (self-attention → multi-turn coherence) · **536 S4** (attention efficiency) · **536 S5** (KV-cache — caching exactly the K and V computed here)
 
 ---
@@ -376,7 +337,7 @@ Weight-matrix notation from the slide: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d
 *The same worked example as a picture (my own) — split the model width into h heads, attend in each, concatenate back, project once:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     X["X [4×512]"] --> S{"split into<br/>8 heads"}
     S --> H1["head 1 · Q,K,V [4×64]<br/>→ attention → [4×64]"]
     S --> H2["head 2 → [4×64]"]
@@ -391,7 +352,6 @@ flowchart LR
 Each head runs the exact five-step computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
-
 
 Cross-link: → **536 S3** (grouped-query attention shrinks the heads' KV footprint) · **536 S4**
 
@@ -424,7 +384,7 @@ H  = T⁵ + T³           ← residual 2
 ```
 
 ```mermaid
-flowchart LR
+flowchart TD
     X[X input] --> LN1["T¹ = LayerNorm(X)"]
     LN1 --> MHA["T² = MultiHeadAttention(T¹)"]
     MHA --> R1(("+"))
@@ -488,7 +448,6 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 **The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to section 11.
 
 **Tradeoff** — the FFNN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFNN with sparsely-activated ones: it's the biggest block of weights to attack.
-
 
 Cross-link: → **536 S3** (architecture advances — what modern blocks change about this one)
 
@@ -554,12 +513,13 @@ Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.9
 
 **Tradeoff** — learned embeddings are simplest and fail hardest outside the trained length; sinusoidal costs nothing and generalises modestly; RoPE is the current default precisely because long context is the pressure point, and it's the only one of the three that rotates rather than adds. RoPE gets full treatment in S3 — this is the preview.
 
-
 Cross-link: → **536 S3** (RoPE in depth) · **536 S5** (why RoPE extrapolates and learned embeddings don't)
 
 ---
 
 ## Part 3 · Text in, text out
+
+*The pipeline wrapped around the model.*
 
 ### 8. From text to tokens to embeddings
 
@@ -568,7 +528,7 @@ Cross-link: → **536 S3** (RoPE in depth) · **536 S5** (why RoPE extrapolates 
 **Intuition** — A model can only do arithmetic, so text has to become numbers. Four steps, each with its own name, and the exam can ask for the order:
 
 ```mermaid
-flowchart LR
+flowchart TD
     T[Raw text] --> V[Vocabulary building]
     V --> TK[Tokens]
     TK --> ID[Token IDs<br/>integers]
@@ -636,7 +596,6 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 **Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what section 12's tokenizer choices are negotiating.
 
-
 Cross-link: → `_shared/tokenization.md` · **521 S1 section 6** — *one note, both subjects*
 
 ---
@@ -650,7 +609,7 @@ Cross-link: → `_shared/tokenization.md` · **521 S1 section 6** — *one note,
 **Mechanism**
 
 ```mermaid
-flowchart LR
+flowchart TD
     W["w₁ … w_N tokens"] --> TB["Layer L<br/>transformer block"]
     TB --> H["h^L_N &nbsp; [1 × d]"]
     H --> UE["Unembedding layer<br/>U = Eᵀ &nbsp; [d × |V|]"]
@@ -694,7 +653,6 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 **Tradeoff / when NOT to tie** — the deck states it cleanly: untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
 
-
 Cross-link: → **536 S5** (inference — this matrix runs once per generated token) · **536 S6** (compression: the LM head is a compression target precisely because it's 13% of parameters)
 
 ---
@@ -723,12 +681,13 @@ flowchart LR
 
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
 
-
 Cross-link: → **521 S1 section 7** (context windows and "lost in the middle") · `_shared/quantization.md` (KV-cache) · `_shared/rag.md` — *retrieval exists because this number is finite*
 
 ---
 
 ## Part 4 · The landscape
+
+*Comparison tables; recognise, don't over-invest.*
 
 ### 11. LLM architectures
 
@@ -771,7 +730,6 @@ And the zoom-ins, which are section 4 and section 5 in picture form: **scaled do
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
 **Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the deck's own line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
-
 
 Cross-link: → **521 S1 section 2** (the same history told as conversational-AI eras) · **536 S3**
 
@@ -926,7 +884,6 @@ tiktoken BPE (Llama-3):
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure you'll see in 521 is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
-
 Cross-link: → `_shared/tokenization.md` — *the full treatment, written once for both subjects* · **521 S1 section 6**
 
 ---
@@ -940,7 +897,7 @@ Cross-link: → `_shared/tokenization.md` — *the full treatment, written once 
 *The chain the deck implies but never draws (my own) — each link forces the next:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Transformer<br/>2017"] --> B["scale works<br/>bigger = better, predictably"]
     B --> C["only the well-funded<br/>can pre-train"]
     C --> D["most teams ADAPT<br/>rather than train"]
@@ -996,7 +953,6 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 **Frontier models named in the deck** — OpenAI o3 · Anthropic Claude Sonnet 3.7 · xAI Grok 3, with a more recent table listing GPT-5.4 Thinking (deep reasoning, tool use, long-horizon research), Gemini 3.1 Pro (complex problem-solving, multimodal, tool workflows), Gemma 4 (open-weight reasoning, agentic), Claude Opus 4.6 (long-context reasoning, coding, sustained agentic work), Mistral Large 3 (open-weight multimodal, **sparse MoE**), Grok 4.20 (parallel multi-agent research), DeepSeek-R1 (**RL-driven** math, logic, reasoning).
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
-
 
 Cross-link: → **521 S3** (model landscape and cost — the same table, used to make a build decision) · **546 S10** (when the general answer is the wrong one)
 
