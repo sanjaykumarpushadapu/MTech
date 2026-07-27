@@ -1,7 +1,7 @@
 # 536 · Session 01 · Foundations of Large Language Models
 
 Exam: **mid-sem (closed book)** | Date learned: ____ | Instructor: Dr. Monali Mavani
-Assembled from: `CS-1 Intro to LLM.pptx` (69 sl, **47 embedded images extracted and read**) · T1 Jurafsky & Martin ch2, 7, 8 · T2 Alammar & Grootendorst ch1–3 · R1 Raschka ch1–2 · HuggingFace LLM course ch6.5
+Assembled from: `CS-1 Intro to LLM.pptx` (69 sl, **47 embedded images extracted and read**) · **T1 Jurafsky & Martin ch2, 7, 8** · **T2 Alammar & Grootendorst ch1–3** · **R1 Raschka ch1–2** · HuggingFace LLM course ch6.5 — *all cited sources now held*
 
 ## Topics
 

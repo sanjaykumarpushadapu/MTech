@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read) | ✓ **T1 ch2 · T2 ch2** read; T1 ch7,8 + T2 ch1,3 held; R1 Raschka ✗ | ✗ | ✗ | ✅ `notes/S01-foundations.md` |
+| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read) | ✅ **all three held**: T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | ✗ | ✗ | ✅ `notes/S01-foundations.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
@@ -89,6 +89,38 @@ Legend: ✓ have · ✗ missing · — n/a
 *Ch3 Looking Inside LLMs* (p95) — Overview of transformer models (96) · Inputs and outputs of a trained transformer LLM (96) · **The components of the forward pass (98)** · **Choosing a single token from the probability distribution (101)** · **Parallel token processing and context size (103)** · **Speeding up generation by caching keys and values (105)** ← *KV-cache, previews S5* · **Inside the transformer block (107)** · Recent improvements (117) · **More efficient attention (118)** ← *previews S4* · The transformer block (123) · **Positional embeddings (RoPE) (124)** ← *previews S3* · Other architectural experiments (127)
 
 ⚠️ **Ch3 spans four sessions.** Read p96–116 for S1; p117–127 belongs to S3 and S4. Don't read the whole chapter in week 1.
+
+
+## R1 · Raschka, *Build a Large Language Model (From Scratch)* (157 pp, markdown export)
+
+Cited for **536 S1 (ch1–2), S2 (ch2, 5), S5 (ch5), S7 (ch7)**.
+
+| Ch | Title | PDF page | Cited for |
+|---|---|---|---|
+| **1** | **Understanding LLM** | **3** | **S1** ✅ |
+| **2** | **Working with Text Data** | **7** | **S1, S2** ✅ |
+| 3 | Coding Attention Mechanisms | ~20 | ✗ **OUT OF SCOPE** |
+| 4 | Implementing a GPT Model from Scratch | 48 | ✗ **OUT OF SCOPE** |
+| **5** | **Pretraining on Unlabeled Data** | **72** | **S2, S5** |
+| 6 | Fine-tuning for Classification | 90 | ✗ **OUT OF SCOPE** |
+| **7** | **Fine-tuning to Follow Instructions** | **108** | **S7** |
+
+**Scope: ch1, 2, 5, 7 only.** Chapters 3, 4 and 6 are outside the syllabus — note that ch3 (Coding Attention Mechanisms) and ch4 (Implementing a GPT Model) are *not* cited even though 536 S1 covers attention and the transformer block; that material comes from **T1 ch8** and **T2 ch3** instead.
+
+**Ch2 section map (the S1 chapter):**
+
+| § | Title | p | In S1 note? |
+|---|---|---|---|
+| 2.1 | Understanding word embeddings | 7 | ✅ §8 |
+| 2.2 | Tokenizing text | ~9 | ✅ §8 |
+| 2.3 | Converting tokens into token IDs | ~10 | ✅ §8 |
+| 2.4 | **Adding special context tokens** | ~11 | ✅ §8 — source of the `<\|unk\|>` 783 / `<\|endoftext\|>` 784 figure |
+| 2.5 | **Byte pair encoding** | **12** | ✅ `_shared/tokenization.md` |
+| 2.6 | Data sampling with a sliding window | ~14 | ⚠️ *not in the deck* — belongs to S2 (pre-training data) |
+| 2.7 | **Creating token embeddings** | **16** | ✅ §8 — source of the fig 2.16 embedding-lookup figure |
+| 2.8 | **Encoding word positions** | **17** | ✅ §8 — source of the fig 2.18 positional-addition figure |
+
+**The deck's figures came from here.** Slides 29, 32 and 35 of `CS-1 Intro to LLM.pptx` reproduce Raschka figs 2.9, 2.16 and 2.18 — special tokens, the embedding-matrix row lookup, and token + positional embedding addition. All three are already extracted into `notes/S01-foundations.md` §8 with their numbers.
 
 ## Scope rule
 

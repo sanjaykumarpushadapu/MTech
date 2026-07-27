@@ -20,7 +20,8 @@ Read `2026-2027-Sem1/STUDY-PLAN.md` for phases, calendar and deadlines before pl
 
 ## Hard rules
 
-1. **Never commit course material.** No `.pdf`, `.ppt`, `.pptx`, `.docx`, datasets or model weights. They are large and copyrighted; they live in Google Drive. `.gitignore` enforces this — do not weaken it. `<subject>/source/README.md` holds links only.
+1. **Never commit course material.** No `.pdf`, `.ppt`, `.pptx`, `.docx`, datasets or model weights. `.gitignore` enforces this — do not weaken it. `<subject>/source/README.md` holds links only.
+   **But textbooks are kept locally in `/_library/`** (gitignored, ~125 MB, nine books) so they never need re-uploading. **Always look there before asking the user for a book.** Slides and recordings still live in Drive/Teams/Taxila and are uploaded per session.
 2. **Never commit secrets.** No API keys, tokens or `.env` files, in any file, including notebooks and note examples. Use `OPENAI_API_KEY` style placeholders.
 3. **Don't invent syllabus content.** Session topics, dates, weights and references come from the handouts. If something isn't in a handout, mark it `⚠️ unconfirmed` rather than guessing. Wrong exam dates are worse than missing ones.
 4. **Don't reproduce textbook text.** Explanations are written fresh, in plain language. Cite the chapter; don't transcribe it.
@@ -44,7 +45,7 @@ Each master index reproduces this table. Its **Source** column *is* the handout'
 
 | Reference says | Do this |
 |---|---|
-| A textbook chapter (`T1 ch8`, `R3 ch1`) | Ask for those chapters, or extract them from a book already uploaded. Chapter→page maps live in `source/MATERIAL-LOG.md` |
+| A textbook chapter (`T1 ch8`, `R3 ch1`) | **Check `/_library/` first — nine textbooks are already there.** Extract the cited chapters using the chapter→page map in `source/MATERIAL-LOG.md`. Only ask the user if the book isn't in `_library/` |
 | A paper or public spec (ReAct, DPO, MCP spec, an Anthropic post) | **Fetch it directly** — these are public. Don't make the user upload them |
 | "Web Resources", "Lecture Notes", or blank | **There is no source behind the slides.** The deck and the recording are the entire syllabus for that session. Say so in the note, and treat missing material as unrecoverable rather than reconstructable |
 
@@ -211,6 +212,25 @@ RAG, retrieval, agents, fine-tuning, function-calling, quantization, Docker/K8s,
 - Short sentences beat long ones. If a sentence can lose words and keep its meaning, cut them.
 - Prefer a table over a list, a list over a paragraph, and a worked example over all three.
 - Flag uncertainty inline with `⚠️`. Never present a guess as a fact.
+
+## Ask for what you need — insistently, not politely
+
+The user has asked to be told **forcefully** when something is needed from them. A gap mentioned once, softly, at the end of a long response, gets missed — and a missed deck or an unconfirmed exam date costs marks months later.
+
+**Every response that ends with an outstanding dependency must carry a clear ASK block.** Not a hint, not a closing offer.
+
+Rules for the ask:
+
+- **Put it at the end, under its own heading**, so it survives skimming.
+- **Name the artifact exactly** — "the 549 session 3 deck from Teams", not "the next materials".
+- **State the consequence of not having it**, concretely: *"without this, session 3's note cannot be written at all — 549 has no textbook from session 4 onward."*
+- **Give a deadline where one exists**, tied to a real date in the study plan.
+- **Rank it.** One thing is the most important; say which and why. A list of five equal-weight asks is a list nobody acts on.
+- **Repeat unresolved asks in the next response.** Do not assume silence means done. Something asked three turns ago and still outstanding is *more* urgent, not less — say so.
+- **Distinguish blocking from optional.** "This blocks the note" and "this would improve the note" are different requests and must not be flattened together.
+- **Never bury an ask inside prose.** If it needs doing, it goes in the block.
+
+**Also flag deadline risk unprompted.** If a date in `STUDY-PLAN.md` is approaching and its milestone in `PROGRESS.md` is still unticked, raise it — even if the user asked about something else entirely. The plan exists to be enforced, not admired.
 
 ## Before finishing any task
 

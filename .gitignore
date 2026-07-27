@@ -8,6 +8,10 @@
 *.xlsx
 *.zip
 
+# Textbooks kept locally for reference — never committed
+_library/
+!_library/README.md
+
 # Data & models
 *.csv
 *.parquet
