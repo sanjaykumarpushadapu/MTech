@@ -871,7 +871,7 @@ So **EC-1 = 35%, two group assignments** (plan shared ~week 2); **EC-2 mid-sem =
 
 🔴 **The remote lab is mandatory for assignments** — *"in laptop, no."* Manual to be shared; expect slowdowns near deadlines. Colab handles only very small models. *Study-plan consequence:* two group assignments, not one solo 30% piece — lighter per person, but with coordination overhead.
 
-**References (slide 60):** T1 Jurafsky & Martin (3rd ed. draft, Jan 2026) ch2/7/8 · T2 Alammar ch1/2/3 · R1 Raschka ch1/2 · HuggingFace LLM course ch6.5 · paper *Neural Machine Translation with Byte-Level Subwords*.
+**References:** T1 Jurafsky & Martin (3rd ed. draft, Jan 2026) ch2/7/8 · T2 Alammar ch1/2/3 · R1 Raschka ch1/2 · HuggingFace LLM course ch6.5 · paper *Neural Machine Translation with Byte-Level Subwords*.
 
 ### Confusions to resolve
 

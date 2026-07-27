@@ -817,7 +817,7 @@ The handout's single *"Project/Assignment 30%"* is actually **two 15% assignment
 
 🔴 **Everything lives in MS Teams** — the handout, each session's deck, and **whatever code is used** for that session. Check the shared folder after every session; the code appears nowhere else.
 
-**Lab tools per the deck (slide 8):** L1 Prefect/Airflow · L2 AWS SageMaker, MLflow · L3 HuggingFace/AWS/OpenAI APIs · L4 Flowise, LangChain, OpenAI · L5 OpenRemote, ThingsBoard.
+**Lab tools per the deck:** L1 Prefect/Airflow · L2 AWS SageMaker, MLflow · L3 HuggingFace/AWS/OpenAI APIs · L4 Flowise, LangChain, OpenAI · L5 OpenRemote, ThingsBoard.
 
 ### Confusions to resolve
 

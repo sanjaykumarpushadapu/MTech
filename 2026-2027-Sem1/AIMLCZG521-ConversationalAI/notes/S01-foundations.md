@@ -169,7 +169,7 @@ flowchart TD
 1. **Intent and entities collapse into one LLM pass** — no separate classifier and extractor.
 2. **A new orchestration layer appears** between understanding and generating, and it's where planning, tool selection and memory retrieval live. That layer is what makes it an agent.
 
-**The agentic shift, point by point** (slide 23):
+**The agentic shift, point by point**:
 
 | Traditional chatbot / LLM | Agentic conversational AI |
 |---|---|
@@ -291,7 +291,7 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 | 5 | **Response Generation** | Generate natural responses | Contextual generation, personality/tone, multi-modal output, structured responses | **LLM generation with control** |
 | 6 | **Memory Systems** | Remember user context | Short-term (conversation), long-term (user profile), **episodic**, **semantic** | **Vector + SQL hybrid** |
 
-**Worked example — banking customer support across four generations** (slide 16), same user problem each time:
+**Worked example — banking customer support across four generations**, same user problem each time:
 
 | Approach | User: "I lost my card" → Bot |
 |---|---|
@@ -727,7 +727,7 @@ Where research is active — useful for essay-style questions asking "what are t
 | **Llama 4 Scout** (open) | Meta | **10M** | Open-weight, ultra-long context | On-prem / custom deployments |
 | DeepSeek V3.2 (open) | DeepSeek | 128K | ~90% of GPT-5.4 at **1/50th cost** | Budget-conscious, high-volume API |
 
-Market context from slide 6: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **100M** ChatGPT users in 2 months (fastest-growing app in history) · **80%** of Fortune 500 using AI agents (Microsoft Copilot Studio telemetry, Nov 2025). Industry: banking 70% of Tier-1 queries handled by AI, up to 60% cost reduction; e-commerce 15–26% conversion lift.
+Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **100M** ChatGPT users in 2 months (fastest-growing app in history) · **80%** of Fortune 500 using AI agents (Microsoft Copilot Studio telemetry, Nov 2025). Industry: banking 70% of Tier-1 queries handled by AI, up to 60% cost reduction; e-commerce 15–26% conversion lift.
 
 *Landscape material — comparison table only, per the subject's study rule. Specific model names date within months; the openness/context/cost axes don't.*
 
@@ -787,7 +787,7 @@ Target interaction in the deck: *"What's the weather like in Mumbai?"* — the n
 
 ⚠️ **Strictly no makeups** for quizzes and assignments; all plagiarism-checked. ⚠️ **521 publishes no fixed dates** — announced in class / on Canvas. **521 uses Canvas** (not Taxila or Teams); check it weekly.
 
-**Instructor's study advice (slide 27):** ① code every lecture ② read the references (ReAct, DPR, DPO — abstract + results) ③ get an API key early *(session-1 lab actually runs locally on Ollama)* ④ start assignments early, no extensions ⑤ ask on Canvas.
+**Instructor's study advice:** ① code every lecture ② read the references (ReAct, DPR, DPO — abstract + results) ③ get an API key early *(session-1 lab actually runs locally on Ollama)* ④ start assignments early, no extensions ⑤ ask on Canvas.
 
 📌 *The handout held is `(S2-25_…)`, the April–May cohort; recordings are `S1-26`. Evaluation carried over unchanged; session plan matches the current deck — worth a quick diff if an S1-26 handout appears.*
 
