@@ -57,6 +57,25 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 
 **The line to remember** — T1's own framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
 
+*The whole course in one picture (my own, after Sculley et al., "Hidden Technical Debt in ML Systems"):*
+
+```mermaid
+flowchart LR
+    subgraph SYS["A real ML system — what you actually build and operate"]
+        direction TB
+        DATA["data collection ·<br/>cleaning · labeling · validation"]
+        FEAT["feature<br/>engineering"]
+        ML[["ML model —<br/>the part you trained"]]
+        SERVE["serving ·<br/>APIs · scaling"]
+        MON["monitoring ·<br/>drift detection"]
+        INFRA["config · resource &<br/>process management"]
+    end
+    DATA --> FEAT --> ML --> SERVE --> MON
+    INFRA -.-> ML
+```
+
+The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
+
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
 <details>
@@ -643,6 +662,18 @@ A:
 ```
 
 Providing *internal data* in the prompt is the case T1 flags forward to **retrieval-augmented generation** — which is 546 S6, and the same RAG you build in 521 and 536. The course's own tool list (LangChain, ChromaDB, OpenAI embeddings and LLM) confirms S6 is hands-on, not conceptual.
+
+*The full customisation ladder (my own — the deck names two rungs; here's the spectrum you actually pick from, cheapest first):*
+
+```mermaid
+flowchart LR
+    A["1 · Prompt<br/>zero-shot"] --> B["2 · Few-shot<br/>examples in prompt"]
+    B --> C["3 · RAG<br/>retrieve your data<br/>into the prompt"]
+    C --> D["4 · Fine-tune<br/>train a copy"]
+    D --> E["5 · Pre-train<br/>your own model"]
+```
+
+Cost, effort and *how much of the model you change* all rise left → right, and the engineering rule is: **reach for the leftmost rung that works.** Prompt and few-shot change nothing but the text; RAG adds a retrieval system but no training; fine-tuning produces a model you own, host and version; pre-training is for the few orgs building foundation models. The classic mistake is fine-tuning something a better prompt or RAG would have fixed — the expensive rung reached for too early. (RAG's mechanics → S6.)
 
 **Worked example** — Fraud detection with a foundation model: `"Given this transaction and the customer's last 10 transactions, is this likely fraudulent? Answer yes/no with one reason."` No training data needed, works immediately — and costs an API call per transaction, with latency you don't control, for a task a decision tree does in microseconds.
 
