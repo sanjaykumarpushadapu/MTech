@@ -145,26 +145,28 @@ flowchart LR
 
 That last part carries the collection-vs-item split (section 4): `/products` = the collection, `/products/101` = one item. Only the id changes what you're addressing.
 
-**Requests** — every request begins by choosing an HTTP **method** (verb):
+**Requests** — every request begins by choosing an HTTP **method** (verb). The four map one-to-one onto **CRUD** (Create, Read, Update, Delete) — the same mapping comes back in REST (section 5), so it's worth locking in here:
 
-| Method | Purpose |
-|---|---|
-| `GET` | Retrieve data |
-| `POST` | Submit data to the server |
-| `PUT` | Update existing data |
-| `DELETE` | Delete data |
+| Method | Purpose | CRUD |
+|---|---|---|
+| `GET` | Retrieve data | **R**ead |
+| `POST` | Submit data to the server | **C**reate |
+| `PUT` | Update existing data | **U**pdate |
+| `DELETE` | Delete data | **D**elete |
 
 **Responses** — data sent back after processing, formatted as **JSON or XML**, with a status code.
 
-**Read the first digit first** — it puts every code in one of **five classes**. The instructor drilled this: learn the classes, not just the codes.
+**Read the first digit first** — it puts every code in one of **five classes**. The instructor drilled this: learn the classes, not just the codes. The quickest way to remember them is to hear what the server is *saying* in each:
 
-| Class | Meaning | You'll meet |
-|---|---|---|
-| **1xx** | **Informational** — request received, still working | `100 Continue`, `102 Processing` |
-| **2xx** | **Success** | `200 OK`, `201 Created` |
-| **3xx** | **Redirection** — resource is elsewhere; go there | `301`, `302`, `303` |
-| **4xx** | **Client error** — the request is wrong | `400`, `401`, `403`, `404` |
-| **5xx** | **Server error** — the server broke | `500` |
+| Class | Meaning | What the server is saying | You'll meet |
+|---|---|---|---|
+| **1xx** | **Informational** — request received, still working | *"Got it, hold on — keep going."* | `100 Continue`, `102 Processing` |
+| **2xx** | **Success** | *"Here you go."* | `200 OK`, `201 Created` |
+| **3xx** | **Redirection** — resource is elsewhere; go there | *"It's moved — look over there."* | `301`, `302`, `303` |
+| **4xx** | **Client error** — the request is wrong | *"You did something wrong."* | `400`, `401`, `403`, `404` |
+| **5xx** | **Server error** — the server broke | *"I broke — not your fault."* | `500` |
+
+Memory hook: **4xx is your fault, 5xx is the server's** — the two error classes get mixed up constantly, and that one line settles it.
 
 The codes worth knowing by name:
 
