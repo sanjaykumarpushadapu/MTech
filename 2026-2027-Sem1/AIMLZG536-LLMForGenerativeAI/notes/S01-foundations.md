@@ -78,14 +78,6 @@ Same words, different order. A language model that has learned English assigns f
 
 **Tradeoff / what this framing costs** — Defining a model purely by next-word probability means there is **no notion of truth in the objective**. A fluent falsehood scores well; that's not a bug in the training, it's what the objective asked for. Hallucination is downstream of this definition, which is why S14 needs separate faithfulness metrics.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Language model = computes **P(W)** (probability of a sentence) or **P(wₙ|w₁…wₙ₋₁)** (probability of the next word). Equivalently: a **probability distribution over the next token**. Learns word order from data, not rules — *P(fluent sentence) > P(scrambled sentence)*. Note: the objective contains **no notion of truth**, only fluency.
-
-</details>
-
 ---
 
 ## 2. What makes a language model "large"
@@ -101,14 +93,6 @@ Same words, different order. A language model that has learned English assigns f
 LLMs are **deep neural networks** trained on that data.
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> LLM = deep neural network trained on massive text. **"Large" means three things: parameter count · training dataset size · context length.** Each scales cost differently → quantization (S6), scaling laws (S2), attention efficiency (S4).
-
-</details>
 
 ---
 
@@ -146,14 +130,6 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 **Generative AI** is the broader area: using computational models to generate text, code, speech, images, video and audio. LLMs are the text branch. And LLMs are **(mostly) natural language generation (NLG) systems** — the process of generating text with them is called **decoding** (the whole of S5).
 
 **Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration. This is the same tradeoff 546 draws in its foundation-models section — the expensive general answer versus the cheap specific one.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Fundamental intuition: a model that can predict text can generate it, by sampling from the predicted distribution.** Feeding output back in = **autoregressive**. Generating text with an LLM = **decoding**. Because prediction is general, **almost any NLP task can be cast as word prediction** — sentiment = compare P("positive"|prompt) vs P("negative"|prompt); QA = P(w|"Q:…A:"). **Generative AI** = using models to generate text, code, speech, images, video, audio. Cost of the reframing: a fine-tuned classifier is smaller, faster and better calibrated.
-
-</details>
 
 ---
 
@@ -255,18 +231,6 @@ That last line **is** attention: each token's output is a **weighted average of 
 > - At **inference** the trick that makes generation fast is the **KV-cache**: keys and values for past tokens are cached so each new token is O(n) not O(n²). This is why the *first* token of a long prompt is slow ("prefill") and later tokens are fast ("decode") — a distinction you'll meet the moment you look at latency metrics.
 > - Practical consequence: **long prompts cost real money and time.** "Just paste the whole document in" runs straight into this quadratic. It's the reason retrieval (RAG) exists — fetch the relevant 4K tokens instead of paying for 100K.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Self-attention** = uncompressed view of the whole sequence + parallel training (matrix built in one go). **Q** "what am I looking for" · **K** "what do I contain" · **V** "what do I contribute".
-> Steps: **① Q·Kᵀ** (dot product = similarity) **② ÷√d_k** (stops softmax destabilising) **③ softmax → ×V** (weighted blend). Then output projection (n×d_v) → (n×d) so layers stack.
-> Shapes: X n×d · W_Q,W_K d×d_k · W_V d×d_v · Q,K n×d_k · V n×d_v · **scores and weights n×n** · Z n×d_v.
-> Vaswani 2017: d=512, h=8, d_k=d_v=64. Llama-3-8B: d=4096, h=32, d_k=128.
-> **Cost: O(n²) in sequence length** — the reason S4 exists.
-
-</details>
-
 ---
 
 ## 5. Multi-head attention
@@ -311,16 +275,6 @@ flowchart LR
 Each head runs the exact five-step computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Multi-head attention** — h parallel heads, **each with its own W_Q, W_K, W_V**; outputs **concatenated then projected by W_O** back to d, so output size = input size → **layers stack**. Each head uses **d_k = d_v = d/h**, so **total cost ≈ single-head at full dimensionality**.
-> Worked: N=4, d=512, h=8 → d_k=d_v=64. X [4×512] · W [512×64] · Q,K,V [4×64] · head out [4×64] · concat [4×512] · W_O [512×512] · final [4×512].
-> Doesn't fix the n² per head — hence MQA/GQA/MLA in S5.
-
-</details>
 
 ---
 
@@ -382,17 +336,6 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 
 **Tradeoff** — the FFNN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFNN with sparsely-activated ones: it's the biggest block of weights to attack.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Transformer block = **multi-head attention + FFNN + LayerNorm + residuals**.
-> **LayerNorm**: applied per token, normalising **across the feature dimension**; **two learnable params γ and β**.
-> **FFNN**: fully-connected **2-layer** (one hidden, one output = two weight matrices); **d_ff > d** — original: **d=512, d_ff=2048** (4×). Uses attention's context to capture complex relationships.
-> Generative models use **decoders only**. Most parameters live in the FFNN → target of quantization (S6) and MoE (S3).
-
-</details>
-
 ---
 
 ## 7. Positional encoding
@@ -420,14 +363,6 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91), the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Each position gets a unique multi-frequency "fingerprint" — like clock hands turning at different speeds — and because it's the *same fixed function at every position*, the model can encode a position it never saw in training, which learned embeddings cannot. RoPE keeps this multi-frequency idea but **rotates** Q and K rather than **adding** to the embedding.
 
 **Tradeoff** — learned embeddings are simplest and fail hardest outside the trained length; sinusoidal costs nothing and generalises modestly; RoPE is the current default precisely because long context is the pressure point, and it's the only one of the three that rotates rather than adds. RoPE gets full treatment in S3 — this is the preview.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Attention has no inherent sense of order** → positional encoding is added to embeddings. Three kinds: **learned** (trainable lookup, dataset-optimal, poor extrapolation) · **sinusoidal** (fixed sin/cos at multiple frequencies, preserves **relative distance**, no params) · **RoPE** (rotates **Q and K in ℂ space**, encodes **relative phase**, **scales best for long / sliding-window context**). Detail in S3.
-
-</details>
 
 ---
 
@@ -494,16 +429,6 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 **Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what section 12's tokenizer choices are negotiating.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Pipeline: **text → vocabulary building → tokens → token IDs → token embeddings → + positional embeddings → model input.** Special context tokens (end-of-text, unknown, padding) added here.
-> **Embedding layer**: weight matrix starts as **small random values**, **optimised during LLM training itself**; **rows = vocab size, columns = embedding dim**, i.e. **E ∈ ℝ^(|V|×d)**.
-> Tension: bigger vocab → shorter sequences (helps O(n²)) but bigger embedding matrix.
-
-</details>
-
 ---
 
 ## 9. The language modelling head, and weight tying
@@ -559,16 +484,6 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 **Tradeoff / when NOT to tie** — the deck states it cleanly: untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **LM head (unembedding)**: final hidden state **h_LN [1×d]** → **logits u** → **softmax → probabilities y** over vocab. y used to score text *or* sample to generate. Training: **every position** predicts next token, cross-entropy. Inference: **last position only**, sampled with temperature / top-k / top-p.
-> **Weight tying** = LM head reuses **Eᵀ** rather than a fresh projection. **Press & Wolf 2017**; standard through GPT-2, BERT, RoBERTa. Input side is an **O(1) row lookup**, not a matmul.
-> Llama-3-8B: |V|=128,256, d=4,096 → E ≈ **525M**. Tied ≈525M, untied ≈**1.05B ≈ 13% of an 8B model**. **Small models tie** (Gemma-3, Llama-3.2-1B/3B, Qwen3-0.6B/4B, SmolLM2); **frontier models untie** (Llama-3/4, DeepSeek-V3, OLMo 2, Qwen3-8B+) and pay for the perplexity gain.
-
-</details>
-
 ---
 
 ## 10. Context length
@@ -578,14 +493,6 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Context length** = maximum tokens the model can process. **Autoregressive ⇒ current context grows as tokens are generated** (prompt + generated so far). Capped by **O(n²) attention** and **KV-cache memory**, not by architecture.
-
-</details>
 
 ---
 
@@ -630,17 +537,6 @@ And the zoom-ins, which are section 4 and section 5 in picture form: **scaled do
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
 **Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the deck's own line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Encoder-only** (BERT, RoBERTa): bidirectional self-attention, **MLM** objective, bidirectional context. Strong at classification/NER/sentiment; **not naturally generative**.
-> **Decoder-only** (GPT, Llama): **causal masking**, **CLM** objective, unidirectional L→R. Strong at generation/dialogue/code; weak at classification.
-> **Encoder-decoder** (T5, BART): encoder makes representations, decoder generates via **cross-attention**; seq2seq / **span corruption** (T5). Strong at translation, summarisation, multimodal; **dual stacks cost training complexity + inference latency**.
-> Decoder-only dominates because any task can be cast as next-word prediction.
-
-</details>
 
 ---
 
@@ -769,19 +665,6 @@ tiktoken BPE (Llama-3):
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure you'll see in 521 is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Common words → own token; rare words split into subwords; worst case one token per character.
-> **Token types**: **word** (can't handle new words; apology/apologize/apologetic near-duplicates) · **subword** (represents new words; standard) · **byte** (256 UTF-8 bytes, 1 token = 1 byte, "Apple"→5 tokens, ByT5/CANINE).
-> **Three subword algorithms**: **BPE** (Sennrich 2016) · **Unigram LM** (Kudo 2018) · **WordPiece** (Schuster & Nakajima 2012). All have **a token learner** (corpus → vocabulary) and **a token segmenter** (sentence → tokens).
-> **BPE**: pre-tokenize → word freq dict → uni-character vocab → **merge most frequent adjacent pair** until target size. Worked: hug10/pug5/pun12/bun4/hugs5 → ("u","g")=20 beats ("u","n")=16 and ("h","u")=15 → merge **"ug"**, then "un", then "hug". **+** rare words, smaller vocab, generalisation. **−** fragments morphologically complex languages; weak on semantics.
-> **SentencePiece**: language-independent, raw Unicode, **no whitespace pre-tokenizer**, `▁` marks space, **lossless** detokenization, **byte fallback = no OOV**. Unigram uses **Viterbi** over candidate segmentations.
-> **tiktoken vs SentencePiece**: merges over **bytes not characters**, **regex pre-split** — better compression, no OOV, byte-exact reversibility. **Llama-3 switched SP→tiktoken.**
-
-</details>
-
 ---
 
 ## 13. The LLM landscape
@@ -835,18 +718,6 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 **Frontier models named in the deck** — OpenAI o3 · Anthropic Claude Sonnet 3.7 · xAI Grok 3, with a more recent table listing GPT-5.4 Thinking (deep reasoning, tool use, long-horizon research), Gemini 3.1 Pro (complex problem-solving, multimodal, tool workflows), Gemma 4 (open-weight reasoning, agentic), Claude Opus 4.6 (long-context reasoning, coding, sustained agentic work), Mistral Large 3 (open-weight multimodal, **sparse MoE**), Grok 4.20 (parallel multi-agent research), DeepSeek-R1 (**RL-driven** math, logic, reasoning).
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Chain: **Shannon 1950 entropy → n-grams → Bengio 2003 neural LM → seq2seq / Adam / attention (all 2014, all for MT) → Transformer 2017 → MoE 2017 → model parallelism 2018–19.**
-> Foundation era: **ELMo** (LSTM pretraining) → **BERT** (Transformer pretraining) → **T5 11B** (everything as text-to-text).
-> Scaling: **GPT-2 1.5B** (first zero-shot signs) → **Kaplan scaling laws** → **GPT-3 175B** (in-context learning, closed) → **PaLM 540B** (massive, **undertrained**) → **Chinchilla 70B** (**compute-optimal** — smaller, better).
-> Open: The Pile/GPT-J · OPT · BLOOM · Llama · Qwen · DeepSeek · OLMo 2.
-> **Openness: closed = API only (GPT-4o) · open-weight = weights + architecture, no data (DeepSeek) · open-source = weights AND data (OLMo).**
-
-</details>
 
 ---
 

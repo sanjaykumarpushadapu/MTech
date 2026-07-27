@@ -78,14 +78,6 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Gap between working model and working product = engineering, not ML. **87% of ML projects fail; 53% never reach production.** T1's transcription start-up: great models, failing business — noisy real data, infeasible latency, inference cost vs margin, unwanted web/payments work, DS↔engineer communication breakdown, manual scripts and a botched model update, fairness failures *with high confidence*, no monitoring except complaints. Point: everything around the model failed, not the model.
-
-</details>
-
 ---
 
 ## 2. Machine learning vocabulary
@@ -155,16 +147,6 @@ T1 devotes a section to this, which signals it can be asked.
 | performance | *prediction accuracy* vs *inference latency* |
 | parameter | *model parameter* (learned) vs *hyperparameter* (chosen) |
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Algorithm** (sklearn/TF) + training data → *training* → **model** (learned function); model + input → *inference* → prediction. AI ⊃ ML ⊃ deep learning; foundation models = large DL models. Supervised = (data, label) pairs.
-> **Parameters** learned from data; **hyperparameters** chosen by you (depth, learning rate, stopping; architecture counts). Analogy: source→compiler→executable ≈ data→algorithm→model, **hyperparameters = compiler options**, algorithm absent at runtime, model stored *pickled* ≈ bytecode+JVM. Breaks because compiler output is deterministic and specified; ML training is neither — though the trained model itself is deterministic.
-> Never say bare "performance" (accuracy vs latency), bare "model" (learned vs architecture), bare "parameter".
-
-</details>
-
 ---
 
 ## 3. Two lifecycles: the SDLC and the ML pipeline
@@ -233,16 +215,6 @@ Worth being able to state, because the exam can ask it either way round:
 The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Development–Testing phases, and adds a monitoring loop the SDLC's Maintenance phase never had to run continuously.
 
 **Tradeoff / when NOT to automate the pipeline** — Full pipeline automation is the goal (S13), but automating *early*, before you know which steps you'll keep changing, builds infrastructure around a design you're about to throw away. Data scientists work notebook-cell-by-cell during exploration for good reason. The engineering judgment is knowing when exploration has stabilised enough to be worth automating.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **SDLC**: Planning → Analysis → Design → Development → Testing → Deployment → Maintenance → loop. Phases universal; rigid *sequencing* is the Waterfall choice and breaks for ML (requirements unknowable up front). **Shift-left** = test early; defect cost rises the later you catch it.
-> **ML pipeline**: model requirements → data collection → labeling → cleaning & feature engineering → training → evaluation → deployment → monitoring. **Highly iterative** — failed evaluation loops back to data, prep, algorithm or hyperparameters. Most steps are little code; **deployment and monitoring carry the infrastructure**.
-> Relation: pipeline sits *inside* the SDLC (≈ design–development–testing), driven by requirements *and data*, "done" = good enough on average not spec-conformant, and adds a continuous monitoring loop.
-
-</details>
 
 Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
@@ -328,14 +300,6 @@ Two specifics worth carrying: **KPIs and a baseline must be established at the p
 
 **The deeper tradeoff, and the one an exam would reward:** the report's own evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Waterfall → Iterative → Agile → Scaled Agile → **ADLC** (Scaled Agile + AI infusion). Each rung: faster feedback, more coordination/tooling cost. Waterfall's killer = late defect discovery. ADLC = AI-assisted automation of *all* SDLC activities (docs, design, code, test cases, test data, scripts). Gains: faster TTM, consistent quality, less human dependence. Risk: that last "gain" is the danger — someone must still tell correct from plausible; report lists no challenges = unproven, not solved.
-
-</details>
-
 Cross-link: → **546 S15** (ADLC phases in detail)
 
 ---
@@ -379,15 +343,6 @@ timeline
 
 **The through-line** — storage → compute → algorithms → data volume, each unlock enabling the next. Transformers didn't arrive because someone had a clever idea in 2018; they arrived because the 2010–2015 data deluge and cloud compute made them trainable.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Software: ~1980–90 Waterfall/monolith/physical server/datacenter → ~2000 Agile/N-tier/virtual/hosted → ~2010 DevOps/microservices/containers/cloud. **Cloud native = Agile + DevOps + Microservices + Containers + Cloud.** Not a maturity score — a monolith is right for small teams.
-> Data: 1960s files → 1970 Codd relational → 1989 KDD/data mining → early 2000s warehousing/ETL/BI → mid 2000s social media + supervised ML → 2006–08 cloud → 2010–15 big data + deep learning → 2018 transformers. Driver chain: storage → compute → algorithms → data volume.
-
-</details>
-
 Cross-link: → `_shared/docker-k8s.md` · **549 S2–S3** · **536 S1–S2**
 
 ---
@@ -430,15 +385,6 @@ flowchart BT
 **Worked example** — A team wants an LLM assistant over company documents. Apex layer. But if documents aren't collected in one place (COLLECT), or the sync pipeline is unreliable (MOVE/STORE), or they're full of duplicates and dead links (EXPLORE/TRANSFORM), the assistant produces confident nonsense. It looks like a model problem; it's a base-of-pyramid problem.
 
 **Tradeoff / how NOT to read the pyramid** — It's a *dependency* claim, not a *sequencing mandate*. Read literally it says "spend two years on data infrastructure before touching ML," which kills projects. Honest reading: cut a thin vertical slice through all six layers for one use case, then widen. Note also that simple ML sits *below* deep learning — A/B tests and logistic regression solve a large share of problems pitched as AI.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> DS = Math/Stats ∩ Domain ∩ CS/IT. Pairwise: stats+domain = research; stats+CS = software dev; **domain+CS = machine learning**. Deliverable is a *decision*, not a chart. Scope: collection → preprocessing → analysis → prediction → visualisation → insight.
-> Hierarchy of needs, bottom→top: Collect (instrumentation, logging) → Move/Store (pipelines, ETL) → Explore/Transform (cleaning, anomaly detection) → Aggregate/Label (metrics, features, training data) → Learn/Optimize (A/B tests, simple ML) → AI/Deep Learning. Dependency claim, not a two-year plan — cut a thin vertical slice.
-
-</details>
 
 ---
 
@@ -522,17 +468,6 @@ T1's evidence on the reverse direction is worth sitting with, since it describes
 
 **Tradeoff / how NOT to use this contrast** — T1 calls it "oversimplified and overgeneralized" itself. As a lens on why a handover failed, useful. As a hiring stereotype, wrong — the point is complementarity, not superiority. And in a small team one person wears four hats, where the risk flips from coordination overhead to blind spots: whoever wrote the code also decides whether it's tested enough.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> SDLC roles: BA · PM · PO · Team Lead · Architect · Developers · QA (shift-left) · Testers · Scrum Master · UX/UI.
-> Data roles by handover: **data engineer** → reliable data flow (ETL: source → staging → warehouse → BI); **data scientist** → model + *one-time forecast*; **ML engineer** → *continuous loop* (client + additional data → model → predictions → vs ground truth → monitoring → retrain).
-> DS vs SE: DS = stats background, exploratory notebooks, evaluates by **accuracy on held-out test data**, ignores latency/cost. SE = delivers to budget/time, evaluates by **trade-offs**, rarely tests generalisation. **Unicorns** (deep in both) are rare — don't plan on them. Goal = **T-shaped**: deep in one, broad across others.
-> Failure mode the course targets: notebook promoted to production without the ground-truth loop.
-
-</details>
-
 Cross-link: → `_shared/ml-lifecycle.md` · **546 M1 Interdisciplinary Teams** · **549 S4**
 
 ---
@@ -584,17 +519,6 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 *But not new:* cloud operation and large-scale data management (warehouses, batch, streaming) predate ML by a decade. The demands are simply higher.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Three ML challenges, each "harder but not new":
-> **(1) Lack of specifications** — can't spec `transcribe()`; **deductive → inductive** reasoning; no "correct", only "good enough on average"; **system must tolerate mistakes**. Not new: SE has always built safe systems from unreliable parts with vague specs.
-> **(2) Interacting with the real world** — bias in/bias out; **feedback loops** (YouTube conspiracy videos, fixed by hard-coded rules not better ML); users adapt and game (adversarial attacks); drift. Not new: hazard analysis, threat modelling, requirements engineering — needed *more*.
-> **(3) Data-focused and scalable** — data beyond one machine, distributed serving, **ML flywheel**, foundation models need expensive inference hardware. Not new: cloud and big data predate ML.
-
-</details>
-
 ---
 
 ## 9. The risk spectrum
@@ -622,14 +546,6 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 3. Navigating conflicting qualities — accuracy, operating cost, latency, time to release
 4. Planning a responsible testing strategy
 5. Designing systems that can be updated rapidly and monitored in production
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Risk spectrum: low (restaurant site) → medium (medical records, payments) → high (aircraft, nuclear). Rigour is already calibrated to risk. **Conjecture: ML products skew toward the complex/risky end, so need more rigorous engineering** — not because ML is inherently riskier, but because we attempt more ambitious things with it. Symmetric error: don't over-engineer low-risk ML; locate the system first. Five enduring principles: (1) customer priorities & mistake tolerance, (2) safe systems from unreliable components, (3) navigate conflicting qualities, (4) responsible testing strategy, (5) rapid update + monitoring.
-
-</details>
 
 ---
 
@@ -679,14 +595,6 @@ Cost, effort and *how much of the model you change* all rise left → right, and
 
 **Tradeoff / when NOT to use** — T1 is direct: foundation models "do not have access to proprietary or recent information that was not part of the training data," and "model size and inference costs can become a challenge." Use them where the task is language-shaped, varied, and hard to specify. Don't use them for a high-volume, low-latency, narrow, well-specified task with plenty of labelled data — fraud scoring at 10,000 transactions/second being exactly that. **A foundation model is the expensive general answer to a question you might be able to specify cheaply.**
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Foundation model = large general-purpose model (umbrella incl. LLMs), trained by a few orgs on huge data, usually via API. Customise two ways: **fine-tuning** (train a copy — expensive, must host) or **in-context learning** (info/examples in the prompt — cheap, costs tokens/context). Few-shot = in-context with examples. Internal data in the prompt → **RAG**. Limits: no proprietary or recent data; size and inference cost. Don't use for high-volume, low-latency, well-specified tasks with labelled data.
-
-</details>
-
 Cross-link: → `_shared/rag.md` · **546 S6** · **536 S10, S12** · **521 S7–8**
 
 ---
@@ -720,15 +628,6 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 > | **Streaming** | Score events as they flow through a queue (Kafka) | Continuous event data — clickstreams, IoT, live anomaly detection |
 >
 > The running example makes the choice concrete: **fraud detection is online** (the score gates a live payment, ~200 ms budget); a monthly churn report is **batch**. Building a heavy real-time service for something a nightly batch job would do — or vice-versa — is the same "match the machinery to the need" judgment as the risk spectrum in section 9.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **MLOps** = automating ML pipelines for reliable deploy/update/monitor/operate. Tools: Kubeflow, Great Expectations, MLflow, Evidently AI, SageMaker. **Cross-cutting, not a phase** — closest coverage: Planning for Operations (tooling) + Interdisciplinary Teams (culture: joint goals, vocabulary, tools).
-> **Responsible ML** = safety, security, fairness, explainability. **No magic tool makes a model fair or secure** — requires holistic system + environment view. Without it, fairness/safety work is "narrow, naive, and ineffective." Can't be scheduled late: the decisions that determine it were made earlier.
-
-</details>
 
 ---
 

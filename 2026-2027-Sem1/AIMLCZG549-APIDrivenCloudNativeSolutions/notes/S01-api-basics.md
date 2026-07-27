@@ -53,14 +53,6 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 > - Real APIs are gated by an **API key or token** in a header (`Authorization: Bearer sk-…`). The contract includes *who's allowed*, not just *what's allowed* — authentication (section 3, `401`) and authorization (`403`) are part of the promise.
 > - Providers enforce **rate limits** (e.g. "60 requests/min"). Exceed one and you get `429 Too Many Requests`, so production code wraps calls in **retry-with-backoff**. This is the "contract binds *you*" cost made concrete: the provider can throttle, version, or deprecate, and your system has to absorb it.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> API = **a contract between a service and its clients**. Rules and protocols letting systems exchange data and integrate function without the user knowing the underlying code. **API-first** = the app is designed as a set of APIs. Cost: a published contract binds you — hence versioning.
-
-</details>
-
 Cross-link: → `_shared/api-design.md` · **546 S9**
 
 ---
@@ -109,14 +101,6 @@ flowchart LR
 Note what the second diagram costs: **six channels instead of two direct calls**, plus a broker to run and monitor. That visual is the tradeoff.
 
 **Tradeoff / when NOT to go async** — Asynchronous buys availability (the consumer service can be down and the message waits) and decoupling, and charges you a broker to operate, eventual consistency, harder debugging, and no simple "what did it return?" answer. Use sync when the caller genuinely needs the answer to proceed — a payment authorisation. Use async for work that can complete later — sending the confirmation email.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Synchronous** = caller blocked until the previous task finishes. Ex: **REST, gRPC, GraphQL**. **Asynchronous** = second task starts without waiting, non-blocking. Ex: message brokers — **RabbitMQ, Kafka, SQS**. Async buys availability + decoupling; costs a broker to operate, eventual consistency, harder debugging. Sync when the caller needs the answer to proceed.
-
-</details>
 
 ---
 
@@ -263,15 +247,6 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 >
 > This is why a failed `PUT` is safe to blindly retry but a failed `POST` isn't — retrying a charge could double-bill. Real payment APIs (Stripe) solve it with an **idempotency key**: you send a unique key with the `POST`, and the server dedupes repeats. This is also the deeper reason `POST`→`201` and `PUT`→`200` (section 3, *which success code when*): `POST` makes something new each time; `PUT` converges on one state.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> HTTP API components: **endpoint** (URL = **host + resource path**, one function, the "door"), **request** (method + endpoint), **response** (JSON/XML + status). Methods: **GET** retrieve · **POST** submit · **PUT** update · **DELETE** delete.
-> Status **classes by first digit**: **1xx** informational · **2xx** success · **3xx** redirection · **4xx** client error · **5xx** server error. Codes: 200 OK · 201 Created · **301 Moved Permanently** (HTTP→HTTPS) · **303 See Other** (post-checkout confirmation) · 400 Bad Request · 401 Unauthorized (*who are you?*) · 403 Forbidden (*known, still denied*) · 404 Not Found · 500 Internal Server Error.
-
-</details>
-
 ---
 
 ## 4. OpenAPI and the API lifecycle
@@ -336,16 +311,6 @@ Note the shape: collection endpoint `/books` for list and create; item endpoint 
 
 **Tradeoff / the cost of spec-first** — Writing the spec before the code is deliberate friction, and it's wasted if the API is internal, single-consumer, and changing weekly. The value scales with the number of consumers who need to agree, and with how expensive it is to renegotiate later. For a public API it's essential; for a script's helper endpoint it's ceremony.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **OpenAPI** (formerly **Swagger**) = formal standard for describing HTTP APIs, mainly REST. Buys: shared understanding · **client code generation** · **test creation** · design standards.
-> Lifecycle: **Requirements → Design → Configure → Publish → Develop → Test → Deploy.**
-> REST endpoint shape: collection `/books` (GET list, POST create) + item `/books/{id}` (GET, PUT, DELETE). Stack in the example: **FastAPI + Uvicorn**, docs auto-generated at `/docs`, tested with pytest.
-
-</details>
-
 Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML services)
 
 ---
@@ -404,14 +369,6 @@ Same resource, two representations:
 
 **Tradeoff / why level 3 is rare** — R2 is blunt: *"in practical terms level 3 is rarely used in modern RESTful HTTP services."* HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Richardson Maturity Model** (Richardson, QCon 2008; popularised by Fowler): **L0** HTTP + single URI, no verbs = *RPC over REST* · **L1 Resources** — resource URIs, adds *identity* (`GET /attendees/1`) · **L2 Verbs** — multiple methods per URI by effect on server, `GET` guaranteed side-effect-free · **L3 Hypermedia Controls = HATEOAS**, response carries available actions. **Target level 2**; L3 rare — chatty, poor fit for interservice calls.
-
-</details>
-
 **A whole system built this way** — the deck's food-delivery architecture, and the best single diagram in the deck because it's a preview of microservices (S3):
 
 ```mermaid
@@ -459,16 +416,6 @@ The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetc
 > - **Auth on every mutating call** — `Authorization` header checked before `POST`/`PUT`/`DELETE`; the deck's "requires suitable permissions" is this.
 >
 > Naming conventions that mark a REST API as well-designed: **plural nouns** (`/students` not `/getStudent`), **no verbs in the path** (the HTTP method *is* the verb), and **nesting for relationships** (`/students/123/courses`). Get these right and the API is self-explanatory; get them wrong and every consumer needs the docs open constantly.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **REST** = architectural style (**Roy Fielding, 2000**), the architecture of the web. Every content item is a **resource**, identified by a **URI**, represented as **JSON/XML**, manipulated by HTTP verbs = CRUD. Collection URI for list/create, item URI (`/x/123`) for read/update/delete.
-> **Benefits**: mature & ubiquitous, simple to test, sync request-response, **no broker**, wide language support. **Drawbacks**: **reduced availability**; **fetching multiple resources needs multiple calls** (profile + posts + comments = 3 calls).
-> Microservices rule: *services have APIs; a service's data is private.*
-
-</details>
 
 ---
 
@@ -553,15 +500,6 @@ query {
 | **Self-managed GraphQL** | You run the server yourself |
 
 **Tradeoff / when NOT to use GraphQL** — The deck's own comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **GraphQL** — **Facebook, 2015**, to fix REST's multiple-round-trips. Client specifies exactly what it wants across multiple sources in **one call**; single-request/all-inclusive-reply. **Schema in SDL** = blueprint, defined up front. Request = **HTTP POST** to `/graphql` → **validate against schema → execute → form JSON**. **`query`** to fetch, **`mutation`** to insert/update/delete. Response mirrors query shape. AWS: **AppSync** (managed) or self-managed.
-> Loses to REST on **caching** (one URL, POST, so HTTP caching breaks).
-
-</details>
 
 ---
 
@@ -664,15 +602,6 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 **Tradeoff / when NOT to use gRPC** — The disadvantages column is the answer, and it's sharp: gRPC is for **service-to-service** traffic where you control both ends. Put it on a public, browser-facing edge and you've chosen a protocol browsers can't natively speak, for consumers who can't debug it with `curl`. The usual architecture is REST or GraphQL at the edge, gRPC behind it.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **RPC** = remote call made to look local, via **client stub → network → server stub**. **gRPC** — **Google, 2015**, open-source RPC framework: **Protocol Buffers** not JSON, **HTTP/2** not HTTP, **`.proto`** file as the API definition, **`protoc`** compiler generates message classes + client and server stubs for **10+ languages**.
-> **Advantages**: well-defined schema, polyglot, lightweight and fast, **best for inter-service communication**. **Disadvantages**: **poor fit for external-facing services**; **browser/mobile support primitive** (grpc-Web, limited). Rule of thumb: REST/GraphQL at the edge, gRPC behind it.
-
-</details>
-
 ---
 
 ## 7b. North–south vs east–west — how to actually choose
@@ -704,17 +633,6 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 **Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the deck's "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
 
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **North–south** = traffic from outside, over the internet: high, **compounding** latency; you don't control the consumer → favour REST/GraphQL (ubiquity, caching, stability). **East–west** = service-to-service, you control both ends → can trade readability for efficiency → gRPC.
-> Multiplier: **one north–south request usually triggers multiple east–west exchanges**, so east–west inefficiency cascades.
-> Weigh: **high-traffic services** (payload size and protocol overhead compound), **large payloads** (JSON verbose; *"human readability" is a weak argument given modern tracing*; parsing cost varies by language), **vintage formats**.
-> Rule: **gRPC when bandwidth is a cumulative concern or volumes are large**; REST at the edge.
-
-</details>
-
 ## 8. Choosing between REST, GraphQL and gRPC
 
 *Reference: R2 ch1 (modelling exchanges & choosing an API format); the comparison table is the deck's own.*
@@ -731,14 +649,6 @@ The deck's comparison table, which is close to guaranteed exam material:
 | Payload data structure | GraphQL — JSON · REST — JSON & XML · gRPC — **Protocol Buffers** |
 
 **The one-line summary worth carrying into the exam:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> REST → web standard, **caching**, browser support, JSON & XML, Swagger (3rd-party codegen). GraphQL → **data fetch** in one call, browser support, JSON, GraphQL Code Generator (3rd party). gRPC → **native code generation for 10+ languages**, **Protocol Buffers**, inter-service. All three synchronous.
-
-</details>
 
 ---
 
@@ -802,15 +712,6 @@ Each version reachable at its own endpoint:
 > | **Date-based** (Stripe) | `Stripe-Version: 2024-06-20` | Each account pins a date; Stripe transforms old-shaped responses so you upgrade on your own schedule |
 >
 > Two career habits the exam won't test but the job will: **deprecation policy** — announce, give a window (6–12 months), monitor who's still on the old version, then sunset — and **most changes should be non-breaking by design**, so you add far fewer major versions than the semver table suggests. In modern practice, teams version **`v1`/`v2`** at the *major* level only and ship minor/patch changes silently — full `X.Y.Z` in the path is rarer than the deck implies.
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> **Versioning** = managing API change without disrupting clients; lets consumers upgrade **at their own pace**. Costly — version only on a **breaking change**: format change (JSON→XML), data type change, resource rename, removing resources/properties/methods, **adding a new required field**.
-> **Semantic versioning `X.Y.Z`**: **X major** = incompatible, new API, routed by URI · **Y minor** = new functionality, backward compatible · **Z patch** = bug fixes, backward compatible. Endpoints per version: `/api/v2.0.0/movies`. Real: Google Maps JS API 3.63.10a.
-
-</details>
 
 ---
 

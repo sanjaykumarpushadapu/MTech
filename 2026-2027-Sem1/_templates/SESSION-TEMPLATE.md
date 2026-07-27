@@ -40,18 +40,6 @@
 > ***Going deeper*** *(beyond the deck — deeper mechanism or a useful adjacent concept the course skips):*
 > Marked clearly, kept out of the examinable body.
 
-<!-- CLOSED-BOOK RECALL CARD — SESSIONS 1–8 ONLY. Omit entirely for sessions 9–16
-     (open-book comprehensive only, where a memorization card serves nothing —
-     the knowledge body above IS the open-book aid). For S1–8, include: -->
-
-<details>
-<summary>📄 <b>Closed-book recall card</b> — fold out for exam revision</summary>
-
-> **Closed-book card**
-> Fewest words that trigger full recall. Concept → why → mechanism → tradeoff.
-
-</details>
-
 Cross-link: → `_shared/<topic>.md` · <other subjects/sessions>
 
 ---
