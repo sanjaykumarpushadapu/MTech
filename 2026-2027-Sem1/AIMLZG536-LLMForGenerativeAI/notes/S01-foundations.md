@@ -721,11 +721,11 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 ---
 
-## Extra material — ⚠️ explicitly NOT for exams
+## Extra depth — WordPiece & byte-level BPE
 
-*Reference: the deck's "Extra slides (Not for exams)"; WordPiece — Schuster & Nakajima 2012; byte-level BPE — GPT-2 paper (Radford et al. 2019). Kept as Lab-1 reference.*
+*Reference: WordPiece — Schuster & Nakajima 2012; byte-level BPE — GPT-2 paper (Radford et al. 2019). The deck flags these as "Extra slides (Not for exams)."*
 
-Kept because **Lab 1 is tokenization** and this is the reference for it. **Skip during closed-book revision.**
+Deeper tokenization knowledge and the reference for **Lab 1**. The deck marks it out of exam scope, so it won't be on the closed-book mid-sem — but it's genuinely useful for the lab and the field, which is why it's kept.
 
 **Byte tokens vs BPE** — byte tokens never merge anything, so they're extremely inefficient (long sequences) but can read **any file or character**. BPE is efficient for what it knows and **"blind" to what it doesn't**. On `"Café 🚀"`: byte tokens give 10 tokens (`[67][97][102][195][169][32][240][159][154][128]` — note `é` takes two bytes and the rocket takes four); BPE gives 3, **one of which is `[UNK]` — the failure**.
 

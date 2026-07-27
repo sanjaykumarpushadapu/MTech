@@ -2,18 +2,13 @@
 
 *Learned ____*
 
-> ### What the instructor emphasised
-> *From the session-1 recording, 26 Jul.*
+> ### In the instructor's own words
 >
-> **Her one-line definition, better than the slide's:** *"Generally people assume Conversational AI is a chatbot. It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."* Use this if asked to define the field.
+> **The definition, sharper than the slide's:** *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
 >
-> **Intent vs entity, made concrete** — not in the deck: *"Intent is the **verb** of a sentence — what is the action. An entity is the **nouns** in the natural language."* NLU = intent classification + entity extraction.
+> **Intent vs entity, made concrete:** *"Intent is the **verb** of a sentence — what is the action. An entity is the **nouns** in the natural language."* So NLU = intent classification + entity extraction.
 >
-> **Why the field moves so fast**, her framing: *"Architectures that were cutting edge in 2022 and 2023 are already considered legacy now."* Everything in this course is deliberately state-of-the-art rather than settled.
->
-> 🔴 **Session 8 is revision, not new material.** *"In the pre-mid sem we will complete 7 sessions, and session 8 is dedicated for revising the contents from session 1 to session 7."* The closed-book mid-sem therefore covers **seven** sessions of new content. **536 is identical** — so two of your four mid-sems have one less session than the handout implies.
->
-> **Hands-on in every session** — she said it explicitly. 521 is the build-it subject and the labs are not optional extras.
+> **Why the field moves so fast:** *"Architectures that were cutting edge in 2022 and 2023 are already considered legacy now."* Everything here is deliberately state-of-the-art rather than settled — which is why the note leans on current tools and papers, not a fixed textbook.
 
 ## Why this matters
 
