@@ -1,7 +1,20 @@
 # 521 · Session 01 · Foundations of Conversational AI
 
 Exam: **mid-sem (closed book)** | Date learned: ____ | Instructor: Dr Bharathi R
-Assembled from: `Session-1-Foundations-of-ConvAI.pdf` (56 sl) · *The Landscape of AI Agents* (Masterman, Besen, Sawtell & Chao, arXiv:2404.11584) · HuggingFace BPE course
+Assembled from: `Session-1-Foundations-of-ConvAI.pdf` (56 sl) · **Teams recording transcript** · *The Landscape of AI Agents* (Masterman, Besen, Sawtell & Chao, arXiv:2404.11584) · HuggingFace BPE course
+
+> ### What the instructor emphasised
+> *From the session-1 recording, 26 Jul.*
+>
+> **Her one-line definition, better than the slide's:** *"Generally people assume Conversational AI is a chatbot. It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."* Use this if asked to define the field.
+>
+> **Intent vs entity, made concrete** — not in the deck: *"Intent is the **verb** of a sentence — what is the action. An entity is the **nouns** in the natural language."* NLU = intent classification + entity extraction.
+>
+> **Why the field moves so fast**, her framing: *"Architectures that were cutting edge in 2022 and 2023 are already considered legacy now."* Everything in this course is deliberately state-of-the-art rather than settled.
+>
+> 🔴 **Session 8 is revision, not new material.** *"In the pre-mid sem we will complete 7 sessions, and session 8 is dedicated for revising the contents from session 1 to session 7."* The closed-book mid-sem therefore covers **seven** sessions of new content. **536 is identical** — so two of your four mid-sems have one less session than the handout implies.
+>
+> **Hands-on in every session** — she said it explicitly. 521 is the build-it subject and the labs are not optional extras.
 
 ## Topics
 
@@ -13,7 +26,9 @@ Assembled from: `Session-1-Foundations-of-ConvAI.pdf` (56 sl) · *The Landscape 
 
 *Sources: slides 4, 17–19*
 
-**Intuition** — The instructor's definition, worth memorising verbatim because it's the opening slide and it enumerates exactly what the course teaches:
+**Intuition** — Her spoken version first, because it's the sharper one: *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
+
+The formal definition from the opening slide, worth memorising verbatim because it enumerates exactly what the course teaches:
 
 > Any AI system that engages humans through **natural language** to **understand intent**, **retain context**, **retrieve knowledge**, and **deliver information or take real-world action**.
 
@@ -23,7 +38,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 | | | |
 |---|---|---|
-| 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU |
+| 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU — *"intent is the **verb**, the action; entity is the **nouns**"* |
 | 🧠 **Reason** | Plan, chain thoughts, decompose multi-step problems | Planning |
 | ⚡ **Act** | Call APIs, write code, retrieve docs, orchestrate agents | Tools |
 
@@ -639,8 +654,8 @@ Slide 26 **disagrees with the course handout**, completing the pattern across al
 
 ## Confusions to resolve
 
-- [ ] Quizzes: two or three (best 2 of 3)?
-- [ ] Assignments: 15 days or 3 weeks?
+- [ ] **Quizzes: two, or three-best-of-two?** ⚠️ The recording did *not* settle this — she said *"the evaluation scheme for EC1… let us discuss in the slides"* and then moved into content without stating numbers. **Ask on Canvas.**
+- [ ] Assignments: 15 days or 3 weeks? Also not stated aloud.
 - [ ] Deck says protocols are covered in "Lectures 14–15"; the handout puts MCP at L13 and A2A at L14. Minor, but check before revising.
 
 ## Lab / build
@@ -649,7 +664,23 @@ Slide 26 **disagrees with the course handout**, completing the pattern across al
 
 **Demo A — BPE with `tiktoken`:** text → tokens, token counting for a sample conversation, cost analysis, model comparison across tokenizers.
 
-**Demo B — weather agent using the native OpenAI API**, in five stages, and the staging is the lesson:
+**Demo B — the weather agent.** ✅ **Notebooks received** → `labs/S01-tokenization-and-tool-calling/`
+
+⚠️ **The notebook differs from the deck.** Slide 47 says "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
+
+Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, four sessions before it's formally taught in S4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
+
+One detail worth noticing in the code: the tool is declared as
+
+```python
+@tool
+def get_weather(city: str) -> str:
+    """Get the current weather for a given city by searching the web. Input should be a city name, e.g. 'Paris' or 'New York'."""
+```
+
+**The docstring is the tool description the model reads to decide when to call it.** That's Anthropic's agent-computer interface point from §3b made concrete — the docstring is prompt engineering, not documentation.
+
+Five stages, and the staging is the lesson:
 
 1. **Baseline** — LLM without tools, so you *see* the limitation first
 2. **Tool definition** — define the weather function schema
@@ -657,7 +688,7 @@ Slide 26 **disagrees with the course handout**, completing the pattern across al
 4. **Execution** — call the actual weather API
 5. **Response generation** — LLM writes the natural answer
 
-Target interaction: *"What's the weather like in Mumbai?"* → extracts location → calls API → receives 32°C, humid, partly cloudy → responds naturally.
+Target interaction in the deck: *"What's the weather like in Mumbai?"* — the notebook uses Tokyo, then a two-city comparison (Paris vs New York). → extracts location → calls API → receives 32°C, humid, partly cloudy → responds naturally.
 
 **Do stage 1 before stage 2.** Watching the model fail without tools is what makes function calling land — skip it and you're just copying a schema.
 

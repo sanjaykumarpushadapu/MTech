@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read) | ✅ **all three held**: T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | ✗ | ✗ | ✅ `notes/S01-foundations.md` |
+| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read) | ✅ **all three held**: T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | ✓ Teams 2h05 | ✅ `transcripts/S01-transcript-cleaned.md` | ✅ `notes/S01-foundations.md` (slides + 3 books + transcript) |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |

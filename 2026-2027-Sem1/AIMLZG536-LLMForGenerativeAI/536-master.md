@@ -9,10 +9,22 @@
 
 | EC | Component | Type | Weight | Date |
 |---|---|---|---|---|
-| EC-1 | Quiz | Online | 5% | 10–20 Aug 2026 (1 week) ⚠️ **CS-1 slide 4 omits the quiz** |
-| EC-1 | Assignment / Lab assignment / Lab exam | Online | **30%** | 27 Aug – 7 Sep 2026 (10 days) ⚠️ **CS-1 slide 4 says "Assignments 35%", no dates, plan shared week 2** — handout allows either 2 assignments or 3 quizzes; instructor appears to have chosen assignments |
-| EC-2 | Mid-semester test | **Closed book** | 30% | **20 Sep 2026 (EN)**, 2h |
-| EC-3 | Comprehensive exam | Open book | 35% | **6 Dec 2026 (EN)**, 2½h |
+| EC-1 | ~~Quiz~~ | — | — | ❌ **NO QUIZZES.** Instructor, S1 recording: *"I'm repeating there are no quizzes for this course."* |
+| EC-1 | **Assignment 1 & 2** — **group**, together forming one end-to-end project | Online | **35%** | Plan shared ~week 2 |
+| EC-2 | Mid-semester test | **Closed book** | **30 marks** | **20 Sep 2026 (EN)**, 2h |
+| EC-3 | Comprehensive exam | Open book | **35 marks** | **6 Dec 2026 (EN)**, 2½h |
+
+✅ **EC-1 RESOLVED from the session-1 recording** (25 Jul 2026). The handout's "Quiz 5% + Assignment 30%" is superseded — the instructor stated the quiz split three times. Weights confirmed: EC-2 30, EC-3 35.
+
+**How the assignments work** — stated in class, in no written source:
+
+- **Group assignments**, not individual. *"You have to create your own groups"* — Ops creates a placeholder.
+- **Assignments 1 and 2 are designed to combine into one complete end-to-end project.** Don't treat them as separate.
+- For each assignment she gives **two problem statements on two different topics**, plus **five or six enterprise case-study options**. **You choose.**
+- Everything assigned **is covered in webinars or classes** first.
+- She supplies lab sheets as Jupyter notebooks with **"80, 90% of the code readily available."**
+
+🔴 **Assignments must run on the BITS remote lab, not your laptop.** *"In laptop, no — you have to use the remote lab for the assignments."* A manual will be shared. No time limit on the lab, but expect contention near deadlines. Colab works only for very small models.
 
 ## Session index
 

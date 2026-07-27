@@ -10,7 +10,7 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Deck | Note | Card | Open | Lab |
 |---|---|---|---|---|---|---|
-| 1 | Foundations & tokenization | ✅ | ✅ | ✅ | ☐ | ☐ L1 |
+| 1 | Foundations & tokenization | ✅ | ✅ | ✅ | ☐ | ☐ L1 · *transcript ✅* |
 | 2 | Pre-training & scaling laws | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 3 | Architecture advances (RoPE, MoE) | ☐ | ☐ | ☐ | ☐ | ☐ L2 |
 | 4 | Training & attention efficiency | ☐ | ☐ | ☐ | ☐ | ☐ |
@@ -53,14 +53,14 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Deck | Note | Card | Open | Lab |
 |---|---|---|---|---|---|---|
-| 1 | Foundations, chatbots → agents | ✅ | ✅ | ✅ | ☐ | ☐ L1 |
+| 1 | Foundations, chatbots → agents | ✅ | ✅ | ✅ | ☐ | ☐ L1 *(notebooks ✅)* · *transcript ✅* |
 | 2 | Embeddings & hybrid retrieval | ☐ | ☐ | ☐ | ☐ | ☐ L2 |
 | 3 | Model landscape & cost | ☐ | ☐ | ☐ | ☐ | ☐ L3 |
 | 4 | Function calling & ReAct | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 5 | Fine-tuning & DPO | ☐ | ☐ | ☐ | ☐ | ☐ L4 |
 | 6 | Agent memory systems | ☐ | ☐ | ☐ | ☐ | ☐ L5a |
 | 7 | RAG foundations | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 8 | RAG advanced + revision | ☐ | ☐ | ☐ | ☐ | ☐ |
+| 8 | **Revision** (S1–S7) | ☐ | ☐ | ☐ | ☐ | — |
 | 9 | Planning & multi-agent | ☐ | ☐ | — | ☐ | ☐ L5b |
 | 10 | Evaluation & LLM-as-judge | ☐ | ☐ | — | ☐ | ☐ L6 |
 | 11 | Cost optimization & caching | ☐ | ☐ | — | ☐ | ☐ L7 |
@@ -74,7 +74,7 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Deck | Note | Card | Open | Lab |
 |---|---|---|---|---|---|---|
-| 1 | Foundations of ML systems eng | ✅ | ✅ | ✅ | ☐ | — |
+| 1 | Foundations of ML systems eng | ✅ | ✅ | ✅ | ☐ | — · *transcript ✅* |
 | 2 | Models → systems, AI paradigms | ☐ | ☐ | ☐ | ☐ | ☐ |
 | 3 | Requirements engineering, GR4ML | ☐ | ☐ | ☐ | ☐ | ☐ L1 |
 | 4 | Measures & quality attributes | ☐ | ☐ | ☐ | ☐ | ☐ L2 |
@@ -113,8 +113,8 @@ One view across all four subjects. Update the same weekend the session happens.
 |---|---|
 | 549 Python self-study complete | ☐ |
 | Running example chosen for 546 (fraud detection) | ✅ |
-| Transcript workflow confirmed working | ☐ |
-| **EC-1 dates confirmed with all four instructors** | ☐ |
+| Transcript workflow confirmed working | ✅ **26 Jul — 536 S1 Teams transcript processed** |
+| **EC-1: 536 ✅ · 546 ✅ (Asgn I BEFORE mid-sem; quiz just before mid-sem)** · 549, 521 ☐ | ☐ |
 | Quizzes ×4 taken (by 20 Aug) | ☐ |
 | Crunch deliverables submitted (7 Sep) | ☐ |
 | Mid-sems done (20 Sep) | ☐ |

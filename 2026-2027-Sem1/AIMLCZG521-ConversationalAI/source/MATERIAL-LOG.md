@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `Session-1-Foundations-of-ConvAI.pdf` (56 sl) | ✓ T1 *Building Effective Agents* · *Landscape of AI Agents* | ✗ | ✗ | ✅ `notes/S01-foundations.md` |
+| 1 | ✓ `Session-1-Foundations-of-ConvAI.pdf` (56 sl) | ✓ T1 *Building Effective Agents* · *Landscape of AI Agents* | ✓ Teams | ✅ `transcripts/S01-transcript-cleaned.md` | ✅ `notes/S01-foundations.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |

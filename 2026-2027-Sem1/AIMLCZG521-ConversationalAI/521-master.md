@@ -3,13 +3,15 @@
 4 credits · 3-1-0 · Instructors: Bharathi R (Lead), S Bhagath, Anupam Purwar, Vijay Singh
 **Mid-sem: L1–L8, closed book · Comprehensive: L1–L16, open book**
 
-> This file is the revision homepage during the semester, and the **open-book front index** in December. Keep the "Note file" column accurate — in the exam it is how you find things.
+> This file is the revision homepage during the semester, and the **open-book front index** in December.
+
+🔴 **Session 8 is a REVISION session, not new material.** Instructor, S1 recording: *"In the pre-mid sem we will complete 7 sessions, and session 8 is dedicated for revising the contents from session 1 to session 7."* So the closed-book mid-sem covers **seven sessions of new content**, not eight. **536 is the same** — its deck marks S8 as revision too. Keep the "Note file" column accurate — in the exam it is how you find things.
 
 ## Evaluation
 
 | EC | Component | Type | Weight | Timing |
 |---|---|---|---|---|
-| EC-1 | Quiz ×3 (best 2) | Open book | 10% | ⚠️ **L1 slide 26 says ×2, not ×3 best-of-3** — no cushion if so. Announced in class / **Canvas** |
+| EC-1 | Quiz ×3 (best 2) | Open book | 10% | ⚠️ **STILL UNRESOLVED.** Handout says ×3 best-of-2; L1 slide 26 says ×2. In the S1 recording she said *"the evaluation scheme for EC1 — what about the quiz and what about the assignments, let us discuss in the slides"* and then moved straight into content **without stating the numbers**. Ask directly on Canvas |
 | EC-1 | Assignment 1 & 2 | Open book | 20% | ⚠️ handout ~15 days each; **L1 slide 26 says ~3 weeks each** |
 | EC-2 | Mid-term | **Closed book** | 30% | ~19–20 Sep 2026 |
 | EC-3 | End semester | Open book | 40% | ~early Dec 2026 |
@@ -26,7 +28,7 @@
 | L4 | Structured Outputs & Function Calling | Native function-calling APIs (OpenAI, Anthropic); ReAct (thought-action-observation); error handling & validation | ReAct (Yao 2023) | mid | `notes/S04-function-calling.md` | → `_shared/function-calling.md` |
 | L5 | Fine-Tuning & Preference Optimization | Fine-tune vs prompt engineering; QLoRA / PEFT; DPO, GRPO | DPO (Rafailov 2023) | mid | `notes/S05-finetuning.md` | → `_shared/finetuning.md` · **536** |
 | L6 | Agent Memory Systems | Short-term vs long-term; hybrid architecture (SQL + vector) | MemGPT (2023) + LangGraph memory docs | mid | `notes/S06-memory.md` | → `_shared/agents.md` |
-| L7–L8 | RAG: Foundations to Advanced | Processing & chunking; re-ranking & contextual retrieval; agentic RAG (routing, iteration). *Mid-term revision* | Anthropic *Contextual Retrieval* (2024) | mid | `notes/S07-08-rag.md` | → `_shared/rag.md` · **549 S10–11** |
+| L7 | RAG: Foundations to Advanced | Processing & chunking; re-ranking & contextual retrieval; agentic RAG (routing, iteration). *Mid-term revision* | Anthropic *Contextual Retrieval* (2024) | mid | `notes/S07-08-rag.md` | → `_shared/rag.md` · **549 S10–11** |
 | L9 | Agent Planning & Multi-Agent Systems | State management & planning; hierarchical & collaborative architectures; error recovery & iteration limits | MetaGPT (2024) | comp | `notes/S09-multi-agent.md` | → `_shared/agents.md` |
 | L10 | Evaluation: RAG to Agents | RAG & agent metrics; LLM-as-judge pattern & limits; benchmarks | MT-Bench (2023), GAIA | comp | `notes/S10-evaluation.md` | → `_shared/evaluation.md` · **546** |
 | L11 | Cost Optimization & Prompt Caching | Token economics & hidden costs; prompt caching; cache warming & invalidation; model routing | Anthropic prompt-caching docs | comp | `notes/S11-cost.md` | → `_shared/quantization.md` · **536** |
@@ -39,7 +41,7 @@
 
 | Lab | Objective | Session ref | Done |
 |---|---|---|---|
-| 1 | Tokenization and AI bot with tool calling | L1 | ☐ |
+| 1 | Tokenization and AI bot with tool calling — **notebooks in `labs/S01-…`**: Ollama `llama3` + LangChain + Tavily, ReAct agent | L1 | ☐ |
 | 2 | Similarity metrics, text-to-speech, rule-based systems, sentiment analysis | L2 | ☐ |
 | 3 | Hybrid search implementation | L3 | ☐ |
 | 4 | Function calling, prompting techniques, multimodal AI | L5 & L6 | ☐ |

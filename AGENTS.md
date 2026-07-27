@@ -225,7 +225,9 @@ Rules for the ask:
 - **Name the artifact exactly** — "the 549 session 3 deck from Teams", not "the next materials".
 - **State the consequence of not having it**, concretely: *"without this, session 3's note cannot be written at all — 549 has no textbook from session 4 onward."*
 - **Give a deadline where one exists**, tied to a real date in the study plan.
-- **Rank it.** One thing is the most important; say which and why. A list of five equal-weight asks is a list nobody acts on.
+- **ONE ask per response.** The user has asked for this explicitly. Rank everything outstanding, ask for **only the top item**, and hold the rest. A list of five asks gets none of them done; a single clear ask gets done.
+- **Move to the next only when the current one is resolved** — done, refused, or shown to be impossible. If the user answers something else and the ask is still open, repeat the *same* ask, not a new one.
+- Keep a short "still outstanding, not asking yet" line if it helps them plan — but never let it become a second ask.
 - **Repeat unresolved asks in the next response.** Do not assume silence means done. Something asked three turns ago and still outstanding is *more* urgent, not less — say so.
 - **Distinguish blocking from optional.** "This blocks the note" and "this would improve the note" are different requests and must not be flattened together.
 - **Never bury an ask inside prose.** If it needs doing, it goes in the block.

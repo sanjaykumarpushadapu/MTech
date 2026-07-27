@@ -1,11 +1,25 @@
 # 536 · Session 01 · Foundations of Large Language Models
 
 Exam: **mid-sem (closed book)** | Date learned: ____ | Instructor: Dr. Monali Mavani
-Assembled from: `CS-1 Intro to LLM.pptx` (69 sl, **47 embedded images extracted and read**) · **T1 Jurafsky & Martin ch2, 7, 8** · **T2 Alammar & Grootendorst ch1–3** · **R1 Raschka ch1–2** · HuggingFace LLM course ch6.5 — *all cited sources now held*
+Assembled from: `CS-1 Intro to LLM.pptx` (69 sl, **47 embedded images extracted and read**) · **T1 Jurafsky & Martin ch2, 7, 8** · **T2 Alammar & Grootendorst ch1–3** · **R1 Raschka ch1–2** · HuggingFace LLM course ch6.5 · **Teams recording transcript, 2h 05m** — *all sources held*
 
 ## Topics
 
 1. What a language model is · 2. What makes it *large* · 3. Generation as prediction · 4. Self-attention · 5. Multi-head attention · 6. The transformer block · 7. Positional encoding · 8. Text → tokens → embeddings · 9. The LM head and weight tying · 10. Context length · 11. Architectures · 12. Tokenization algorithms · 13. The LLM landscape
+
+> ### What the instructor actually emphasised
+> *From the 2h 05m recording. The deck can't show this; the transcript can.*
+>
+> **Time spent (instructor, minute-marked):** ~19 min course admin and handout walkthrough · **~20 min on what a language model is and conditional generation** (22:04–39:21, the longest continuous technical stretch) · **~17 min on self-attention worked step by step with matrix shapes** (42:17–59:43) · tokenization and architectures covered but briefly.
+>
+> **Her framing of the whole course, worth carrying:**
+> *"Before mid-semester we will cover all these things, and post mid-semester will be mainly from the **application engineering point of view**."* So S1–S8 are mechanism; S9–S16 are application. That matches the closed/open-book split exactly.
+>
+> **On architectures — sharper than the deck:** *"Decoder-only LLMs have become so powerful that **encoder-only models are used only in specialised cases**, like when you want to deploy on an **edge device**, because they are very lightweight."* The deck's three-way table (§11) is even-handed; the instructor is not. If asked to compare, note the asymmetry.
+>
+> **Her worked example is Llama-3 8B** — *"8 billion parameter model, where model dimensionality or embedding dimensionality is 4096."* Same numbers as §4's shapes table. Use Llama-3 8B as the running example for 536, the way fraud detection runs through 546.
+>
+> **Post-mid-sem order she stated:** prompt engineering and reasoning first, then evaluation. Matches the handout's S10–S11 then S14.
 
 > ⚠️ **Slides 61–69 are explicitly marked "Extra slides (Not for exams)"** — byte tokens vs BPE, byte-level BPE, and WordPiece. Kept at the end of this note because **Lab 1 is tokenization** and you'll want them there, but they are **out of exam scope**. Don't spend closed-book revision time on them.
 
@@ -719,24 +733,34 @@ So the **first merge is `##gs`**, not `##ug` — the opposite of BPE's answer on
 
 ---
 
-## ⚠️ Admin — conflict with the handout
+## Admin — ✅ resolved from the recording
 
-Slide 4's evaluation table **does not match the handout**:
+**The handout is superseded.** The instructor confirmed in class, repeatedly:
 
-| | Handout | Slide 4 |
-|---|---|---|
-| Quiz | 5%, 10–20 Aug | *(absent)* |
-| Assignment | 30%, 27 Aug – 7 Sep | **Assignments 35%** — "plan will be shared by second week" |
-| Mid-term | 30%, closed, 20 Sep EN | 30%, closed book |
-| End semester | 35%, open, 6 Dec EN | 35%, open book |
+> *"I'm repeating — there are **no quizzes** for this course."*
+> *"EC2 will be closed book 30 marks and EC3 will be 35 marks."*
 
-The slides fold the quiz into a single **35% assignments** component with **no dates** and a plan promised in week 2. The handout's own note allows this — *"EC-1 consists of either two Assignments or three Quizzes"* — so the instructor appears to have chosen assignments. **Watch for the week-2 announcement**; it determines whether the 27 Aug – 7 Sep crunch holds for 536.
+So EC-1 is **35%, two group assignments**, plan shared around week 2. The handout's "Quiz 5% + Assignment 30%" split never applied — its own note permits either two assignments or three quizzes, and she chose assignments.
+
+**Assignment design, from the recording only:**
+
+- **Group work.** You form your own groups; Ops creates a placeholder.
+- **Assignments 1 and 2 are meant to combine into one end-to-end project** — plan them together, not separately.
+- Each assignment comes with **two problem statements**, plus **five or six enterprise case-study options**; you choose.
+- Everything assigned **is taught first**, in webinars or classes.
+- Lab sheets are Jupyter notebooks with **80–90% of the code already written**.
+
+🔴 **The remote lab is mandatory for assignments.** *"In laptop, no — you have to use the remote lab."* A manual will be shared; there's no session time limit, but expect slowdowns near deadlines. Google Colab only handles very small models.
+
+*Consequence for the study plan:* 536's crunch load is now two group assignments rather than one solo 30% piece — lighter per person, but with coordination overhead and a dependency on groupmates.
 
 **References given on slide 60** — T1 Jurafsky & Martin (3rd ed. draft, Jan 2026) **ch2, 7, 8** · T2 Alammar **ch1, 2, 3** · R1 Raschka **ch1, 2** · HuggingFace LLM course chapter 6.5 · paper: *Neural Machine Translation with Byte-Level Subwords*.
 
 ## Confusions to resolve
 
-- [ ] Evaluation: is the quiz replaced by assignments? Week-2 announcement decides.
+- [x] ~~Evaluation: is the quiz replaced by assignments?~~ **Resolved** — no quizzes; 35% group assignments.
+- [ ] Which two problem statements, and which enterprise case studies? Announced with the assignment plan (~week 2).
+- [ ] Remote lab access — manual not yet shared.
 - [ ] Does the deck's `MultipleResponse`/`MultiplyResponse`-style sloppiness appear elsewhere — check slide 21's arithmetic against your own working.
 - [ ] Slide 41 is blank in the export — check whether something was on it.
 
