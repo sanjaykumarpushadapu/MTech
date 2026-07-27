@@ -26,9 +26,9 @@ Weekends = 4 contact sessions (2h each) + a 2–3h lab block. Weekdays = 1h per 
 | **P3 · First crunch** | 27 Aug – 7 Sep | 549 project 30% + 536 assignment 30% + 546 situated learning 5% | **Three** deliverables in one window. Start day 1 |
 | **P4 · Mid-sem run-up** | 8–18 Sep | Sessions 1–8 consolidation **+ 🔴 546 Assignment I (10%) lands here** | Contested, not clear. 536 & 521 mid-sems cover **7** sessions, not 8 |
 | **P5 · Mid-sems** | 19–20 Sep | 546 Sat EN · 549 FN + 536 EN Sun · 521 in window | Closed book, sessions 1–8 |
-| **P6 · Second half** | 26 Sep – 14 Nov | Sessions 9–16 | Open-book pages, not cards. **Rolling revision of S1–8 starts in October** |
+| **P6 · Second half** | 26 Sep – 14 Nov | Sessions 9–16 | Notes + condensed open-book pages. **Rolling revision of S1–8 starts in October** |
 | **P7 · 546 assignments** | 29 Oct – 11 Nov | 546 Asgn I & II, 20% | Overlaps sessions 14–15. Plan the collision |
-| **P8 · Comp prep** | 15 Nov – 4 Dec | Front index (16–20 Nov), print + bind (21–22 Nov), lookup drills | Retrieval speed, not new understanding |
+| **P8 · Comp prep** | 15 Nov – 4 Dec | Finish any condensed pages, front index (16–20 Nov), print + bind (21–22 Nov), lookup drills | Retrieval speed, not new understanding. **Bound file ≈180 pp**, not the 1,500 pp of full notes |
 | **P9 · Comps** | 5–6 Dec | 546 Sat EN · 549 FN + 536 EN Sun · 521 early Dec | Open book, all 16. ⚠️ Sat-night turnaround into a Sunday double |
 
 **Three pressure points:** 27 Aug–7 Sep · 19–20 Sep · 5–6 Dec. Everything else is buffer. Protect the buffer.
@@ -57,7 +57,7 @@ Same shape every week. Don't redesign it mid-semester.
 
 | Day | Slot | What happens |
 |---|---|---|
-| **Sat** | 2 classes + 2×15 min | Class → immediately: concept list, closed-book card stubs, "what confused me" line |
+| **Sat** | 2 classes + 2×15 min | Class → immediately: concept list, the deck saved, "what confused me" line |
 | **Sun** | 2 classes + 2×15 min | Same |
 | **Sun** | **+ 2–3h lab block** | **The week's primary lab.** Protected time, not overflow — see below |
 | **Mon** | 536 LLMs · 1h | Sharpest hour — theory-heaviest subject. Mechanism topics: reproduce one worked example **by hand**. Landscape topics: comparison table only |
@@ -67,7 +67,9 @@ Same shape every week. Don't redesign it mid-semester.
 | **Fri** | 1h · second lab / flex | The week's **second** lab, or overflow, or the thing that went wrong. If nothing's pending: write the week's `_shared/` note |
 
 **The weekday hour, precisely:**
-`recall last session cold (10 min) → fix what was fuzzy (20 min) → write the open-book page (30 min)`
+`recall last session cold (10 min) → fix what was fuzzy (20 min) → deepen the note (30 min)`
+
+The **condensed open-book page** is *not* part of the weekday hour. It's a two-page mechanical squeeze of a note that already exists (`_templates/OPENBOOK-TEMPLATE.md`), and it can be batched — a Sunday block in October, or P8. Writing it early costs the note's depth and buys nothing, because you cannot condense understanding you haven't built yet.
 
 Note what changed: **the lab is no longer a 15-minute tail on the weekday hour.** It never fitted there.
 
@@ -112,7 +114,7 @@ Weekend = contact session number. Sessions 1–8 are mid-sem scope (closed book)
 | Wk | Weekend | Sessions | Weekday focus | Deadlines |
 |---|---|---|---|---|
 | 6 | **5–6 Sep** | S6 | Crunch continues; Sun block still on deliverables. 521 L6 memory systems. Reuse lab code in the deliverables — that's what "project-as-you-go" buys you. **549 S5 has Lab 1 (data pipeline) — do the minimum that runs** | **549 project + 536 assignment due ~7 Sep** |
-| 7 | **12–13 Sep** | S7 (+S8) | Last new mid-sem material. **Backfill the notes the crunch cost you.** Convert all S1–S8 to closed-book cards; build the one-page concept-name checklist per subject. Sun block → backfill, not labs | Mid-sem scope closes |
+| 7 | **12–13 Sep** | S7 (+S8) | Last new mid-sem material. **Backfill the notes the crunch cost you.** Build the one-page concept-name checklist per subject — the closed-book drill is: read a concept name, reproduce its four parts from memory, check against the note. Sun block → backfill, not labs | Mid-sem scope closes |
 | 8 | **19–20 Sep** | **MID-SEMS** | Mon–Fri before: cover-and-recite the checklists, 4 subjects rotating. No new reading, no labs | **546 Sat EN · 549 FN + 536 EN Sun · 521 in window** |
 | 9 | **26–27 Sep** | S9 | Reset. Switch note mode: open-book pages, not cards. 521 L9 multi-agent · **Sun block: 521 Lab 5b naïve RAG** | — |
 
@@ -246,7 +248,7 @@ Let it grow out of the labs rather than building it separately. When an assignme
 Decide these now, while calm, so you're not deciding them at 11pm in September.
 
 - **The week doesn't fit?** Committed load is ~17h/week (8h classes + 1h same-day notes + 2.5h lab block + 5h weekdays). Cut in this order: Friday's second lab → open-book pages for comprehensive-only sessions → *never* the same-day notes or the cold recall.
-- **Behind by one session?** Skip the open-book page, keep the closed-book card. Cards are recoverable later; understanding isn't.
+- **Behind by one session?** Write the session note, skip its condensed open-book page. The note is the understanding and can't be recovered later; the condensed page is a mechanical squeeze of a note that already exists, and can be done in December.
 - **Behind by a week?** Drop 546 first (least cumulative, most recoverable), never 549 (5 credits, most cumulative).
 - **Crunch collision (Aug 27–Sep 7)?** Notes go to bare concept lists for those two weeks. Deliverables at 30% outweigh notes. Backfill on 12–13 Sep.
 - **Lab won't run?** 30-minute cap, then write down the error, move on, ask in class. Debugging alone past 30 minutes is the worst hour-per-mark rate available.

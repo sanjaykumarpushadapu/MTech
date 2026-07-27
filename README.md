@@ -12,7 +12,7 @@ Notes, labs and study material for the whole degree. One folder per semester.
 
 - **No course material in git.** Textbook PDFs, slides and datasets live in Google Drive. `.gitignore` blocks them. Each subject's `source/` holds a pointer file only.
 - **One markdown file per session**, in `<subject>/notes/`, following `_templates/SESSION-TEMPLATE.md`.
-- **Every session gets both note types** the same weekend it's taught: a closed-book card (recall) and an open-book page (lookup).
+- **Every session gets one note** the same weekend it's taught. The note body is what you revise from for *both* exams — there are no separate recall cards. A **condensed open-book page** is derived from it later, for the bound December file.
 - **Shared topics go in `_shared/`,** written once and cross-linked from every subject that touches them.
 
 ## Layout

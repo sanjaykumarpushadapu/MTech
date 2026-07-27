@@ -205,7 +205,36 @@ A wide `LR` diagram scrolls sideways on screen and is **cut off** on the printed
 cd tools && npm run check
 ```
 
-## 8 · Shared topics
+## 8 · The condensed open-book page
+
+The comprehensives are open book, and BITS bans loose sheets — everything must be **printed and bound by 22 Nov**. The notes cannot be that file: four subjects × 16 sessions ≈ **1,500 pages**, which no one navigates in 60 seconds under exam pressure.
+
+So each session has **two artifacts, in a strict order**:
+
+| Artifact | Purpose | When |
+|---|---|---|
+| `notes/S<NN>-….md` | The knowledge. Full length. **Never printed.** Revised from for the closed-book mid-sem | Same weekend as the class |
+| `openbook/S<NN>-….md` | **Two pages.** Lookup only, for the bound December file | Derived later — deferrable |
+
+**The condensed page is derived, never authored.** It is a mechanical squeeze of a note that already exists. If you find yourself working out new understanding while writing one, stop — that belongs in the note.
+
+Follow `_templates/OPENBOOK-TEMPLATE.md`. **Hard limit: two sides of A4.**
+
+| Goes on the page | Stays in the note |
+|---|---|
+| Every formula, with symbols named | The Intuition prose |
+| Every comparison table | The full worked-example walkthrough |
+| **Every tradeoff line** — marks concentrate here | ***In practice*** / ***Going deeper*** blocks |
+| The diagrams — fastest thing to find on a page | Source attribution and cross-links |
+| Worked-example *answers* | The reasoning that produced them |
+
+**If it doesn't fit in two pages, cut prose.** Never cut a formula, a comparison table or a tradeoff line.
+
+**Bound file target: ~180 pages** — master index (4) + 64 condensed pages (~130) + 10 condensed shared notes (~40).
+
+⚠️ **Order matters.** A note without its condensed page is recoverable in an afternoon in November. A condensed page written *before* the note is a summary of nothing, and the understanding it was supposed to compress never gets built. **Never write the condensed page first**, and when behind, always drop the condensed page rather than the note.
+
+## 9 · Shared topics
 
 Ten topics appear in two to four subjects. **Write each once in `_shared/<topic>.md`** when the first course reaches it. When a later course arrives, **do not write a second note** — add a row to that file's "course-specific angles" table and cross-link from the session note.
 
@@ -213,7 +242,7 @@ Record **exam scope per course** in the shared file: the same topic can be close
 
 `_shared/` notes follow the same concept rules as session notes, **including the diagram requirement.**
 
-## 9 · Tone
+## 10 · Tone
 
 - Plain language; define jargon on first use or don't use it.
 - No filler, no motivational framing, no restating the question.
@@ -221,7 +250,7 @@ Record **exam scope per course** in the shared file: the same topic can be close
 - Flag uncertainty inline with `⚠️`. Never present a guess as a fact.
 - **Own mistakes plainly and say what the wrong belief was**, so it isn't repeated. Don't bury a correction inside a summary of new work.
 
-## 10 · Ask for what you need — insistently
+## 11 · Ask for what you need — insistently
 
 The user has asked to be told **forcefully**. A gap mentioned softly at the end of a long response gets missed, and a missed deck costs marks months later.
 
@@ -234,7 +263,7 @@ The user has asked to be told **forcefully**. A gap mentioned softly at the end 
 - **Distinguish blocking from optional.** Never flatten them together.
 - **Flag deadline risk unprompted** when a `STUDY-PLAN.md` date nears with its `PROGRESS.md` milestone unticked.
 
-## 11 · Before finishing any task
+## 12 · Before finishing any task
 
 Run these, don't eyeball them:
 
@@ -248,13 +277,14 @@ git status --short                 # nothing binary or secret staged
 - [ ] Every concept has: `*Reference:*` · Intuition · Mechanism · Worked example · Tradeoff · diagram · `Cross-link:`
 - [ ] Any arithmetic in a worked example was actually executed
 - [ ] Master index row + `PROGRESS.md` row updated
+- [ ] If a condensed open-book page exists, it was derived from the note — not written first
 - [ ] `source/MATERIAL-LOG.md` records what arrived and what was missing
 - [ ] No PDFs, slides, datasets or secrets staged
 - [ ] Dates and weights match the handout, or are marked `⚠️`
 
 ⚠️ **Do not run `git commit` from the sandbox.** It creates `.git/*.lock` files it cannot then remove, and the next commit fails with a misleading "another git process is running". **Stage the work and give the user the commit command.**
 
-## 12 · Repo layout
+## 13 · Repo layout
 
 ```
 MTech/
@@ -266,7 +296,8 @@ MTech/
     ├── PROGRESS.md              ← dashboard: 64 sessions × deck/note/open/lab
     ├── <CODE>-<CourseTitle>/
     │   ├── <code>-master.md     ← session index + ALL course logistics
-    │   ├── notes/S01-….md
+    │   ├── notes/S01-….md       ← the knowledge, full length, never printed
+    │   ├── openbook/S01-….md    ← 2-page lookup sheet, derived from the note
     │   ├── labs/S01-…/
     │   └── source/
     │       ├── README.md        ← links only
@@ -274,10 +305,10 @@ MTech/
     │       └── transcripts/     ← gitignored; read, fold in, discard
     ├── _shared/                 ← cross-subject notes + README index
     ├── _library/                ← 9 textbooks, gitignored — CHECK HERE FIRST
-    └── _templates/SESSION-TEMPLATE.md
+    └── _templates/  SESSION-TEMPLATE.md · OPENBOOK-TEMPLATE.md
 ```
 
-## 13 · Key dates (all four handouts, confirmed)
+## 14 · Key dates (all four handouts, confirmed)
 
 | Date | Event |
 |---|---|
