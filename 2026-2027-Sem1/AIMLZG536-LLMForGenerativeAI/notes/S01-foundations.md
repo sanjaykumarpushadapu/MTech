@@ -220,6 +220,34 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 | Vaswani et al. 2017 (original) | 512 | 8 | 64 |
 | Llama-3-8B | 4096 | 32 | 128 |
 
+**Worked example — attention by hand, with actual numbers** *(my own — the deck gives only shapes, but you don't *have* attention until you've pushed numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
+
+**① Scores `QKᵀ`** — every query dotted with every key:
+
+| | K(x₁) | K(x₂) |
+|---|---|---|
+| **Q(x₁)** | 1·1+0·0 = **1** | 1·1+0·1 = **1** |
+| **Q(x₂)** | 1·1+1·0 = **1** | 1·1+1·1 = **2** |
+
+**② Scale `÷√d_k = ÷√2`** → x₂'s row becomes `[0.71, 1.41]`.
+
+**③ Causal mask** (decoder — a token cannot see the future): x₁'s score against x₂ is set to `−∞`, so x₁ may attend only to itself.
+
+**④ Softmax each row → attention weights** (a probability distribution over the allowed tokens):
+
+| | on x₁ | on x₂ |
+|---|---|---|
+| **x₁** | **1.00** | — (masked) |
+| **x₂** | **0.33** | **0.67** |
+
+*(x₂'s row: `e^0.71 / (e^0.71 + e^1.41) = 2.03 / 6.14 = 0.33`; the rest is 0.67.)*
+
+**⑤ Weighted sum `Z = A·V`:**
+- `z₁ = 1.00·[1,0] = ` **`[1, 0]`** — with the mask, token 1's new vector is just itself.
+- `z₂ = 0.33·[1,0] + 0.67·[1,1] = ` **`[1, 0.67]`** — a blend, leaning 67% on itself and 33% on token 1.
+
+That last line **is** attention: each token's output is a **weighted average of value vectors**, and the weights are *learned relevance*. Notice the weight table is `2 × 2` (n × n) — that's the whole cost story, and it grows with every token added. This is the O(n²) the tradeoff below is about.
+
 **Tradeoff / the cost that defines the field** — the attention matrix is **n × n**. Double the context and you quadruple the attention compute and memory. Every efficiency topic in S4 — FlashAttention, Ring Attention, sliding-window, sparse and linear attention — exists to attack that single quadratic term. Self-attention buys an uncompressed view and parallel training; it charges O(n²).
 
 > ***In practice*** *(beyond the deck — what this O(n²) means when you actually use LLMs):*
@@ -264,6 +292,23 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 | **Final MHA output** | **4 × 512** | same shape as input → stackable |
 
 Weight-matrix notation from the slide: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ ℝ^(d×d_v), W_O ∈ ℝ^(h·d_v × d).
+
+*The same worked example as a picture (my own) — split the model width into h heads, attend in each, concatenate back, project once:*
+
+```mermaid
+flowchart LR
+    X["X [4×512]"] --> S{"split into<br/>8 heads"}
+    S --> H1["head 1 · Q,K,V [4×64]<br/>→ attention → [4×64]"]
+    S --> H2["head 2 → [4×64]"]
+    S --> H8["… head 8 → [4×64]"]
+    H1 --> C["concat<br/>[4×512]"]
+    H2 --> C
+    H8 --> C
+    C --> WO["× W_O [512×512]"]
+    WO --> O["output [4×512]<br/>= input size → stackable"]
+```
+
+Each head runs the exact five-step computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
 
@@ -363,6 +408,16 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 | **Learned positional embeddings** | Position is a **trainable lookup** — the network discovers optimal encodings for the dataset | Fits the data; doesn't extrapolate past trained length |
 | **Sinusoidal encodings** | **Fixed sine/cosine functions at multiple frequencies** | Preserves **relative distance**; no parameters |
 | **RoPE** (Rotary Positional Embeddings) | Encodes position by **rotating Q and K in ℂ space** | Embeds **relative phase relationships**; **scales better for long and sliding-window contexts** |
+
+**Sinusoidal, made concrete** *(my own — the deck says "sine/cosine at multiple frequencies" without ever showing it).* With model dim `d = 4`, the formula pairs dimensions — even dim = sin, odd dim = cos — and the **frequency shrinks** as you climb the dimensions. `PE(pos, 0..3)`:
+
+| pos | dim0 = sin(pos·1) | dim1 = cos(pos·1) | dim2 = sin(pos·0.01) | dim3 = cos(pos·0.01) |
+|---|---|---|---|---|
+| 0 | 0.00 | 1.00 | 0.00 | 1.00 |
+| 1 | 0.84 | 0.54 | 0.01 | 1.00 |
+| 2 | 0.91 | −0.42 | 0.02 | 1.00 |
+
+Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91), the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Each position gets a unique multi-frequency "fingerprint" — like clock hands turning at different speeds — and because it's the *same fixed function at every position*, the model can encode a position it never saw in training, which learned embeddings cannot. RoPE keeps this multi-frequency idea but **rotates** Q and K rather than **adding** to the embedding.
 
 **Tradeoff** — learned embeddings are simplest and fail hardest outside the trained length; sinusoidal costs nothing and generalises modestly; RoPE is the current default precisely because long context is the pressure point, and it's the only one of the three that rotates rather than adds. RoPE gets full treatment in S3 — this is the preview.
 
