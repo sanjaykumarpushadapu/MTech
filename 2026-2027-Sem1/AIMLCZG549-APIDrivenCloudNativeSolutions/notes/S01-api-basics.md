@@ -30,7 +30,9 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 ---
 
-## 1. What an API is
+## Part 1 · What an API is
+
+### 1. What an API is
 
 *Reference: R2 Gough, Bryant & Auburn, *Mastering API Architecture* ch1 (Design, Build & Specify APIs).*
 
@@ -57,7 +59,7 @@ Cross-link: → `_shared/api-design.md` · **546 S9**
 
 ---
 
-## 2. Synchronous vs asynchronous
+### 2. Synchronous vs asynchronous
 
 *Reference: R2 ch1; for the async side, the RabbitMQ and Apache Kafka docs, and [asyncapi.com](https://www.asyncapi.com) (the async counterpart to OpenAPI).*
 
@@ -104,7 +106,9 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 ---
 
-## 3. HTTP APIs
+## Part 2 · HTTP and specification
+
+### 3. HTTP APIs
 
 *Reference: [MDN HTTP docs](https://developer.mozilla.org/en-US/docs/Web/HTTP) and **RFC 9110** (HTTP semantics) — the canonical, durable source for methods and status codes. (The status-code classes and endpoint anatomy came from the class Q&A.)*
 
@@ -249,7 +253,7 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 ---
 
-## 4. OpenAPI and the API lifecycle
+### 4. OpenAPI and the API lifecycle
 
 *Reference: the OpenAPI spec at [openapis.org](https://www.openapis.org) / [spec.openapis.org](https://spec.openapis.org); [FastAPI docs](https://fastapi.tiangolo.com) for the worked stack.*
 
@@ -315,7 +319,9 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML ser
 
 ---
 
-## 5. REST
+## Part 3 · The three API styles
+
+### 5. REST
 
 *Reference: Roy Fielding's 2000 dissertation, ch5 (the origin of REST); R2 ch1.*
 
@@ -354,7 +360,7 @@ Same resource, two representations:
 | `PUT` | `/institute/students/123` | Update student 123 |
 | `DELETE` | `/institute/students/123` | Delete student 123 |
 
-### How RESTful is it? The Richardson Maturity Model
+#### How RESTful is it? The Richardson Maturity Model
 
 *Not in the deck — this is R2 ch1, and it's the standard way to grade a REST API. Go deeper: Fowler, ["Richardson Maturity Model"](https://martinfowler.com/articles/richardsonMaturityModel.html).*
 
@@ -419,7 +425,7 @@ The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetc
 
 ---
 
-## 6. GraphQL
+### 6. GraphQL
 
 *Reference: [graphql.org/learn](https://graphql.org/learn); AWS AppSync docs for the managed option.*
 
@@ -503,7 +509,7 @@ query {
 
 ---
 
-## 7. gRPC
+### 7. gRPC
 
 *Reference: [grpc.io/docs](https://grpc.io/docs) and the Protocol Buffers docs at [protobuf.dev](https://protobuf.dev).*
 
@@ -604,7 +610,7 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 ---
 
-## 7b. North–south vs east–west — how to actually choose
+### 7b. North–south vs east–west — how to actually choose
 
 *Reference: R2 Gough ch1 — this north–south / east–west framing is R2's, absent from the deck, and it's what makes the comparison table usable.*
 
@@ -633,7 +639,7 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 **Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the deck's "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
 
-## 8. Choosing between REST, GraphQL and gRPC
+### 8. Choosing between REST, GraphQL and gRPC
 
 *Reference: R2 ch1 (modelling exchanges & choosing an API format); the comparison table is the deck's own.*
 
@@ -652,7 +658,9 @@ The deck's comparison table, which is close to guaranteed exam material:
 
 ---
 
-## 9. API versioning
+## Part 4 · Evolution
+
+### 9. API versioning
 
 *Reference: [semver.org](https://semver.org) (the spec); [Stripe API versioning](https://docs.stripe.com/api/versioning) for the date-based scheme in practice.*
 

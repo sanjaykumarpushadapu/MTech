@@ -18,9 +18,15 @@
 
 <numbered index of the concepts below, grouped into parts>
 
+<!-- BODY HIERARCHY: group the numbered concepts under Part headings, matching the
+     Topics index. Parts are ## , concepts are ### N. , sub-sections are #### N.M .
+     End-matter (Self-study / Lab / build) stays at ## . -->
+
 ---
 
-## <Concept name>
+## Part 1 · <part title>
+
+### 1. <Concept name>
 
 *Reference: <durable source — spec / official docs / textbook chapter / canonical article / link>. Where only the deck exists, say so: "deck only; no durable source behind this."*
 
@@ -44,9 +50,11 @@ Cross-link: → `_shared/<topic>.md` · <other subjects/sessions>
 
 ---
 
-## <Next concept>
+### 2. <Next concept>
 
 ...
+
+<!-- start each new Part with its own `## Part N · <title>` divider, then `### ` concepts -->
 
 ---
 

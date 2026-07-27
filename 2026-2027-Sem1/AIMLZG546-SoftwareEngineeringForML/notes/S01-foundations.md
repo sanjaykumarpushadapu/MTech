@@ -33,7 +33,9 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 
 ---
 
-## 1. Why this course exists
+## Part 1 · The argument
+
+### 1. Why this course exists
 
 *Reference: T1 Kästner, *Machine Learning in Production* ch1 (Introduction) — free online at mlip-cmu.github.io.*
 
@@ -80,11 +82,11 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 ---
 
-## 2. Machine learning vocabulary
+### 2. Machine learning vocabulary
 
 *Reference: T1 Kästner ch3 — the ML terminology the deck's agenda promised but stopped short of.*
 
-### 2.1 Algorithm vs model, training vs inference
+#### 2.1 Algorithm vs model, training vs inference
 
 **Intuition** — Two different things both get called "the ML", and keeping them apart is most of the clarity in this course. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs once, at training. The model runs a billion times, in production.
 
@@ -107,7 +109,7 @@ The nesting, stated flatly in T1: **AI ⊃ machine learning ⊃ deep learning**,
 > - Trained models live in a **model registry** (MLflow Model Registry, SageMaker) — versioned, staged (staging → production), and rolled back like any other artifact. The registry is to models what git is to code.
 > - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what S14's provenance section is about.
 
-### 2.2 Parameters, hyperparameters, and the compiler analogy
+#### 2.2 Parameters, hyperparameters, and the compiler analogy
 
 **Intuition** — Inside a model there are numbers the algorithm *learned* and numbers you *chose*. Learned → **parameters**. Chosen → **hyperparameters**.
 
@@ -137,7 +139,7 @@ The nesting, stated flatly in T1: **AI ⊃ machine learning ⊃ deep learning**,
 
 **Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. T1's precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
 
-### 2.3 Terminology traps
+#### 2.3 Terminology traps
 
 T1 devotes a section to this, which signals it can be asked.
 
@@ -149,11 +151,13 @@ T1 devotes a section to this, which signals it can be asked.
 
 ---
 
-## 3. Two lifecycles: the SDLC and the ML pipeline
+## Part 2 · Process — what engineering already knows
+
+### 3. Two lifecycles: the SDLC and the ML pipeline
 
 *Reference: T1 Kästner ch1 (why the SDLC assumption breaks) & ch3 (the ML pipeline); for the SDLC itself, any SE text (Sommerville, *Software Engineering*).*
 
-### 3.1 The Software Development Life Cycle
+#### 3.1 The Software Development Life Cycle
 
 **Intuition** — A structured, repeating process for building software: plan it, understand it, design it, build it, check it, ship it, keep it alive. A cycle, not a line — maintenance feeds back into planning.
 
@@ -174,7 +178,7 @@ flowchart LR
 
 **Tradeoff / when the SDLC assumption fails** — The phases are always present; running them **once, in strict order** (Waterfall) only works when requirements are fixed and knowable up front. ML violates that by construction — you cannot specify the accuracy target before seeing whether the data supports it. That is the *lack of specifications* problem, developed in section 8.1.
 
-### 3.2 The machine-learning pipeline
+#### 3.2 The machine-learning pipeline
 
 **Intuition** — Training is one step of many. Everything before it is making data fit to learn from; everything after is deciding whether it's good enough and keeping it alive.
 
@@ -200,7 +204,7 @@ Two engineering-relevant properties, both from T1:
 
 **Worked example** — Fraud detection. *Requirements* — catch fraud above ₹5,000 within 200ms. *Collection* — 18 months of transactions. *Labeling* — confirmed chargebacks, which arrive 30–90 days late (a real problem, not a footnote). *Cleaning/features* — merchant risk score, velocity in last hour. *Training* — six lines. *Evaluation* — recall at a fixed false-positive rate. *Deployment* — behind the payment API. *Monitoring* — recall against chargebacks as they arrive.
 
-### 3.3 How the two relate
+#### 3.3 How the two relate
 
 Worth being able to state, because the exam can ask it either way round:
 
@@ -220,7 +224,7 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
 ---
 
-## 4. From Waterfall to ADLC
+### 4. From Waterfall to ADLC
 
 *Reference: R1 Tech Mahindra ADLC white paper (held in `/_library/`).*
 
@@ -236,7 +240,7 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
 **Worked example** — Fraud detector under Waterfall: a 60-page spec, then discovering in UAT that the label definition was wrong, then a six-month delay. Under ADLC: AI drafts the spec, generates test data covering fraud edge cases, writes the deployment scripts — so "the label definition is wrong" → corrected and redeployed takes days.
 
-### What the report is actually about
+#### What the report is actually about
 
 *The slide shows only the evolution table. The paper's real subject is different, and more useful for this course.*
 
@@ -250,7 +254,7 @@ Concretely: an Agile team on a 4-week iteration adds an AI pair programmer. Deve
 
 *This is a local-optimisation trap, and it's the same shape as 546's central theme: improving one component doesn't improve the system. Compare section 1 — Sidney's models were excellent and the business still failed.*
 
-### The five GenAI capabilities, and where they pay
+#### The five GenAI capabilities, and where they pay
 
 | Capability | What it does |
 |---|---|
@@ -271,7 +275,7 @@ Claimed productivity improvement, by SDLC phase:
 
 *Note the shape: **Build and Test gain most (30%), Design least (15%)**. Design is judgment-heavy and hardest to automate — which is precisely why modules 2–3 of this course are about design and not about coding.*
 
-### Why adoption fails — four categories
+#### Why adoption fails — four categories
 
 | Category | Representative failure |
 |---|---|
@@ -282,7 +286,7 @@ Claimed productivity improvement, by SDLC phase:
 
 That last row is worth pausing on. It's an *organisational* failure mode, not a technical one — the efficiency gain is real and gets resisted because of what it implies for budgets and jobs. The report's remedy is to **incentivise leaders for efficiency gains** rather than punish them with reduced budgets.
 
-### The four-stage adoption journey
+#### The four-stage adoption journey
 
 ```mermaid
 flowchart LR
@@ -304,11 +308,13 @@ Cross-link: → **546 S15** (ADLC phases in detail)
 
 ---
 
-## 5. How software and data got here
+## Part 3 · Context
+
+### 5. How software and data got here
 
 *Reference: deck only for the framing; cloud-native evolution is developed in 549 S2–S3 and `_shared/docker-k8s.md`.*
 
-### 5.1 Evolution of software development
+#### 5.1 Evolution of software development
 
 **Intuition** — Four things evolved *together*, not separately: how you develop, how the app is structured, how you ship it, what it runs on. Each era's four choices reinforce each other.
 
@@ -324,7 +330,7 @@ Cloud Native App = Agile + DevOps + Microservices + Containers + Cloud
 
 **Tradeoff / when NOT to go cloud-native** — Microservices and containers buy independent deployment and scaling, and cost you distributed-system problems you didn't previously have: network failures between services, distributed tracing, eventual consistency, far more operational surface. A monolith on one server is genuinely right for a small team with modest load. "Cloud native" is not a maturity score.
 
-### 5.2 Evolution of data
+#### 5.2 Evolution of data
 
 **Intuition** — Sixty years of one pressure: more data than the previous generation's tools could hold, forcing a new layer each time.
 
@@ -347,7 +353,7 @@ Cross-link: → `_shared/docker-k8s.md` · **549 S2–S3** · **536 S1–S2**
 
 ---
 
-## 6. What data science is
+### 6. What data science is
 
 *Reference: deck; the DS Venn and the "hierarchy of needs" are standard framings (Monica Rogati, "The AI Hierarchy of Needs").*
 
@@ -388,13 +394,15 @@ flowchart BT
 
 ---
 
-## 7. Who builds these systems
+## Part 4 · People and judgment
+
+### 7. Who builds these systems
 
 *Reference: T1 Kästner ch1 (data scientists vs software engineers; T-shaped people; unicorns).*
 
 **Intuition** — Roles exist because different failures need different specialists watching for them. In ML systems the roles come from two different traditions that were trained differently and mean different things by "done" — which is where the friction lives.
 
-### 7.1 Roles in the SDLC
+#### 7.1 Roles in the SDLC
 
 | Role | Responsibility |
 |---|---|
@@ -409,7 +417,7 @@ flowchart BT
 | Scrum Master | Facilitates Agile, removes impediments |
 | UX/UI Designers | Design intuitive interfaces |
 
-### 7.2 The three data roles
+#### 7.2 The three data roles
 
 Distinguished by **what they hand over**, and the handovers get progressively harder to engineer.
 
@@ -447,7 +455,7 @@ flowchart LR
 
 **Tradeoff / when the one-time forecast is correct** — The data scientist's diagram genuinely is the right shape for a pricing study, a feasibility check, a board question. Building the full ML-engineer loop for a question asked once is waste. The failure this course targets is the opposite: a one-time-forecast notebook promoted into a production dependency without the ground-truth loop, degrading silently.
 
-### 7.3 Data scientists vs software engineers — the actual friction
+#### 7.3 Data scientists vs software engineers — the actual friction
 
 T1 states its own central theme outright: *how to get data scientists and software engineers to each contribute their distinct expertise while effectively working together.* The friction isn't skill, it's different notions of what "done" means.
 
@@ -472,13 +480,13 @@ Cross-link: → `_shared/ml-lifecycle.md` · **546 M1 Interdisciplinary Teams** 
 
 ---
 
-## 8. What ML changes about engineering
+### 8. What ML changes about engineering
 
 *Reference: T1 Kästner ch1 (the three challenges, each "harder but not new").*
 
 **Intuition** — There's an open debate about whether ML fundamentally changes engineering or just demands that we finally apply existing practice rigorously. T1 gives three challenges, and for each argues the challenge is *harder* but *not new*. That two-part shape — challenge, then "but we've seen this before" — is what makes it exam-friendly, and you should reproduce both halves.
 
-### 8.1 Lack of specifications
+#### 8.1 Lack of specifications
 
 Traditional engineering relies on decomposition: specify each component, build and test separately, compose. T1's contrast:
 
@@ -502,7 +510,7 @@ The deep shift: **deductive reasoning** (logic-based, applying rules) → **indu
 
 *But not new:* software engineering has a long history of building safe systems from unreliable components, and comprehensive formal specifications were always rare. Engineers already cope with vague specs via agile methods, cross-team communication, and lots of testing.
 
-### 8.2 Interacting with the real world
+#### 8.2 Interacting with the real world
 
 Models trained on observations of the world, then acting on that world:
 
@@ -513,7 +521,7 @@ Models trained on observations of the world, then acting on that world:
 
 *But not new:* software has harmed people without ML — radiation overdoses, crashed planes and spacecraft. The established response is requirements engineering, hazard analysis, threat modelling. ML makes it *harder* because more components are poorly understood and the data isn't neutral — so requirements engineering matters *more*, not less.
 
-### 8.3 Data-focused and scalable
+#### 8.3 Data-focused and scalable
 
 Data that doesn't fit one machine; distributed training and serving; **the ML flywheel** — more users → more data → better models → more users. Large foundation models need expensive hardware even for inference, forcing dedicated machines accessed remotely.
 
@@ -521,7 +529,7 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 ---
 
-## 9. The risk spectrum
+### 9. The risk spectrum
 
 *Reference: T1 Kästner ch1 (the risk/rigour argument and the enduring principles).*
 
@@ -549,7 +557,7 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 ---
 
-## 10. Foundation models and prompting
+### 10. Foundation models and prompting
 
 *Reference: T1 Kästner ch3 (foundation models & prompting); the RAG stack is built hands-on in 546 S6.*
 
@@ -599,7 +607,7 @@ Cross-link: → `_shared/rag.md` · **546 S6** · **536 S10, S12** · **521 S7�
 
 ---
 
-## 11. MLOps and responsible ML
+### 11. MLOps and responsible ML
 
 *Reference: T1 Kästner ch1 (MLOps & responsible ML as cross-cutting concerns).*
 

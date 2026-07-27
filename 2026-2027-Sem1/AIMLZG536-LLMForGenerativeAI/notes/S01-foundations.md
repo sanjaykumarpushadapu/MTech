@@ -53,7 +53,9 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 ---
 
-## 1. What a language model is
+## Part 1 · What a language model is
+
+### 1. What a language model is
 
 *Reference: T1 Jurafsky & Martin, *Speech and Language Processing* ch3 (N-gram language models) — the P(W) framing.*
 
@@ -80,7 +82,7 @@ Same words, different order. A language model that has learned English assigns f
 
 ---
 
-## 2. What makes a language model "large"
+### 2. What makes a language model "large"
 
 *Reference: R1 Raschka, *Build a Large Language Model (From Scratch)* ch1.*
 
@@ -96,7 +98,7 @@ LLMs are **deep neural networks** trained on that data.
 
 ---
 
-## 3. Generation as prediction
+### 3. Generation as prediction
 
 *Reference: T2 Alammar & Grootendorst, *Hands-On Large Language Models* ch1.*
 
@@ -133,7 +135,9 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 ---
 
-## 4. Self-attention
+## Part 2 · How the machinery works
+
+### 4. Self-attention
 
 *Reference: T2 ch3; the original ["Attention Is All You Need"](https://arxiv.org/abs/1706.03762) (Vaswani et al. 2017); [Alammar, "The Illustrated Transformer"](https://jalammar.github.io/illustrated-transformer/).*
 
@@ -233,7 +237,7 @@ That last line **is** attention: each token's output is a **weighted average of 
 
 ---
 
-## 5. Multi-head attention
+### 5. Multi-head attention
 
 *Reference: "Attention Is All You Need" sec. 3.2.2; Alammar's *Illustrated Transformer*.*
 
@@ -278,7 +282,7 @@ Each head runs the exact five-step computation from section 4, just in 64 dimens
 
 ---
 
-## 6. The transformer block
+### 6. The transformer block
 
 *Reference: T2 ch3; "Attention Is All You Need" sec. 3. On pre-norm specifically, Xiong et al. 2020, "On Layer Normalization in the Transformer Architecture".*
 
@@ -338,7 +342,7 @@ Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]
 
 ---
 
-## 7. Positional encoding
+### 7. Positional encoding
 
 *Reference: T2 ch3; RoPE — Su et al. 2021, ["RoFormer"](https://arxiv.org/abs/2104.09864).*
 
@@ -366,7 +370,9 @@ Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.9
 
 ---
 
-## 8. From text to tokens to embeddings
+## Part 3 · Text in, text out
+
+### 8. From text to tokens to embeddings
 
 *Reference: R1 Raschka ch2 (working with text data) — the embedding lookup and special tokens.*
 
@@ -431,7 +437,7 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 ---
 
-## 9. The language modelling head, and weight tying
+### 9. The language modelling head, and weight tying
 
 *Reference: weight tying — Press & Wolf 2017, ["Using the Output Embedding to Tie Word Vectors"](https://arxiv.org/abs/1608.05859).*
 
@@ -486,7 +492,7 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 ---
 
-## 10. Context length
+### 10. Context length
 
 *Reference: follows from section 4's O(n²) attention cost and KV-cache growth — no single canonical text; the framing is the deck's.*
 
@@ -496,7 +502,9 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 ---
 
-## 11. LLM architectures
+## Part 4 · The landscape
+
+### 11. LLM architectures
 
 *Reference: the source papers — BERT (Devlin et al. 2018), GPT, T5 (Raffel et al. 2020); "Attention Is All You Need" for the original encoder–decoder figure.*
 
@@ -540,11 +548,11 @@ And the zoom-ins, which are section 4 and section 5 in picture form: **scaled do
 
 ---
 
-## 12. Tokenization
+### 12. Tokenization
 
 *Reference: [HuggingFace NLP course ch6](https://huggingface.co/learn/nlp-course/chapter6) (tokenizers); BPE — Sennrich et al. 2016.*
 
-### 12.1 Why subwords
+#### 12.1 Why subwords
 
 **Intuition** — the deck's framing: **common words end up in the subword vocabulary; rarer words are split into components** (sometimes intuitive, sometimes not). Worst case, a word is split into as many subwords as it has characters.
 
@@ -555,7 +563,7 @@ la##ern##           →  misspellings
 Transformer##ify    →  novel items
 ```
 
-### 12.2 Three types of token
+#### 12.2 Three types of token
 
 | Type | How | Problem it solves / creates |
 |---|---|---|
@@ -563,7 +571,7 @@ Transformer##ify    →  novel items
 | **Subword tokens** | Break unknown words into smaller pieces already in the vocabulary | **Can represent new words**; the standard choice |
 | **Byte tokens** | Vocabulary of **UTF-8 bytes (256)**; **one token = one byte** | No OOV ever; very long sequences. "Apple" → `[65][112][112][108][101]` = 5 tokens. Used by **tokenizer-free models — ByT5, CANINE** |
 
-### 12.3 Subword algorithms
+#### 12.3 Subword algorithms
 
 Three, all sharing the same two-part structure:
 
@@ -580,7 +588,7 @@ Every one has **two parts** — this is the definitional split, and it's examina
 
 The vocabulary is built **dynamically**: frequent words get their own tokens, rare words get split.
 
-### 12.4 BPE — worked example, reproduce this by hand
+#### 12.4 BPE — worked example, reproduce this by hand
 
 The algorithm: **pre-tokenize** into words (rule-based), build a **word dictionary with frequency counts**, start from a **uni-character vocabulary**, then **merge the most frequent adjacent pair** repeatedly until the target vocabulary size is reached.
 
@@ -611,7 +619,7 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 
 **Limitations** — can produce **fragmented tokens for languages with complex morphology**; **may not capture semantic meaning** as effectively as other methods.
 
-### 12.5 SentencePiece
+#### 12.5 SentencePiece
 
 **Language-independent** subword tokenizer that learns **directly from raw Unicode text** with a fixed vocabulary size — **no whitespace pre-tokenizer required**, which is what makes it language-independent.
 
@@ -630,7 +638,7 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 
 The first wins if its learned piece probabilities score higher.
 
-### 12.6 SentencePiece vs tiktoken
+#### 12.6 SentencePiece vs tiktoken
 
 The distinction, stated precisely: they differ in **what unit they merge over (characters vs bytes)** and **whether they pre-split the text (no vs regex-yes)**.
 
@@ -667,7 +675,7 @@ tiktoken BPE (Llama-3):
 
 ---
 
-## 13. The LLM landscape
+### 13. The LLM landscape
 
 *Reference: T2 ch1 for the history; scaling laws — Kaplan et al. 2020 and Hoffmann et al. 2022 (Chinchilla).*
 

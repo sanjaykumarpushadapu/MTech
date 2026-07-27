@@ -39,7 +39,9 @@ Conversational AI — agents — is one of the most employable specialisations i
 
 ---
 
-## 1. What conversational AI is
+## Part 1 · What the field is
+
+### 1. What conversational AI is
 
 *Reference: deck — the definition and the understand/reason/act frame are the instructor's own.*
 
@@ -67,7 +69,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 ---
 
-## 2. The evolution, 1960s → 2026
+### 2. The evolution, 1960s → 2026
 
 *Reference: deck; for the agent era, Masterman et al. 2024, [The Landscape of AI Agents](https://arxiv.org/abs/2404.11584).*
 
@@ -100,7 +102,7 @@ Cross-link: → `_shared/agents.md` · **536 S1** (same landscape, model-side fr
 
 ---
 
-## 3. Architecture: traditional vs agentic
+### 3. Architecture: traditional vs agentic
 
 *Reference: deck; Anthropic, [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents).*
 
@@ -152,7 +154,7 @@ flowchart TD
 
 ---
 
-## 3b. Workflows vs agents — and when not to build one
+### 3b. Workflows vs agents — and when not to build one
 
 *Reference: Anthropic, [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Dec 2024) — the course's primary text.*
 
@@ -223,7 +225,9 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 
 ---
 
-## 4. The six components of modern conversational AI
+## Part 2 · What a system is made of
+
+### 4. The six components of modern conversational AI
 
 *Reference: deck — the six-component taxonomy is standard conversational-AI architecture.*
 
@@ -262,7 +266,7 @@ Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (R
 
 ---
 
-## 5. Frameworks
+### 5. Frameworks
 
 *Reference: deck; each framework's own docs (langchain.com, llamaindex.ai, microsoft.github.io/autogen).*
 
@@ -291,7 +295,9 @@ Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (R
 
 ---
 
-## 6. Tokenization
+## Part 3 · The model layer
+
+### 6. Tokenization
 
 *Reference: [HuggingFace NLP course ch6](https://huggingface.co/learn/nlp-course/chapter6); BPE — Sennrich et al. 2016. Shared with 536 S1/S12 and `_shared/tokenization.md`.*
 
@@ -363,7 +369,7 @@ Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subject
 
 ---
 
-## 7. Context windows
+### 7. Context windows
 
 *Reference: "lost in the middle" — Liu et al. 2023, [arXiv:2307.03172](https://arxiv.org/abs/2307.03172).*
 
@@ -386,7 +392,7 @@ Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subject
 
 ---
 
-## 8. LLMs as the brain — capabilities and limits
+### 8. LLMs as the brain — capabilities and limits
 
 *Reference: deck — the capability→consequence mapping is the deck's own.*
 
@@ -452,7 +458,9 @@ flowchart LR
 
 ---
 
-## 9. The seven-stage agent lifecycle
+## Part 4 · How an agent actually runs
+
+### 9. The seven-stage agent lifecycle
 
 *Reference: deck — the seven-stage framing is the instructor's own (deck only).*
 
@@ -511,7 +519,7 @@ Cross-link: → `_shared/agents.md`
 
 ---
 
-## 10. Protocol landscape
+### 10. Protocol landscape
 
 *Reference: MCP — [modelcontextprotocol.io](https://modelcontextprotocol.io) (Anthropic 2024); A2A — Google's spec.*
 
@@ -544,7 +552,7 @@ Cross-link: → `_shared/agents.md`, `_shared/api-design.md` · **549 S1** (REST
 
 ---
 
-## 11. Production concerns
+### 11. Production concerns
 
 *Reference: deck; the tools' own docs (LangSmith, Arize Phoenix, OpenTelemetry).*
 
@@ -577,7 +585,7 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 ---
 
-## 12. Open problems
+### 12. Open problems
 
 *Reference: deck; each research direction is its own paper (MemGPT, Titans, GAIA, SWE-bench, Constitutional AI).*
 

@@ -196,8 +196,8 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`. A note is a **knowledge 
 
 1. **Title** — `<Subject Name> · Session NN · <Topic>`, leading with the subject **name** (e.g. "Conversational AI"), not the code. Then a one-line identity aside: **just** `*Learned <date>*` — no instructor, sources or other metadata (per-concept `*Reference:*` lines carry provenance; the master index carries logistics).
 2. **Why this matters** — 2–4 sentences: what this is and why it's worth knowing *for a career*. The one bit of orientation that earns its place, because it frames the knowledge.
-3. **Topics** — the numbered index of concepts.
-4. **The concept body** — each concept in four parts, plus depth blocks and diagrams (below). This is the note.
+3. **Topics** — the numbered index of concepts, grouped into **Parts**.
+4. **The concept body**, organised as a two-level hierarchy that matches the index: **Parts are `##`** (`## Part 2 · How the machinery works`), **concepts are `### N.`** under their Part, **sub-sections are `#### N.M`**. Each concept follows the four-part shape plus depth blocks and diagrams (below). End-matter (Self-study / Lab / build and any appendix) stays at `##`. This grouping is what makes a 13-concept note navigable — don't leave the body as a flat list.
 5. **Self-study / Lab / build** — career-useful, stays in the body.
 6. **Exam-scope footer** — one italic line: this session's exam scope + a link to the subject `<code>-master.md`. **Course logistics — weights, dates, evaluation, lab environment, platform, study strategy — live ONCE in the master index, never per session.**
 
