@@ -107,6 +107,8 @@ The user uploads material session by session and says **subject, session number,
 
 **Auto-generated transcripts are noisy.** Technical terms come through mangled (`RoPE` → "rope", `SwiGLU` → "swiglue", `GQA` → "GQ A"). Reconcile against the slides, which have the correct spellings, and silently use the correct term in the note. Do not ask the user to clean transcripts first.
 
+**Transcripts are raw source, not knowledge base — do not commit them.** A transcript is read to *build or update* a note: fold the important content — the instructor's exact words, what got emphasised, off-slide clarifications, exam hints — into the session note, which is the durable record. Then the transcript's job is done. `source/transcripts/` is gitignored; a transcript may sit there locally while you work, but it is never committed. If a note later needs the transcript again, the user re-supplies it. The **note captures the value; the transcript is disposable.**
+
 ### Add your own clarity — within the scope the handout sets
 
 The sources define **what** is examinable. They are often poor at making it **understood**. Closing that gap is part of the job, not a liberty.
@@ -291,7 +293,7 @@ MTech/
     │   └── source/
     │       ├── README.md        ← Drive links only
     │       ├── MATERIAL-LOG.md  ← what material exists per session
-    │       └── transcripts/     ← plain-text transcripts (committable)
+    │       └── transcripts/     ← raw transcripts (gitignored — read & extract, never committed)
     ├── AIMLCZG549-APIDrivenCloudNativeSolutions/
     ├── AIMLCZG521-ConversationalAI/
     ├── AIMLZG546-SoftwareEngineeringForML/

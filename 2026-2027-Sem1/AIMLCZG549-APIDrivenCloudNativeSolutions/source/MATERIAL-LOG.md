@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | ✓ **R2 ch1 read** | ✓ Teams | ✅ `transcripts/S01-transcript-cleaned.md` | ✅ `notes/S01-api-basics.md` |
+| 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | ✓ **R2 ch1 read** | ✓ Teams | ✅ received & extracted into note (not stored) | ✅ `notes/S01-api-basics.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
@@ -98,5 +98,4 @@ The **Conference API** running example the deck names as self-study lives here.
 ## Where things live
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.
-Transcripts (`.txt`, `.srt`, `.vtt`) are small and plain text, so they **may** be committed if useful:
-put them in `source/transcripts/`. They are not blocked by `.gitignore`.
+Transcripts are **raw source, not committed** — `source/transcripts/` is gitignored. Read a transcript to build or update the note, fold the important content (instructor quotes, emphasis, off-slide clarifications) into it, then it's done. The note is the record.

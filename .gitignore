@@ -43,3 +43,9 @@ venv/
 Thumbs.db
 .vscode/
 .idea/
+
+# Transcripts — raw source, not knowledge base. Read them to build/update the note,
+# fold the important content (instructor quotes, emphasis, off-slide clarifications)
+# into the session note, then don't commit. The note is the record, not the transcript.
+2026-2027-Sem1/*/source/transcripts/*
+!2026-2027-Sem1/*/source/transcripts/.gitkeep

@@ -9,7 +9,7 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `Session-1-Foundations-of-ConvAI.pdf` (56 sl) | ✓ T1 *Building Effective Agents* · *Landscape of AI Agents* | ✓ Teams | ✅ `transcripts/S01-transcript-cleaned.md` | ✅ `notes/S01-foundations.md` |
+| 1 | ✓ `Session-1-Foundations-of-ConvAI.pdf` (56 sl) | ✓ T1 *Building Effective Agents* · *Landscape of AI Agents* | ✓ Teams | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` |
 | 2 |  |  |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
@@ -104,5 +104,4 @@ Still open: assignment duration (handout ~15 days vs slide ~3 weeks). **Plan for
 ## Where things live
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.
-Transcripts (`.txt`, `.srt`, `.vtt`) are small and plain text, so they **may** be committed if useful:
-put them in `source/transcripts/`. They are not blocked by `.gitignore`.
+Transcripts are **raw source, not committed** — `source/transcripts/` is gitignored. Read a transcript to build or update the note, fold the important content (instructor quotes, emphasis, off-slide clarifications) into it, then it's done. The note is the record.
