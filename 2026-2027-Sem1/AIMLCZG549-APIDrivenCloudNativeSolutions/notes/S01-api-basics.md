@@ -14,8 +14,8 @@ It matters beyond 549: **you will spend this entire semester calling REST APIs**
 | If you have… | Read |
 |---|---|
 | **10 minutes** | The closed-book cards — the `>` blockquotes |
-| **1 hour** (your Tuesday slot) | §5 REST and §8 the comparison table. Then run the two `curl` commands in §3 and §9 |
-| **Before the mid-sem** | All of it. §7b (north–south vs east–west) is the framing that makes §8 answerable |
+| **1 hour** (your Tuesday slot) | section 5 REST and section 8 the comparison table. Then run the two `curl` commands in section 3 and section 9 |
+| **Before the mid-sem** | All of it. section 7b (north–south vs east–west) is the framing that makes section 8 answerable |
 | **Tonight, 10 minutes** | `curl -X GET "https://jsonplaceholder.typicode.com/posts"` and install Postman |
 
 🔴 **549 has no textbook from session 4 onward.** Sessions 1–3 have R2 and R3 behind them; sessions 4–16 list only *"Web Resources, Lecture Notes."* **Collect every deck and recording, every weekend, without exception** — for this subject they are the syllabus, and a deck you didn't download may be gone.
@@ -60,7 +60,7 @@ It matters beyond 549: **you will spend this entire semester calling REST APIs**
 
 **Worked example** — Amazon Bedrock exposes `GET /models` to list models and `POST /models/{model-id}/invoke` to run inference. You never see the GPUs, the model weights, or the serving stack. You see a contract. Same for Hugging Face, LangChain and Prefect — which is exactly why this course is API-driven.
 
-**Tradeoff / the cost of the contract** — Once published, the contract binds you. Clients build against it and break when it changes, which is why §9 (versioning) exists as a topic at all. An internal function can be refactored freely; a published API cannot. **Publishing an API is a commitment, not a feature.**
+**Tradeoff / the cost of the contract** — Once published, the contract binds you. Clients build against it and break when it changes, which is why section 9 (versioning) exists as a topic at all. An internal function can be refactored freely; a published API cannot. **Publishing an API is a commitment, not a feature.**
 
 > **Closed-book card**
 > API = **a contract between a service and its clients**. Rules and protocols letting systems exchange data and integrate function without the user knowing the underlying code. **API-first** = the app is designed as a set of APIs. Cost: a published contract binds you — hence versioning.
@@ -134,16 +134,16 @@ flowchart LR
 
 **Endpoints** — simple URLs representing a collection of objects or a single object. Resources live on the server; each endpoint is a URL designed to perform **a single function**. The deck's phrasing is worth keeping: endpoints are the **"doors" or "paths"** through which a client sends requests.
 
-*A point a student got wrong in class, worth pinning down: an endpoint is **not** just the resource path — it is **host + resource path together**.* Take `https://api.amazon.com/products/101` and split it into its four parts:
+*A student got this wrong in class: an endpoint is **not** just the resource path — it's **host + resource path together**.* Split `https://api.amazon.com/products/101`:
 
-| Part | In the example | What it is |
+| Part | Example | What it is |
 |---|---|---|
-| Protocol | `https://` | How to talk to the server — HTTPS = the secure form |
+| Protocol | `https://` | HTTPS = the secure form |
 | Host | `api.amazon.com` | Which server to reach |
-| Resource | `/products` | What kind of thing you want |
-| Id | `/101` | Which specific one — present **only** when addressing a single item |
+| Resource | `/products` | What kind of thing |
+| Id | `/101` | Which specific one — present **only** for a single item |
 
-The collection-vs-item split from §4 lives in that last part: `/products` (no id) is the collection; `/products/101` (id present) is one item. Same host, same resource name — the presence of the id changes what you're addressing.
+That last part carries the collection-vs-item split (section 4): `/products` = the collection, `/products/101` = one item. Only the id changes what you're addressing.
 
 **Requests** — every request begins by choosing an HTTP **method** (verb):
 
@@ -156,7 +156,7 @@ The collection-vs-item split from §4 lives in that last part: `/products` (no i
 
 **Responses** — data sent back after processing, formatted as **JSON or XML**, with a status code.
 
-**Read the first digit first.** Every status code falls into one of **five classes**, and the leading digit tells you the class before you know the exact code — the instructor drilled this, so learn the classes, not just the seven codes below:
+**Read the first digit first** — it puts every code in one of **five classes**. The instructor drilled this: learn the classes, not just the codes.
 
 | Class | Meaning | You'll meet |
 |---|---|---|
@@ -184,7 +184,7 @@ The codes worth knowing by name:
 
 Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we don't know who you are*. 403 = *we know who you are and you still can't*.
 
-The **3xx family** trips people up because you rarely see it — the browser follows the redirect silently. But it's happening constantly: type an `http://` address and land on `https://` (that's a **301**); finish a checkout and get bounced to an order-confirmation page (that's a **303**). The lesson: a redirect is not an error — *"the work will not stop, but it has to look for another URL."*
+The **3xx family** is invisible — the browser follows the redirect silently — but constant: type `http://` and land on `https://` (**301**); finish a checkout and get bounced to a confirmation page (**303**). A redirect is not an error — *"the work doesn't stop, it just looks for another URL."*
 
 **Worked example — run this, it takes ten seconds:**
 
@@ -194,7 +194,7 @@ curl -X GET "https://jsonplaceholder.typicode.com/posts"
 
 Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · response = posts in JSON. The deck also suggests trying it in **Postman**, which is worth installing now — you'll want it for labs 3 and 4.
 
-**Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (§7).
+**Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (section 7).
 
 > **Closed-book card**
 > HTTP API components: **endpoint** (URL = **host + resource path**, one function, the "door"), **request** (method + endpoint), **response** (JSON/XML + status). Methods: **GET** retrieve · **POST** submit · **PUT** update · **DELETE** delete.
@@ -605,7 +605,7 @@ The deck's comparison table, which is close to guaranteed exam material:
 | Code generation | **gRPC** — native, 10+ languages · GraphQL — GraphQL Code Generator (3rd party) · REST — Swagger (3rd party) |
 | Payload data structure | GraphQL — JSON · REST — JSON & XML · gRPC — **Protocol Buffers** |
 
-**The one-line summary worth carrying into the exam:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (§2), not a different API style.
+**The one-line summary worth carrying into the exam:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
 
 > **Closed-book card**
 > REST → web standard, **caching**, browser support, JSON & XML, Swagger (3rd-party codegen). GraphQL → **data fetch** in one call, browser support, JSON, GraphQL Code Generator (3rd party). gRPC → **native code generation for 10+ languages**, **Protocol Buffers**, inter-service. All three synchronous.
@@ -679,7 +679,7 @@ Each version reachable at its own endpoint:
 | 3 | **Conference API** | R2 Gough et al., *Mastering API Architecture* | The textbook's running example |
 | 4 | **AsyncAPI Specification** | https://www.asyncapi.com/en | The async counterpart to OpenAPI — **event-driven architectures** |
 
-AsyncAPI is the one to actually look at: it closes the loop on §2 by showing that asynchronous APIs have their own description standard, exactly parallel to OpenAPI for synchronous ones.
+AsyncAPI is the one to actually look at: it closes the loop on section 2 by showing that asynchronous APIs have their own description standard, exactly parallel to OpenAPI for synchronous ones.
 
 ---
 
@@ -714,4 +714,4 @@ No lab this session — **549 Lab 1 is at session 5**. But two things are worth 
 1. `curl -X GET "https://jsonplaceholder.typicode.com/posts"` — confirms you can read an API response.
 2. Install **Postman**, repeat the same call. You'll need it from lab 3 onward.
 
-Then, if the hour allows: build the Books API from §4 in FastAPI. It's ~30 lines, it produces auto-generated docs at `/docs`, and it makes every abstract term in this session concrete.
+Then, if the hour allows: build the Books API from section 4 in FastAPI. It's ~30 lines, it produces auto-generated docs at `/docs`, and it makes every abstract term in this session concrete.
