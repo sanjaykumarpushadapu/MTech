@@ -169,6 +169,17 @@ The sources define **what** is examinable. They are often poor at making it **un
 
 **The test:** does this help the reader *reproduce the concept under exam pressure* or *use it competently on the job*? If neither, cut it.
 
+### Write for the average student — the comprehension bar
+
+**Every note must be followable by an average student** — a working professional with a CS background but rusty maths — not only by someone who already knows the topic. Clearing that bar is a hard requirement, not a nice-to-have. Correct-but-impenetrable is a fail.
+
+- **Plain-language on-ramp before any dense mechanism.** One sentence saying what a symbol or step *does* in words, before the formula does it in symbols — *"softmax turns a list of scores into probabilities that add to 1."* The formula still follows; it's just no longer the reader's first contact with the idea.
+- **One concrete everyday analogy per hard concept.** Q/K/V as a group chat, idempotency as an elevator button, an API contract as a restaurant menu, workflow-vs-agent as recipe-vs-chef. Keep it short — the analogy is scaffolding, the mechanism still carries the weight.
+- **Signpost heavy arithmetic as skimmable on a first pass**, and state the one sentence to walk away with, so cognitive load never blocks the idea. A worked example the reader skips in fear teaches nothing.
+- **More explanation belongs at the hard spots, not everywhere.** Padding an already-clear section raises load and works against comprehension — the enemy is confusion *and* volume. Add the on-ramp where a reader stalls; leave the easy sections tight.
+
+**The comprehension test:** could an average student, reading this section cold, follow it without reaching for a second source? If not, add the on-ramp or the analogy — don't just restate the formula louder.
+
 ## 7 · Diagrams
 
 **Every concept in every note — session notes and `_shared/` notes alike — has at least one Mermaid diagram.** A concept with no picture is one you re-read three times and still don't hold.
@@ -285,6 +296,7 @@ git status --short                 # nothing binary or secret staged
 - [ ] **Every handout sub-topic covered** — checked against the handout file itself, not the master index
 - [ ] Every deck agenda item covered, or the gap flagged inline in the note
 - [ ] Every concept has: Intuition · Mechanism · Worked example · Tradeoff · diagram
+- [ ] **An average student could follow every concept cold** — plain-language on-ramp before dense maths, one everyday analogy per hard concept, heavy arithmetic signposted as skimmable
 - [ ] No source references (no `*Reference:*`, `T1`/`R2`/`ch3`, "the deck") and no cross-subject links
 - [ ] Any arithmetic in a worked example was actually executed
 - [ ] Master index row + `PROGRESS.md` row updated
