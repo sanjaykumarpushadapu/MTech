@@ -43,9 +43,9 @@ Every handout's **Part B: Learning Plan** table governs the course:
 | **Sub-Topics** | The note's sections — **and the definition of examinable scope** |
 | **Reference** | Where the instructor built the slides from |
 
-**Verify coverage against the handout verbatim, not against a summary of it.** Read the `.docx`/`.pdf` itself (`python-docx`, `pdfplumber`) and check every bullet. A master-index row is a derived summary and can silently drop a sub-topic — 549's "Mocking" survived three reviews that way, because the word appeared in the note only inside *To Kill a Mockingbird*.
+**Verify coverage against the handout verbatim, not against a summary of it.** Read the `.docx`/`.pdf` itself (`python-docx`, `pdfplumber`) and check every bullet. A master-index row is a derived summary and can silently drop a sub-topic — 549's "Mocking" survived three reviews that way, because the word appeared in the note only inside *To Kill a Mockingbird*. A handout bullet counts as covered only when the note contains a **clear, dedicated explanation of that exact topic** that a reviewer can point to by section heading or clearly bounded subsection — not a passing mention, not a keyword hit, and not an example that happens to use the same word.
 
-**Also check the deck's own agenda slide.** It is the instructor's contract for that session and can differ from the handout in both directions — 546's agenda promised four blocks and the deck delivered three, ending before "Types of ML Domains".
+**Also check the deck's own agenda slide.** It is the instructor's contract for that session and can differ from the handout in both directions — 546's agenda promised four blocks and the deck delivered three, ending before "Types of ML Domains". An agenda item counts as covered only when the note teaches it as a section or clearly identifiable subsection that a reviewer can point to immediately; do not mark it covered because nearby material is "close enough."
 
 ### What the Reference column tells you to do
 
@@ -136,7 +136,7 @@ Plus **at least one Mermaid diagram**. All are mandatory; the checklist in §11 
 **The most important rule here.** A note is one notebook on a topic, assembled from wherever facts came from — not a stack of source summaries.
 
 - **Never** create "From the slides" / "From the textbook" sections.
-- **One topic, one place.** Slide diagram + textbook mechanism + instructor's aside all live in that topic's section.
+- **One topic, one place.** Slide diagram + textbook mechanism + instructor's aside all live in that topic's section. If the handout names a topic separately, it still needs a clearly findable home in the note — ideally its own heading or a clearly named subsection, not a sentence buried inside another section.
 - **No duplication.** If a concept spans two topics, write it in the more natural home and cross-reference.
 - **No source overrides another** — they combine. Flag `⚠️` only on genuinely incompatible factual claims (a date, a weight, a definition).
 - **Order for learning, not arrival.** Vocabulary before the concepts using it; motivation before mechanism.
@@ -178,7 +178,7 @@ The sources define **what** is examinable. They are often poor at making it **un
 - **One concrete everyday analogy per hard concept.** Q/K/V as a group chat, idempotency as an elevator button, an API contract as a restaurant menu, workflow-vs-agent as recipe-vs-chef. Keep it short — the analogy is scaffolding, the mechanism still carries the weight.
 - **Signpost heavy arithmetic as skimmable on a first pass**, and state the one sentence to walk away with, so cognitive load never blocks the idea. A worked example the reader skips in fear teaches nothing.
 - **More explanation belongs at the hard spots, not everywhere.** Padding an already-clear section raises load and works against comprehension — the enemy is confusion *and* volume. Add the on-ramp where a reader stalls; leave the easy sections tight.
-- **On review passes, prefer adding missing clarity over compressing existing material.** If a handout topic is present but thin, the default fix is to add the missing explanation, worked example, decision rule, or diagram — **more understanding, not less text**. Only compress when the extra words are repetition or note-about-the-note prose rather than knowledge.
+- **Every handout topic and sub-topic must be explicitly covered in the note.** Do not treat a syllabus item as "covered" because it is only implied, briefly named, partially folded into another section, or matched by keyword search alone. On review, check each handout bullet against the note and record the exact heading or subsection where it is taught. If you cannot point to one immediately, treat the topic as missing and add the explanation, worked example, diagram, or decision rule until it is **clearly present, easy to find, and learnable on its own**.
 
 **The comprehension test:** could an average student, reading this section cold, follow it without reaching for a second source? If not, add the on-ramp or the analogy — don't just restate the formula louder.
 
@@ -297,8 +297,8 @@ cd tools && npm run check          # every diagram parses; no LR diagram too wid
 git status --short                 # nothing binary or secret staged
 ```
 
-- [ ] **Every handout sub-topic covered** — checked against the handout file itself, not the master index
-- [ ] Every deck agenda item covered, or the gap flagged inline in the note
+- [ ] **Every handout topic and sub-topic explicitly covered** — checked against the handout file itself, not the master index; no implied coverage, no keyword-only matches
+- [ ] Every deck agenda item explicitly covered, or the gap flagged inline in the note
 - [ ] Every concept has: Intuition · Mechanism · Worked example · Tradeoff · diagram
 - [ ] **An average student could follow every concept cold** — plain-language on-ramp before dense maths, one everyday analogy per hard concept, heavy arithmetic signposted as skimmable
 - [ ] No source references (no `*Reference:*`, `T1`/`R2`/`ch3`, "the deck") and no cross-subject links
