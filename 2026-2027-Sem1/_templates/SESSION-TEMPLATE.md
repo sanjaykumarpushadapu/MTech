@@ -28,7 +28,7 @@
 
 ### 1. <Concept name>
 
-*Reference: <durable source — spec / official docs / textbook chapter / canonical article / link>. Where only the deck exists, say so: "deck only; no durable source behind this."*
+<!-- No reference line, no source citation. State the knowledge directly. -->
 
 **Intuition** — what it actually is, in one or two plain sentences. No jargon that isn't defined here.
 
@@ -55,10 +55,10 @@ flowchart TD
 > ***In practice*** *(beyond the deck — how this is used on the job):*
 > The tools, the auth/cost/latency realities, the conventions, what production adds that the slide omits.
 
-> ***Going deeper*** *(beyond the deck — deeper mechanism or a useful adjacent concept the course skips):*
+> ***Going deeper*** *(deeper mechanism or a useful adjacent concept the course skips):*
 > Marked clearly, kept out of the examinable body.
 
-Cross-link: → `_shared/<topic>.md` · <other subjects/sessions>
+<!-- No cross-link line. Each subject's notes are self-contained — no pointers to other subjects. -->
 
 ---
 

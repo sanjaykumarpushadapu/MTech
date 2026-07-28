@@ -6,9 +6,9 @@
 
 This is the session that separates people who can *train* a model from people who can *ship* one — the difference that defines an ML **engineer**. Its central claim, which you'll spend a career proving true: **the model is rarely the problem; everything around it is.** Data quality, latency, cost, monitoring, fairness, the handoff between data scientists and engineers — that's where ML products actually live or die. This note gives you the vocabulary (algorithm vs model, parameters vs hyperparameters), the process (SDLC, ML pipeline, MLOps), and the judgment (the risk spectrum, when the general answer is the wrong one) to reason about real systems.
 
-Three sources, one argument: the slides give the process history, Kästner (T1) gives the failure evidence (**87% of ML projects fail**), the Tech Mahindra paper gives the local-optimisation trap. Read them as one.
+Three angles, one argument: the process history, the failure evidence (**87% of ML projects fail**), and the local-optimisation trap. Read them as one.
 
-**Running example throughout:** **fraud detection**, used in every section — and it's Kästner's own ch3 example too, so book and note align from page one.
+**Running example throughout:** **fraud detection**, used in every section — and it's the standard credit-card-fraud teaching example, so everything lines up from the start.
 
 ## Part 1 · The argument
 
@@ -16,13 +16,11 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 
 ### 1. Why this course exists
 
-*Reference: T1 Kästner, *Machine Learning in Production* ch1 (Introduction) — free online at mlip-cmu.github.io.*
-
 **Intuition** — You can train a good model and still have no product. The gap between "the model works in my notebook" and "customers pay for this and it doesn't fall over" is the entire subject of this course, and it's an engineering gap, not an ML gap.
 
 **The numbers** — consultants report **87% of ML projects fail**, and **53% never make it from prototype to production**.
 
-**Worked example — T1's spine, the transcription start-up.** Sidney, a data scientist, publishes state-of-the-art domain-specific speech recognition and starts a company selling transcription to researchers and conference organisers. The models are genuinely excellent. The business struggles anyway:
+**Worked example — the transcription start-up.** Sidney, a data scientist, publishes state-of-the-art domain-specific speech recognition and starts a company selling transcription to researchers and conference organisers. The models are genuinely excellent. The business struggles anyway:
 
 | What went wrong | Which module fixes it |
 |---|---|
@@ -36,9 +34,9 @@ Three sources, one argument: the slides give the process history, Kästner (T1) 
 | Medical diagnoses mistranscribed **with high confidence**; African American vernacular barely intelligible | Fairness, responsible ML (M7) |
 | No visibility into model performance unless a customer complained | Monitoring (M6), QA (M5) |
 
-**The line to remember** — T1's own framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
+**The line to remember** — the framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
 
-*The whole course in one picture (my own, after Sculley et al., "Hidden Technical Debt in ML Systems"):*
+*The whole course in one picture (my own — the classic "hidden technical debt" point):*
 
 ```mermaid
 flowchart LR
@@ -59,13 +57,9 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
-Cross-link: → **521 S1 section 1** (the same "it's a system, not a model" point from the agent side)
-
 ---
 
 ### 2. Machine learning vocabulary
-
-*Reference: T1 Kästner ch3 — the ML terminology the deck's agenda promised but stopped short of.*
 
 #### 2.1 Algorithm vs model, training vs inference
 
@@ -79,7 +73,7 @@ flowchart LR
     MOD -->|model inference| PRED[Prediction]
 ```
 
-The nesting, stated flatly in T1: **AI ⊃ machine learning ⊃ deep learning**, with **foundation models** a kind of large model typically produced by deep learning. Supervised ML learns from *(data, label)* pairs, where the label is the expected output.
+The nesting: **AI ⊃ machine learning ⊃ deep learning**, with **foundation models** a kind of large model typically produced by deep learning. Supervised ML learns from *(data, label)* pairs, where the label is the expected output.
 
 **Mechanism — what "training" actually does.** The algorithm searches for the function that best fits the examples, then freezes it:
 
@@ -100,7 +94,7 @@ Three consequences follow directly, and each drives a later session:
 
 **Tradeoff / when the distinction bites** — Software engineers routinely conflate the two and then reason wrongly about deployment: shipping the whole training environment to production "because we need sklearn", inflating the container and the attack surface. This distinction is what makes model serving a separate architectural concern (S12).
 
-> ***In practice*** *(beyond the deck — how "the model ships, not the algorithm" actually works):*
+> ***In practice*** *(beyond the course — how "the model ships, not the algorithm" actually works):*
 > - The model is **serialized** to a file and loaded by a runtime. Formats you'll meet: **pickle/joblib** (sklearn — convenient but unsafe to load from untrusted sources, and version-brittle), **ONNX** (framework-neutral, for cross-runtime serving), **safetensors** (the safe standard for deep-learning weights). "Which format" is a real deployment decision.
 > - Trained models live in a **model registry** (MLflow Model Registry, SageMaker) — versioned, staged (staging → production), and rolled back like any other artifact. The registry is to models what git is to code.
 > - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what S14's provenance section is about.
@@ -111,11 +105,11 @@ Three consequences follow directly, and each drives a later session:
 
 | | Set by | Example | Fixed when |
 |---|---|---|---|
-| Model architecture | You (T1 counts it as a hyperparameter) | 3-layer net; decision tree | Before training |
+| Model architecture | You (counts as a hyperparameter) | 3-layer net; decision tree | Before training |
 | **Hyperparameters** | You | Max depth = 2; learning rate; stopping criterion | Before training |
 | **Parameters** | The algorithm, from data | Threshold `amount > 500`; matrix weights | During training |
 
-**The analogy to remember**, in T1's words: *where a compiler takes source code to generate an executable function, an ML algorithm takes data to create a function (model). Just like the compiler, the ML algorithm is no longer used at runtime. Hyperparameters correspond to compiler options.*
+**The analogy to remember**: *where a compiler takes source code to generate an executable function, an ML algorithm takes data to create a function (model). Just like the compiler, the ML algorithm is no longer used at runtime. Hyperparameters correspond to compiler options.*
 
 | Traditional software | Machine learning |
 |---|---|
@@ -126,18 +120,18 @@ Three consequences follow directly, and each drives a later session:
 | Running the executable | Inference |
 | Bytecode + JVM | Serialized ("pickled") model + runtime |
 
-**Worked example — T1's own, and it's fraud detection.** A decision tree for credit-card fraud, trained with a hyperparameter capping nesting at two levels. The learned function is two nested if-then-else statements (the *internal structure*), with specific decision boundaries on `terminalRisk` and `amount` (the *parameters*). You chose "depth ≤ 2"; the data chose the thresholds.
+**Worked example — fraud detection.** A decision tree for credit-card fraud, trained with a hyperparameter capping nesting at two levels. The learned function is two nested if-then-else statements (the *internal structure*), with specific decision boundaries on `terminalRisk` and `amount` (the *parameters*). You chose "depth ≤ 2"; the data chose the thresholds.
 
-**Two consequences T1 draws out:**
+**Two consequences:**
 
-- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. *Where the randomness comes from (my clarity — T1 names the fact, not the cause): **random weight initialisation**, the **random order of mini-batches** in stochastic gradient descent, randomised techniques like **dropout**, and even **floating-point addition being non-associative on a GPU** — parallel threads sum partial results in whatever order they finish, giving bit-level-different totals. Same data, same code, slightly different model. A compiler has none of these, which is why its output is reproducible and a trained model's isn't.*
+- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. *Where the randomness comes from (my clarity — the fact is stated, not the cause): **random weight initialisation**, the **random order of mini-batches** in stochastic gradient descent, randomised techniques like **dropout**, and even **floating-point addition being non-associative on a GPU** — parallel threads sum partial results in whatever order they finish, giving bit-level-different totals. Same data, same code, slightly different model. A compiler has none of these, which is why its output is reproducible and a trained model's isn't.*
 - **Models are stored serialized, not as binaries** — an intermediate format of learned parameters, loaded by a runtime. Directly analogous to Java bytecode plus the JVM. Some infrastructure compiles models to native code for speed.
 
-**Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. T1's precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
+**Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. The precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
 
 #### 2.3 Types of ML domains
 
-⚠️ *The deck's own agenda (slide 14) promises "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but **the deck runs out at slide 28 on "Data Science — Hierarchy of Needs" and never reaches it**, and the recording doesn't cover it either. Filled in here because it is a named syllabus item. Expect it to reappear in session 2, which is titled "Foundations (cont.)".*
+⚠️ *The session agenda promises "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but **the material ends before reaching it** (it stops at "Data Science — Hierarchy of Needs"), and the recording doesn't cover it either. Filled in here because it is a named syllabus item. Expect it to reappear in session 2, which is titled "Foundations (cont.)".*
 
 **Intuition** — "ML domain" gets used for two different cuts, and both are worth holding because they answer different engineering questions.
 
@@ -173,15 +167,13 @@ The engineering consequence is the dashed note: **supervised learning makes labe
 
 #### 2.4 Terminology traps
 
-T1 devotes a section to this, which signals it can be asked.
+This gets its own section, which signals it can be asked.
 
 | Ambiguous word | Say instead |
 |---|---|
 | model | *machine-learned model* vs *software-architecture model* |
 | performance | *prediction accuracy* vs *inference latency* |
 | parameter | *model parameter* (learned) vs *hyperparameter* (chosen) |
-
-Cross-link: → `_shared/ml-lifecycle.md` · **549 S4** (data science and the ML lifecycle)
 
 ---
 
@@ -190,8 +182,6 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4** (data science and the ML
 *What engineering already knows.*
 
 ### 3. Two lifecycles: the SDLC and the ML pipeline
-
-*Reference: T1 Kästner ch1 (why the SDLC assumption breaks) & ch3 (the ML pipeline); for the SDLC itself, any SE text (Sommerville, *Software Engineering*).*
 
 #### 3.1 The Software Development Life Cycle
 
@@ -233,7 +223,7 @@ flowchart TD
     MON -.-> R
 ```
 
-Two engineering-relevant properties, both from T1:
+Two engineering-relevant properties:
 
 1. **It is highly iterative.** A bad evaluation sends you back to a different algorithm, different hyperparameters, more data, or different preparation. The dashed arrows are the normal path, not the exception.
 2. **Most steps have surprisingly little code.** Preparation is programmed transformations (drop outlier rows, normalise a column). Training is "very few lines calling the library." **Deployment and monitoring are where the substantial infrastructure lives** — which is exactly why this is a software-engineering course.
@@ -256,13 +246,9 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 
 **Tradeoff / when NOT to automate the pipeline** — Full pipeline automation is the goal (S13), but automating *early*, before you know which steps you'll keep changing, builds infrastructure around a design you're about to throw away. Data scientists work notebook-cell-by-cell during exploration for good reason. The engineering judgment is knowing when exploration has stabilised enough to be worth automating.
 
-Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
-
 ---
 
 ### 4. From Waterfall to ADLC
-
-*Reference: R1 Tech Mahindra ADLC white paper (held in `/_library/`).*
 
 **Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, which the report calls **ADLC** (AI-Driven Development Life Cycle) and names as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
 
@@ -278,7 +264,7 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4–S7** · **546 S13**
 
 #### What the report is actually about
 
-*The slide shows only the evolution table. The paper's real subject is different, and more useful for this course.*
+*The evolution table is only the surface — the real subject is different, and more useful for this course.*
 
 Its opening claim: **"the adoption levels are still far below expectations. Many organizations struggle to realize value by adopting AI in SDLC."** Not because the tools are bad — *"Does this mean these tools lack value? Absolutely not."* — but because **tool adoption is only one step**, and organizations ignore the rest of the ecosystem.
 
@@ -340,8 +326,6 @@ Two specifics worth carrying: **KPIs and a baseline must be established at the p
 
 **The deeper tradeoff, and the one an exam would reward:** the report's own evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
 
-Cross-link: → **546 S15** (ADLC phases in detail)
-
 ---
 
 ## Part 3 · Context
@@ -349,8 +333,6 @@ Cross-link: → **546 S15** (ADLC phases in detail)
 *Landscape; tables, not prose.*
 
 ### 5. How software and data got here
-
-*Reference: deck only for the framing; cloud-native evolution is developed in 549 S2–S3 and `_shared/docker-k8s.md`.*
 
 #### 5.1 Evolution of software development
 
@@ -387,13 +369,9 @@ timeline
 
 **The through-line** — storage → compute → algorithms → data volume, each unlock enabling the next. Transformers didn't arrive because someone had a clever idea in 2018; they arrived because the 2010–2015 data deluge and cloud compute made them trainable.
 
-Cross-link: → `_shared/docker-k8s.md` · **549 S2–S3** · **536 S1–S2**
-
 ---
 
 ### 6. What data science is
-
-*Reference: deck; the DS Venn and the "hierarchy of needs" are standard framings (Monica Rogati, "The AI Hierarchy of Needs").*
 
 **Intuition** — The study of data: turning it into a *story* that produces insight, and insight that produces a decision. If no decision changes, it wasn't data science — it was reporting. Scope runs collection → preprocessing → analysis → prediction → visualisation (storytelling) → insight.
 
@@ -430,8 +408,6 @@ flowchart BT
 
 **Tradeoff / how NOT to read the pyramid** — It's a *dependency* claim, not a *sequencing mandate*. Read literally it says "spend two years on data infrastructure before touching ML," which kills projects. Honest reading: cut a thin vertical slice through all six layers for one use case, then widen. Note also that simple ML sits *below* deep learning — A/B tests and logistic regression solve a large share of problems pitched as AI.
 
-Cross-link: → `_shared/ml-lifecycle.md` · **549 S4**
-
 ---
 
 ## Part 4 · People and judgment
@@ -439,8 +415,6 @@ Cross-link: → `_shared/ml-lifecycle.md` · **549 S4**
 *The half of the course that isn't recall.*
 
 ### 7. Who builds these systems
-
-*Reference: T1 Kästner ch1 (data scientists vs software engineers; T-shaped people; unicorns).*
 
 **Intuition** — Roles exist because different failures need different specialists watching for them. In ML systems the roles come from two different traditions that were trained differently and mean different things by "done" — which is where the friction lives.
 
@@ -499,7 +473,7 @@ flowchart LR
 
 #### 7.3 Data scientists vs software engineers — the actual friction
 
-T1 states its own central theme outright: *how to get data scientists and software engineers to each contribute their distinct expertise while effectively working together.* The friction isn't skill, it's different notions of what "done" means.
+The central theme, stated outright: *how to get data scientists and software engineers to each contribute their distinct expertise while effectively working together.* The friction isn't skill, it's different notions of what "done" means.
 
 | | Data scientists | Software engineers |
 |---|---|---|
@@ -512,21 +486,17 @@ T1 states its own central theme outright: *how to get data scientists and softwa
 **Two terms that get asked:**
 
 - **"Unicorns"** — people deeply skilled in both. Rare, "even considered mythical." Most people specialise. Don't staff a plan on unicorns.
-- **T-shaped team members** — deep expertise in one area (the vertical) plus broad understanding of others (the horizontal). T1's stated goal is not to turn data scientists into engineers, but to give each enough breadth to *understand and appreciate* the other. T-shaped people are what make interdisciplinary teams work.
+- **T-shaped team members** — deep expertise in one area (the vertical) plus broad understanding of others (the horizontal). The stated goal is not to turn data scientists into engineers, but to give each enough breadth to *understand and appreciate* the other. T-shaped people are what make interdisciplinary teams work.
 
-T1's evidence on the reverse direction is worth sitting with, since it describes most of this cohort: software engineers who pick up ML without formal training "approach machine learning rather naively with little focus on feature engineering, they rarely test models for generalization, and they think of more data and deep learning as the only next steps when stuck."
+The evidence on the reverse direction is worth sitting with, since it describes most of this cohort: software engineers who pick up ML without formal training "approach machine learning rather naively with little focus on feature engineering, they rarely test models for generalization, and they think of more data and deep learning as the only next steps when stuck."
 
-**Tradeoff / how NOT to use this contrast** — T1 calls it "oversimplified and overgeneralized" itself. As a lens on why a handover failed, useful. As a hiring stereotype, wrong — the point is complementarity, not superiority. And in a small team one person wears four hats, where the risk flips from coordination overhead to blind spots: whoever wrote the code also decides whether it's tested enough.
-
-Cross-link: → `_shared/ml-lifecycle.md` · **546 M1 Interdisciplinary Teams** · **549 S4**
+**Tradeoff / how NOT to use this contrast** — it's "oversimplified and overgeneralized" by its own admission. As a lens on why a handover failed, useful. As a hiring stereotype, wrong — the point is complementarity, not superiority. And in a small team one person wears four hats, where the risk flips from coordination overhead to blind spots: whoever wrote the code also decides whether it's tested enough.
 
 ---
 
 ### 8. What ML changes about engineering
 
-*Reference: T1 Kästner ch1 (the three challenges, each "harder but not new").*
-
-**Intuition** — There's an open debate about whether ML fundamentally changes engineering or just demands that we finally apply existing practice rigorously. T1 gives three challenges, and for each argues the challenge is *harder* but *not new*. That two-part shape — challenge, then "but we've seen this before" — is what makes it exam-friendly, and you should reproduce both halves.
+**Intuition** — There's an open debate about whether ML fundamentally changes engineering or just demands that we finally apply existing practice rigorously. There are three challenges, and for each the argument is the same: *harder* but *not new*. That two-part shape — challenge, then "but we've seen this before" — is what makes it exam-friendly, and you should reproduce both halves.
 
 ```mermaid
 flowchart TD
@@ -542,7 +512,7 @@ flowchart TD
 
 #### 8.1 Lack of specifications
 
-Traditional engineering relies on decomposition: specify each component, build and test separately, compose. T1's contrast:
+Traditional engineering relies on decomposition: specify each component, build and test separately, compose. The contrast:
 
 ```python
 def compute_deductions(agi, expenses):
@@ -583,7 +553,7 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 #### 8.4 Where the "not new" argument breaks down
 
-**Tradeoff / when this framing misleads** — reproduce both halves of T1's argument, but don't over-apply the reassuring half. "Harder but not new" is right about the *techniques* and can be wrong about the *consequences*, in three places:
+**Tradeoff / when this framing misleads** — reproduce both halves of the argument, but don't over-apply the reassuring half. "Harder but not new" is right about the *techniques* and can be wrong about the *consequences*, in three places:
 
 | The argument holds | Where it strains |
 |---|---|
@@ -591,19 +561,15 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 | Requirements engineering and hazard analysis already exist | They assume you can *enumerate* the hazards. A model's failure modes are discovered in production, from users, often months later, and often by the group harmed |
 | Cloud and big data predate ML | True — but the **flywheel** is new. Scale used to be a consequence of success; with ML it's an input to quality, so competitors with more users get better models and pull further ahead. That's a market dynamic, not an engineering one |
 
-**How to use this:** give T1's two-part shape — challenge, then "we've seen this before" — and then add the qualifier. *"The techniques transfer; the assumption that failures are detectable does not."* That earns more than reciting the three challenges.
+**How to use this:** give the two-part shape — challenge, then "we've seen this before" — and then add the qualifier. *"The techniques transfer; the assumption that failures are detectable does not."* That earns more than reciting the three challenges.
 
 **The concrete risk** — "not new" can license doing nothing differently. Every one of the three challenges needs a *specific* new practice: model-behaviour testing rather than unit tests (session 10), monitoring for drift rather than for crashes (session 11), and documenting intended use rather than trusting an API contract (session 13, model cards). The reassurance is about the *discipline* being available, not about the *work* being already done.
-
-Cross-link: → **521 S1 section 12** (open problems — the same limits, named from the research side) · **546 S10–11** (testing and quality, the practices these three challenges demand)
 
 ---
 
 ### 9. The risk spectrum
 
-*Reference: T1 Kästner ch1 (the risk/rigour argument and the enduring principles).*
-
-**Intuition** — T1's actual thesis, and the sentence most likely to be quoted at you: it isn't that ML *is* riskier, it's that we *attempt riskier things* with ML.
+**Intuition** — the actual thesis, and the sentence most likely to be quoted at you: it isn't that ML *is* riskier, it's that we *attempt riskier things* with ML.
 
 | Risk | Example | Practice level |
 |---|---|---|
@@ -625,9 +591,9 @@ flowchart LR
 
 **Worked example** — Fraud detection is not a restaurant website. False negatives cost money; false positives block legitimate customers and can be discriminatory; the system runs on live payment traffic at scale. Mid-to-high on the spectrum, and the practices should match — which is what modules 2–7 supply.
 
-**Tradeoff / the symmetric error** — T1 is careful and so should you be: "It is not that machine learning automatically makes projects riskier — and there certainly are also many low-risk systems with machine-learning components." Applying nuclear-grade rigour to a low-stakes recommender is its own failure. The judgment is *locating your system on the spectrum first*, then matching practice to position. That judgment is what 546 teaches.
+**Tradeoff / the symmetric error** — be careful here: "It is not that machine learning automatically makes projects riskier — and there certainly are also many low-risk systems with machine-learning components." Applying nuclear-grade rigour to a low-stakes recommender is its own failure. The judgment is *locating your system on the spectrum first*, then matching practice to position. That judgment is what 546 teaches.
 
-**The enduring principles** T1 says survive every technology shift — a ready-made exam answer:
+**The enduring principles** that survive every technology shift — a ready-made exam answer:
 
 1. Understanding customer priorities and tolerance for mistakes
 2. Designing safe systems with unreliable components
@@ -635,17 +601,13 @@ flowchart LR
 4. Planning a responsible testing strategy
 5. Designing systems that can be updated rapidly and monitored in production
 
-Cross-link: → **546 S14** (responsible ML engineering) · **521 S12** (security and prompt injection)
-
 ---
 
 ### 10. Foundation models and prompting
 
-*Reference: T1 Kästner ch3 (foundation models & prompting); the RAG stack is built hands-on in 546 S6.*
-
 **Intuition** — Instead of training a model per task, a few organisations train one enormous general-purpose model and everyone else *instructs* it with a prompt. Customisation moves from training data to prompt text.
 
-**Mechanism** — T1's toxicity example: rather than training a toxicity classifier on labelled examples, send `Answer only yes or no. Is the following sentence toxic: [input]`.
+**Mechanism** — a toxicity example: rather than training a toxicity classifier on labelled examples, send `Answer only yes or no. Is the following sentence toxic: [input]`.
 
 Two ways to customise:
 
@@ -667,9 +629,9 @@ Text: [sentence to analyze]
 A:
 ```
 
-Providing *internal data* in the prompt is the case T1 flags forward to **retrieval-augmented generation** — which is 546 S6, and the same RAG you build in 521 and 536. The course's own tool list (LangChain, ChromaDB, OpenAI embeddings and LLM) confirms S6 is hands-on, not conceptual.
+Providing *internal data* in the prompt is the case that flags forward to **retrieval-augmented generation** — which is S6. The course's own tool list (LangChain, ChromaDB, OpenAI embeddings and LLM) confirms S6 is hands-on, not conceptual.
 
-*The full customisation ladder (my own — the deck names two rungs; here's the spectrum you actually pick from, cheapest first):*
+*The full customisation ladder (my own — usually only two rungs are named; here's the full spectrum, cheapest first):*
 
 ```mermaid
 flowchart LR
@@ -683,23 +645,19 @@ Cost, effort and *how much of the model you change* all rise left → right, and
 
 **Worked example** — Fraud detection with a foundation model: `"Given this transaction and the customer's last 10 transactions, is this likely fraudulent? Answer yes/no with one reason."` No training data needed, works immediately — and costs an API call per transaction, with latency you don't control, for a task a decision tree does in microseconds.
 
-**Tradeoff / when NOT to use** — T1 is direct: foundation models "do not have access to proprietary or recent information that was not part of the training data," and "model size and inference costs can become a challenge." Use them where the task is language-shaped, varied, and hard to specify. Don't use them for a high-volume, low-latency, narrow, well-specified task with plenty of labelled data — fraud scoring at 10,000 transactions/second being exactly that. **A foundation model is the expensive general answer to a question you might be able to specify cheaply.**
-
-Cross-link: → `_shared/rag.md` · **546 S6** · **536 S10, S12** · **521 S7–8**
+**Tradeoff / when NOT to use** — bluntly: foundation models "do not have access to proprietary or recent information that was not part of the training data," and "model size and inference costs can become a challenge." Use them where the task is language-shaped, varied, and hard to specify. Don't use them for a high-volume, low-latency, narrow, well-specified task with plenty of labelled data — fraud scoring at 10,000 transactions/second being exactly that. **A foundation model is the expensive general answer to a question you might be able to specify cheaply.**
 
 ---
 
 ### 11. MLOps and responsible ML
 
-*Reference: T1 Kästner ch1 (MLOps & responsible ML as cross-cutting concerns).*
+**Intuition** — both are *cross-cutting concerns*, not chapters. That framing is itself examinable, because it's the argument against believing a tool can solve either.
 
-**Intuition** — T1 treats both as *cross-cutting concerns*, not as chapters. That framing is itself examinable, because it's the argument against believing a tool can solve either.
-
-**MLOps** — automating ML pipelines so models can be deployed, updated, monitored and operated reliably. Usually discussed as a tool market: Kubeflow (scalable workflows), Great Expectations (data quality testing), MLflow (experiment tracking), Evidently AI (model monitoring), Amazon SageMaker (end-to-end platform). T1 covers the *fundamentals* across the whole book, with the closest dedicated treatment in **Planning for Operations** (tooling landscape) and **Interdisciplinary Teams** (the collaboration culture — joint goals, joint vocabulary, joint tools).
+**MLOps** — automating ML pipelines so models can be deployed, updated, monitored and operated reliably. Usually discussed as a tool market: Kubeflow (scalable workflows), Great Expectations (data quality testing), MLflow (experiment tracking), Evidently AI (model monitoring), Amazon SageMaker (end-to-end platform). The *fundamentals* run across the whole course, with the closest dedicated treatment in **Planning for Operations** (tooling landscape) and **Interdisciplinary Teams** (the collaboration culture — joint goals, joint vocabulary, joint tools).
 
 That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, SageMaker, plus DVC, Prefect, Docker/K8s, FastAPI, PyTest.
 
-**Responsible ML** — T1's position is blunt: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Attempted without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
+**Responsible ML** — bluntly: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Attempted without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
 
 *Why "cross-cutting" is the whole claim (my own) — these aren't phases you can schedule:*
 
@@ -727,13 +685,13 @@ Both touch **every** phase. A team that plans to "do the fairness work in sprint
 
 **Tradeoff** — the practical implication of "cross-cutting" is that you cannot schedule either as a phase. A team that plans to "do the fairness work in sprint 12" has already lost, because the decisions that determine fairness — what data, what labels, what the system does with a low-confidence prediction — were made in sprints 1 through 11.
 
-> ***In practice*** *(beyond the deck — what MLOps actually looks like as a job):*
+> ***In practice*** *(beyond the course — what MLOps actually looks like as a job):*
 > MLOps is **CI/CD extended to data and models**. On top of the usual code pipeline (git, tests, containers), an ML pipeline adds three things software CI/CD never had:
 > - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. You can reproduce "the model from March" only if both are versioned alongside the code.
 > - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
 > - **Monitoring for drift** — the loop the S07 diagram shows: compare live predictions against ground truth as it arrives (Evidently AI), alert when recall slides, trigger retraining. This is the part that has no equivalent in traditional software, and it's where "ML engineer" and "MLOps engineer" spend most of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
 
-> ***Going deeper*** *(my own knowledge, beyond the deck — the three ways a model actually serves predictions; picking the wrong one is a classic mistake):*
+> ***Going deeper*** *(my own knowledge, beyond the course — the three ways a model actually serves predictions; picking the wrong one is a classic mistake):*
 >
 > | Pattern | How | When |
 > |---|---|---|
@@ -743,15 +701,13 @@ Both touch **every** phase. A team that plans to "do the fairness work in sprint
 >
 > The running example makes the choice concrete: **fraud detection is online** (the score gates a live payment, ~200 ms budget); a monthly churn report is **batch**. Building a heavy real-time service for something a nightly batch job would do — or vice-versa — is the same "match the machinery to the need" judgment as the risk spectrum in section 9.
 
-Cross-link: → `_shared/ml-lifecycle.md` · `_shared/evaluation.md` · **549 S6** (ML pipelines & MLOps) · **546 S13–14**
-
 ---
 
 ## Lab / build
 
 No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blueprint, fraud detection.
 
-**Locked in:** fraud detection is the running example for all sixteen sessions. T1 ch3 uses a credit-card fraud decision tree as its own worked example (section 2.2), so the textbook and the running example line up from page one.
+**Locked in:** fraud detection is the running example for all sixteen sessions. the same credit-card fraud decision tree is the standard worked example (section 2.2), so the textbook and the running example line up from page one.
 
 ---
 

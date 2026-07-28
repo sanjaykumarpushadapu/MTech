@@ -34,11 +34,9 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 ### 1. What a language model is
 
-*Reference: T1 Jurafsky & Martin, *Speech and Language Processing* ch3 (N-gram language models) — the P(W) framing.*
-
 **Intuition** — A language model answers one question: *given what came before, what comes next?* Everything else in this course is built on that.
 
-*The deck opens with this (Alammar fig 1-2) — one input type, three different output types, and 536 follows only the first:*
+*One input type, three different output types — this session follows only the first:*
 
 ```mermaid
 flowchart TD
@@ -48,7 +46,7 @@ flowchart TD
     LAI --> C["Classification<br/>identify targets"]
 ```
 
-All three run on the same machinery — only the *head* on top differs. That's why section 9's language-modelling head matters, and why 521 S2's embeddings come from the same model with the head swapped out.
+All three run on the same machinery — only the *head* on top differs. That's why section 9's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
 
 **Mechanism** — formally, a model that computes either:
 
@@ -57,7 +55,7 @@ All three run on the same machinery — only the *head* on top differs. That's w
 
 Equivalently: it assigns a probability to each possible next word — **a probability distribution over the vocabulary**.
 
-**Worked example — the deck's own:**
+**Worked example — the own:**
 
 ```
 P(all of a sudden I notice three guys standing on the sidewalk)
@@ -69,15 +67,11 @@ Same words, different order. A language model that has learned English assigns f
 
 **Tradeoff / what this framing costs** — Defining a model purely by next-word probability means there is **no notion of truth in the objective**. A fluent falsehood scores well; that's not a bug in the training, it's what the objective asked for. Hallucination is downstream of this definition, which is why S14 needs separate faithfulness metrics.
 
-Cross-link: → **521 S1 section 8** (the same object seen from the application side — what it lets an agent do, and how each capability has a matching failure)
-
 ---
 
 ### 2. What makes a language model "large"
 
-*Reference: R1 Raschka, *Build a Large Language Model (From Scratch)* ch1.*
-
-**Intuition** — "Large" is not one thing. The deck names three, and the exam can ask for all three:
+**Intuition** — "Large" is not one thing. There are three, and the exam can ask for all three:
 
 1. **Model size** — number of parameters
 2. **Dataset size** — trained on massive text, "large portions of the entire publicly available text on the internet"
@@ -85,7 +79,7 @@ Cross-link: → **521 S1 section 8** (the same object seen from the application 
 
 LLMs are **deep neural networks** trained on that data.
 
-*The three axes, and what each actually charges you (my own — the deck lists them without separating their cost curves):*
+*The three axes, and what each actually charges you (my own — usually listed without separating their cost curves):*
 
 ```mermaid
 flowchart LR
@@ -101,15 +95,11 @@ flowchart LR
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
 
-Cross-link: → `_shared/quantization.md` · **536 S5–6** — *every one of the three "large" axes becomes a serving cost later; scale is the thing compression exists to undo*
-
 ---
 
 ### 3. Generation as prediction
 
-*Reference: T2 Alammar & Grootendorst, *Hands-On Large Language Models* ch1.*
-
-**Intuition** — This is the session's key idea, and the deck calls it *the fundamental intuition of language models*: **a model that can predict text can also generate text, by sampling from the distribution it predicts.** Prediction and generation are the same machine used in two directions.
+**Intuition** — This is the session's key idea, and it's *the fundamental intuition of language models*: **a model that can predict text can also generate text, by sampling from the distribution it predicts.** Prediction and generation are the same machine used in two directions.
 
 A model used this way is an **autoregressive language model** — each generated token is fed back in to predict the next.
 
@@ -170,7 +160,7 @@ The distribution **sharpened** — 0.204 → 0.702 for the winner. More context 
 
 ⚠️ **The reframe that matters:** nothing in these two steps knows what a sentence *is*. There is no grammar module and no plan. Fluency is what a good conditional distribution looks like from the outside.
 
-**The consequence that makes LLMs general** — *almost any NLP task can be modelled as word prediction.* The deck's two examples:
+**The consequence that makes LLMs general** — *almost any NLP task can be modelled as word prediction.* Two examples:
 
 **Sentiment classification** becomes a comparison of two probabilities:
 
@@ -187,9 +177,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 **Generative AI** is the broader area: using computational models to generate text, code, speech, images, video and audio. LLMs are the text branch. And LLMs are **(mostly) natural language generation (NLG) systems** — the process of generating text with them is called **decoding** (the whole of S5).
 
-**Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration. This is the same tradeoff 546 draws in its foundation-models section — the expensive general answer versus the cheap specific one.
-
-Cross-link: → **521 S1 section 8** · `_shared/rag.md` — *"plausible continuation" is the mechanism; hallucination is that mechanism running without evidence*
+**Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration. It's the expensive general answer versus the cheap specific one.
 
 ---
 
@@ -199,13 +187,11 @@ Cross-link: → **521 S1 section 8** · `_shared/rag.md` — *"plausible continu
 
 ### 4. Self-attention
 
-*Reference: T2 ch3; the original ["Attention Is All You Need"](https://arxiv.org/abs/1706.03762) (Vaswani et al. 2017); [Alammar, "The Illustrated Transformer"](https://jalammar.github.io/illustrated-transformer/).*
-
-**Intuition** — Self-attention lets every token look at every earlier token and decide how much each one matters to it. The deck's framing: it gives **an uncompressed view of the entire sequence with fast training**. "Uncompressed" is the key word — unlike an RNN, nothing is squeezed through a fixed-size hidden state; every position stays individually addressable.
+**Intuition** — Self-attention lets every token look at every earlier token and decide how much each one matters to it. One framing: it gives **an uncompressed view of the entire sequence with fast training**. "Uncompressed" is the key word — unlike an RNN, nothing is squeezed through a fixed-size hidden state; every position stays individually addressable.
 
 It builds a matrix comparing each token with every token before it, weighted by **how relevant the token pairs are to one another**. During training the whole matrix is computed **in one go**, which is what enables **parallelisation** — and that, not accuracy alone, is why transformers won.
 
-**Mechanism — the three vectors.** Every token produces three projections, and the deck's phrasing for each is worth memorising verbatim:
+**Mechanism — the three vectors.** Every token produces three projections, and the phrasing for each is worth memorising verbatim:
 
 | | Name | The question it asks |
 |---|---|---|
@@ -229,7 +215,7 @@ flowchart TD
 ```
 
 1. **Q · Kᵀ** — dot product: how similar is the query to each key? Higher = more relevant.
-2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Why √d_k specifically (my clarity — the deck states the effect, not the reason): each score is a dot product of two d_k-dimensional vectors, so its size grows with the dimension — variance ≈ d_k, typical magnitude ≈ √d_k. Dividing by √d_k renormalises scores back to unit scale. Skip it and, at d_k = 128, scores run into the tens; softmax of widely-spread inputs saturates to almost one-hot, its gradient collapses toward 0, and the layer stops learning. √d_k is exactly the factor that cancels the dimension's inflation.*
+2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Why √d_k specifically (my clarity — the effect is stated without the reason): each score is a dot product of two d_k-dimensional vectors, so its size grows with the dimension — variance ≈ d_k, typical magnitude ≈ √d_k. Dividing by √d_k renormalises scores back to unit scale. Skip it and, at d_k = 128, scores run into the tens; softmax of widely-spread inputs saturates to almost one-hot, its gradient collapses toward 0, and the layer stops learning. √d_k is exactly the factor that cancels the dimension's inflation.*
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
 As the original paper's block, which is the form to reproduce in an exam:
@@ -260,7 +246,7 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 | Vaswani et al. 2017 (original) | 512 | 8 | 64 |
 | Llama-3-8B | 4096 | 32 | 128 |
 
-**Worked example — attention by hand, with actual numbers** *(my own — the deck gives only shapes, but you don't *have* attention until you've pushed numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
+**Worked example — attention by hand, with actual numbers** *(my own — usually only shapes are given, but you don't *have* attention until you've pushed numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
 
 **① Scores `QKᵀ`** — every query dotted with every key:
 
@@ -290,18 +276,14 @@ That last line **is** attention: each token's output is a **weighted average of 
 
 **Tradeoff / the cost that defines the field** — the attention matrix is **n × n**. Double the context and you quadruple the attention compute and memory. Every efficiency topic in S4 — FlashAttention, Ring Attention, sliding-window, sparse and linear attention — exists to attack that single quadratic term. Self-attention buys an uncompressed view and parallel training; it charges O(n²).
 
-> ***In practice*** *(beyond the deck — what this O(n²) means when you actually use LLMs):*
+> ***In practice*** *(beyond the course — what this O(n²) means when you actually use LLMs):*
 > - You **never implement attention yourself** in a real job — you call an optimised kernel (**FlashAttention**) inside a serving stack (**vLLM**, **TGI**, TensorRT-LLM). Knowing the maths is what lets you reason about *why* a 100K-token prompt is slow and expensive, not code the softmax.
 > - At **inference** the trick that makes generation fast is the **KV-cache**: keys and values for past tokens are cached so each new token is O(n) not O(n²). This is why the *first* token of a long prompt is slow ("prefill") and later tokens are fast ("decode") — a distinction you'll meet the moment you look at latency metrics.
 > - Practical consequence: **long prompts cost real money and time.** "Just paste the whole document in" runs straight into this quadratic. It's the reason retrieval (RAG) exists — fetch the relevant 4K tokens instead of paying for 100K.
 
-Cross-link: → **521 S1 section 8** (self-attention → multi-turn coherence) · **536 S4** (attention efficiency) · **536 S5** (KV-cache — caching exactly the K and V computed here)
-
 ---
 
 ### 5. Multi-head attention
-
-*Reference: "Attention Is All You Need" sec. 3.2.2; Alammar's *Illustrated Transformer*.*
 
 **Intuition** — One attention head learns one notion of relevance. Run several in parallel with **their own K, Q, V weight matrices** and each can specialise — syntax, coreference, topic. Concatenate, project back down, and the output is the same size as the input, **so layers can be stacked**.
 
@@ -332,7 +314,7 @@ Step 4 is the one people skip. Without `W_O` the heads never talk to each other 
 | W_O | **(8×64) × 512 = 512 × 512** | output projection |
 | **Final MHA output** | **4 × 512** | same shape as input → stackable |
 
-Weight-matrix notation from the slide: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ ℝ^(d×d_v), W_O ∈ ℝ^(h·d_v × d).
+Weight-matrix notation: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ ℝ^(d×d_v), W_O ∈ ℝ^(h·d_v × d).
 
 *The same worked example as a picture (my own) — split the model width into h heads, attend in each, concatenate back, project once:*
 
@@ -353,17 +335,13 @@ Each head runs the exact five-step computation from section 4, just in 64 dimens
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
 
-Cross-link: → **536 S3** (grouped-query attention shrinks the heads' KV footprint) · **536 S4**
-
 ---
 
 ### 6. The transformer block
 
-*Reference: T2 ch3; "Attention Is All You Need" sec. 3. On pre-norm specifically, Xiong et al. 2020, "On Layer Normalization in the Transformer Architecture".*
-
 **Intuition** — Attention alone only *mixes* information between tokens. The block adds the parts that *process* it: a feed-forward network to do computation, layer normalisation to keep training stable, and residual connections so gradients survive depth.
 
-**Mechanism — the block, as equations.** The deck gives these twice, and they were images not text, so they are easy to miss. **Learn the two-line form; be able to expand it to the six-line form.**
+**Mechanism — the block, as equations.** These are easy to miss — often shown as images, not text. **Learn the two-line form; be able to expand it to the six-line form.**
 
 Compact (pre-norm, which is what modern LLMs use):
 
@@ -443,19 +421,15 @@ T¹ = (X − μ)/σ = [−1.414, 0, 0, +1.414]
 
 **Feed-forward network (FFNN)** — uses the contextual information created by the attention layer to capture complex relationships. A fully-connected **2-layer** network: one hidden layer, one output layer, **two weight matrices**. The hidden dimension **d_ff is larger than the model dimension d** — in the original transformer, **d = 512 and d_ff = 2048** (4×).
 
-Notation from the slides: **X** is the input to the layer; **T** (shape [N × d]) marks the transformer computation, with superscripts demarcating each step inside the block.
+Notation: **X** is the input to the layer; **T** (shape [N × d]) marks the transformer computation, with superscripts demarcating each step inside the block.
 
 **The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to section 11.
 
 **Tradeoff** — the FFNN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFNN with sparsely-activated ones: it's the biggest block of weights to attack.
 
-Cross-link: → **536 S3** (architecture advances — what modern blocks change about this one)
-
 ---
 
 ### 7. Positional encoding
-
-*Reference: T2 ch3; RoPE — Su et al. 2021, ["RoFormer"](https://arxiv.org/abs/2104.09864).*
 
 **Intuition** — **Attention has no inherent sense of order.** Shuffle the tokens and the attention maths gives the same answer, because a dot product doesn't know which token came first. Position has to be *added* to the embeddings so the model can infer sequence structure.
 
@@ -467,7 +441,7 @@ Cross-link: → **536 S3** (architecture advances — what modern blocks change 
 | **Sinusoidal encodings** | **Fixed sine/cosine functions at multiple frequencies** | Preserves **relative distance**; no parameters |
 | **RoPE** (Rotary Positional Embeddings) | Encodes position by **rotating Q and K in ℂ space** | Embeds **relative phase relationships**; **scales better for long and sliding-window contexts** |
 
-**Mechanism — the sinusoidal formula.** *(The deck says "sine/cosine at multiple frequencies" and never writes it down.)* For position `pos` and dimension index `i`:
+**Mechanism — the sinusoidal formula.** *("sine/cosine at multiple frequencies" is stated but rarely written down.)* For position `pos` and dimension index `i`:
 
 ```
 PE(pos, 2i)   = sin( pos / 10000^(2i/d) )     ← even dimensions
@@ -493,7 +467,7 @@ i = 1  →  10000^(2/4)  = 100      → slow:  sin(pos/100), cos(pos/100)
 | 1 | 0.84 | 0.54 | 0.01 | 1.00 |
 | 2 | 0.91 | −0.42 | 0.02 | 1.00 |
 
-*The deck's figure (Raschka 2.18) shows the addition itself. The key point: it is an **elementwise sum**, not a concatenation — position and meaning share the same d dimensions:*
+*The key point: it is an **elementwise sum**, not a concatenation — position and meaning share the same d dimensions:*
 
 ```mermaid
 flowchart BT
@@ -513,8 +487,6 @@ Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.9
 
 **Tradeoff** — learned embeddings are simplest and fail hardest outside the trained length; sinusoidal costs nothing and generalises modestly; RoPE is the current default precisely because long context is the pressure point, and it's the only one of the three that rotates rather than adds. RoPE gets full treatment in S3 — this is the preview.
 
-Cross-link: → **536 S3** (RoPE in depth) · **536 S5** (why RoPE extrapolates and learned embeddings don't)
-
 ---
 
 ## Part 3 · Text in, text out
@@ -522,8 +494,6 @@ Cross-link: → **536 S3** (RoPE in depth) · **536 S5** (why RoPE extrapolates 
 *The pipeline wrapped around the model.*
 
 ### 8. From text to tokens to embeddings
-
-*Reference: R1 Raschka ch2 (working with text data) — the embedding lookup and special tokens.*
 
 **Intuition** — A model can only do arithmetic, so text has to become numbers. Four steps, each with its own name, and the exam can ask for the order:
 
@@ -551,7 +521,7 @@ flowchart TD
 
 Stage 4 is a *lookup, not a matrix multiply* — mathematically it's one-hot × E, but no implementation does that; it's an indexing operation, which is why it costs nothing at inference.
 
-**The embedding layer**, precisely as the deck describes it:
+**The embedding layer**:
 
 - The weight matrix starts as **small random values**.
 - Those values are **optimised during LLM training as part of the LLM optimisation itself** — embeddings are *learned*, not looked up from somewhere else.
@@ -559,7 +529,7 @@ Stage 4 is a *lookup, not a matrix multiply* — mathematically it's one-hot × 
 
 So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; section 9 reuses it.
 
-**Special context tokens — the concrete case.** Raschka's example extends a vocabulary of `brown→0, dog→1, fox→2, …` with two extras at the end:
+**Special context tokens — the concrete case.** A worked example extends a vocabulary of `brown→0, dog→1, fox→2, …` with two extras at the end:
 
 | Token | ID | Purpose |
 |---|---|---|
@@ -578,7 +548,7 @@ row 4:  -1.1589   0.3255  -0.6315
 row 5:  -2.8400  -0.7849  -1.4096   ← token ID 5 ("over")
 ```
 
-⚠️ **The trap Raschka calls out explicitly:** the embedding for token ID 5 is the **sixth** row, not the fifth — Python counts from 0. Easy marks lost if you index by one.
+⚠️ **The trap:** the embedding for token ID 5 is the **sixth** row, not the fifth — Python counts from 0. Easy marks lost if you index by one.
 
 **Then positional embeddings are added elementwise**, and they have **the same dimension** as the token embeddings:
 
@@ -596,13 +566,9 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 **Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what section 12's tokenizer choices are negotiating.
 
-Cross-link: → `_shared/tokenization.md` · **521 S1 section 6** — *one note, both subjects*
-
 ---
 
 ### 9. The language modelling head, and weight tying
-
-*Reference: weight tying — Press & Wolf 2017, ["Using the Output Embedding to Tie Word Vectors"](https://arxiv.org/abs/1608.05859).*
 
 **Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector back into a guess over the vocabulary. It's the mirror image of the embedding layer: embeddings map IDs → vectors, the LM head maps vectors → IDs.
 
@@ -651,19 +617,15 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 | **Tied** (small models) | Gemma-3 · Llama-3.2-1B/3B · Qwen3-0.6B/4B · SmolLM2 |
 | **Untied** (frontier scale) | Llama-3/4 · DeepSeek-V3 · OLMo 2 · Qwen3-8B+ |
 
-**Tradeoff / when NOT to tie** — the deck states it cleanly: untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
-
-Cross-link: → **536 S5** (inference — this matrix runs once per generated token) · **536 S6** (compression: the LM head is a compression target precisely because it's 13% of parameters)
+**Tradeoff / when NOT to tie** — untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
 
 ---
 
 ### 10. Context length
 
-*Reference: follows from section 4's O(n²) attention cost and KV-cache growth — no single canonical text; the framing is the deck's.*
-
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
-*The deck's figure (Alammar 1-27) makes the point people miss — **generated tokens count against the same budget as the prompt**:*
+*The point people miss — **generated tokens count against the same budget as the prompt**:*
 
 ```mermaid
 flowchart LR
@@ -681,8 +643,6 @@ flowchart LR
 
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
 
-Cross-link: → **521 S1 section 7** (context windows and "lost in the middle") · `_shared/quantization.md` (KV-cache) · `_shared/rag.md` — *retrieval exists because this number is finite*
-
 ---
 
 ## Part 4 · The landscape
@@ -690,8 +650,6 @@ Cross-link: → **521 S1 section 7** (context windows and "lost in the middle") 
 *Comparison tables; recognise, don't over-invest.*
 
 ### 11. LLM architectures
-
-*Reference: the source papers — BERT (Devlin et al. 2018), GPT, T5 (Raffel et al. 2020); "Attention Is All You Need" for the original encoder–decoder figure.*
 
 **Intuition** — Three shapes, distinguished by **what each token is allowed to see**. That one question determines the training objective, the strengths and the weaknesses — so learn the table by the *context* column and derive the rest.
 
@@ -729,19 +687,15 @@ And the zoom-ins, which are section 4 and section 5 in picture form: **scaled do
 
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
-**Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the deck's own line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
-
-Cross-link: → **521 S1 section 2** (the same history told as conversational-AI eras) · **536 S3**
+**Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
 
 ---
 
 ### 12. Tokenization
 
-*Reference: [HuggingFace NLP course ch6](https://huggingface.co/learn/nlp-course/chapter6) (tokenizers); BPE — Sennrich et al. 2016.*
-
 #### 12.1 Why subwords
 
-**Intuition** — the deck's framing: **common words end up in the subword vocabulary; rarer words are split into components** (sometimes intuitive, sometimes not). Worst case, a word is split into as many subwords as it has characters.
+**Intuition** — the framing: **common words end up in the subword vocabulary; rarer words are split into components** (sometimes intuitive, sometimes not). Worst case, a word is split into as many subwords as it has characters.
 
 ```
 hat, learn          →  common words, one token each
@@ -758,7 +712,7 @@ Transformer##ify    →  novel items
 | **Subword tokens** | Break unknown words into smaller pieces already in the vocabulary | **Can represent new words**; the standard choice |
 | **Byte tokens** | Vocabulary of **UTF-8 bytes (256)**; **one token = one byte** | No OOV ever; very long sequences. "Apple" → `[65][112][112][108][101]` = 5 tokens. Used by **tokenizer-free models — ByT5, CANINE** |
 
-*The deck's figure (Alammar 2-6) runs one sentence through all four granularities. Read it top to bottom as a trade of vocabulary size against sequence length:*
+*One sentence through all four granularities. Read it top to bottom as a trade of vocabulary size against sequence length:*
 
 ```mermaid
 flowchart TD
@@ -829,7 +783,7 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 | 3 | `+ un` | `("h","ug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("h","ug","s",5)` |
 | 4 | `+ hug` | `("hug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("hug","s",5)` |
 
-⚠️ **The trap, at merge 2 (my clarity — 521 teaches this same corpus and flags it; this deck doesn't):** once `ug` exists, the pair `("h","ug")` = 15 is sitting right there and *looks* like the obvious next merge. But `("u","n")` = pun(12) + bun(4) = **16** still beats it, so **`un` merges second, not `hug`.** Re-count every adjacent pair each round — never assume the pair you just created wins the next one.
+⚠️ **The trap, at merge 2 (my clarity — the merge order is given but the trap is never flagged):** once `ug` exists, the pair `("h","ug")` = 15 is sitting right there and *looks* like the obvious next merge. But `("u","n")` = pun(12) + bun(4) = **16** still beats it, so **`un` merges second, not `hug`.** Re-count every adjacent pair each round — never assume the pair you just created wins the next one.
 
 **Advantages** — efficient handling of rare words and subword units; reduces vocabulary size, making the model more efficient; better generalisation by breaking words into subword units.
 
@@ -884,22 +838,18 @@ tiktoken BPE (Llama-3):
 
 **Tradeoff / the whole tokenizer decision in one line** — bigger vocabulary means fewer tokens per document, which means shorter sequences and cheaper O(n²) attention — but a bigger embedding matrix and more rarely-seen tokens. That's why vocabulary sizes cluster between 32K and 256K rather than at either extreme, and why compression ratio (tokens per byte) is the metric people actually optimise.
 
-> ***In practice*** *(beyond the deck — tokenization is where your API bill comes from):*
+> ***In practice*** *(beyond the course — tokenization is where your API bill comes from):*
 > - **You pay per token**, in and out. Tokenization is the invisible layer that decides how many tokens a document costs. `tiktoken.encoding_for_model("gpt-4o").encode(text)` counts them before you send — do this to estimate cost and to stay under the context window.
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
-> - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure you'll see in 521 is mostly about tokens — fewer, cheaper tokens per call at the same quality.
-
-Cross-link: → `_shared/tokenization.md` — *the full treatment, written once for both subjects* · **521 S1 section 6**
+> - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
 ---
 
 ### 13. The LLM landscape
 
-*Reference: T2 ch1 for the history; scaling laws — Kaplan et al. 2020 and Hoffmann et al. 2022 (Chinchilla).*
-
 **Intuition** — Worth learning as a *causal chain*, not a list of names: each item made the next possible.
 
-*The chain the deck implies but never draws (my own) — each link forces the next:*
+*The chain implied but rarely drawn (my own) — each link forces the next:*
 
 ```mermaid
 flowchart TD
@@ -955,19 +905,15 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
 
-**Frontier models named in the deck** — OpenAI o3 · Anthropic Claude Sonnet 3.7 · xAI Grok 3, with a more recent table listing GPT-5.4 Thinking (deep reasoning, tool use, long-horizon research), Gemini 3.1 Pro (complex problem-solving, multimodal, tool workflows), Gemma 4 (open-weight reasoning, agentic), Claude Opus 4.6 (long-context reasoning, coding, sustained agentic work), Mistral Large 3 (open-weight multimodal, **sparse MoE**), Grok 4.20 (parallel multi-agent research), DeepSeek-R1 (**RL-driven** math, logic, reasoning).
+**Frontier models** — OpenAI o3 · Anthropic Claude Sonnet 3.7 · xAI Grok 3, with a more recent table listing GPT-5.4 Thinking (deep reasoning, tool use, long-horizon research), Gemini 3.1 Pro (complex problem-solving, multimodal, tool workflows), Gemma 4 (open-weight reasoning, agentic), Claude Opus 4.6 (long-context reasoning, coding, sustained agentic work), Mistral Large 3 (open-weight multimodal, **sparse MoE**), Grok 4.20 (parallel multi-agent research), DeepSeek-R1 (**RL-driven** math, logic, reasoning).
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
-
-Cross-link: → **521 S3** (model landscape and cost — the same table, used to make a build decision) · **546 S10** (when the general answer is the wrong one)
 
 ---
 
 ## Extra depth — WordPiece & byte-level BPE
 
-*Reference: WordPiece — Schuster & Nakajima 2012; byte-level BPE — GPT-2 paper (Radford et al. 2019). The deck flags these as "Extra slides (Not for exams)."*
-
-Deeper tokenization knowledge and the reference for **Lab 1**. The deck marks it out of exam scope, so it won't be on the closed-book mid-sem — but it's genuinely useful for the lab and the field, which is why it's kept.
+Deeper tokenization knowledge and the reference for **Lab 1** — out of exam scope, so it won't be on the closed-book mid-sem — but it's genuinely useful for the lab and the field, which is why it's kept.
 
 **Byte tokens vs BPE** — byte tokens never merge anything, so they're extremely inefficient (long sequences) but can read **any file or character**. BPE is efficient for what it knows and **"blind" to what it doesn't**. On `"Café 🚀"`: byte tokens give 10 tokens (`[67][97][102][195][169][32][240][159][154][128]` — note `é` takes two bytes and the rocket takes four); BPE gives 3, **one of which is `[UNK]` — the failure**.
 

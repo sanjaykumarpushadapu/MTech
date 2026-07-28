@@ -4,7 +4,7 @@
 
 > ### In the instructor's own words
 >
-> **The definition, sharper than the slide's:** *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
+> **The definition, in plain terms:** *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
 >
 > **Intent vs entity, made concrete:** *"Intent is the **verb** of a sentence — what is the action. An entity is the **nouns** in the natural language."* So NLU = intent classification + entity extraction.
 >
@@ -20,8 +20,6 @@ Conversational AI — agents — is one of the most employable specialisations i
 
 ### 1. What conversational AI is
 
-*Reference: deck — the definition and the understand/reason/act frame are the instructor's own.*
-
 **Intuition** — Her spoken version first, because it's the sharper one: *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
 
 The formal definition from the opening slide, worth memorising verbatim because it enumerates exactly what the course teaches:
@@ -30,7 +28,7 @@ The formal definition from the opening slide, worth memorising verbatim because 
 
 Note the four verbs — understand, retain, retrieve, act. Each becomes a module.
 
-**The three-part frame** the deck uses throughout:
+**The three-part frame** used throughout:
 
 | | | |
 |---|---|---|
@@ -54,13 +52,9 @@ Every step rightward buys coverage of a wider query space and pays for it in pre
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
-Cross-link: → **546 S2** (models → systems: the same "it's not the model" argument, from the engineering side)
-
 ---
 
 ### 2. The evolution, 1960s → 2026
-
-*Reference: deck; for the agent era, Masterman et al. 2024, [The Landscape of AI Agents](https://arxiv.org/abs/2404.11584).*
 
 **Intuition** — Seven eras, each fixing the previous one's fatal limitation and introducing a new one. Learn it by the **Limitations** column: that's what drives the next row.
 
@@ -101,13 +95,9 @@ timeline
 
 **Tradeoff** — notice that each era's limitation is *architectural*, not a matter of effort. Rule-based systems didn't need more rules; they needed learning. LLMs don't need bigger models to take actions; they need tools. Recognising which kind of problem you have — "needs more of the same" vs "needs a different architecture" — is the judgment this table teaches.
 
-Cross-link: → `_shared/agents.md` · **536 S1** (same landscape, model-side framing)
-
 ---
 
 ### 3. Architecture: traditional vs agentic
-
-*Reference: deck; Anthropic, [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents).*
 
 **Intuition** — The old pipeline classified then responded. The new one plans then acts. Everything else follows from that.
 
@@ -159,15 +149,11 @@ Read the two dashed arrows — they are the entire architectural change. Everyth
 
 **Tradeoff / what the old architecture was better at** — the traditional pipeline is *inspectable*. When it misfires you can point at the intent classifier or the dialogue policy and see exactly what went wrong. The agentic version replaces those legible stages with an LLM making decisions you cannot fully audit, which is precisely why safety (stage 6) and observability become their own topics rather than afterthoughts. **You trade debuggability for capability.**
 
-Cross-link: → `_shared/agents.md` · **536 S13** (agentic AI) · **546 S15–16** (SE for agentic systems)
-
 ---
 
 ### 3b. Workflows vs agents — and when not to build one
 
-*Reference: Anthropic, [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Dec 2024) — the course's primary text.*
-
-**Intuition** — The deck says "agentic AI" as though it were one thing. Anthropic's guide draws a sharper line inside it, and this distinction is the most useful single idea in the primary textbook:
+**Intuition** — "Agentic AI" gets used as though it were one thing. Anthropic's guide draws a sharper line inside it, and this distinction is the most useful single idea in the primary textbook:
 
 | | Definition |
 |---|---|
@@ -193,14 +179,14 @@ flowchart LR
     IN[Input] --> AUG --> OUT[Output]
 ```
 
-An LLM enhanced with **retrieval, tools and memory**, where the model actively uses them — generating its own search queries, selecting tools, deciding what to retain. This is the same claim as the deck's "LLM is the brain but needs tools, memory and planning," stated more precisely.
+An LLM enhanced with **retrieval, tools and memory**, where the model actively uses them — generating its own search queries, selecting tools, deciding what to retain. This is the same claim as the "LLM is the brain but needs tools, memory and planning," stated more precisely.
 
 **Worked example — the same task, both ways.** Refunding a customer:
 
 - *Workflow*: code says `classify intent → if refund: check eligibility → if eligible: issue refund → confirm`. The LLM classifies and writes text; **the path is fixed**.
 - *Agent*: the model is given the tools `check_eligibility`, `issue_refund`, `lookup_order` and the goal "resolve this customer's refund request", and decides for itself which to call, in what order, and when it's done.
 
-**Tradeoff / when NOT to build an agent** — this is the guide's central argument and it runs directly against the deck's enthusiasm, which makes it valuable:
+**Tradeoff / when NOT to build an agent** — this is the guide's central argument and it runs directly against the enthusiasm, which makes it valuable:
 
 > Find the **simplest solution possible**, and only increase complexity when needed. This might mean **not building agentic systems at all.** Agentic systems often trade **latency and cost** for better task performance.
 
@@ -230,8 +216,6 @@ That is a direct argument for the instructor's own advice ("code every lecture�
 
 On that third: the guide's rule of thumb is to invest as much effort in the **ACI** as teams normally invest in HCI. Building their SWE-bench agent, they *"spent more time optimising our tools than the overall prompt."*
 
-Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer) come in **L9**
-
 ---
 
 ## Part 2 · What a system is made of
@@ -240,11 +224,9 @@ Cross-link: → `_shared/agents.md` · patterns (prompt chaining, routing, paral
 
 ### 4. The six components of modern conversational AI
 
-*Reference: deck — the six-component taxonomy is standard conversational-AI architecture.*
-
 **Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, has to do the same six jobs: work out what you want, keep track of where the conversation is, look things up, do things, say something back, and remember. What changed over twenty years is not the list — it's that all six used to be separate hand-built modules, and now the LLM absorbs three of them (understanding, dialogue, generation) while the other three (knowledge, action, memory) became *harder* because we now expect them to work on open-ended input.
 
-*The six, arranged by what the LLM absorbed and what it didn't (my own — the deck gives a flat table, and the split is the insight):*
+*The six, arranged by what the LLM absorbed and what it didn't (my own — usually a flat table; the split is the insight):*
 
 ```mermaid
 flowchart TD
@@ -293,13 +275,9 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 
 **Tradeoff** — components 3, 4 and 6 are where the cost and risk live. Knowledge access needs a vector store to run and keep fresh; action execution means the agent can do real damage; memory means you're now storing user data with everything that implies. Components 1, 2 and 5 come almost free with the LLM. **The expensive half of the system is the half that touches the outside world.**
 
-Cross-link: → `_shared/rag.md`, `_shared/function-calling.md` · **546 S6** (RAG as architecture pattern)
-
 ---
 
 ### 5. Frameworks
-
-*Reference: deck; each framework's own docs (langchain.com, llamaindex.ai, microsoft.github.io/autogen).*
 
 **Intuition** — A framework is glue, not capability. Nothing in the tables below does anything you couldn't do with the model's HTTP API and a few hundred lines of Python — the Tavily lab proves it. What you're buying is **the conventions**: a standard way to describe a tool, a retry policy, a place to put memory, a trace you can read. That's worth real money on a team and close to nothing when you're learning, which is why the labs deliberately make you see the loop before the framework hides it.
 
@@ -345,21 +323,17 @@ flowchart TD
 
 The bottom row is the honest trade: the old stack failed **loudly and predictably**; the new one fails **plausibly**. Rasa could not answer an unanticipated question. LangChain will answer it — correctly or not.
 
-**The key shift**, in the deck's words: *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
+**The key shift**, in the words: *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
 
 **Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
-
-Cross-link: → `_shared/agents.md` · **549 S9** (LangChain from the API-integration angle)
 
 ---
 
 ## Part 3 · The model layer
 
-*Mechanism; shared with 536.*
+*The model layer — mechanism.*
 
 ### 6. Tokenization
-
-*Reference: [HuggingFace NLP course ch6](https://huggingface.co/learn/nlp-course/chapter6); BPE — Sennrich et al. 2016. Shared with 536 S1/S12 and `_shared/tokenization.md`.*
 
 **Intuition** — Breaking text into subword units that LLMs process. BPE sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
@@ -372,7 +346,7 @@ flowchart LR
     G -.->|"new words representable<br/>sequence length manageable"| G
 ```
 
-**Why it matters for conversational AI specifically** — four consequences, and this framing is what makes it a 521 topic rather than just a 536 one:
+**Why it matters for conversational AI specifically** — four consequences, and this framing is what makes tokenization a conversational-AI topic, not just a modelling detail:
 
 | | Why |
 |---|---|
@@ -381,7 +355,7 @@ flowchart LR
 | ⚡ **Latency** | More tokens = slower response |
 | 🎯 **Quality** | Tokenization affects understanding of domain-specific terms |
 
-Token counts from the deck — note how unintuitive they are:
+Token counts — note how unintuitive they are:
 
 | Text | Tokens | Count |
 |---|---|---|
@@ -422,7 +396,7 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 *The trap in merge 2:* `("h","ug")` at 15 looks like the obvious next merge because it just became available, but `("u","n")` at 16 beats it. **Count before you assume.**
 
-**Segmenting new words with those three rules** — and this is where the deck goes further than 536's:
+**Segmenting new words with those three rules** — and this is where it goes further:
 
 | Word | Tokenized as | Why |
 |---|---|---|
@@ -430,17 +404,13 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 | `mug` | `["[UNK]", "ug"]` | **"m" was never in the base vocabulary** |
 | `thug` | `["[UNK]", "hug"]` | "t" not in base vocab; u+g merge, then h+ug merge |
 
-**The deck's exercise: how is `unhug` tokenized?** Split to characters `u n h u g` → apply rules in learned order: `("u","g")→"ug"` gives `u n h ug`; `("u","n")→"un"` gives `un h ug`; `("h","ug")→"hug"` gives **`["un", "hug"]`**. Every character was in the base vocabulary, so no `[UNK]`.
+**Exercise: how is `unhug` tokenized?** Split to characters `u n h u g` → apply rules in learned order: `("u","g")→"ug"` gives `u n h ug`; `("u","n")→"un"` gives `un h ug`; `("h","ug")→"hug"` gives **`["un", "hug"]`**. Every character was in the base vocabulary, so no `[UNK]`.
 
 **Tradeoff / where BPE fails** — the `mug` case is the whole limitation in one line: **character-level BPE has no fallback**. Any character absent from the base vocabulary becomes `[UNK]` and its meaning is lost entirely. That's what byte-level tokenizers fix, and it's why every frontier model after Llama-2 moved to byte-level (tiktoken). For conversational AI specifically, `[UNK]` on a customer's name or a product code is a silent failure that degrades the whole turn.
-
-Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subjects teach BPE on this same corpus, both closed-book scope. One note, two exams.*
 
 ---
 
 ### 7. Context windows
-
-*Reference: "lost in the middle" — Liu et al. 2023, [arXiv:2307.03172](https://arxiv.org/abs/2307.03172).*
 
 **Intuition** — The maximum tokens a model can hold, which for a conversation means how much history it can see at once.
 
@@ -451,11 +421,11 @@ Cross-link: → `_shared/tokenization.md` · **536 S1** — ⚠️ *both subject
 | Gemini 1.5 Pro | 1M | ~750K | Entire codebases |
 | Emerging models | 2M+ | — | Specialised use cases |
 
-**⚠️ The challenge the deck flags — and it's the exam-worthy bit, not the numbers:**
+**⚠️ The challenge — the exam-worthy bit, not the numbers:**
 
 > **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG + memory systems** (Module 2).
 
-*Why it happens (my clarity — the deck names the effect, not the cause): a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. So a fact buried mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
+*Why it happens (my clarity — the effect is usually named without the cause): a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. So a fact buried mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
 
 *"Lost in the middle" drawn (my own) — recall accuracy against position in the context:*
 
@@ -470,13 +440,9 @@ Accuracy is U-shaped, not flat. A fact placed halfway through a long context is 
 
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
-Cross-link: → **536 S1 section 10** (why the window is capped — O(n²) and KV-cache) · `_shared/rag.md` — *"lost in the middle" is the argument for retrieval*
-
 ---
 
 ### 8. LLMs as the brain — capabilities and limits
-
-*Reference: deck — the capability→consequence mapping is the deck's own.*
 
 **Intuition** — The LLM is the reasoning engine, and its strengths and failures are *the same property seen twice*. It is a next-token predictor trained to produce plausible continuations — so it is fluent, flexible and good at intent, **and** it will produce a plausible continuation when it has no idea, which is what hallucination is. It is not a bug bolted onto a good system; it's the cost of the mechanism that makes the system work at all.
 
@@ -493,7 +459,7 @@ flowchart LR
     A --> CA[Conversational Agent]
 ```
 
-**Technical capability → conversational consequence** — the deck pairs them, and the pairing is the point:
+**Technical capability → conversational consequence** — pair them; the pairing is the point:
 
 | Technical capability | Impact on conversations |
 |---|---|
@@ -526,7 +492,7 @@ flowchart LR
 
 **Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (section 11) become a topic.
 
-> ***Going deeper*** *(my own knowledge, beyond the deck — RAG in one picture, since it's named as the fix all through this note but never drawn):*
+> ***Going deeper*** *(my own knowledge, beyond the course — RAG in one picture, since it's named as the fix all through this note but never drawn):*
 > **RAG = Retrieval-Augmented Generation.** Instead of hoping the model *memorised* a fact, you **fetch** the relevant text and hand it to the model in the prompt:
 >
 > ```mermaid
@@ -542,8 +508,6 @@ flowchart LR
 >
 > Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8 and `_shared/rag.md`.
 
-Cross-link: → **536 S1 sections 1, 3** (the mechanism behind every capability in this table) · `_shared/rag.md` (the fix for the first limitation)
-
 ---
 
 ## Part 4 · How an agent actually runs
@@ -551,8 +515,6 @@ Cross-link: → **536 S1 sections 1, 3** (the mechanism behind every capability 
 *The spine of the whole course.*
 
 ### 9. The seven-stage agent lifecycle
-
-*Reference: deck — the seven-stage framing is the instructor's own (deck only).*
 
 **Intuition** — The spine of the whole course. Every later lecture deepens one stage. **Learn this cold; it's the single most likely structured question on the mid-sem.**
 
@@ -615,7 +577,7 @@ What actually passes between stages:
 
 Notice safety appears **twice** — sanitization at stage 1 (input) and validation at stage 6 (output). That bracketing is deliberate and worth stating in an exam answer.
 
-**Exercise from the deck — do this, it's likely exam-shaped:**
+**Exercise — do this, it's likely exam-shaped:**
 
 > *"Find me a good Italian restaurant near my office that's open tonight and make a reservation for 2 at 7 PM"*
 >
@@ -625,18 +587,14 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing (L11) is for.
 
-> ***In practice*** *(beyond the deck — how you actually build these seven stages):*
+> ***In practice*** *(beyond the course — how you actually build these seven stages):*
 > - In real code the lifecycle is a **state machine**, and **LangGraph** is the tool the course uses for exactly this: each stage is a **node**, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Drawing the seven stages as a LangGraph is Lab-4-and-beyond work.
 > - Stages 1 and 6 (**safety**) are usually not your own code — you wire in **guardrails libraries** (NeMo Guardrails, Guardrails AI, Llama Guard) for prompt-injection defence, PII redaction and output filtering. "Never rely on a single safety layer" (section 11) means both ends, plus these.
 > - Stage 4 (**tool invocation**) is the one that acts on the world, so anything irreversible — a payment, a booking, a delete — gets a **human-in-the-loop** confirmation before execution, not after. This is the single most important production habit in the whole lifecycle.
 
-Cross-link: → `_shared/agents.md`
-
 ---
 
 ### 10. Protocol landscape
-
-*Reference: MCP — [modelcontextprotocol.io](https://modelcontextprotocol.io) (Anthropic 2024); A2A — Google's spec.*
 
 **Intuition** — As agents proliferate they need standard ways to talk to tools, data, each other and UIs. The argument for standards, stated as a contrast:
 
@@ -667,24 +625,20 @@ flowchart TD
     AG2 -->|"MCP again"| T2["its own tools"]
 ```
 
-**The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges. USB-C is the analogy the deck reaches for, and it's a good one — before it, every device needed its own cable.
+**The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges. USB-C is the natural analogy, and it's a good one — before it, every device needed its own cable.
 
-**The deck's own caveat, worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes in L13–L14 (the deck says 14–15).
+**A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes in L13–L14.
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
 
-> ***In practice*** *(beyond the deck — MCP is the one to actually know right now):*
-> **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** (549 S1) — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.
-
-Cross-link: → `_shared/agents.md`, `_shared/api-design.md` · **549 S1** (REST/GraphQL/gRPC)
+> ***In practice*** *(beyond the course — MCP is the one to actually know right now):*
+> **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.
 
 ---
 
 ### 11. Production concerns
 
-*Reference: deck; the tools' own docs (LangSmith, Arize Phoenix, OpenTelemetry).*
-
-**Intuition** — the deck's framing: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
+**Intuition** — the framing: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
 
 *The four axes are not independent — every fix on one pushes on another (my own):*
 
@@ -729,13 +683,9 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 **Tradeoff** — these four pull against each other, and naming the tension is what a good exam answer does. Every safety layer adds latency. Cheaper model routing costs quality. Prompt caching saves 50–90% but constrains how you structure prompts. There is no configuration that maximises all four; production work is **choosing which to sacrifice for this particular product.**
 
-Cross-link: → `_shared/evaluation.md` · **546 S11** (pipeline and system quality) · **549 S7** (deployment and tooling)
-
 ---
 
 ### 12. Open problems
-
-*Reference: deck; each research direction is its own paper (MemGPT, Titans, GAIA, SWE-bench, Constitutional AI).*
 
 **Intuition** — Every item below is a limitation of the *current* generation, not a law. It's worth knowing which is which: some of these are engineering problems that money and iteration will close, and some are open research questions that may not close at all. Reading them as a single list of "things AI can't do yet" is the mistake — the useful skill is telling a **workaround** from a **wall**.
 
@@ -758,7 +708,7 @@ Where research is active — useful for essay-style questions asking "what are t
 | ⚙️ **Engineering — will close** | Persistent cross-session memory | External memory is ugly but it works; the remaining problems are retrieval quality and cost |
 | 🧱 **Research — may not close** | Consistent multi-step reasoning | Next-token prediction has no mechanism that *guarantees* a valid inference chain, only one that makes valid chains likely |
 | 🧱 **Research — may not close** | Grounded factual accuracy | A model has no internal notion of "I don't know this." RAG supplies evidence; it doesn't install doubt |
-| 🧱 **Research — may not close** | Safety & alignment at scale | We can't fully specify what we want (**546 section 8.1** — the same specification problem, from the other end) |
+| 🧱 **Research — may not close** | Safety & alignment at scale | We can't fully specify what we want (the same specification problem, from the other end) |
 | ⚠️ **Compounding** | Reliable long-horizon execution | 95% per-step accuracy over 100 steps is 0.6% end-to-end. Arithmetic, not capability — and it's why long agent runs need checkpoints rather than better models |
 
 **Tradeoff / how to use this section** — the temptation is to treat these as reasons not to build. That's the wrong read. **Every one of them has a design response available today**, and knowing the response is what separates an architect from a commentator:
@@ -774,13 +724,9 @@ Where research is active — useful for essay-style questions asking "what are t
 
 The honest summary: **none of these are solved, and all of them are survivable.** Production systems ship on top of every limitation in this table — by constraining the problem until the model's reliability is enough for it, which is the real design skill this course teaches.
 
-Cross-link: → **546 S8.1** (the specification problem, reached from software engineering) · `_shared/agents.md`
-
 ---
 
 ## State of the art — 2026 (landscape, table only)
-
-*Reference: deck; vendor model cards (these numbers date within months).*
 
 | Model | Provider | Context | Strength | Best for |
 |---|---|---|---|---|
@@ -799,13 +745,13 @@ Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **10
 
 ## Lab / build
 
-**521 Lab 1 (session 1): tokenization and an AI bot with tool calling.** The deck runs two hands-on demos:
+**521 Lab 1 (session 1): tokenization and an AI bot with tool calling.** Two hands-on demos:
 
 **Demo A — BPE with `tiktoken`:** text → tokens, token counting for a sample conversation, cost analysis, model comparison across tokenizers.
 
 **Demo B — the weather agent.** ✅ **Notebooks received** → `labs/S01-tokenization-and-tool-calling/`
 
-⚠️ **The notebook differs from the deck.** Slide 47 says "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
+⚠️ **The notebook differs from the plan.** The stated approach is "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
 
 Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, four sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
 
@@ -850,11 +796,9 @@ Five stages, and the staging is the lesson:
 4. **Execution** — call the actual weather API
 5. **Response generation** — LLM writes the natural answer
 
-Target interaction in the deck: *"What's the weather like in Mumbai?"* — the notebook uses Tokyo, then a two-city comparison (Paris vs New York). → extracts location → calls API → receives 32°C, humid, partly cloudy → responds naturally.
+Target interaction: *"What's the weather like in Mumbai?"* — the notebook uses Tokyo, then a two-city comparison (Paris vs New York). → extracts location → calls API → receives 32°C, humid, partly cloudy → responds naturally.
 
 **Do stage 1 before stage 2.** Watching the model fail without tools is what makes function calling land — skip it and you're just copying a schema.
-
-> **Note:** 536's Lab 1 is *also* tokenization, also at session 1, also using `tiktoken`. Do them in one sitting — the token-counting script serves both.
 
 ---
 

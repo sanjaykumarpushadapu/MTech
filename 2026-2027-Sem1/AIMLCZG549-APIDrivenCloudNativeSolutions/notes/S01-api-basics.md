@@ -14,8 +14,6 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 ### 1. What an API is
 
-*Reference: R2 Gough, Bryant & Auburn, *Mastering API Architecture* ch1 (Design, Build & Specify APIs).*
-
 **Intuition** — An API is a **contract between a service and its clients**. It says: send me a request shaped like this, and I promise a response shaped like that. Neither side needs to know how the other is built. That's the whole point — the contract is the product.
 
 ```mermaid
@@ -28,30 +26,26 @@ flowchart LR
 
 **Everything to the right of the contract can be rewritten** — new language, new database, new hardware — and no client notices. That independence *is* the product. It's also why a breaking change is such a big deal (section 9): it's the one thing that reaches across the line.
 
-**Three definitions from the deck, in increasing usefulness:**
+**Three definitions, in increasing usefulness:**
 
 1. "Application Programming Interface" — the acronym, tells you nothing.
 2. **A contract between a service and its clients** — the one to remember.
 3. A set of rules and protocols for building and interacting with software, enabling systems to exchange data and integrate function **without the end user understanding the underlying code**.
 
-**API-first approach** — the application is *designed as* a set of APIs from the start, rather than having an API bolted on afterwards. The deck flags this term explicitly; it's the premise of the whole course, and it recurs in 546 S9 (designing APIs for ML services).
+**API-first approach** — the application is *designed as* a set of APIs from the start, rather than having an API bolted on afterwards. It's an explicitly-named term, and the premise of the whole course.
 
 **Worked example** — Amazon Bedrock exposes `GET /models` to list models and `POST /models/{model-id}/invoke` to run inference. You never see the GPUs, the model weights, or the serving stack. You see a contract. Same for Hugging Face, LangChain and Prefect — which is exactly why this course is API-driven.
 
 **Tradeoff / the cost of the contract** — Once published, the contract binds you. Clients build against it and break when it changes, which is why section 9 (versioning) exists as a topic at all. An internal function can be refactored freely; a published API cannot. **Publishing an API is a commitment, not a feature.**
 
-> ***In practice*** *(beyond the deck — what calling an API actually looks like on the job):*
+> ***In practice*** *(beyond the course — what calling an API actually looks like on the job):*
 > - You almost never write raw HTTP. You call an **SDK** — `openai`, `boto3`, `huggingface_hub` — and every one of those is a thin wrapper that builds the HTTP request for you. Knowing the contract underneath is exactly what lets you debug when the SDK does something surprising (a 400 you didn't expect, a field it won't send).
 > - Real APIs are gated by an **API key or token** in a header (`Authorization: Bearer sk-…`). The contract includes *who's allowed*, not just *what's allowed* — authentication (section 3, `401`) and authorization (`403`) are part of the promise.
 > - Providers enforce **rate limits** (e.g. "60 requests/min"). Exceed one and you get `429 Too Many Requests`, so production code wraps calls in **retry-with-backoff**. This is the "contract binds *you*" cost made concrete: the provider can throttle, version, or deprecate, and your system has to absorb it.
 
-Cross-link: → `_shared/api-design.md` · **546 S9**
-
 ---
 
 ### 2. Synchronous vs asynchronous
-
-*Reference: R2 ch1; for the async side, the RabbitMQ and Apache Kafka docs, and [asyncapi.com](https://www.asyncapi.com) (the async counterpart to OpenAPI).*
 
 **Intuition** — Synchronous means the caller **waits**; the next task can't start until this one finishes (blocked). Asynchronous means the caller doesn't wait; a second task can begin in parallel (non-blocked).
 
@@ -76,7 +70,7 @@ Cross-link: → `_shared/api-design.md` · **546 S9**
 
 That last row is why real systems are usually both. The user-facing read (`GET /orders/123`) stays synchronous because the user needs an answer now; the fulfilment pipeline behind it goes async because nothing there benefits from making anyone wait.
 
-**Mechanism — the deck's own example, an order service, both ways.**
+**Mechanism — the example, an order service, both ways.**
 
 Synchronous (REST): the order service calls each downstream service directly and waits.
 
@@ -108,8 +102,6 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 **Tradeoff / when NOT to go async** — Asynchronous buys availability (the consumer service can be down and the message waits) and decoupling, and charges you a broker to operate, eventual consistency, harder debugging, and no simple "what did it return?" answer. Use sync when the caller genuinely needs the answer to proceed — a payment authorisation. Use async for work that can complete later — sending the confirmation email.
 
-Cross-link: → `_shared/api-design.md` · **549 S5** (API-driven data pipelines) · **546 S5** (microservices)
-
 ---
 
 ## Part 2 · HTTP and specification
@@ -117,8 +109,6 @@ Cross-link: → `_shared/api-design.md` · **549 S5** (API-driven data pipelines
 *The wire format everything else sits on.*
 
 ### 3. HTTP APIs
-
-*Reference: [MDN HTTP docs](https://developer.mozilla.org/en-US/docs/Web/HTTP) and **RFC 9110** (HTTP semantics) — the canonical, durable source for methods and status codes. (The status-code classes and endpoint anatomy came from the class Q&A.)*
 
 **Intuition** — HTTP APIs are the standard way applications talk over the web, typically browser → server. Three components: **endpoint**, **request**, **response**.
 
@@ -202,11 +192,11 @@ The codes worth knowing by name:
 | **404 Not Found** | Requested resource does not exist |
 | **500 Internal Server Error** | Unexpected server error |
 
-*Which success code when (my clarity — the deck lists both but doesn't pair them to the method):* a `GET` that returns data → **200 OK**; a `POST` that creates a resource → **201 Created**. Both mean "it worked" — 201 adds "…and I made something new," which is why it's the natural reply to POST.
+*Which success code when (my clarity — both codes exist but aren't usually paired to the method):* a `GET` that returns data → **200 OK**; a `POST` that creates a resource → **201 Created**. Both mean "it worked" — 201 adds "…and I made something new," which is why it's the natural reply to POST.
 
 Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we don't know who you are*. 403 = *we know who you are and you still can't*.
 
-> ***Going deeper*** *(my own knowledge, beyond the deck — how a request actually proves who it is; `401`/`403` are where you meet this):*
+> ***Going deeper*** *(my own knowledge, beyond the course — how a request actually proves who it is; `401`/`403` are where you meet this):*
 > Three auth schemes you'll use constantly:
 >
 > | Scheme | How it works | Where you'll see it |
@@ -244,7 +234,7 @@ The **3xx family** is invisible — the browser follows the redirect silently �
 curl -X GET "https://jsonplaceholder.typicode.com/posts"
 ```
 
-Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · response = posts in JSON. The deck also suggests trying it in **Postman**, which is worth installing now — you'll want it for labs 3 and 4.
+Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · response = posts in JSON. Also worth trying it in **Postman**, which is worth installing now — you'll want it for labs 3 and 4.
 
 > ***Going deeper*** *(my own — what that `curl` actually sends and receives on the wire; an SDK hides this, but it's all HTTP really is):*
 > The **request** your client sends is plain text:
@@ -268,8 +258,8 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 **Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (section 7).
 
-> ***Going deeper*** *(beyond the deck — safe vs idempotent methods, the property that makes retries safe):*
-> The deck lists the four verbs by purpose. In practice the property that matters is what happens when you **repeat** a call — because networks drop responses and clients retry.
+> ***Going deeper*** *(beyond the course — safe vs idempotent methods, the property that makes retries safe):*
+> The four verbs are usually listed by purpose. In practice the property that matters is what happens when you **repeat** a call — because networks drop responses and clients retry.
 >
 > | Method | **Safe?** (no change) | **Idempotent?** (same result if repeated) |
 > |---|---|---|
@@ -280,17 +270,13 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 >
 > This is why a failed `PUT` is safe to blindly retry but a failed `POST` isn't — retrying a charge could double-bill. Real payment APIs (Stripe) solve it with an **idempotency key**: you send a unique key with the `POST`, and the server dedupes repeats. This is also the deeper reason `POST`→`201` and `PUT`→`200` (section 3, *which success code when*): `POST` makes something new each time; `PUT` converges on one state.
 
-Cross-link: → `_shared/api-design.md` · **549 S8** (calling AI/cognitive service APIs — all of them are HTTP APIs shaped like this)
-
 ---
 
 ### 4. OpenAPI and the API lifecycle
 
-*Reference: the OpenAPI spec at [openapis.org](https://www.openapis.org) / [spec.openapis.org](https://spec.openapis.org); [FastAPI docs](https://fastapi.tiangolo.com) for the worked stack.*
-
 **Intuition** — If an API is a contract, someone has to write the contract down in a form both humans and machines can read. That's **OpenAPI** — an *API description standard*, formerly called Swagger, providing a formal way to describe HTTP APIs, mainly RESTful ones.
 
-**What a written spec buys you** — the deck lists four, and they're the exam answer:
+**What a written spec buys you** — four things, and they're the exam answer:
 
 1. People understand how the API works, and how a sequence of APIs work together
 2. **Generate client code**
@@ -299,7 +285,7 @@ Cross-link: → `_shared/api-design.md` · **549 S8** (calling AI/cognitive serv
 
 #### 4.1 Mocking — building against a contract that has no implementation yet
 
-⚠️ *The handout lists **mocking** under this session ("OpenAPI spec, mocking, semantic versioning, tools") and the instructor read it out in class, but **the deck has no slide on it**. Filled in here from the OpenAPI toolchain, because it is named in the syllabus and is the practical payoff of writing the spec first.*
+⚠️ *The handout lists **mocking** under this session ("OpenAPI spec, mocking, semantic versioning, tools") and the instructor read it out in class, but there was no slide on it. Filled in here from the OpenAPI toolchain, because it is named in the syllabus and is the practical payoff of writing the spec first.*
 
 **Intuition** — Once the contract exists, it can be *served* before anyone writes the code behind it. A **mock server** reads the OpenAPI document and returns responses that match the schema — right shape, right status codes, fake data. The front-end team starts immediately instead of waiting for the back-end.
 
@@ -329,7 +315,7 @@ The front-end now builds real screens. When the back-end ships, the URL changes 
 
 **This is what "API-first" actually means in practice.** Design-first isn't a philosophical preference — it's the thing that lets three teams work in parallel off one document instead of serially off each other.
 
-**Mechanism — the seven-step lifecycle the deck walks through**, built around a Books API:
+**Mechanism — the seven-step lifecycle**, built around a Books API:
 
 ```mermaid
 flowchart LR
@@ -378,8 +364,6 @@ Note the shape: collection endpoint `/books` for list and create; item endpoint 
 
 **Tradeoff / the cost of spec-first** — Writing the spec before the code is deliberate friction, and it's wasted if the API is internal, single-consumer, and changing weekly. The value scales with the number of consumers who need to agree, and with how expensive it is to renegotiate later. For a public API it's essential; for a script's helper endpoint it's ceremony.
 
-Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML services)
-
 ---
 
 ## Part 3 · The three API styles
@@ -387,8 +371,6 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML ser
 *The heart of the session.*
 
 ### 5. REST
-
-*Reference: Roy Fielding's 2000 dissertation, ch5 (the origin of REST); R2 ch1.*
 
 **Intuition** — REST is not a technology, it's an **architectural style** — Roy Fielding, 2000 — and it's the architecture of the web itself. Its single organising idea: **treat every piece of content as a resource**, give each resource a URI, and manipulate it with HTTP's existing verbs.
 
@@ -399,7 +381,7 @@ Cross-link: → `_shared/api-design.md` · **546 S9** (designing APIs for ML ser
 - Representations are **JSON or XML**.
 - HTTP methods map onto CRUD: `GET` read, `POST` create, `PUT` update, `DELETE` delete. POST/PUT/DELETE require suitable permissions.
 
-*The deck names REST as "stateless" but never unpacks it — and section 7 leans on the word again, so it's worth pinning down here (my clarity, drawn from R2's REST-vs-RPC point).* **Stateless** means every request carries everything the server needs to handle it — auth token, resource id, body — and the server keeps **no memory of the client between calls**. There is no server-side "session" that request 2 silently depends on from request 1; if the client needs continuity, the client resends the context. Why this earns REST its "mature and ubiquitous" benefit: if the server remembers nothing, **any server instance can answer any request**, so ten identical servers behind a load balancer just work — that's what lets REST scale horizontally. It's also the exact property RPC gives up (see section 7: *"REST is by definition stateless; with RPC state depends on the implementation"*), which is why RPC can be faster but more coupled.
+*REST is called "stateless" but the word is rarely unpacked — and section 7 leans on it again, so it's worth pinning down (my clarity).* **Stateless** means every request carries everything the server needs to handle it — auth token, resource id, body — and the server keeps **no memory of the client between calls**. There is no server-side "session" that request 2 silently depends on from request 1; if the client needs continuity, the client resends the context. Why this earns REST its "mature and ubiquitous" benefit: if the server remembers nothing, **any server instance can answer any request**, so ten identical servers behind a load balancer just work — that's what lets REST scale horizontally. It's also the exact property RPC gives up (see section 7: *"REST is by definition stateless; with RPC state depends on the implementation"*), which is why RPC can be faster but more coupled.
 
 Same resource, two representations:
 
@@ -415,7 +397,7 @@ Same resource, two representations:
 { "id": 1, "name": "Shreyas", "profession": "Teacher" }
 ```
 
-**Worked example — the deck's student API.** Note how the *URI* changes meaning by whether an ID is present, while the verb carries the operation:
+**Worked example — the student API.** Note how the *URI* changes meaning by whether an ID is present, while the verb carries the operation:
 
 | Method | URI | Operation |
 |---|---|---|
@@ -427,7 +409,7 @@ Same resource, two representations:
 
 #### How RESTful is it? The Richardson Maturity Model
 
-*Not in the deck — this is R2 ch1, and it's the standard way to grade a REST API. Go deeper: Fowler, ["Richardson Maturity Model"](https://martinfowler.com/articles/richardsonMaturityModel.html).*
+*The standard way to grade a REST API. Go deeper: Fowler, ["Richardson Maturity Model"](https://martinfowler.com/articles/richardsonMaturityModel.html).*
 
 **Intuition** — Leonard Richardson (QCon 2008) reviewed many REST APIs and found teams adopt REST in **levels**, not all-or-nothing. Martin Fowler popularised them. Most real APIs sit at level 2.
 
@@ -438,9 +420,9 @@ Same resource, two representations:
 | **2** | **Verbs (Methods)** | Multiple resource URIs accessed by **different request methods**, chosen by their effect on the server. Guarantees `GET` doesn't change state | adding `PUT /attendees/1`, `DELETE /attendees/1` |
 | **3** | **Hypermedia Controls** | **HATEOAS** — Hypertext As The Engine Of Application State. The response carries the actions now possible on the returned object | `GET /attendees/1` returns the update/delete links |
 
-**Tradeoff / why level 3 is rare** — R2 is blunt: *"in practical terms level 3 is rarely used in modern RESTful HTTP services."* HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
+**Tradeoff / why level 3 is rare** — in practical terms, **level 3 is rarely used in modern RESTful HTTP services**. HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
 
-**A whole system built this way** — the deck's food-delivery architecture, and the best single diagram in the deck because it's a preview of microservices (S3):
+**A whole system built this way** — the food-delivery architecture, and the best single diagram here — a preview of microservices (S3):
 
 ```mermaid
 flowchart TD
@@ -463,7 +445,7 @@ flowchart TD
 
 Two captions on that slide carry the actual lesson: **"Services have APIs"** and **"A service's data is private."** Every service owns its own database; nothing reaches into another service's data. That constraint is what makes independent deployment possible, and it's the microservices idea in one line.
 
-**Benefits and drawbacks — straight from the deck, and the likeliest exam question in this session:**
+**Benefits and drawbacks — the likeliest exam question in this session:**
 
 | Benefits | Drawbacks |
 |---|---|
@@ -473,28 +455,24 @@ Two captions on that slide carry the actual lesson: **"Services have APIs"** and
 | **No intermediate broker** | |
 | Supported by most languages and frameworks | |
 
-The "fetching multiple resources" drawback is the deck's setup for GraphQL: fetching a user's profile, their posts, and comments on those posts takes **three separate API calls**.
+The "fetching multiple resources" drawback is the setup for GraphQL: fetching a user's profile, their posts, and comments on those posts takes **three separate API calls**.
 
 **Why this matters for the rest of the course** — most AI services from AWS, Azure and GCP are RESTful. Amazon Bedrock exposes `GET https://bedrock.us-west-2.amazonaws.com/models` and `POST .../models/{model-id}/invoke`, both with access tokens and JSON responses. Hugging Face, LangChain and Prefect are the same. **You will spend this semester calling REST APIs.**
 
 **Tradeoff / when NOT to use REST** — When one screen needs data from many resources, REST's one-resource-per-call shape produces chatty clients and slow mobile screens (→ GraphQL). When two internal services exchange huge volumes and you control both ends, REST's text payloads and HTTP/1.1 overhead are pure waste (→ gRPC).
 
-> ***In practice*** *(beyond the deck — what a real REST endpoint has that `GET /students` doesn't show; R2 ch1 covers these as "REST standards & structure"):*
+> ***In practice*** *(beyond the course — what a real REST endpoint has that `GET /students` doesn't show):*
 > A production collection endpoint is never just "return everything." Four things you'll build every time:
 > - **Pagination** — `GET /students?page=2&limit=50` (or cursor-based `?after=<id>`). Returning 10,000 rows in one response is how you take down your own service.
 > - **Filtering & sorting** — `GET /students?branch=CS&sort=-gpa`. The query string is where "which subset" lives.
 > - **A consistent error envelope** — not just a `400`, but a JSON body like `{"error": {"code": "invalid_branch", "message": "…"}}` so clients can handle failures programmatically. Consistency across every endpoint is what makes an API pleasant to build against.
-> - **Auth on every mutating call** — `Authorization` header checked before `POST`/`PUT`/`DELETE`; the deck's "requires suitable permissions" is this.
+> - **Auth on every mutating call** — `Authorization` header checked before `POST`/`PUT`/`DELETE`; the "requires suitable permissions" is this.
 >
 > Naming conventions that mark a REST API as well-designed: **plural nouns** (`/students` not `/getStudent`), **no verbs in the path** (the HTTP method *is* the verb), and **nesting for relationships** (`/students/123/courses`). Get these right and the API is self-explanatory; get them wrong and every consumer needs the docs open constantly.
-
-Cross-link: → `_shared/api-design.md` · **546 S9** (APIs and packaging) · **549 S8**
 
 ---
 
 ### 6. GraphQL
-
-*Reference: [graphql.org/learn](https://graphql.org/learn); AWS AppSync docs for the managed option.*
 
 **Intuition** — Built by **Facebook in 2015** specifically to fix REST's multiple-round-trips problem. Instead of the server deciding what each endpoint returns, **the client describes exactly the data it wants**, across multiple sources, in **one call**.
 
@@ -521,7 +499,7 @@ flowchart TD
 - The server **validates** it against the schema (you cannot ask for what the schema doesn't support), **executes** it against whatever databases or sources are needed, and **forms a JSON response**.
 - Two operation types: **`query`** to fetch, **`mutation`** to insert, update or delete.
 
-**Worked example — the deck's own REST-vs-GraphQL comparison.** Fetch a user's profile, their posts, and comments on those posts from a social media app.
+**Worked example — the REST-vs-GraphQL comparison.** Fetch a user's profile, their posts, and comments on those posts from a social media app.
 
 REST — three round trips:
 
@@ -565,22 +543,18 @@ query {
 ]}}
 ```
 
-**Two deployment options on AWS**, from the AWS architecture blog the deck cites:
+**Two deployment options on AWS**, from AWS's architecture guidance:
 
 | Option | What it is |
 |---|---|
 | **Fully managed — AWS AppSync** | A managed GraphQL server coordinating front-end requests with backend services |
 | **Self-managed GraphQL** | You run the server yourself |
 
-**Tradeoff / when NOT to use GraphQL** — The deck's own comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
-
-Cross-link: → `_shared/api-design.md`
+**Tradeoff / when NOT to use GraphQL** — The comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
 
 ---
 
 ### 7. gRPC
-
-*Reference: [grpc.io/docs](https://grpc.io/docs) and the Protocol Buffers docs at [protobuf.dev](https://protobuf.dev).*
 
 **Intuition** — Start from **RPC** (Remote Procedure Call): make a call to a remote server *look like calling a local function*, for distributed client-server applications. gRPC is Google's 2015 open-source RPC framework, tuned for speed between services.
 
@@ -618,7 +592,7 @@ flowchart LR
 
 That diagram is the point of gRPC in one picture: **a C++ service, a Ruby client and an Android/Java client, all generated from one `.proto` file.**
 
-**Worked example — the deck's calculator `.proto`:**
+**Worked example — the calculator `.proto`:**
 
 ```protobuf
 syntax = "proto3";
@@ -640,33 +614,33 @@ message AddResponse {
 }
 ```
 
-Run `protoc` on this and you get, in your language of choice: the message classes, the parsing code, and **both client and server stubs**. You define the API once, language- and platform-neutrally, and generate for many languages — which is the deck's stated reason for using proto files.
+Run `protoc` on this and you get, in your language of choice: the message classes, the parsing code, and **both client and server stubs**. You define the API once, language- and platform-neutrally, and generate for many languages — which is the stated reason for using proto files.
 
-*(The numbers `= 1`, `= 2` are field tags identifying fields on the wire, not default values — a common first-read confusion. Note also the deck's own typo: `MultiplyResponse` is declared as `MultipleResponse`.)*
+*(The numbers `= 1`, `= 2` are field tags identifying fields on the wire, not default values — a common first-read confusion.*
 
-**The difference that matters most, from R2 — state:**
+**The difference that matters most — state:**
 
 > *"A key difference between REST and RPC is state. **REST is by definition stateless** — with RPC **state depends on the implementation**."*
 
-RPC exchanges can accumulate state, which buys **high performance at the potential cost of reliability and routing complexity**. RPC also conveys **exact functionality at a method level**, so producer and consumer end up **more coupled**. R2's judgement is worth quoting: *"Coupling is not always a bad thing, especially in east–west services where performance is a key consideration."*
+RPC exchanges can accumulate state, which buys **high performance at the potential cost of reliability and routing complexity**. RPC also conveys **exact functionality at a method level**, so producer and consumer end up **more coupled**. And coupling is not always a bad thing — **especially in east–west services where performance is a key consideration**.
 
-**Why HTTP/2 actually helps** — the deck lists it as a feature; R2 says why. HTTP/2 adds **binary compression and framing**: a transparent binary framing layer splits and compresses messages into chunks, enabling **full request/response multiplexing over a single connection**. Fetching 20 attendees over HTTP/1 needs **20 new TCP connections**; over HTTP/2 it's **20 requests on one connection**. gRPC uses HTTP/2 by default and shrinks payloads with a binary protocol.
+**Why HTTP/2 actually helps** — it's often listed as a feature; here's why. HTTP/2 adds **binary compression and framing**: a transparent binary framing layer splits and compresses messages into chunks, enabling **full request/response multiplexing over a single connection**. Fetching 20 attendees over HTTP/1 needs **20 new TCP connections**; over HTTP/2 it's **20 requests on one connection**. gRPC uses HTTP/2 by default and shrinks payloads with a binary protocol.
 
-*(R2 also notes HTTP/3 is coming, built on **QUIC** over UDP.)*
+*(HTTP/3 is coming, built on **QUIC** over UDP.)*
 
-> ***Going deeper*** *(my own — the four call types HTTP/2 multiplexing unlocks; the deck's calculator shows only the first):*
+> ***Going deeper*** *(my own — the four call types HTTP/2 multiplexing unlocks; the calculator shows only the first):*
 > Because gRPC rides on HTTP/2, a call isn't limited to one-request-one-response. There are **four kinds**, and knowing they exist is most of what the topic is about:
 >
 > | Type | Shape | Example |
 > |---|---|---|
-> | **Unary** | 1 request → 1 response (like REST) | `Add(a, b) → sum` — the deck's calculator |
+> | **Unary** | 1 request → 1 response (like REST) | `Add(a, b) → sum` — the calculator |
 > | **Server streaming** | 1 request → *stream* of responses | "subscribe to stock prices" — one ask, many updates |
 > | **Client streaming** | *stream* of requests → 1 response | "upload 10,000 sensor readings" → one ack |
 > | **Bidirectional** | both stream at once | live chat, real-time translation |
 >
 > In the `.proto` you mark it with the `stream` keyword — `rpc Prices(Req) returns (stream Price)`. Streaming is the concrete payoff of HTTP/2 multiplexing, and it's something REST cannot do cleanly — a real reason to reach for gRPC beyond raw speed.
 
-**Advantages and disadvantages — from the deck:**
+**Advantages and disadvantages —:**
 
 | Advantages | Disadvantages |
 |---|---|
@@ -677,13 +651,9 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 **Tradeoff / when NOT to use gRPC** — The disadvantages column is the answer, and it's sharp: gRPC is for **service-to-service** traffic where you control both ends. Put it on a public, browser-facing edge and you've chosen a protocol browsers can't natively speak, for consumers who can't debug it with `curl`. The usual architecture is REST or GraphQL at the edge, gRPC behind it.
 
-Cross-link: → `_shared/api-design.md` · **546 S5** (microservices — gRPC is the east–west default there) · **549 S12**
-
 ---
 
 ### 7b. North–south vs east–west — how to actually choose
-
-*Reference: R2 Gough ch1 — this north–south / east–west framing is R2's, absent from the deck, and it's what makes the comparison table usable.*
 
 **Intuition** — Which API format is right depends less on the format's features than on **where the traffic comes from**:
 
@@ -707,11 +677,11 @@ flowchart TD
 
 **The multiplier that makes this matter:** *"In a microservices-based architecture it is likely that **one north–south request will involve multiple east–west exchanges**."* So east–west inefficiency doesn't stay local — it cascades back to the user.
 
-**Three factors R2 says to weigh:**
+**Three factors to weigh:**
 
 **High-traffic services** — if exchange frequency is high, payload size and protocol overhead compound, showing up as either transfer cost or total latency.
 
-**Large payloads** — JSON over REST is verbose compared with a fixed or binary representation. And R2 attacks the usual defence directly:
+**Large payloads** — JSON over REST is verbose compared with a fixed or binary representation. And the usual defence is worth attacking directly:
 
 > A common misconception is that **"human readability" is quoted as a primary reason to use JSON**. The number of times a developer will need to read a message, versus the performance consideration, is not a strong case with modern tracing tools… Better logging and error handling can mitigate the human-readable argument.
 
@@ -719,19 +689,15 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 **Vintage formats** — not every service is modern; older components are an active consideration when evolving an architecture.
 
-**Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the deck's "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
-
-Cross-link: → **546 S5** (architecture and microservices) · `_shared/docker-k8s.md`
+**Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
 
 ---
 
 ### 8. Choosing between REST, GraphQL and gRPC
 
-*Reference: R2 ch1 (modelling exchanges & choosing an API format); the comparison table is the deck's own.*
-
 **Intuition** — There is no best API style, only a best fit. The choice falls out of three questions asked in order: **who calls it** (a browser you don't control, or a service you do), **what shape is the data** (a flat resource, or a graph you'd otherwise fetch in five round-trips), and **what does a mistake cost** (a slow page, or a blown latency budget). Answer those and the style picks itself.
 
-The deck's comparison table, which is close to guaranteed exam material:
+The comparison table, close to guaranteed exam material:
 
 | Feature | Best API type |
 |---|---|
@@ -773,8 +739,6 @@ The lesson: **one system, three correct answers.** Anyone who says "we're a Grap
 
 **The trap in the table above:** it compares styles on *features*, which invites picking the one with the most ticks. Features don't decide this — consumers do. gRPC's superior speed is worth nothing if the caller is a browser.
 
-Cross-link: → `_shared/api-design.md` — *written once; 546 S9 reaches the same material from the packaging side*
-
 ---
 
 ## Part 4 · Evolution
@@ -782,8 +746,6 @@ Cross-link: → `_shared/api-design.md` — *written once; 546 S9 reaches the sa
 *Changing a contract without breaking people.*
 
 ### 9. API versioning
-
-*Reference: [semver.org](https://semver.org) (the spec); [Stripe API versioning](https://docs.stripe.com/api/versioning) for the date-based scheme in practice.*
 
 **Intuition** — Versioning is managing change to an API **without disrupting clients**. A good strategy communicates what changed and lets consumers upgrade **at their own pace**.
 
@@ -838,7 +800,7 @@ Step 3 is the one teams skip and then regret. If you cannot answer *"who is stil
 | **Y** | Minor | New functionality or bug fixes, announced in change logs | ✅ Yes |
 | **Z** | Patch | Bug fixes only | ✅ Yes |
 
-**Worked example — the deck's movies API:**
+**Worked example — the movies API:**
 
 | Version | What changed |
 |---|---|
@@ -860,10 +822,10 @@ Each version reachable at its own endpoint:
 
 **A real one** — Google Maps JavaScript API is at **3.63.10a** (13 Jan 2026): `3.63` is the major/minor series, `10` the patch within it, and `a`/`b`/`d` are sub-patch identifiers for minor updates and bug-fix builds. Worth noting that a real-world scheme extends semver rather than following it exactly.
 
-**Tradeoff / when NOT to version** — Every live major version is a codebase you maintain, test and secure. Version too eagerly and you're running four APIs; version too late and you break your consumers. The deck's guidance — version only on breaking changes — is the balance point, and it implies the cheaper move is usually **designing the change to be non-breaking** (add an optional field rather than a required one).
+**Tradeoff / when NOT to version** — Every live major version is a codebase you maintain, test and secure. Version too eagerly and you're running four APIs; version too late and you break your consumers. The guidance — version only on breaking changes — is the balance point, and it implies the cheaper move is usually **designing the change to be non-breaking** (add an optional field rather than a required one).
 
-> ***In practice*** *(beyond the deck — where the version actually goes, and how big APIs handle it):*
-> The deck shows the version in the **URL path** (`/api/v2.0.0/movies`). That's the most common style — visible, easy to route, easy to test in a browser — but real APIs use two other schemes you'll meet:
+> ***In practice*** *(beyond the course — where the version actually goes, and how big APIs handle it):*
+> The classic style puts the version in the **URL path** (`/api/v2.0.0/movies`). That's the most common style — visible, easy to route, easy to test in a browser — but real APIs use two other schemes you'll meet:
 >
 > | Where the version lives | Example | Trade |
 > |---|---|---|
@@ -871,21 +833,19 @@ Each version reachable at its own endpoint:
 > | **Header** | `Accept: application/vnd.api+json; version=2` | URL stays clean; but invisible in a browser and easy to forget |
 > | **Date-based** (Stripe) | `Stripe-Version: 2024-06-20` | Each account pins a date; Stripe transforms old-shaped responses so you upgrade on your own schedule |
 >
-> Two career habits the exam won't test but the job will: **deprecation policy** — announce, give a window (6–12 months), monitor who's still on the old version, then sunset — and **most changes should be non-breaking by design**, so you add far fewer major versions than the semver table suggests. In modern practice, teams version **`v1`/`v2`** at the *major* level only and ship minor/patch changes silently — full `X.Y.Z` in the path is rarer than the deck implies.
-
-Cross-link: → `_shared/api-design.md` · **546 S9** (versioning a model API is versioning an API, plus the model)
+> Two career habits the exam won't test but the job will: **deprecation policy** — announce, give a window (6–12 months), monitor who's still on the old version, then sunset — and **most changes should be non-breaking by design**, so you add far fewer major versions than the semver table suggests. In modern practice, teams version **`v1`/`v2`** at the *major* level only and ship minor/patch changes silently — full `X.Y.Z` in the path is rarer than the semver table implies.
 
 ---
 
 ## Self-study — four APIs to explore
 
-*The deck's own self-study picks; each links to its source below.*
+*Self-study picks; each links to its source below.*
 
 | # | What | Where | Why |
 |---|---|---|---|
 | 1 | **Swagger Petstore** (OpenAPI 3.0) | https://editor.swagger.io/ | Observe the JSON-based API structure |
 | 2 | **Rapid API** | https://rapidapi.com/ | World's largest public API marketplace |
-| 3 | **Conference API** | R2 Gough et al., *Mastering API Architecture* | The textbook's running example |
+| 3 | **Conference API** | *Mastering API Architecture* (O'Reilly) | A book's running example |
 | 4 | **AsyncAPI Specification** | https://www.asyncapi.com/en | The async counterpart to OpenAPI — **event-driven architectures** |
 
 AsyncAPI is the one to actually look at: it closes the loop on section 2 by showing that asynchronous APIs have their own description standard, exactly parallel to OpenAPI for synchronous ones.

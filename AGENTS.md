@@ -27,7 +27,7 @@ Read `2026-2027-Sem1/STUDY-PLAN.md` before planning work.
 2. **Textbooks live in `/_library/`** (gitignored, 9 books). **Look there before asking the user for a book.**
 3. **Never commit secrets.** Placeholders only (`OPENAI_API_KEY`).
 4. **Never invent syllabus content.** Topics, dates, weights, references come from handouts. Unknown → `⚠️ unconfirmed`, never a guess.
-5. **Never reproduce textbook text.** Explain fresh; cite the chapter.
+5. **Never reproduce textbook text.** Explain fresh, in your own words — and **don't cite the source in the note** (no `T1`/`R2`/`ch3`, no "the deck"). The note carries knowledge, not references.
 6. **One file per session**, `<subject>/notes/S<NN>-<slug>.md` — **`S` prefix in every subject**, including 521 (whose handout says `L1…L16`; use `L3` in prose, `S03-` in the filename). Creating a note updates its row in `<code>-master.md` **and** `PROGRESS.md` in the same change.
 7. **Lab code lives in `<subject>/labs/S<NN>-<slug>/`**, never in `notes/`.
 8. **Transcripts are never committed.** Read → fold into the note → done. `source/transcripts/` is gitignored.
@@ -115,14 +115,15 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`.
 
 ### Every concept, in this order
 
-**Intuition** → **Mechanism** → **Worked example** → **Tradeoff / when NOT to use** → **`Cross-link:`**
+**Intuition** → **Mechanism** → **Worked example** → **Tradeoff / when NOT to use**
 
-Plus a `*Reference:*` line under the heading and **at least one Mermaid diagram**. All six are mandatory; the checklist in §11 verifies them.
+Plus **at least one Mermaid diagram**. All are mandatory; the checklist in §11 verifies them.
 
+- **No source references.** A note states the knowledge directly — no `*Reference:*` line, no "the deck says…", no textbook codes (`T1`, `R2`, `ch3`) or textbook-author citations in the prose. The knowledge stands on its own. Where an origin *is* the knowledge (REST = Fielding 2000, GraphQL = Facebook 2015, BPE = Sennrich 2016), that's a fact worth keeping — a citation of *the textbook* is not.
+- **No cross-subject links.** Each subject's notes are self-contained. Never link or point to another subject's session (`→ 546 S9`, "shared with 536", "you'll also see this in 521"). Same-*subject* navigation ("section 4", "S14") is fine. If a topic recurs in two subjects, each note covers it fully on its own — separateness over reuse.
 - **Tradeoff is never blank** and never "depends on the use case." Name the specific situation where the simpler option wins.
 - **The worked example must be reproducible by hand or in ≤30 lines.** A *described* example is not an example. For mechanism topics, show arithmetic on small numbers — and **verify the arithmetic by running it** before writing it down.
 - **Landscape topics get a comparison table**, not prose.
-- **`*Reference:*` must be durable** — a spec, chapter, or canonical link the reader could actually go read. Never "slides 13–14"; the deck won't exist in December. Where only the deck exists (common in 549 from S4), say *"deck only; no durable source behind this."*
 
 **Depth blocks**, where a concept has real-world weight — blockquoted, italic-marked as beyond-course:
 
@@ -234,13 +235,13 @@ Follow `_templates/OPENBOOK-TEMPLATE.md`. **Hard limit: two sides of A4.**
 
 ⚠️ **Order matters.** A note without its condensed page is recoverable in an afternoon in November. A condensed page written *before* the note is a summary of nothing, and the understanding it was supposed to compress never gets built. **Never write the condensed page first**, and when behind, always drop the condensed page rather than the note.
 
-## 9 · Shared topics
+## 9 · Subjects are self-contained — no sharing, no cross-links
 
-Ten topics appear in two to four subjects. **Write each once in `_shared/<topic>.md`** when the first course reaches it. When a later course arrives, **do not write a second note** — add a row to that file's "course-specific angles" table and cross-link from the session note.
+Some topics appear in two to four subjects (RAG, tokenization, agents, …). **Each subject covers its own topics fully, in its own notes.** When a topic recurs in another subject, **write it again there** from that subject's angle — do not point to another subject's note, and do not factor it into a shared file that both link to. Separateness beats reuse: a reader in one subject should never need another subject's notes.
 
-Record **exam scope per course** in the shared file: the same topic can be closed-book for one subject and open-book for another. `rag.md` is the sharp case — mid-sem scope for 521, comprehensive-only for 536, 546 and 549.
-
-`_shared/` notes follow the same concept rules as session notes, **including the diagram requirement.**
+- **No `_shared/` cross-links from session notes**, and no "→ 546 S9 / shared with 536" pointers anywhere.
+- Same-*subject* navigation ("section 4", "see S14") is fine.
+- The small duplication of re-explaining a shared topic per subject is the intended cost — it keeps each subject a clean, standalone reference.
 
 ## 10 · Tone
 
@@ -283,7 +284,8 @@ git status --short                 # nothing binary or secret staged
 
 - [ ] **Every handout sub-topic covered** — checked against the handout file itself, not the master index
 - [ ] Every deck agenda item covered, or the gap flagged inline in the note
-- [ ] Every concept has: `*Reference:*` · Intuition · Mechanism · Worked example · Tradeoff · diagram · `Cross-link:`
+- [ ] Every concept has: Intuition · Mechanism · Worked example · Tradeoff · diagram
+- [ ] No source references (no `*Reference:*`, `T1`/`R2`/`ch3`, "the deck") and no cross-subject links
 - [ ] Any arithmetic in a worked example was actually executed
 - [ ] Master index row + `PROGRESS.md` row updated
 - [ ] `MATERIALS-WATCHLIST.md` updated if material arrived or a new gap appeared
