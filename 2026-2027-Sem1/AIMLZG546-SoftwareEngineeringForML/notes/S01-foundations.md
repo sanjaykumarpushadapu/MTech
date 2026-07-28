@@ -55,6 +55,8 @@ flowchart LR
 
 The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
 
+*A car makes the proportion vivid:* the trained model is the **engine** — but a car is mostly everything else: chassis, brakes, steering, fuel system, dashboard, airbags. A brilliant engine bolted to no brakes isn't a car; a brilliant model with no data pipeline, no serving layer and no monitoring isn't a product. This course is about building the rest of the car.
+
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
 ---
@@ -530,7 +532,7 @@ def transcribe(audio_file):
 
 The first can be implemented by one developer and relied on by another without either seeing the other's code. The second cannot be specified — *we use ML precisely because we don't know how to specify the function.*
 
-The deep shift: **deductive reasoning** (logic-based, applying rules) → **inductive reasoning** (generalising from observation). We can no longer ask whether a component is *correct*, only whether it works *well enough on average* on test data or in the system. And since some answers will be wrong, **the rest of the system must tolerate mistakes** — a design constraint, not an afterthought. This is the concrete reason the SDLC's "run the phases once in order" assumption (section 3.1) fails.
+The deep shift: **deductive reasoning** (logic-based, applying rules) → **inductive reasoning** (generalising from observation). *Concretely: deductive reasoning is "all men are mortal; Socrates is a man; therefore Socrates is mortal" — the conclusion is **guaranteed** by the rules. Inductive reasoning is "every swan I've ever seen is white, so swans are white" — a generalisation from examples that holds right up until the first black swan. A trained model reasons the second way, which is exactly why it can be **confidently wrong**: it never had a rule to apply, only a pile of examples to generalise from.* We can no longer ask whether a component is *correct*, only whether it works *well enough on average* on test data or in the system. And since some answers will be wrong, **the rest of the system must tolerate mistakes** — a design constraint, not an afterthought. This is the concrete reason the SDLC's "run the phases once in order" assumption (section 3.1) fails.
 
 *But not new:* software engineering has a long history of building safe systems from unreliable components, and comprehensive formal specifications were always rare. Engineers already cope with vague specs via agile methods, cross-team communication, and lots of testing.
 

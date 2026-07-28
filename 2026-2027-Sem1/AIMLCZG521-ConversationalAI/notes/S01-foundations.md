@@ -161,6 +161,8 @@ Read the two dashed arrows — they are the entire architectural change. Everyth
 | **Workflows** | Systems where LLMs and tools are orchestrated through **predefined code paths** |
 | **Agents** | Systems where LLMs **dynamically direct their own processes and tool usage**, maintaining control over how they accomplish tasks |
 
+*An everyday analogy that makes the line stick:* a **workflow** is a **recipe** — the steps are written down in advance and followed in the same order every time; predictable, and it never surprises you. An **agent** is a **chef** told *"make me dinner with what's in the fridge"* — it decides what to cook and in what order, improvising as it goes; flexible, but you can't be certain in advance exactly what it'll do. Same ingredients (an LLM plus some tools), completely different amount of freedom handed to the model.
+
 The dividing question: **who decides the sequence of steps — you, in code, or the model, at runtime?**
 
 **The building block both are made of — the augmented LLM:**
@@ -425,7 +427,7 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 > **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG + memory systems** (Module 2).
 
-*Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. So a fact buried mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
+*Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. It's the same way you skim a long email: you reliably catch the opening line and the ask at the very bottom, but a detail buried three paragraphs deep you gloss right over — even though your eyes passed over all of it. So a fact placed mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
 
 *"Lost in the middle" drawn — recall accuracy against position in the context:*
 

@@ -127,6 +127,8 @@ Generation runs that factorisation *forward*. Four steps, repeated until a stop 
 | 3 | **Select** a token — `argmax` (greedy) or sample from `p` | one ID |
 | 4 | **Append** it to the context and return to step 1 | context grows by 1 |
 
+*What softmax actually does, in one sentence (it shows up in every section from here on, so it's worth pinning down now):* it takes a list of raw scores — some big, some small, some negative — and turns them into positive numbers that add up to 1, i.e. a set of probabilities. The `e^{z}` part makes every score positive and exaggerates the gaps (a slightly bigger score becomes a much bigger probability); dividing by the sum `Σ e^{z}` makes the whole thing add to 1. So "apply softmax" just means "convert these scores into a probability distribution, letting the biggest scores dominate."
+
 The loop stops at an end-of-sequence token or a length cap. Step 3 is the only place randomness enters — which is why the *same* model gives different answers on different runs, and why `temperature=0` makes it deterministic.
 
 **Worked example — generate two tokens by hand.** Vocabulary of five: `the, cat, sat, mat, <eos>`. Prompt: `"The"`.
@@ -199,6 +201,8 @@ It builds a matrix comparing each token with every token before it, weighted by 
 | **K** | Key | *"What do I contain?"* — each past token advertising its relevance to the query |
 | **V** | Value | *"What do I contribute?"* — the actual content pulled in once relevance is decided |
 
+*An everyday analogy for Q, K, V — hold this and the maths below is just the analogy with numbers:* imagine you post a question in a group chat. Your **query** is what you're looking for. Every earlier message carries a **key** — a little label advertising what that message is about — and a **value** — its actual content. You mentally compare your query against each key to judge relevance, then you pull in the values of the relevant messages, paying most attention to the most relevant. Self-attention does exactly this, except "compare" is a dot product and "pay attention in proportion" is a softmax.
+
 **The computation, in three steps:**
 
 ```mermaid
@@ -215,7 +219,7 @@ flowchart TD
 ```
 
 1. **Q · Kᵀ** — dot product: how similar is the query to each key? Higher = more relevant.
-2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Why √d_k specifically: each score is a dot product of two d_k-dimensional vectors, so its size grows with the dimension — variance ≈ d_k, typical magnitude ≈ √d_k. Dividing by √d_k renormalises scores back to unit scale. Skip it and, at d_k = 128, scores run into the tens; softmax of widely-spread inputs saturates to almost one-hot, its gradient collapses toward 0, and the layer stops learning. √d_k is exactly the factor that cancels the dimension's inflation.*
+2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *The plain-English version first: a dot product is a sum of d_k little products, and the more numbers you add together, the bigger the total tends to get. So a 128-long dot product (Llama-3) produces far bigger raw scores than a 2-long one. Feed huge, widely-spread scores into softmax and it hands almost all the weight to a single winner and ignores everything else — and once softmax is that lopsided, its gradient is nearly zero, so the layer stops learning. Dividing by √d_k shrinks the scores back to a sensible size so softmax stays sensitive. Why √d_k and not d_k? each score is a dot product of two d_k-dimensional vectors, so its variance grows to ≈ d_k and its typical magnitude to ≈ √d_k — dividing by √d_k is exactly the factor that cancels that inflation and renormalises scores back to unit scale.*
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
 The same computation as a pipeline — the form to reproduce in an exam:
@@ -245,6 +249,8 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 |---|---|---|---|
 | Original transformer | 512 | 8 | 64 |
 | Llama-3-8B | 4096 | 32 | 128 |
+
+> **First pass? You can skim the numbers.** The one sentence to walk away with is at the very end: *each token's new vector is a weighted average of the other tokens' values, and the model learned the weights.* Everything below is just that sentence, proven on the smallest example that still shows every moving part. Read it once for the shape, then come back and push the numbers through by hand when you want it to stick.
 
 **Worked example — attention by hand, with actual numbers** *(you don't* have *attention until you've pushed real numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
 
@@ -465,7 +471,9 @@ i = 1  →  10000^(2/4)  = 100      → slow:  sin(pos/100), cos(pos/100)
 | 1 | 0.84 | 0.54 | 0.01 | 1.00 |
 | 2 | 0.91 | −0.42 | 0.02 | 1.00 |
 
-*The key point: it is an **elementwise sum**, not a concatenation — position and meaning share the same d dimensions:*
+**Read the table column-wise** — the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91) while the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Picture a bank of clock hands turning at different speeds: the seconds hand (dim0) races round while the hour hand (dim2) barely stirs, so no two moments ever show the same *combination* of hand positions. That combination is each position's unique multi-frequency "fingerprint." And because it's the *same fixed function at every position*, the model can even fingerprint a position it never saw during training — something learned embeddings simply cannot do.
+
+*The other key point: position is added on by an **elementwise sum**, not a concatenation — position and meaning share the same d dimensions:*
 
 ```mermaid
 flowchart BT
@@ -479,11 +487,7 @@ flowchart BT
 
 Both tokens carry the **identical** token embedding `[1,1,1]` — the same word — yet leave with different input embeddings. Position is the only thing that separated them. That is this whole section in one picture.
 
-**Tradeoff / where sinusoidal breaks** — it preserves *relative* distance beautifully but the model has to infer that relationship from a sum; nothing enforces it. Adding position into the same dimensions as meaning also means the two compete for representational space. RoPE's answer is to **rotate** Q and K instead — position then acts on the *angle* between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it.
-
-Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.91), the **high dimensions barely move** (dim2 crawls 0 → 0.01 → 0.02). Each position gets a unique multi-frequency "fingerprint" — like clock hands turning at different speeds — and because it's the *same fixed function at every position*, the model can encode a position it never saw in training, which learned embeddings cannot. RoPE keeps this multi-frequency idea but **rotates** Q and K rather than **adding** to the embedding.
-
-**Tradeoff** — learned embeddings are simplest and fail hardest outside the trained length; sinusoidal costs nothing and generalises modestly; RoPE is the current default precisely because long context is the pressure point, and it's the only one of the three that rotates rather than adds. RoPE gets full treatment in S3 — this is the preview.
+**Tradeoff** — the three approaches trade off cleanly. **Learned embeddings** are simplest and fail hardest outside the trained length. **Sinusoidal** costs nothing and generalises modestly, but it preserves only *relative* distance and the model has to infer even that from a sum — nothing enforces it — while packing position into the same dimensions as meaning makes the two compete for space. **RoPE** is the current default precisely because long context is the pressure point, and it's the only one of the three that **rotates** Q and K rather than **adding** to the embedding: position then acts on the *angle* between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it. RoPE keeps sinusoidal's multi-frequency idea but applies it by rotation; it gets full treatment in S3 — this is the preview.
 
 ---
 

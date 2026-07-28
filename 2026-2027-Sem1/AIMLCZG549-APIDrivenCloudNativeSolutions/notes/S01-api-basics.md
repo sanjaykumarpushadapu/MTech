@@ -16,6 +16,8 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 **Intuition** — An API is a **contract between a service and its clients**. It says: send me a request shaped like this, and I promise a response shaped like that. Neither side needs to know how the other is built. That's the whole point — the contract is the product.
 
+*A restaurant analogy carries this whole section:* the **menu** is the API. It promises "ask for dish 12 and you'll get *this* meal" without telling you a thing about the kitchen. You order *from the menu* — you don't walk in and instruct the chef — and the restaurant is free to swap chefs, ovens, or suppliers; as long as the menu still delivers dish 12, you never notice and never care. The **menu is the contract; the kitchen is the implementation.** Keep this picture: almost everything below is a detail of how the menu is written or how it changes over time.
+
 ```mermaid
 flowchart LR
     CL["Client<br/>knows only the contract"] -->|"request shaped<br/>like THIS"| API{{"THE CONTRACT<br/>the API"}}
@@ -137,6 +139,8 @@ flowchart LR
 |---|---|---|
 | **Safe** | Doesn't change server state | `GET`, `HEAD`, `OPTIONS` |
 | **Idempotent** | Calling it five times = calling it once | `GET`, `PUT`, `DELETE` — **but not `POST`** |
+
+*The everyday picture of **idempotent**: an **elevator call button**. Press it once or press it five times — the same one elevator arrives; the extra presses change nothing. Setting a light switch to "on" is idempotent the same way (flip it to on however many times, the light is just on). `POST` is the opposite — it's like **adding an item to your cart**: click twice and you've got two in the basket.*
 
 That `POST` exception is the practical one: a retried `POST` can create two orders, which is why payment APIs make you send an idempotency key. `PUT /products/101` with the same body is harmless to repeat; `POST /products` is not.
 
