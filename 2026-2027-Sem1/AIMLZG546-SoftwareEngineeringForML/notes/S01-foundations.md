@@ -1,6 +1,6 @@
 # Software Engineering for Machine Learning · Session 01 · Foundations of ML Systems Engineering
 
-*Learned ____*
+*Learned 26 Jul 2026*
 
 ## Why this matters
 

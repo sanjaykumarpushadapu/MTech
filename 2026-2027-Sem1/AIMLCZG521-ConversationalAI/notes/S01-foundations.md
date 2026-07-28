@@ -1,18 +1,10 @@
 # Conversational AI · Session 01 · Foundations of Conversational AI
 
-*Learned ____*
-
-> ### In the instructor's own words
->
-> **The definition, in plain terms:** *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
->
-> **Intent vs entity, made concrete:** *"Intent is the **verb** of a sentence — what is the action. An entity is the **nouns** in the natural language."* So NLU = intent classification + entity extraction.
->
-> **Why the field moves so fast:** *"Architectures that were cutting edge in 2022 and 2023 are already considered legacy now."* Everything here is deliberately state-of-the-art rather than settled — which is why the note leans on current tools and papers, not a fixed textbook.
+*Learned 26 Jul 2026*
 
 ## Why this matters
 
-Conversational AI — agents — is one of the most employable specialisations in the field right now, and this session is the **map of the whole territory**. It's **not chatbots**: in the instructor's words, *"a reasoning system that happens to speak your language."* Here you get the sixty-year arc that explains why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that is the spine of the course, and the **protocol landscape** (MCP, A2A) being standardised as you read this. Get this and you can architect an agent, reason about its cost and failure modes, and talk fluently about where the field is heading — plus it covers tokenization and context windows deeply enough to build on.
+Conversational AI — agents — is one of the most employable specialisations in the field right now, and this session is the **map of the whole territory**. It's **not just chatbots**: it is a reasoning system that happens to speak your language. Here you get the sixty-year arc that explains why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that is the spine of the course, and the **protocol landscape** (MCP, A2A) being standardised as you read this. Get this and you can architect an agent, reason about its cost and failure modes, and talk fluently about where the field is heading — plus it covers tokenization and context windows deeply enough to build on.
 
 ## Part 1 · What the field is
 
@@ -20,9 +12,9 @@ Conversational AI — agents — is one of the most employable specialisations i
 
 ### 1. What conversational AI is
 
-**Intuition** — Her spoken version first, because it's the sharper one: *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
+**Intuition** — Conversational AI is not just a chatbot. It is a **reasoning system that happens to speak your language**.
 
-The formal definition, worth memorising verbatim because it enumerates exactly what the course teaches:
+The formal definition is useful because it enumerates exactly what the course teaches:
 
 > Any AI system that engages humans through **natural language** to **understand intent**, **retain context**, **retrieve knowledge**, and **deliver information or take real-world action**.
 
@@ -32,7 +24,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 | | | |
 |---|---|---|
-| 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU — *"intent is the **verb**, the action; entity is the **nouns**"* |
+| 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU — intent is the **verb**, the action; entity is the **nouns** |
 | 🧠 **Reason** | Plan, chain thoughts, decompose multi-step problems | Planning |
 | ⚡ **Act** | Call APIs, write code, retrieve docs, orchestrate agents | Tools |
 
@@ -82,7 +74,7 @@ timeline
 | **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** |
 | **2025–2026** | On-device & multi-modal (SLMs, native multimodality) | Real-time voice/video, privacy-first local processing | **Hardware constraints, fragmented ecosystems** |
 
-**The key driver — quotable, and the likeliest short-answer question:**
+**The key driver:**
 
 > Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
@@ -208,7 +200,7 @@ And on agents specifically: their autonomy means **higher costs and the potentia
 >
 > Start by using LLM APIs directly — many patterns are a few lines of code. If you use a framework, **understand the underlying code**; incorrect assumptions about what's under the hood are a common source of error.
 
-That is a direct argument for the instructor's own advice ("code every lecture… run the demo code and change one thing") and for Lab 1 using the **native OpenAI API** rather than LangChain.
+That is a direct argument for a hands-on study style: code every lecture, run the demo code, and change one thing. It is also why Lab 1 is stronger with the **native OpenAI API** than with LangChain: the abstraction is thinner, so the moving parts stay visible.
 
 **The three core principles** — a ready-made exam answer to "what makes an agent effective?":
 

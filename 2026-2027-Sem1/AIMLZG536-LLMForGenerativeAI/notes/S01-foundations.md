@@ -1,6 +1,6 @@
 # Large Language Models for Generative AI · Session 01 · Foundations of Large Language Models
 
-*Learned ____*
+*Learned 26 Jul 2026*
 
 ## Why this matters
 
@@ -193,7 +193,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 It builds a matrix comparing each token with every token before it, weighted by **how relevant the token pairs are to one another**. During training the whole matrix is computed **in one go**, which is what enables **parallelisation** — and that, not accuracy alone, is why transformers won.
 
-**Mechanism — the three vectors.** Every token produces three projections, and the phrasing for each is worth memorising verbatim:
+**Mechanism — the three vectors.** Every token produces three projections, and each one plays a distinct role:
 
 | | Name | The question it asks |
 |---|---|---|
@@ -219,7 +219,7 @@ flowchart TD
 ```
 
 1. **Q · Kᵀ** — dot product: how similar is the query to each key? Higher = more relevant.
-2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *The plain-English version first: a dot product is a sum of d_k little products, and the more numbers you add together, the bigger the total tends to get. So a 128-long dot product (Llama-3) produces far bigger raw scores than a 2-long one. Feed huge, widely-spread scores into softmax and it hands almost all the weight to a single winner and ignores everything else — and once softmax is that lopsided, its gradient is nearly zero, so the layer stops learning. Dividing by √d_k shrinks the scores back to a sensible size so softmax stays sensitive. Why √d_k and not d_k? each score is a dot product of two d_k-dimensional vectors, so its variance grows to ≈ d_k and its typical magnitude to ≈ √d_k — dividing by √d_k is exactly the factor that cancels that inflation and renormalises scores back to unit scale.*
+2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Plain-language first:* longer vectors naturally produce larger dot products, simply because you are summing more little products. If you feed those oversized scores straight into softmax, it becomes too peaky too early: one token gets almost all the probability, the rest get almost none, and learning becomes unstable. Dividing by `√d_k` shrinks the scores back to a sensible size so softmax stays responsive. The reason the divisor is `√d_k` rather than `d_k` is that a dot product's **variance** grows roughly like `d_k`, so its typical size grows like `√d_k`; dividing by `√d_k` cancels exactly that inflation.*
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
 The same computation as a pipeline — the form to reproduce in an exam:
@@ -950,7 +950,7 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
 
-**Frontier models** — OpenAI o3 · Anthropic Claude Sonnet 3.7 · xAI Grok 3, with a more recent table listing GPT-5.4 Thinking (deep reasoning, tool use, long-horizon research), Gemini 3.1 Pro (complex problem-solving, multimodal, tool workflows), Gemma 4 (open-weight reasoning, agentic), Claude Opus 4.6 (long-context reasoning, coding, sustained agentic work), Mistral Large 3 (open-weight multimodal, **sparse MoE**), Grok 4.20 (parallel multi-agent research), DeepSeek-R1 (**RL-driven** math, logic, reasoning).
+**Current frontier families** — large closed models, open-weight models, reasoning-tuned models, multimodal models, and sparse-MoE systems. The names in this row change quickly; the durable thing to learn is *what kind of capability each family is pushing*: stronger reasoning, longer context, tool use, multimodality, or lower inference cost through sparse activation.
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
 

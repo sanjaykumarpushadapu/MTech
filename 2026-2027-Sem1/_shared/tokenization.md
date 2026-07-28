@@ -1,7 +1,7 @@
 # Shared · Tokenization & BPE
 
 **Status:** ✅ written 26 Jul 2026
-**Written from:** 521 S1 deck · 536 S1 deck · HuggingFace LLM course ch6.5 (the source both decks copied) · **T1 Jurafsky & Martin ch2 section 2.4** · **T2 Alammar ch2**
+**Written from:** 521 S1 · 536 S1 · HuggingFace LLM course ch6.5 · **T1 Jurafsky & Martin ch2 section 2.4** · **T2 Alammar ch2**
 **Reused by:** 521 S11 (cost optimisation) · 536 S6 (serving economics)
 
 > 🔴 **Closed-book scope in BOTH subjects** — 521 mid-sem (L1–L8) and 536 mid-sem (S1–8). You must reproduce BPE by hand for two different exams, one day apart. Highest-value shared note of the semester.
@@ -33,7 +33,7 @@ Tokenization sits under everything else in the degree. Context limits are counte
 
 ## 0. Why tokenize at all
 
-*Source: J&M ch2 §2.4 — the framing neither deck gives*
+*Start here: before algorithms, fix the reason tokenization exists at all.*
 
 **Intuition** — Tokenization is *"the first stage of natural language processing: segmenting the running input text into tokens."* But why impose a fixed unit at all?
 
@@ -404,9 +404,9 @@ tiktoken BPE (Llama-3):
 
 ## 6b. What determines a tokenizer's behaviour — three design choices
 
-*Source: T2 Alammar ch2, "Tokenizer Properties" — the design-level framing no other source gives*
+*This section shifts from algorithms to design judgment: why two tokenizers using the same algorithm can still behave very differently in practice.*
 
-**Intuition** — sections 3–6 covered *algorithms*. But two tokenizers using the same algorithm still behave differently. Alammar names **three groups of design choices** that determine the result:
+**Intuition** — sections 3–6 covered *algorithms*. But two tokenizers using the same algorithm can still behave differently. The result depends on **three design choices**:
 
 ```mermaid
 flowchart TD
@@ -424,9 +424,9 @@ flowchart TD
 |---|---|
 | **Vocabulary size** | How many tokens to keep. **30K and 50K are common; increasingly 100K+** |
 | **Special tokens** | Which markers the model tracks: **beginning-of-text (`<s>`), end-of-text, padding, unknown, CLS, masking** — plus domain-specific ones (Galactica adds `<work>`, `[START_REF]`) |
-| **Capitalization** | Lowercase everything, or not? *"Name capitalization often carries useful information, but do we want to waste token vocabulary space on all-caps versions of words?"* |
+| **Capitalization** | Lowercase everything, or not? Names and acronyms carry useful information, but keeping every case variant also spends vocabulary space |
 
-**③ The domain of the training data** — *"Even if we select the same method and parameters, tokenizer behavior will be different based on the dataset it was trained on."* The methods optimise a vocabulary **to represent a specific dataset**, so a tokenizer trained on prose behaves differently on code and on multilingual text.
+**③ The domain of the training data** — the methods optimise a vocabulary **to represent a specific dataset**, so a tokenizer trained on prose behaves differently on code and on multilingual text.
 
 **Worked example — why code models need their own tokenizer.** A text-focused tokenizer splits indentation into separate space tokens:
 
@@ -530,10 +530,3 @@ for name in ["gpt2", "meta-llama/Llama-2-7b-hf", "meta-llama/Meta-Llama-3-8B"]:
 ```
 
 Then add 521's cost layer: multiply token counts by current per-token pricing and reproduce the $100–300/day figure.
-
-## Sources
-
-**T2 Alammar ch2** (PDF p59–79) — tokenizer design choices, tokenizer comparison, token types.
-**T1 Jurafsky & Martin ch2 section 2.4** (PDF p21–25) — the definitional treatment: why tokenize, the trainer/encoder split, pseudocode, the `re-` morpheme example, the greedy-encoder rule.
-HuggingFace LLM course ch6.5 — https://huggingface.co/learn/llm-course/en/chapter6/5
-Cited directly on 536's reference slide 60; 521 uses the same corpus and exercises without citing it.
