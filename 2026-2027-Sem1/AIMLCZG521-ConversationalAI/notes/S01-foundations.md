@@ -16,7 +16,7 @@ Conversational AI — agents — is one of the most employable specialisations i
 
 ## Part 1 · What the field is
 
-*Definitions and sixty years of history.*
+*Ground the vocabulary first: what conversational AI actually is, and the sixty-year arc from rule-based ELIZA to today's agents — the history is what explains why systems look the way they do now.*
 
 ### 1. What conversational AI is
 
@@ -220,7 +220,7 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 
 ## Part 2 · What a system is made of
 
-*The component checklist you diagnose failures with.*
+*The anatomy of a real system — the six components every conversational agent has. Treat this as the checklist you return to whenever one of them fails.*
 
 ### 4. The six components of modern conversational AI
 
@@ -331,7 +331,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 ## Part 3 · The model layer
 
-*The model layer — mechanism.*
+*Down one level, into the model itself: tokenization, context windows and the mechanics that decide what an agent can and can't do with language.*
 
 ### 6. Tokenization
 
@@ -512,7 +512,7 @@ flowchart LR
 
 ## Part 4 · How an agent actually runs
 
-*The spine of the whole course.*
+*The heart of the course: the seven-stage loop that turns a language model into an agent that plans, calls tools and acts — and why that same loop is what makes agents both powerful and hard to make reliable.*
 
 ### 9. The seven-stage agent lifecycle
 

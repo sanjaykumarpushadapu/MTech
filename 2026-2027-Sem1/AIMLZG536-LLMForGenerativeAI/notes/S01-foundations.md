@@ -30,7 +30,7 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 ## Part 1 · What a language model is
 
-*The conceptual base, and the longest stretch of her class time.*
+*Start here. What "language model" and "large" actually mean — and the one idea everything else rests on: **predicting text and generating text are the same machine**, run in two directions.*
 
 ### 1. What a language model is
 
@@ -183,7 +183,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 ## Part 2 · How the machinery works
 
-*Worked by hand; ~17 minutes on attention alone.*
+*Open the box. Attention, multi-head attention, the transformer block, positional encoding — worked by hand with real numbers, because you don't actually understand attention until you've pushed a vector through it.*
 
 ### 4. Self-attention
 
@@ -243,7 +243,7 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 
 | Model | d | h | d_k = d_v |
 |---|---|---|---|
-| Vaswani et al. 2017 (original) | 512 | 8 | 64 |
+| Original transformer | 512 | 8 | 64 |
 | Llama-3-8B | 4096 | 32 | 128 |
 
 **Worked example — attention by hand, with actual numbers** *(my own — usually only shapes are given, but you don't *have* attention until you've pushed numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
@@ -491,7 +491,7 @@ Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.9
 
 ## Part 3 · Text in, text out
 
-*The pipeline wrapped around the model.*
+*The pipeline wrapped around the model: how raw text becomes tokens and embeddings going in, how the final hidden vector becomes a word coming out, and what "context length" actually costs you.*
 
 ### 8. From text to tokens to embeddings
 
@@ -595,7 +595,7 @@ Softmax probabilities y can then be used to **assign a probability to a given te
 
 Training vs inference differ in *which position* is used: during training **every position predicts its next token** (that's the parallelism paying off); during inference **only the last position** is used to generate. At training the logits go to cross-entropy against the next token; at inference they're sampled with **temperature, top-k or top-p** — all of S5.
 
-**Weight tying** — the same matrix **E [|V| × d]** maps token IDs ↔ hidden vectors in both directions. Weight tying means the LM head **reuses Eᵀ** instead of learning a fresh output projection. Introduced by **Press & Wolf (2017)**; standard through GPT-2, BERT and RoBERTa.
+**Weight tying** — the same matrix **E [|V| × d]** maps token IDs ↔ hidden vectors in both directions. Weight tying means the LM head **reuses Eᵀ** instead of learning a fresh output projection. It is a long-standing technique, standard through GPT-2, BERT and RoBERTa.
 
 An implementation detail worth knowing: on the input side **no matrix multiplication actually happens** — the one-hot picks out row *t* of E, an **O(1) row lookup (gather)** per token.
 
@@ -618,6 +618,49 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 | **Untied** (frontier scale) | Llama-3/4 · DeepSeek-V3 · OLMo 2 · Qwen3-8B+ |
 
 **Tradeoff / when NOT to tie** — untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
+
+---
+
+#### Zoom out — where an LLM's parameters actually live
+
+We just counted the head's parameters. Step back and count the *whole model* — this is the picture behind the "7B / 70B / 400B" numbers from section 2, and it's worth having concretely.
+
+**What a parameter is** — a **parameter** (or **weight**) is simply **one number the model learned during training**. "8B parameters" means 8 billion such numbers, **frozen after training and loaded into memory every time the model runs**. Training *sets* them; inference only *reads* them. Every one of these numbers lives inside one of the matrices you already met in sections 4–9 — there is nowhere else for them to hide.
+
+**Where they live** — a decoder-only LLM is just: **one embedding matrix** at the bottom → **a stack of N identical transformer blocks** → **one final norm** → **the LM head** at the top. Only a few components actually hold weights. Writing **d** = hidden size, **|V|** = vocabulary size, **N** = number of layers, classic FFN width = 4·d:
+
+| Where | Matrices | Parameter count |
+|---|---|---|
+| **Token embedding** | E | `\|V\| × d` |
+| **Attention** (per layer) | W_Q, W_K, W_V, W_O — each `d × d` | `4 d²` |
+| **Feed-forward** (per layer) | W_up `d × 4d` + W_down `4d × d` | `8 d²` |
+| **LayerNorms** (per layer) | 2 × (γ, β) | `4 d` (negligible) |
+| **Final LayerNorm** | γ, β | `2 d` (negligible) |
+| **LM head** | Eᵀ | **0 if tied**, else `\|V\| × d` |
+
+Drop the tiny norm terms and one layer costs `4d² + 8d² = ` **`12 d²`**. That gives the single most useful rule of thumb in the subject:
+
+> **Total ≈ 12 · N · d²  +  vocabulary terms.**
+> The stack grows with **d²** (quadratic in *width*) and **linearly** with *depth* N. The vocabulary terms — `|V|·d` for embeddings, plus another `|V|·d` if the head is untied — are a **fixed tax** set by vocabulary size, not by how deep the model is.
+
+**Worked example — why "7B" adds up.** Take d = 4096, N = 32, |V| = 50,257, FFN = 4d, head tied:
+
+```
+Per layer   = 12 · d²         = 12 × 4096²     ≈ 201 M
+Stack       = N × per layer   = 32 × 201 M     ≈ 6.44 B
+Embedding   = |V| × d         = 50,257 × 4096  ≈ 0.21 B
+LM head     = tied → 0
+─────────────────────────────────────────────────────
+Total                                          ≈ 6.65 B   → a "7B" model
+```
+
+Read effects straight off the formula: **double the depth** N and you add another ~6.4 B; **widen** d from 4096 → 5120 and the stack grows by (5120/4096)² ≈ **1.56×**. Width is the expensive dial because it's squared.
+
+**Which block dominates** — of the 12 per-layer units, **8 are the feed-forward network and 4 are attention**: **⅔ of every layer is FFN**, ⅓ is attention, norms are rounding error. That is the exact arithmetic reason compression (S6) and Mixture-of-Experts (S3) both attack the FFN first — it's simply where the weights are.
+
+**Where the head fits** — the LM head is the `|V| × d` matrix at the very top, ~0.5 B at 8B scale (the ~13% "untied" cost from the table above). Frontier models pay it; on a 1B model the *same* matrix is a far bigger slice, so small models **tie** it to the embedding and pay nothing. Embedding + head together are the **vocabulary tax**: fixed by |V|, felt most at small scale.
+
+**The one picture to carry** — *where the parameters are is where the cost is and where every optimisation aims.* And keep two things separate that are easy to confuse: **parameters = the model's fixed size in memory** (set by d, N, |V|); **context length = work done per token at run time** (the O(n²) of section 4, which adds *no* parameters at all). Making a model "bigger" and giving it a "longer context" are different levers.
 
 ---
 
@@ -647,7 +690,7 @@ flowchart LR
 
 ## Part 4 · The landscape
 
-*Comparison tables; recognise, don't over-invest.*
+*Zoom out to the map: the main architecture families, the tokenizer choices you meet in practice, and the models you'll actually work with. Aim to **recognise and place** these, not memorise every cell.*
 
 ### 11. LLM architectures
 
@@ -729,11 +772,11 @@ Going down the figure, **vocabulary shrinks and sequence length grows**. Since a
 
 Three, all sharing the same two-part structure:
 
-| Algorithm | Origin |
+| Algorithm | Core idea (how the vocabulary is learned) |
 |---|---|
-| **Byte-Pair Encoding (BPE)** | Sennrich et al., 2016 |
-| **Unigram language modelling** | Kudo, 2018 |
-| **WordPiece** | Schuster and Nakajima, 2012 |
+| **Byte-Pair Encoding (BPE)** | Start from characters; **greedily merge the most frequent adjacent pair**, over and over |
+| **Unigram language modelling** | Start from a large vocabulary; **prune the tokens whose removal costs the least likelihood** |
+| **WordPiece** | Merge the pair that **most increases the training corpus's likelihood** (not just raw frequency) |
 
 Every one has **two parts** — this is the definitional split, and it's examinable:
 

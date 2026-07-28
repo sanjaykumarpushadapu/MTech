@@ -12,7 +12,7 @@ Three angles, one argument: the process history, the failure evidence (**87% of 
 
 ## Part 1 · The argument
 
-*Read these two first; they carry the course.*
+*The two ideas the whole course is built on: that shipping a model is an **engineering** problem rather than a modelling one, and the precise sense in which **"the model is never the problem."** Read these first — everything later is a consequence of them.*
 
 ### 1. Why this course exists
 
@@ -179,7 +179,7 @@ This gets its own section, which signals it can be asked.
 
 ## Part 2 · Process
 
-*What engineering already knows.*
+*What software engineering already knows, and where ML bends it: the development lifecycle, the ML pipeline, and the exact points where the familiar process breaks once a **learned** component enters the system.*
 
 ### 3. Two lifecycles: the SDLC and the ML pipeline
 
@@ -330,7 +330,7 @@ Two specifics worth carrying: **KPIs and a baseline must be established at the p
 
 ## Part 3 · Context
 
-*Landscape; tables, not prose.*
+*The surrounding landscape: how AI is reshaping the development lifecycle, and where foundation models fit into it. Map-level — know the shape and the tradeoffs, not every cell of every table.*
 
 ### 5. How software and data got here
 
@@ -412,7 +412,7 @@ flowchart BT
 
 ## Part 4 · People and judgment
 
-*The half of the course that isn't recall.*
+*The half of engineering that isn't code: interdisciplinary teams, the risk spectrum, and the judgment calls — above all, **when the expensive general answer is the wrong one** — that separate an ML engineer from someone who only trains models.*
 
 ### 7. Who builds these systems
 
