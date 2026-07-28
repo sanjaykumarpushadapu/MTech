@@ -215,17 +215,30 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    R[Model requirements] --> DC[Data collection]
-    DC --> DL[Data labeling]
-    DL --> CL[Data cleaning &<br/>feature engineering]
-    CL --> TR[Model training]
-    TR --> EV[Model evaluation]
-    EV --> DEP[Deployment]
-    DEP --> MON[Monitoring]
-    EV -.->|not good enough| CL
-    EV -.->|different algorithm<br/>or hyperparameters| TR
-    EV -.->|need more data| DC
-    MON -.-> R
+    R["Model requirements"] --> DC
+
+    subgraph PREP["Prepare the data"]
+        direction LR
+        DC["Data collection"] --> DL["Data labeling"] --> CL["Data cleaning and<br/>feature engineering"]
+    end
+
+    subgraph BUILD["Learn and judge"]
+        direction LR
+        TR["Model training"] --> EV["Model evaluation"]
+    end
+
+    subgraph RUN["Run in production"]
+        direction LR
+        DEP["Deployment"] --> MON["Monitoring"]
+    end
+
+    CL --> TR
+    EV --> DEP
+
+    EV -.->|"need more data"| DC
+    EV -.->|"need different features"| CL
+    EV -.->|"need a different algorithm<br/>or hyperparameters"| TR
+    MON -.->|"production feedback"| R
 ```
 
 Two engineering-relevant properties:
