@@ -10,7 +10,7 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 ## Part 1 · What an API is
 
-*The contract, and how it's called.*
+*The promise itself: what a contract between a service and its clients actually is, and the two ways it can be called — the caller waits (synchronous) or it doesn't (asynchronous).*
 
 ### 1. What an API is
 
@@ -38,7 +38,7 @@ flowchart LR
 
 **Tradeoff / the cost of the contract** — Once published, the contract binds you. Clients build against it and break when it changes, which is why section 9 (versioning) exists as a topic at all. An internal function can be refactored freely; a published API cannot. **Publishing an API is a commitment, not a feature.**
 
-> ***In practice*** *(beyond the course — what calling an API actually looks like on the job):*
+> ***In practice*** *— what calling an API actually looks like on the job:*
 > - You almost never write raw HTTP. You call an **SDK** — `openai`, `boto3`, `huggingface_hub` — and every one of those is a thin wrapper that builds the HTTP request for you. Knowing the contract underneath is exactly what lets you debug when the SDK does something surprising (a 400 you didn't expect, a field it won't send).
 > - Real APIs are gated by an **API key or token** in a header (`Authorization: Bearer sk-…`). The contract includes *who's allowed*, not just *what's allowed* — authentication (section 3, `401`) and authorization (`403`) are part of the promise.
 > - Providers enforce **rate limits** (e.g. "60 requests/min"). Exceed one and you get `429 Too Many Requests`, so production code wraps calls in **retry-with-backoff**. This is the "contract binds *you*" cost made concrete: the provider can throttle, version, or deprecate, and your system has to absorb it.
@@ -106,7 +106,7 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 ## Part 2 · HTTP and specification
 
-*The wire format everything else sits on.*
+*The wire format every API style sits on: the anatomy of one request/response, what the status codes mean, and how you write the contract down so humans and machines agree (OpenAPI).*
 
 ### 3. HTTP APIs
 
@@ -192,11 +192,11 @@ The codes worth knowing by name:
 | **404 Not Found** | Requested resource does not exist |
 | **500 Internal Server Error** | Unexpected server error |
 
-*Which success code when (my clarity — both codes exist but aren't usually paired to the method):* a `GET` that returns data → **200 OK**; a `POST` that creates a resource → **201 Created**. Both mean "it worked" — 201 adds "…and I made something new," which is why it's the natural reply to POST.
+*Which success code when:* a `GET` that returns data → **200 OK**; a `POST` that creates a resource → **201 Created**. Both mean "it worked" — 201 adds "…and I made something new," which is why it's the natural reply to POST.
 
 Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we don't know who you are*. 403 = *we know who you are and you still can't*.
 
-> ***Going deeper*** *(my own knowledge, beyond the course — how a request actually proves who it is; `401`/`403` are where you meet this):*
+> ***Going deeper*** *— how a request actually proves who it is; `401`/`403` are where you meet this:*
 > Three auth schemes you'll use constantly:
 >
 > | Scheme | How it works | Where you'll see it |
@@ -236,7 +236,7 @@ curl -X GET "https://jsonplaceholder.typicode.com/posts"
 
 Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · response = posts in JSON. Also worth trying it in **Postman**, which is worth installing now — you'll want it for labs 3 and 4.
 
-> ***Going deeper*** *(my own — what that `curl` actually sends and receives on the wire; an SDK hides this, but it's all HTTP really is):*
+> ***Going deeper*** *— what that `curl` actually sends and receives on the wire; an SDK hides it, but it's all HTTP really is:*
 > The **request** your client sends is plain text:
 > ```http
 > GET /posts/1 HTTP/1.1
@@ -258,7 +258,7 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 **Tradeoff** — HTTP's ubiquity is its strength and its ceiling. It's text-based, request-per-resource, and carries header overhead on every call. That overhead is invisible for a browser fetching a page and very visible for two internal services exchanging millions of messages — which is the gap gRPC exists to fill (section 7).
 
-> ***Going deeper*** *(beyond the course — safe vs idempotent methods, the property that makes retries safe):*
+> ***Going deeper*** *— safe vs idempotent methods, the property that makes retries safe:*
 > The four verbs are usually listed by purpose. In practice the property that matters is what happens when you **repeat** a call — because networks drop responses and clients retry.
 >
 > | Method | **Safe?** (no change) | **Idempotent?** (same result if repeated) |
@@ -368,7 +368,7 @@ Note the shape: collection endpoint `/books` for list and create; item endpoint 
 
 ## Part 3 · The three API styles
 
-*The heart of the session.*
+*The three ways to shape the promise — REST, GraphQL and gRPC — what each is best at, and, more importantly, how to choose between them for a given caller.*
 
 ### 5. REST
 
@@ -381,7 +381,7 @@ Note the shape: collection endpoint `/books` for list and create; item endpoint 
 - Representations are **JSON or XML**.
 - HTTP methods map onto CRUD: `GET` read, `POST` create, `PUT` update, `DELETE` delete. POST/PUT/DELETE require suitable permissions.
 
-*REST is called "stateless" but the word is rarely unpacked — and section 7 leans on it again, so it's worth pinning down (my clarity).* **Stateless** means every request carries everything the server needs to handle it — auth token, resource id, body — and the server keeps **no memory of the client between calls**. There is no server-side "session" that request 2 silently depends on from request 1; if the client needs continuity, the client resends the context. Why this earns REST its "mature and ubiquitous" benefit: if the server remembers nothing, **any server instance can answer any request**, so ten identical servers behind a load balancer just work — that's what lets REST scale horizontally. It's also the exact property RPC gives up (see section 7: *"REST is by definition stateless; with RPC state depends on the implementation"*), which is why RPC can be faster but more coupled.
+*REST is called "stateless", and section 7 leans on the word again, so it's worth pinning down.* **Stateless** means every request carries everything the server needs to handle it — auth token, resource id, body — and the server keeps **no memory of the client between calls**. There is no server-side "session" that request 2 silently depends on from request 1; if the client needs continuity, the client resends the context. Why this earns REST its "mature and ubiquitous" benefit: if the server remembers nothing, **any server instance can answer any request**, so ten identical servers behind a load balancer just work — that's what lets REST scale horizontally. It's also the exact property RPC gives up (see section 7: *"REST is by definition stateless; with RPC state depends on the implementation"*), which is why RPC can be faster but more coupled.
 
 Same resource, two representations:
 
@@ -409,7 +409,7 @@ Same resource, two representations:
 
 #### How RESTful is it? The Richardson Maturity Model
 
-*The standard way to grade a REST API. Go deeper: Fowler, ["Richardson Maturity Model"](https://martinfowler.com/articles/richardsonMaturityModel.html).*
+*The standard way to grade a REST API — teams adopt REST in levels, not all-or-nothing.*
 
 **Intuition** — Leonard Richardson (QCon 2008) reviewed many REST APIs and found teams adopt REST in **levels**, not all-or-nothing. Martin Fowler popularised them. Most real APIs sit at level 2.
 
@@ -461,7 +461,7 @@ The "fetching multiple resources" drawback is the setup for GraphQL: fetching a 
 
 **Tradeoff / when NOT to use REST** — When one screen needs data from many resources, REST's one-resource-per-call shape produces chatty clients and slow mobile screens (→ GraphQL). When two internal services exchange huge volumes and you control both ends, REST's text payloads and HTTP/1.1 overhead are pure waste (→ gRPC).
 
-> ***In practice*** *(beyond the course — what a real REST endpoint has that `GET /students` doesn't show):*
+> ***In practice*** *— what a real REST endpoint has that `GET /students` doesn't show:*
 > A production collection endpoint is never just "return everything." Four things you'll build every time:
 > - **Pagination** — `GET /students?page=2&limit=50` (or cursor-based `?after=<id>`). Returning 10,000 rows in one response is how you take down your own service.
 > - **Filtering & sorting** — `GET /students?branch=CS&sort=-gpa`. The query string is where "which subset" lives.
@@ -605,18 +605,18 @@ service Calculator {
 }
 
 message AddRequest {
-  int a = 1;
-  int b = 2;
+  int32 a = 1;
+  int32 b = 2;
 }
 
 message AddResponse {
-  int result = 1;
+  int32 result = 1;
 }
 ```
 
 Run `protoc` on this and you get, in your language of choice: the message classes, the parsing code, and **both client and server stubs**. You define the API once, language- and platform-neutrally, and generate for many languages — which is the stated reason for using proto files.
 
-*(The numbers `= 1`, `= 2` are field tags identifying fields on the wire, not default values — a common first-read confusion.*
+*(The numbers `= 1`, `= 2` are field tags identifying fields on the wire, not default values — a common first-read confusion.)*
 
 **The difference that matters most — state:**
 
@@ -628,7 +628,7 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 *(HTTP/3 is coming, built on **QUIC** over UDP.)*
 
-> ***Going deeper*** *(my own — the four call types HTTP/2 multiplexing unlocks; the calculator shows only the first):*
+> ***Going deeper*** *— the four call types HTTP/2 multiplexing unlocks; the calculator shows only the first:*
 > Because gRPC rides on HTTP/2, a call isn't limited to one-request-one-response. There are **four kinds**, and knowing they exist is most of what the topic is about:
 >
 > | Type | Shape | Example |
@@ -640,7 +640,7 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 >
 > In the `.proto` you mark it with the `stream` keyword — `rpc Prices(Req) returns (stream Price)`. Streaming is the concrete payoff of HTTP/2 multiplexing, and it's something REST cannot do cleanly — a real reason to reach for gRPC beyond raw speed.
 
-**Advantages and disadvantages —:**
+**Advantages and disadvantages:**
 
 | Advantages | Disadvantages |
 |---|---|
@@ -708,7 +708,7 @@ The comparison table, close to guaranteed exam material:
 | Code generation | **gRPC** — native, 10+ languages · GraphQL — GraphQL Code Generator (3rd party) · REST — Swagger (3rd party) |
 | Payload data structure | GraphQL — JSON · REST — JSON & XML · gRPC — **Protocol Buffers** |
 
-*The three questions as a decision tree (my own) — ask them in this order and the style picks itself:*
+*The three questions as a decision tree — ask them in this order and the style picks itself:*
 
 ```mermaid
 flowchart TD
@@ -743,7 +743,7 @@ The lesson: **one system, three correct answers.** Anyone who says "we're a Grap
 
 ## Part 4 · Evolution
 
-*Changing a contract without breaking people.*
+*How a published contract changes over time without breaking the people who depend on it: what counts as a breaking change, when to version, and how to roll it out.*
 
 ### 9. API versioning
 
@@ -824,7 +824,7 @@ Each version reachable at its own endpoint:
 
 **Tradeoff / when NOT to version** — Every live major version is a codebase you maintain, test and secure. Version too eagerly and you're running four APIs; version too late and you break your consumers. The guidance — version only on breaking changes — is the balance point, and it implies the cheaper move is usually **designing the change to be non-breaking** (add an optional field rather than a required one).
 
-> ***In practice*** *(beyond the course — where the version actually goes, and how big APIs handle it):*
+> ***In practice*** *— where the version actually goes, and how big APIs handle it:*
 > The classic style puts the version in the **URL path** (`/api/v2.0.0/movies`). That's the most common style — visible, easy to route, easy to test in a browser — but real APIs use two other schemes you'll meet:
 >
 > | Where the version lives | Example | Trade |
