@@ -43,7 +43,7 @@ Tokenization sits under everything else in the degree. Context limits are counte
 2. **Eliminating unknown words.** Tokenizations that include sub-word units remove the OOV problem.
 
 ```mermaid
-flowchart TD
+flowchart LR
     TR["Training corpus<br/>low · new · newer"] --> V["Word-level vocabulary<br/>low, new, newer"]
     TEST(["Test word: <b>lower</b>"]) --> V
     V --> UNK["❌ UNK<br/>meaning destroyed"]
@@ -131,7 +131,7 @@ All three share the same two-part structure — **definitional and examinable**:
 2. **Token segmenter** — sentence → tokens, using that vocabulary
 
 ```mermaid
-flowchart TD
+flowchart LR
     C[(Raw training corpus)] --> TL["TOKEN LEARNER<br/>runs ONCE, at training time"]
     TL --> VOC[["Vocabulary<br/>+ ordered merge list"]]
     NEW(["New sentence, at inference"]) --> TS["TOKEN SEGMENTER<br/>runs on EVERY input"]
@@ -469,7 +469,7 @@ Counts are unintuitive — measure, don't assume:
 | "Book a flight to NYC" | Book · a · flight · to · NYC | 5 |
 
 ```mermaid
-flowchart TD
+flowchart LR
     TXT["Conversation text"] --> TK["Tokenizer<br/>~4 chars ≈ 1 token"]
     TK --> IN["INPUT tokens<br/>system prompt + history<br/>+ retrieved context"]
     TK --> OUT["OUTPUT tokens<br/>the reply"]

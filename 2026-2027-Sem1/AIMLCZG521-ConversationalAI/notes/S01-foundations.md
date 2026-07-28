@@ -31,7 +31,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 **The bot ladder** — a progression of sophistication:
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["1 · Chatbot<br/>keyword match"] --> B["2 · Task bot<br/>slot filling"]
     B --> C["3 · FAQ bot<br/>context-aware"]
     C --> D["4 · Generative system<br/>fluent, open-ended"]

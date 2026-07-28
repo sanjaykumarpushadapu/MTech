@@ -217,7 +217,7 @@ Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we d
 > The OAuth flow in one picture — the pattern behind every "Sign in with…" button:
 >
 > ```mermaid
-> flowchart TD
+> flowchart LR
 >     U["User"] -->|"clicks sign-in"| APP["Your app"]
 >     APP -->|"redirect to authorize"| AUTH["Auth server"]
 >     AUTH -->|"consent screen"| U
