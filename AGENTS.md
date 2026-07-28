@@ -120,6 +120,7 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`.
 Plus **at least one Mermaid diagram**. All are mandatory; the checklist in §11 verifies them.
 
 - **No source references.** A note states the knowledge directly — no `*Reference:*` line, no "the deck says…", no textbook codes (`T1`, `R2`, `ch3`) or textbook-author citations in the prose. The knowledge stands on its own. Where an origin *is* the knowledge (REST = Fielding 2000, GraphQL = Facebook 2015, BPE = Sennrich 2016), that's a fact worth keeping — a citation of *the textbook* is not.
+- **No source-framing prose.** Do not write meta-phrases such as "in the instructor's own words", "spoken version first", "worth memorising verbatim", "quotable", "the deck copied", or "the source says". Convert them into direct knowledge statements. A note should read like the subject itself, not commentary about where the wording came from.
 - **No cross-subject links.** Each subject's notes are self-contained. Never link or point to another subject's session (`→ 546 S9`, "shared with 536", "you'll also see this in 521"). Same-*subject* navigation ("section 4", "S14") is fine. If a topic recurs in two subjects, each note covers it fully on its own — separateness over reuse.
 - **Tradeoff is never blank** and never "depends on the use case." Name the specific situation where the simpler option wins.
 - **The worked example must be reproducible by hand or in ≤30 lines.** A *described* example is not an example. For mechanism topics, show arithmetic on small numbers — and **verify the arithmetic by running it** before writing it down.
@@ -191,6 +192,8 @@ Sources, in order of preference:
 3. **Draw your own**, marked `(my own)`. A comparison table often hides a structure worth drawing; the point is usually the *relationship*, not the cells.
 
 **Carry labels across verbatim** — the exam uses the instructor's words. **Don't invent structure the image lacks**; if an arrow is ambiguous, say so in prose. The Mermaid block is the permanent record — never write "see the diagram on slide 16."
+
+**Prefer clean diagrams over exhaustive ones.** A Mermaid block should expose the structure at a glance, not reproduce every sentence from the source. Fewer boxes, shorter labels, and a clear stage flow beat dense diagrams with crossing lines. If `timeline` or `sequenceDiagram` becomes cluttered or tool-fragile, rewrite it as a clean `flowchart TD` instead.
 
 ### Direction is a decision, not a default
 

@@ -20,10 +20,15 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 ```mermaid
 flowchart LR
-    CL["Client<br/>knows only the contract"] -->|"request shaped<br/>like THIS"| API{{"THE CONTRACT<br/>the API"}}
-    API -->|"response shaped<br/>like THAT"| CL
-    API --- IMPL["Service internals<br/>language · DB · servers<br/>free to change"]
-    IMPL -.->|"invisible to the client"| IMPL
+    CL["Client<br/>knows only the contract"] -->|"request"| API{{"API contract"}}
+    API -->|"response"| CL
+    subgraph IMPL["Implementation hidden behind the contract"]
+        direction TB
+        APP["service code"]
+        DB["database"]
+        INF["servers / runtime"]
+    end
+    API --- APP
 ```
 
 **Everything to the right of the contract can be rewritten** — new language, new database, new hardware — and no client notices. That independence *is* the product. It's also why a breaking change is such a big deal (section 9): it's the one thing that reaches across the line.
@@ -212,20 +217,16 @@ Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we d
 > The OAuth flow in one picture — the pattern behind every "Sign in with…" button:
 >
 > ```mermaid
-> sequenceDiagram
->     participant U as User
->     participant A as Your App
->     participant Auth as Auth Server
->     participant API as Resource API
->     U->>A: click "Sign in with Google"
->     A->>Auth: redirect to authorise
->     Auth->>U: "Allow this app to access X?"
->     U->>Auth: approve
->     Auth->>A: authorisation code
->     A->>Auth: code + app secret
->     Auth->>A: short-lived access token
->     A->>API: request + Bearer token
->     API->>A: data (200) — or 401 if token bad/expired
+> flowchart TD
+>     U["User"] -->|"clicks sign-in"| APP["Your app"]
+>     APP -->|"redirect to authorize"| AUTH["Auth server"]
+>     AUTH -->|"consent screen"| U
+>     U -->|"approve"| AUTH
+>     AUTH -->|"authorization code"| APP
+>     APP -->|"code + app secret"| AUTH
+>     AUTH -->|"short-lived access token"| APP
+>     APP -->|"request + Bearer token"| API["Resource API"]
+>     API -->|"data (200) or 401"| APP
 > ```
 >
 > The line that connects it all: **authentication (*who are you?*) → `401`; authorization (*are you allowed?*) → `403`.** OAuth **scopes** are exactly how a `403` gets decided — the token says *what* the app may do, not just *who* it is.
@@ -297,13 +298,13 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 ```mermaid
 flowchart TD
-    SPEC[["openapi.yaml<br/>the contract"]] --> MOCK["Mock server<br/>Prism · WireMock · Postman"]
-    SPEC --> CLIENT["Client SDKs<br/>openapi-generator"]
-    SPEC --> TESTS["Contract tests<br/>Dredd · Schemathesis"]
-    MOCK --> FE["Front-end team<br/>builds against fake responses"]
-    CLIENT --> CONS["Consumers<br/>typed calls, no hand-written HTTP"]
-    TESTS --> BE["Back-end team<br/>proves the real API matches"]
-    FE -.->|"both sides converge on<br/>the SAME document"| BE
+    SPEC[["openapi.yaml<br/>single contract"]] --> MOCK["Mock server"]
+    SPEC --> CLIENT["Client SDKs"]
+    SPEC --> TESTS["Contract tests"]
+    MOCK --> FE["Front-end builds early"]
+    CLIENT --> CONS["Consumers call typed SDKs"]
+    TESTS --> BE["Back-end proves conformance"]
+    FE -.->|"same contract"| BE
 ```
 
 **Worked example** — `openapi.yaml` declares `GET /books/{id}` returning `{id, title, author}`. Run a mock:

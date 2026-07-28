@@ -32,12 +32,12 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 ```mermaid
 flowchart TD
-    A["Chatbot<br/>keyword match"] --> B["Task Bot<br/>slot filling"]
-    B --> C["FAQ Bot<br/>context-aware"]
-    C --> D["Generative<br/>fluent, open-ended"]
-    D --> E["Agent<br/>plans + acts"]
-    A -.->|"deterministic · auditable · cheap"| A
-    E -.->|"adaptive · opaque · expensive"| E
+    A["1 · Chatbot<br/>keyword match"] --> B["2 · Task bot<br/>slot filling"]
+    B --> C["3 · FAQ bot<br/>context-aware"]
+    C --> D["4 · Generative system<br/>fluent, open-ended"]
+    D --> E["5 · Agent<br/>plans + acts"]
+    A --- L["cheap · deterministic · auditable"]
+    E --- R["adaptive · expensive · less predictable"]
 ```
 
 Every step rightward buys coverage of a wider query space and pays for it in predictability. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
@@ -51,15 +51,13 @@ Every step rightward buys coverage of a wider query space and pays for it in pre
 **Intuition** — Seven eras, each fixing the previous one's fatal limitation and introducing a new one. Learn it by the **Limitations** column: that's what drives the next row.
 
 ```mermaid
-timeline
-    title Conversational AI, 1960s to 2026
-    1960s-1990s : Rule-based, ELIZA and ALICE : no learning, no context
-    2000-2010 : Statistical ML, SVM CRF HMM : hand-crafted features
-    2010-2017 : Deep learning, RNN LSTM Seq2Seq : data hungry, task-specific
-    2017-2020 : Transformers, BERT GPT-2 T5 : still needs fine-tuning
-    2020-2023 : LLMs and GenAI, GPT-3 ChatGPT : hallucinates, cannot act
-    2023-2025 : Agentic AI, LLM plus tools and memory : orchestration, cost
-    2025-2026 : Protocols and multi-agent, MCP and A2A : standards still settling
+flowchart TD
+    A["1960s–1990s<br/>Rule-based systems<br/>ELIZA · ALICE<br/>limit: no learning, no context"] --> B["2000–2010<br/>Statistical ML<br/>SVM · CRF · HMM<br/>limit: hand-crafted features"]
+    B --> C["2010–2017<br/>Deep learning<br/>RNN · LSTM · Seq2Seq<br/>limit: data hungry, task-specific"]
+    C --> D["2017–2020<br/>Transformers<br/>BERT · GPT-2 · T5<br/>limit: still needs fine-tuning"]
+    D --> E["2020–2023<br/>LLMs and GenAI<br/>GPT-3 · ChatGPT<br/>limit: hallucinations, no actions"]
+    E --> F["2023–2025<br/>Agentic AI<br/>tools · memory · planning<br/>limit: orchestration, cost"]
+    F --> G["2025–2026<br/>Protocols and multi-agent<br/>MCP · A2A<br/>limit: standards still settling"]
 ```
 
 *Read the last clause of each row — the limitation is what causes the next era.*

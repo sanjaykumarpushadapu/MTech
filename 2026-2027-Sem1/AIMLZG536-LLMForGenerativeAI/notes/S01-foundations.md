@@ -16,12 +16,12 @@ This is the session that makes you fluent in how modern AI actually works under 
 flowchart TD
     T[text] --> TOK["tokenizer<br/>(sec 12)"]
     TOK --> ID[token IDs]
-    ID --> EM["+ token & positional<br/>embeddings (sec 7–8)"]
+    ID --> EM["token + positional<br/>embeddings (sec 7–8)"]
     EM --> BL["N× transformer block<br/>attention (sec 4–5) + FFN (sec 6)"]
     BL --> HN[final hidden state]
     HN --> LMH["LM head / unembedding<br/>(sec 9)"]
-    LMH --> PR[distribution over vocab<br/>= P（next token）]
-    PR -.->|sample a token, append, repeat| ID
+    LMH --> PR["distribution over vocabulary<br/>P(next token)"]
+    PR -.->|"sample → append → repeat"| ID
 ```
 
 One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture and every section below is "what happens at this one box." The **context length** (section 10) is just how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives entirely in the attention inside the block.
@@ -326,15 +326,17 @@ Weight-matrix notation: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ �
 
 ```mermaid
 flowchart TD
-    X["X [4×512]"] --> S{"split into<br/>8 heads"}
-    S --> H1["head 1 · Q,K,V [4×64]<br/>→ attention → [4×64]"]
-    S --> H2["head 2 → [4×64]"]
-    S --> H8["… head 8 → [4×64]"]
-    H1 --> C["concat<br/>[4×512]"]
+    X["X [4×512]"] --> S{"split into 8 heads"}
+    S --> H1["head 1<br/>[4×64] → attend → [4×64]"]
+    S --> H2["head 2<br/>[4×64] → attend → [4×64]"]
+    S --> H3["…"]
+    S --> H8["head 8<br/>[4×64] → attend → [4×64]"]
+    H1 --> C["concatenate<br/>[4×512]"]
     H2 --> C
+    H3 --> C
     H8 --> C
-    C --> WO["× W_O [512×512]"]
-    WO --> O["output [4×512]<br/>= input size → stackable"]
+    C --> WO["output projection W_O<br/>[512×512]"]
+    WO --> O["final output [4×512]"]
 ```
 
 Each head runs the exact same computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.

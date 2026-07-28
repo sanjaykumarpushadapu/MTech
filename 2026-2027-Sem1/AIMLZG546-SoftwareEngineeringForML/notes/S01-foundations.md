@@ -42,15 +42,18 @@ Three angles, one argument: the process history, the failure evidence (**87% of 
 flowchart LR
     subgraph SYS["A real ML system — what you actually build and operate"]
         direction TB
-        DATA["data collection ·<br/>cleaning · labeling · validation"]
-        FEAT["feature<br/>engineering"]
-        ML[["ML model —<br/>the part you trained"]]
-        SERVE["serving ·<br/>APIs · scaling"]
-        MON["monitoring ·<br/>drift detection"]
-        INFRA["config · resource &<br/>process management"]
+        DATA["data pipeline<br/>collection · cleaning<br/>labeling · validation"]
+        FEAT["feature engineering"]
+        ML[["trained model"]]
+        SERVE["serving layer<br/>APIs · scaling"]
+        MON["monitoring<br/>drift · performance"]
+        INFRA["infrastructure<br/>config · resources · process"]
     end
     DATA --> FEAT --> ML --> SERVE --> MON
+    INFRA -.-> DATA
     INFRA -.-> ML
+    INFRA -.-> SERVE
+    INFRA -.-> MON
 ```
 
 The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
@@ -357,16 +360,14 @@ Cloud Native App = Agile + DevOps + Microservices + Containers + Cloud
 **Intuition** — Sixty years of one pressure: more data than the previous generation's tools could hold, forcing a new layer each time.
 
 ```mermaid
-timeline
-    title Evolution of Data
-    1960s : Files and spreadsheets : Manual, paper-based, limited sharing
-    1970 : Codd's relational model : Foundation for modern RDBMS
-    1989 : KDD and data mining : Classification, regression, clustering
-    Early 2000s : Transactional to analytical : Data warehousing, ETL, BI dashboards
-    Mid 2000s : Social media : User-generated data, supervised ML advances
-    2006-2008 : Cloud computing : AWS and Azure, scalable compute and storage
-    2010-2015 : Big data deluge : Mobile and IoT, deep learning in NLP and CV
-    2018 : Transformers : Attention Is All You Need, NLP and AI at scale
+flowchart TD
+    A["1960s<br/>files and spreadsheets<br/>manual, limited sharing"] --> B["1970<br/>relational model<br/>foundation for RDBMS"]
+    B --> C["1989<br/>KDD and data mining<br/>classification · regression · clustering"]
+    C --> D["early 2000s<br/>warehousing and ETL<br/>transactional → analytical"]
+    D --> E["mid 2000s<br/>social media data<br/>supervised ML expands"]
+    E --> F["2006–2008<br/>cloud computing<br/>scalable storage and compute"]
+    F --> G["2010–2015<br/>big data deluge<br/>mobile · IoT · deep learning"]
+    G --> H["2018<br/>transformers at scale<br/>attention + large data + compute"]
 ```
 
 **The through-line** — storage → compute → algorithms → data volume, each unlock enabling the next. Transformers didn't arrive because someone had a clever idea in 2018; they arrived because the 2010–2015 data deluge and cloud compute made them trainable.
