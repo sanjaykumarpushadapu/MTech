@@ -116,6 +116,10 @@ flowchart TD
         GEN --> SAFE["Safety & validation"]
         SAFE --> R2([Response])
     end
+    NLU -.-> MAP1["now inside<br/>LLM understanding"]
+    DM -.-> MAP2["now inside<br/>orchestration"]
+    MAP1 -.-> LLM
+    MAP2 -.-> ORC
 ```
 
 Read the two dashed arrows — they are the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
@@ -160,9 +164,9 @@ The dividing question: **who decides the sequence of steps — you, in code, or 
 ```mermaid
 flowchart TD
     IN[Input] --> LLM[LLM]
-    R[Retrieval] --> LLM
-    T[Tools] --> LLM
-    M[Memory] --> LLM
+    LLM <--> R[Retrieval]
+    LLM <--> T[Tools]
+    LLM <--> M[Memory]
     LLM --> OUT[Output]
 ```
 

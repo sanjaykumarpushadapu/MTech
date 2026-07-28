@@ -614,6 +614,8 @@ flowchart TD
     SST -->|return message| NET2[Network]
     NET2 --> CST2[Client stub]
     CST2 -->|unpacks, delivers| CN2[Client node]
+    CN -.->|"local-call illusion"| CST
+    CST2 -.->|"result looks local again"| CN2
 ```
 
 The **stub** is the whole trick: client and server each hold a local object that hides the packing, sending and unpacking, so the caller writes an ordinary function call.
@@ -630,10 +632,10 @@ The **stub** is the whole trick: client and server each hold a local object that
 
 ```mermaid
 flowchart TD
-    RC[Ruby client<br/>gRPC stub] --> GS[gRPC server<br/>C++ service]
-    AJ[Android-Java client<br/>gRPC stub] --> GS
-    GS --> RC
-    GS --> AJ
+    RC[Ruby client<br/>gRPC stub] -->|"proto request"| GS[gRPC server<br/>C++ service]
+    AJ[Android-Java client<br/>gRPC stub] -->|"proto request"| GS
+    GS -->|"proto response"| RC
+    GS -->|"proto response"| AJ
 ```
 
 That diagram is the point of gRPC in one picture: **a C++ service, a Ruby client and an Android/Java client, all generated from one `.proto` file.**

@@ -731,6 +731,7 @@ flowchart TD
     CTX --> M["Generative LLM<br/>maximum context length: 512"]
     M --> O["token 9<br/>domesticated"]
     O --> NCTX["new context length = 9<br/>prompt + generated tokens"]
+    NCTX --> NEXT["next decoding step"]
 ```
 
 **The consequence:** a 512-token window with a 400-token prompt leaves room for about 112 tokens of answer, not 512. Every token generated shrinks what's left. This is why a long system prompt costs you twice — you pay for it on every request *and* it eats the answer budget.
