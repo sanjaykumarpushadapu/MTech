@@ -4,8 +4,8 @@ Instructor-supplied notebooks from session 1 (26 Jul 2026), shared via OneDrive.
 
 | File | What it does |
 |---|---|
-| `LocalGPT.ipynb` | 2 cells. Minimal local chat loop over Ollama `gemma3:1b`. Proves the local model works before anything else is attempted |
-| `tavily_weather_agent.ipynb` | 19 cells. The full **weather agent** demo from deck slide 47 — the five-stage build |
+| `LocalGPT.ipynb` | 7 cells (2 code). Minimal local chat loop over Ollama `gemma3:1b`. Proves the local model works before anything else is attempted |
+| `tavily_weather_agent.ipynb` | 20 cells (8 code). The full **weather agent** demo from deck slide 47 — the five-stage build |
 
 ## The stack she chose, and why it matters
 
@@ -23,11 +23,13 @@ Instructor-supplied notebooks from session 1 (26 Jul 2026), shared via OneDrive.
 
 ## The five-stage build (deck slide 47, realised in the notebook)
 
-1. **Baseline** — cell 9: LLM with no tools, so the limitation is visible first
-2. **Tool definition** — cell 11: `@tool def get_weather(city: str)`; the **docstring is the tool description the LLM reads**
-3. **Tool selection** — cell 13: `initialize_agent(..., verbose=True)`
-4. **Execution** — cells 15–16: Tokyo, then a two-city comparison
-5. **Response generation** — the agent turns raw search output into prose
+Cell numbers below are the **code** cells; each links back to the note section it demonstrates (note → cell map lives in the note's *Lab / build* section).
+
+1. **Baseline** — Step 4, cell 10: LLM connected, no tools yet, so the limitation is visible first → note **§8** (*"LLMs can't take actions"*)
+2. **Tool definition** — Step 5, cell 12: `@tool def get_weather(city: str)`; the **docstring is the tool description the LLM reads** → note **§3b** (the ACI point)
+3. **Tool selection** — Step 6, cell 14: `initialize_agent(..., verbose=True)` — the model picks the path → note **§3b** (agent vs workflow), **§9** (routing → reasoning)
+4. **Execution** — Step 7, cells 16–17: Tokyo, then a two-city comparison → note **§9** (tool invocation)
+5. **Response generation** — the agent turns raw search output into prose → note **§9** (response stage)
 
 **`verbose=True` is the point of the lab.** It prints the agent's thoughts and tool choices — the ReAct loop made visible. Don't turn it off.
 

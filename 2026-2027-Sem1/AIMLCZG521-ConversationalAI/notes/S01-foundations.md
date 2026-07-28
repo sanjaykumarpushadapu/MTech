@@ -767,6 +767,18 @@ Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **10
 
 **Demo B — the weather agent.** ✅ **Notebooks received** → `labs/S01-tokenization-and-tool-calling/`
 
+**Note → code map** — reading a concept and want to see it run? Jump to the exact cell:
+
+| This note's concept | Notebook · cell | What you run / see |
+|---|---|---|
+| §8 — *"LLMs can't take actions"* (the limitation that motivates agents) | `LocalGPT.ipynb` · cell 5 · then `tavily_weather_agent.ipynb` Step 4 · cell 10 | a bare model answering with **no tools** — the gap everything else fills |
+| §3b — the **augmented LLM** · the **ACI docstring** point | `tavily_weather_agent.ipynb` Step 5 · cell 12 | `@tool def get_weather(...)` — the **docstring *is* the tool description** the model reads |
+| §3b — **agent vs workflow** (who picks the path) · §9 routing→reasoning | `tavily_weather_agent.ipynb` Step 6 · cell 14 | `initialize_agent(… ZERO_SHOT_REACT_DESCRIPTION, verbose=True)` — the *model*, not your code, decides |
+| §9 — the **seven-stage loop** · the **ReAct** *Going deeper* box | `tavily_weather_agent.ipynb` Step 7 · cells 16–17 | the `verbose` **Thought → Action → Observation** trace — the loop made visible |
+| §6 — **tokenization / BPE** (Demo A) | *conceptual — worked by hand in §6; no notebook in this lab* | the BPE merge example lives in the note itself |
+
+*(The notebook also opens with its own "How this maps to the course" cell — this table is the reverse direction, note → cell.)*
+
 ⚠️ **The notebook differs from the plan.** The stated approach is "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
 
 Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, three sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
