@@ -323,7 +323,7 @@ flowchart TD
 
 The bottom row is the honest trade: the old stack failed **loudly and predictably**; the new one fails **plausibly**. Rasa could not answer an unanticipated question. LangChain will answer it — correctly or not.
 
-**The key shift**, in the words: *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
+**The key shift:** *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
 
 **Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
 
@@ -638,7 +638,7 @@ flowchart TD
 
 ### 11. Production concerns
 
-**Intuition** — the framing: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
+**Intuition** — the core point: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
 
 *The four axes are not independent — every fix on one pushes on another:*
 
@@ -753,7 +753,7 @@ Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **10
 
 ⚠️ **The notebook differs from the plan.** The stated approach is "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
 
-Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, four sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
+Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, three sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
 
 > ***Going deeper*** *— what the ReAct trace you're about to watch actually is (full treatment L4):*
 > **ReAct = Reason + Act.** The agent doesn't answer in one shot — it runs a loop, thinking out loud between tool calls:
@@ -786,7 +786,7 @@ def get_weather(city: str) -> str:
     """Get the current weather for a given city by searching the web. Input should be a city name, e.g. 'Paris' or 'New York'."""
 ```
 
-**The docstring is the tool description the model reads to decide when to call it.** That's Anthropic's agent-computer interface point from section 3b made concrete — the docstring is prompt engineering, not documentation.
+**The docstring is the tool description the model reads to decide when to call it.** That's the agent-computer interface (ACI) point from section 3b made concrete — the docstring is prompt engineering, not documentation.
 
 Five stages, and the staging is the lesson:
 

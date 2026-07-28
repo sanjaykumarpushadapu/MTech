@@ -681,7 +681,7 @@ flowchart TD
     RML -.-> O
 ```
 
-Both touch **every** phase. A team that plans to "do the fairness work in sprint 12" has already lost — the decisions that determined fairness (what data, what labels, what happens on a low-confidence prediction) were made in sprints 1 through 11.
+Both touch **every** phase — there is no single point in the timeline where either is "the current task."
 
 **Tradeoff** — the practical implication of "cross-cutting" is that you cannot schedule either as a phase. A team that plans to "do the fairness work in sprint 12" has already lost, because the decisions that determine fairness — what data, what labels, what the system does with a low-confidence prediction — were made in sprints 1 through 11.
 

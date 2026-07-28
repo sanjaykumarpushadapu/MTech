@@ -218,7 +218,7 @@ flowchart TD
 2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Why √d_k specifically: each score is a dot product of two d_k-dimensional vectors, so its size grows with the dimension — variance ≈ d_k, typical magnitude ≈ √d_k. Dividing by √d_k renormalises scores back to unit scale. Skip it and, at d_k = 128, scores run into the tens; softmax of widely-spread inputs saturates to almost one-hot, its gradient collapses toward 0, and the layer stops learning. √d_k is exactly the factor that cancels the dimension's inflation.*
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
-As the original paper's block, which is the form to reproduce in an exam:
+The same computation as a pipeline — the form to reproduce in an exam:
 
 ```
 MatMul(Q, Kᵀ) → Scale (÷√d_k) → Mask (optional) → SoftMax → MatMul(·, V)
@@ -300,7 +300,7 @@ Step 4 is the one people skip. Without `W_O` the heads never talk to each other 
 
 **The key economy** — because each head works in a *reduced* dimension d_k = d_v = d/h, **the total computational cost is similar to single-head attention at full dimensionality.** You get multiple views for roughly the price of one. That sentence is a likely exam question.
 
-**Worked example — reproduce this by hand.** Input length N = 4, d = 512, heads A = 8, so d_k = d_v = 512/8 = **64**.
+**Worked example — reproduce this by hand.** Input length N = 4, d = 512, heads h = 8, so d_k = d_v = 512/8 = **64**.
 
 | Tensor | Shape | Why |
 |---|---|---|
@@ -331,7 +331,7 @@ flowchart TD
     WO --> O["output [4×512]<br/>= input size → stackable"]
 ```
 
-Each head runs the exact five-step computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
+Each head runs the exact same computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
 
@@ -419,13 +419,11 @@ T¹ = (X − μ)/σ = [−1.414, 0, 0, +1.414]
 
 **Layer normalisation** — applied **independently to each token's hidden vector**, normalising **across the feature dimension** (not across the batch or the sequence — that's the distinction that gets examined). Has **two learnable parameters, γ and β**.
 
-**Feed-forward network (FFNN)** — uses the contextual information created by the attention layer to capture complex relationships. A fully-connected **2-layer** network: one hidden layer, one output layer, **two weight matrices**. The hidden dimension **d_ff is larger than the model dimension d** — in the original transformer, **d = 512 and d_ff = 2048** (4×).
-
-Notation: **X** is the input to the layer; **T** (shape [N × d]) marks the transformer computation, with superscripts demarcating each step inside the block.
+**Feed-forward network (FFN)** — uses the contextual information created by the attention layer to capture complex relationships. A fully-connected **2-layer** network: one hidden layer, one output layer, **two weight matrices**. The hidden dimension **d_ff is larger than the model dimension d** — in the original transformer, **d = 512 and d_ff = 2048** (4×).
 
 **The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to section 11.
 
-**Tradeoff** — the FFNN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFNN with sparsely-activated ones: it's the biggest block of weights to attack.
+**Tradeoff** — the FFN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFN with sparsely-activated ones: it's the biggest block of weights to attack.
 
 ---
 
@@ -441,7 +439,7 @@ Notation: **X** is the input to the layer; **T** (shape [N × d]) marks the tran
 | **Sinusoidal encodings** | **Fixed sine/cosine functions at multiple frequencies** | Preserves **relative distance**; no parameters |
 | **RoPE** (Rotary Positional Embeddings) | Encodes position by **rotating Q and K in ℂ space** | Embeds **relative phase relationships**; **scales better for long and sliding-window contexts** |
 
-**Mechanism — the sinusoidal formula.** *("sine/cosine at multiple frequencies" is stated but rarely written down.)* For position `pos` and dimension index `i`:
+**Mechanism — the sinusoidal formula.** For position `pos` and dimension index `i`:
 
 ```
 PE(pos, 2i)   = sin( pos / 10000^(2i/d) )     ← even dimensions
@@ -495,7 +493,7 @@ Read it column-wise: the **low dimensions swing fast** (dim0: 0 → 0.84 → 0.9
 
 ### 8. From text to tokens to embeddings
 
-**Intuition** — A model can only do arithmetic, so text has to become numbers. Four steps, each with its own name, and the exam can ask for the order:
+**Intuition** — A model can only do arithmetic, so text has to become numbers. Five stages, each with its own name, and the exam can ask for the order:
 
 ```mermaid
 flowchart TD
@@ -509,7 +507,7 @@ flowchart TD
 
 **Special context tokens** are added at this stage — end-of-text, unknown, padding and similar markers the model needs but the raw text doesn't contain.
 
-**Mechanism — the four stages, in order.** The exam can ask for this sequence:
+**Mechanism — the five stages, in order.** The exam can ask for this sequence:
 
 | # | Stage | In → out |
 |---|---|---|
@@ -704,7 +702,7 @@ flowchart LR
 | **Strengths** | Comprehension — classification, **NER**, sentiment — builds dense semantic representations | Open-ended generation, dialogue, code completion, story synthesis | Translation, summarisation, **multimodal pipelines where input and output domains differ** |
 | **Weaknesses** | **Not naturally generative** — needs adapter heads or fine-tuning for sequence output | Less efficient for classification or bidirectional reasoning | **Dual stacks increase training complexity and inference latency** |
 
-**The original Vaswani figure, which all three descend from** — worth being able to sketch:
+**The original transformer figure, which all three descend from** — worth being able to sketch:
 
 ```mermaid
 flowchart BT
@@ -807,7 +805,7 @@ Corpus: `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
 | Pair | Where it appears | Total |
 |---|---|---|
 | **("u","g")** | hug 10 + pug 5 + hugs 5 | **20** ✅ most frequent |
-| ("p","u") | pug 5 + pun 12 | **17** ← *the runner-up; watch it at merge 2* |
+| ("p","u") | pug 5 + pun 12 | **17** ← *the runner-up to this first merge (17 < 20); it then evaporates once `pug` → `p·ug`* |
 | ("u","n") | pun 12 + bun 4 | 16 |
 | ("h","u") | hug 10 + hugs 5 | 15 |
 | ("g","s") | hugs 5 | 5 |
@@ -906,19 +904,19 @@ flowchart TD
 
 **Why this matters for the course:** the middle link is why sessions 9–16 exist at all. If anyone could pre-train, the syllabus would be about pre-training. Because they can't, it's about adaptation.
 
-**Pre-neural (before 2010s)** — Shannon 1950 uses a language model to measure the **entropy of English**; then decades of **n-gram** language models for machine translation and speech recognition.
+**Pre-neural (before 2010s)** — as early as 1950, a language model was used to measure the **entropy of English**; then decades of **n-gram** language models for machine translation and speech recognition.
 
 **Neural ingredients (2010s)** — each a component the transformer needed:
 
 | Year | Contribution |
 |---|---|
-| 2003 | First **neural language model** — Bengio+ |
-| 2014 | **Sequence-to-sequence** modelling (for MT) — Sutskever+ |
-| 2014 | **Adam** optimizer — Kingma+ |
-| 2014 | **Attention** mechanism (for MT) — Bahdanau+ |
-| **2017** | **Transformer** architecture (for MT) — Vaswani+ |
-| 2017 | **Mixture of experts** — Shazeer+ |
-| 2018–19 | **Model parallelism** — Huang+, Rajbhandari+, Shoeybi+ |
+| 2003 | First **neural language model** |
+| 2014 | **Sequence-to-sequence** modelling (for MT) |
+| 2014 | **Adam** optimizer |
+| 2014 | **Attention** mechanism (for MT) |
+| **2017** | **Transformer** architecture (for MT) |
+| 2017 | **Mixture of experts** |
+| 2018–19 | **Model parallelism** |
 
 Note that attention, seq2seq and the transformer all arrived **for machine translation**. None of them were built to make chatbots.
 
