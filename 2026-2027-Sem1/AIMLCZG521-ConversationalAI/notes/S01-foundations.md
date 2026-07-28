@@ -430,6 +430,25 @@ flowchart LR
 
 Accuracy is U-shaped, not flat. A fact placed halfway through a long context is the one the model is most likely to overlook — so **where** you put something in the prompt matters as much as whether you put it there at all.
 
+**Worked example — a context budget by hand.** Suppose a support agent has a **32K-token** window. One request might spend it like this:
+
+| Budget item | Tokens |
+|---|---|
+| System prompt and tool instructions | 2,500 |
+| Conversation so far (12 turns) | 4,800 |
+| Retrieved policy documents | 9,000 |
+| Tool results | 1,200 |
+| Safety wrapper and formatting instructions | 1,000 |
+| Room left for the answer | **13,500** |
+
+Now extend the chat by another 20 turns and retrieve another 8K tokens of documentation:
+
+```
+32,000 - (2,500 + 12,800 + 17,000 + 1,200 + 1,000) = -2,500
+```
+
+You are **over budget before the model answers at all**. That is the operational meaning of "context window": it is a finite budget shared by instructions, history, retrieval, tool output, and the answer.
+
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
 ---
@@ -622,6 +641,17 @@ flowchart TD
 **A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes in L13–L14.
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
+
+**Decision rule — which protocol for which edge?**
+
+| Situation | Reach for |
+|---|---|
+| One agent needs to call **tools or data sources** from different vendors in a standard way | **MCP** |
+| Multiple agents need to **delegate tasks or collaborate** | **A2A** |
+| One internal team controls both sides and just needs a simple integration | **Custom REST / GraphQL** may still be simpler |
+| You are still prototyping one agent with one or two tools | Start with **direct tool calls** first, standardise later |
+
+The practical principle is the same as workflows vs agents in section 3b: **take the simplest thing that preserves the capability you need**. Standards pay off at scale, not on day one.
 
 > ***In practice*** *— MCP is the one to actually know right now:*
 > **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.

@@ -178,6 +178,7 @@ The sources define **what** is examinable. They are often poor at making it **un
 - **One concrete everyday analogy per hard concept.** Q/K/V as a group chat, idempotency as an elevator button, an API contract as a restaurant menu, workflow-vs-agent as recipe-vs-chef. Keep it short — the analogy is scaffolding, the mechanism still carries the weight.
 - **Signpost heavy arithmetic as skimmable on a first pass**, and state the one sentence to walk away with, so cognitive load never blocks the idea. A worked example the reader skips in fear teaches nothing.
 - **More explanation belongs at the hard spots, not everywhere.** Padding an already-clear section raises load and works against comprehension — the enemy is confusion *and* volume. Add the on-ramp where a reader stalls; leave the easy sections tight.
+- **On review passes, prefer adding missing clarity over compressing existing material.** If a handout topic is present but thin, the default fix is to add the missing explanation, worked example, decision rule, or diagram — **more understanding, not less text**. Only compress when the extra words are repetition or note-about-the-note prose rather than knowledge.
 
 **The comprehension test:** could an average student, reading this section cold, follow it without reaching for a second source? If not, add the on-ramp or the analogy — don't just restate the formula louder.
 

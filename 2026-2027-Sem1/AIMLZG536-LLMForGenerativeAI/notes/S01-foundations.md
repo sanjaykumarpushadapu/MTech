@@ -495,6 +495,49 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 
 **Tradeoff** — the three approaches trade off cleanly. **Learned embeddings** are simplest and fail hardest outside the trained length. **Sinusoidal** costs nothing and generalises modestly, but it preserves only *relative* distance and the model has to infer even that from a sum — nothing enforces it — while packing position into the same dimensions as meaning makes the two compete for space. **RoPE** is the current default precisely because long context is the pressure point, and it's the only one of the three that **rotates** Q and K rather than **adding** to the embedding: position then acts on the *angle* between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it. RoPE keeps sinusoidal's multi-frequency idea but applies it by rotation; it gets full treatment in S3 — this is the preview.
 
+### 7b. Building blocks of an LLM — the checklist view
+
+**Intuition** — The handout names **"building blocks of LLM"** as its own item because by this point in the session you have seen all the pieces, just spread across several sections. This is the compact revision view. If asked *"what are the building blocks of a decoder-only LLM?"* this is the fast, exam-safe answer.
+
+```mermaid
+flowchart TD
+    TXT[text] --> TOK[tokenizer]
+    TOK --> EMB[token embeddings]
+    EMB --> POS[positional encoding]
+    POS --> ATTN[self-attention]
+    ATTN --> FFN[feed-forward network]
+    FFN --> RN[residuals + normalization]
+    RN --> STACK["repeat N blocks"]
+    STACK --> HEAD[LM head / unembedding]
+    HEAD --> DIST[distribution over vocabulary]
+```
+
+**What each block contributes:**
+
+| Block | Job |
+|---|---|
+| **Tokenizer** | Break raw text into IDs the model can process |
+| **Embeddings** | Turn token IDs into dense vectors |
+| **Positional encoding** | Inject word order, because attention alone has no sense of position |
+| **Self-attention** | Let each token pull information from other relevant tokens |
+| **Feed-forward network** | Apply a learned non-linear transformation at each position |
+| **Residuals + normalization** | Keep very deep stacks trainable and numerically stable |
+| **Repeated transformer blocks** | Build depth; one block is not enough capacity |
+| **LM head** | Turn the final hidden vector into logits over the vocabulary |
+
+**Worked example — the shortest possible forward pass.** Prompt `"The cat"`:
+
+1. Tokenizer maps it to token IDs.
+2. Embeddings turn each ID into a length-`d` vector.
+3. Positional encoding marks which vector is first and which is second.
+4. Attention lets `"cat"` look back at `"The"` when forming its hidden state.
+5. The FFN reshapes that hidden state into a more useful feature vector.
+6. After many repeated blocks, the LM head produces scores like `{sat, sleeps, is, ...}` over the vocabulary.
+
+That is the whole machine in miniature: **text → IDs → vectors → repeated contextual transformation → vocabulary scores**.
+
+**Tradeoff / what this checklist hides** — The list makes the model look like eight equal boxes, which is useful for revision and slightly misleading in implementation. The expensive parts are not equal: parameters concentrate in embeddings, FFNs and the LM head, while run-time cost under long contexts concentrates in attention. Later sessions are mostly optimisations of one of those hotspots, not new building blocks.
+
 ---
 
 ## Part 3 · Text in, text out

@@ -322,6 +322,42 @@ The front-end now builds real screens. When the back-end ships, the URL changes 
 
 **This is what "API-first" actually means in practice.** Design-first isn't a philosophical preference — it's the thing that lets three teams work in parallel off one document instead of serially off each other.
 
+#### 4.2 OpenAPI generators — turning the contract into code
+
+**Intuition** — Once the contract is written, a lot of repetitive code can be generated rather than hand-written. That is what **OpenAPI generators** do: read the spec and produce server stubs, client SDKs, model classes, docs, or test scaffolds. The spec stops being only documentation and becomes a build input.
+
+**Mechanism** — one OpenAPI file can feed several teams at once:
+
+```mermaid
+flowchart TD
+    SPEC[["openapi.yaml"]] --> GEN["OpenAPI generator"]
+    GEN --> SDK["Client SDK<br/>TypeScript · Python · Java"]
+    GEN --> STUB["Server stub<br/>handlers + models"]
+    GEN --> DOC["Reference docs"]
+    GEN --> TEST["Contract-test scaffold"]
+```
+
+The pattern is the same one you already saw with mocking: **one contract, many downstream artifacts**. Here the output is code rather than a fake server.
+
+**Worked example** — a Books API spec defines `GET /books/{id}` and `POST /books`. A generator can produce:
+
+- a **TypeScript SDK** with methods like `getBook(id)` and `createBook(payload)`
+- a **FastAPI / Spring stub** with empty handlers to implement
+- model types like `Book` and `BookCreateRequest`
+
+Concrete command:
+
+```bash
+npx @openapitools/openapi-generator-cli generate \
+  -i openapi.yaml \
+  -g typescript-fetch \
+  -o ./sdk
+```
+
+The front-end now imports typed methods instead of hand-building URLs and request bodies; the back-end starts from the same request and response shapes.
+
+**Tradeoff / why generated code is not the finish line** — Generated code removes boilerplate, not judgment. A poor contract generates poor code faster. You still need to design good names, auth, retries, pagination, error envelopes, and the behaviour around the contract. Treat generators as accelerators, not as architecture.
+
 **Mechanism — the seven-step lifecycle**, built around a Books API:
 
 ```mermaid

@@ -424,6 +424,48 @@ flowchart BT
 
 **Tradeoff / how NOT to read the pyramid** — It's a *dependency* claim, not a *sequencing mandate*. Read literally it says "spend two years on data infrastructure before touching ML," which kills projects. Honest reading: cut a thin vertical slice through all six layers for one use case, then widen. Note also that simple ML sits *below* deep learning — A/B tests and logistic regression solve a large share of problems pitched as AI.
 
+#### 6.1 The data-science pipeline, explicitly
+
+**Intuition** — The handout names the **data science pipeline** separately from the ML pipeline because they answer different questions. The ML pipeline asks, *"how do we train, evaluate, deploy and monitor a model?"* The data-science pipeline starts earlier and wider: *"how do we turn messy raw data into a decision someone can use?"*
+
+*Shortest memory hook:* the **ML pipeline is model-centric**; the **data-science pipeline is insight-centric**.
+
+```mermaid
+flowchart TD
+    C["Collect<br/>raw data arrives"] --> CL["Clean<br/>fix missing values, bad rows"]
+    CL --> E["Explore<br/>patterns, anomalies, bias"]
+    E --> F["Feature / transform<br/>shape data into something useful"]
+    F --> M["Model or analysis<br/>learn or estimate"]
+    M --> I["Interpret<br/>metrics, visuals, story"]
+    I --> D["Decision / action<br/>what changes next"]
+```
+
+**Mechanism** — each stage removes one kind of ambiguity before the next stage can do useful work:
+
+| Stage | What question it answers |
+|---|---|
+| **Collect** | Do we have the right data at all? |
+| **Clean** | Can we trust the rows and columns? |
+| **Explore** | What patterns or traps are in it? |
+| **Feature / transform** | In what form should the data be presented? |
+| **Model or analysis** | What rule, forecast, or estimate best fits? |
+| **Interpret** | Is the result meaningful to a human decision-maker? |
+| **Decision / action** | What will the organisation actually do differently? |
+
+**Worked example — fraud detection through the data-science pipeline**
+
+| Stage | Fraud example |
+|---|---|
+| Collect | Pull card transactions, merchant metadata, customer history |
+| Clean | Remove corrupt timestamps, fix currencies, dedupe retries |
+| Explore | Find fraud spikes by merchant type, hour, geography |
+| Feature / transform | Build `transactions_last_1h`, `merchant_risk`, `country_change` |
+| Model or analysis | Train a classifier or compute a rule-based risk score |
+| Interpret | Check precision/recall and inspect why false positives happen |
+| Decision / action | Block, review, or allow the transaction |
+
+**Tradeoff / where people confuse this with the ML pipeline** — Teams often jump straight to the model because it looks like the "AI part." That is usually the wrong place to begin. If the data-science pipeline is weak, the ML pipeline inherits the weakness and produces a polished bad model. The model is one stage in the pipeline, not the pipeline itself.
+
 ---
 
 ## Part 4 · People and judgment
