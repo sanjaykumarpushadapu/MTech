@@ -195,6 +195,7 @@ Sources, in order of preference:
 **Carry labels across verbatim** — the exam uses the instructor's words. **Don't invent structure the image lacks**; if an arrow is ambiguous, say so in prose. The Mermaid block is the permanent record — never write "see the diagram on slide 16."
 
 **Prefer clean diagrams over exhaustive ones.** A Mermaid block should expose the structure at a glance, not reproduce every sentence from the source. Fewer boxes, shorter labels, and a clear stage flow beat dense diagrams with crossing lines. If `timeline` or `sequenceDiagram` becomes cluttered or tool-fragile, rewrite it as a clean `flowchart TD` instead.
+**Do not leave overlapping or crossing arrows when a clearer layout is possible.** If arrows overlap, reverse the flow direction (`LR` ↔ `TD`), stack the stages vertically, split one busy node into two simpler nodes, or replace a loop-back arrow with a "next state" box. The reader should be able to trace every path without visual ambiguity.
 
 ### Direction is a decision, not a default
 

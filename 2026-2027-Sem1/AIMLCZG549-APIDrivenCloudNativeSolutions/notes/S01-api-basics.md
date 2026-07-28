@@ -98,9 +98,10 @@ flowchart TD
     CRC --> CS[Consumer Service]
     OS --> RRC[[Restaurant request channel]]
     RRC --> RS[Restaurant Service]
-    CS --> OSR[[Order Service reply channel]]
-    RS --> OSR
-    OSR --> OS
+    CS --> CSR[[Consumer reply]]
+    RS --> RSR[[Restaurant reply]]
+    CSR --> OS
+    RSR --> OS
     OS --> CRP[[Client reply channel]]
     CRP -->|create order response| C
 ```
@@ -604,15 +605,15 @@ query {
 **Mechanism — how plain RPC works**, which you need before gRPC makes sense:
 
 ```mermaid
-flowchart LR
+flowchart TD
     CN[Client node] -->|procedure call| CST[Client stub]
     CST -->|packages call into message| NET[Network]
     NET --> SST[Server stub]
     SST -->|unpacks, passes call| SN[Server node]
     SN -->|result| SST
-    SST --> NET
-    NET --> CST
-    CST -->|unpacks, delivers| CN
+    SST -->|return message| NET2[Network]
+    NET2 --> CST2[Client stub]
+    CST2 -->|unpacks, delivers| CN2[Client node]
 ```
 
 The **stub** is the whole trick: client and server each hold a local object that hides the packing, sending and unpacking, so the caller writes an ordinary function call.
@@ -628,9 +629,11 @@ The **stub** is the whole trick: client and server each hold a local object that
 | Languages | — | **10+** — C#/.NET, C++, Dart, Go, Java, Kotlin, Node, Objective-C, PHP, Python, Ruby |
 
 ```mermaid
-flowchart LR
-    RC[Ruby client<br/>gRPC stub] <-->|proto request / proto response| GS[gRPC server<br/>C++ service]
-    AJ[Android-Java client<br/>gRPC stub] <-->|proto request / proto response| GS
+flowchart TD
+    RC[Ruby client<br/>gRPC stub] --> GS[gRPC server<br/>C++ service]
+    AJ[Android-Java client<br/>gRPC stub] --> GS
+    GS --> RC
+    GS --> AJ
 ```
 
 That diagram is the point of gRPC in one picture: **a C++ service, a Ruby client and an Android/Java client, all generated from one `.proto` file.**

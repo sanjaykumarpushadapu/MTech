@@ -722,15 +722,15 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 *The point people miss — **generated tokens count against the same budget as the prompt**:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph CTX["current context length = 8"]
-        direction LR
+        direction TB
         P["prompt tokens 1-6<br/>Tell me something about llamas."]
         G["generated tokens 7-8<br/>Llamas are"]
     end
     CTX --> M["Generative LLM<br/>maximum context length: 512"]
     M --> O["token 9<br/>domesticated"]
-    O -->|"append, context grows to 9"| CTX
+    O --> NCTX["new context length = 9<br/>prompt + generated tokens"]
 ```
 
 **The consequence:** a 512-token window with a 400-token prompt leaves room for about 112 tokens of answer, not 512. Every token generated shrinks what's left. This is why a long system prompt costs you twice — you pay for it on every request *and* it eats the answer budget.

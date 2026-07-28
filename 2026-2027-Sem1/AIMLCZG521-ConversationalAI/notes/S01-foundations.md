@@ -94,7 +94,7 @@ flowchart TD
 *Both pipelines, side by side — the contrast is the content, so read across rather than down:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph T["TRADITIONAL · pre-2020"]
         direction TB
         U1([User input]) --> SR["Speech recognition<br/>if voice"]
@@ -104,18 +104,18 @@ flowchart LR
         NLG --> TTS["Text-to-speech<br/>if voice"]
         TTS --> R1([Response])
     end
+    T --> SHIFT["Agentic shift:<br/>NLU collapses into the LLM,<br/>and dialogue policy becomes orchestration"]
+    SHIFT --> A
     subgraph A["AGENTIC · 2023+"]
         direction TB
         U2([User input]) --> LLM["LLM understanding<br/>intent + entities<br/>in ONE pass"]
-        LLM --> ORC["ORCHESTRATION LAYER<br/>planning · tool selection<br/>· memory retrieval"]
+        LLM --> ORC["ORCHESTRATION LAYER<br/>planning · tool selection<br/>memory retrieval"]
         ORC --> TOOL["Tool invocation<br/>APIs · DB · code"]
         TOOL --> MEM["Memory update<br/>context · user profile"]
         MEM --> GEN["LLM generation<br/>contextual response"]
         GEN --> SAFE["Safety & validation"]
         SAFE --> R2([Response])
     end
-    NLU -.->|"collapses into"| LLM
-    DM -.->|"replaced by"| ORC
 ```
 
 Read the two dashed arrows — they are the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
@@ -158,17 +158,12 @@ The dividing question: **who decides the sequence of steps — you, in code, or 
 **The building block both are made of — the augmented LLM:**
 
 ```mermaid
-flowchart LR
-    subgraph AUG[Augmented LLM]
-        LLM[LLM]
-        R[Retrieval]
-        T[Tools]
-        M[Memory]
-        LLM <--> R
-        LLM <--> T
-        LLM <--> M
-    end
-    IN[Input] --> AUG --> OUT[Output]
+flowchart TD
+    IN[Input] --> LLM[LLM]
+    R[Retrieval] --> LLM
+    T[Tools] --> LLM
+    M[Memory] --> LLM
+    LLM --> OUT[Output]
 ```
 
 An LLM enhanced with **retrieval, tools and memory**, where the model actively uses them — generating its own search queries, selecting tools, deciding what to retain. This is the same claim as the "LLM is the brain but needs tools, memory and planning," stated more precisely.
@@ -665,17 +660,14 @@ The practical principle is the same as workflows vs agents in section 3b: **take
 *The four axes are not independent — every fix on one pushes on another:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     O["Observability<br/>traces, tool success,<br/>latency, cost per session"]
-    C["Cost<br/>caching, routing,<br/>token budgets"]
-    L["Latency<br/>budget per stage"]
-    S["Safety<br/>input · tool · output"]
-    C -->|"smaller model<br/>= lower quality"| L
-    L -->|"fewer checks<br/>= faster"| S
-    S -->|"more checks<br/>= more cost"| C
-    O -->|"cannot manage what<br/>you cannot see"| C
-    O --> L
-    O --> S
+    O --> C["Cost<br/>caching, routing,<br/>token budgets"]
+    O --> L["Latency<br/>budget per stage"]
+    O --> S["Safety<br/>input · tool · output"]
+    C -->|"smaller model<br/>can hurt quality"| L
+    L -->|"fewer checks<br/>run faster"| S
+    S -->|"more checks<br/>raise cost"| C
 ```
 
 **Observability comes first** — not because it matters most, but because the other three are unmanageable without it. You cannot tune a latency budget you are not measuring.
