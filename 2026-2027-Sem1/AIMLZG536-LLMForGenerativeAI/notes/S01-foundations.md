@@ -55,6 +55,8 @@ All three run on the same machinery — only the *head* on top differs. That's w
 
 Equivalently: it assigns a probability to each possible next word — **a probability distribution over the vocabulary**.
 
+That is the whole exam-safe definition in three moves: **score sequences, score next tokens, turn the scores into a vocabulary-wide distribution.**
+
 **Worked example — word order is the whole signal:**
 
 ```
@@ -200,6 +202,8 @@ It builds a matrix comparing each token with every token before it, weighted by 
 | **Q** | Query | *"What am I looking for?"* — the current token asking a question of every previous token |
 | **K** | Key | *"What do I contain?"* — each past token advertising its relevance to the query |
 | **V** | Value | *"What do I contribute?"* — the actual content pulled in once relevance is decided |
+
+If you remember only one sentence before the arithmetic starts, remember this one: **Q asks, K advertises, V supplies the content.**
 
 *An everyday analogy for Q, K, V — hold this and the maths below is just the analogy with numbers:* imagine you post a question in a group chat. Your **query** is what you're looking for. Every earlier message carries a **key** — a little label advertising what that message is about — and a **value** — its actual content. You mentally compare your query against each key to judge relevance, then you pull in the values of the relevant messages, paying most attention to the most relevant. Self-attention does exactly this, except "compare" is a dot product and "pay attention in proportion" is a softmax.
 

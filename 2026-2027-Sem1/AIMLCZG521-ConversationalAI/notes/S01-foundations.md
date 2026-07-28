@@ -151,7 +151,7 @@ Read the two dashed arrows — they are the entire architectural change. Everyth
 | **Workflows** | Systems where LLMs and tools are orchestrated through **predefined code paths** |
 | **Agents** | Systems where LLMs **dynamically direct their own processes and tool usage**, maintaining control over how they accomplish tasks |
 
-*An everyday analogy that makes the line stick:* a **workflow** is a **recipe** — the steps are written down in advance and followed in the same order every time; predictable, and it never surprises you. An **agent** is a **chef** told *"make me dinner with what's in the fridge"* — it decides what to cook and in what order, improvising as it goes; flexible, but you can't be certain in advance exactly what it'll do. Same ingredients (an LLM plus some tools), completely different amount of freedom handed to the model.
+*An everyday analogy that makes the line stick:* a **workflow** is a **recipe** — the steps are written down in advance and followed in the same order every time. An **agent** is a **chef** told *"make me dinner with what's in the fridge"* — it decides the steps at runtime. Same ingredients (LLM plus tools), different amount of freedom handed to the model.
 
 The dividing question: **who decides the sequence of steps — you, in code, or the model, at runtime?**
 
@@ -216,7 +216,7 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 
 ### 4. The six components of modern conversational AI
 
-**Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, has to do the same six jobs: work out what you want, keep track of where the conversation is, look things up, do things, say something back, and remember. What changed over twenty years is not the list — it's that all six used to be separate hand-built modules, and now the LLM absorbs three of them (understanding, dialogue, generation) while the other three (knowledge, action, memory) became *harder* because we now expect them to work on open-ended input.
+**Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, still has to do the same six jobs: understand, track the conversation, look things up, act, respond, and remember. What changed is where the difficulty lives: the LLM absorbs much of **understanding, dialogue, and generation**, while **knowledge, action, and memory** remain the expensive engineering pieces.
 
 *The six, arranged by what the LLM absorbed and what it didn't — the split is the insight:*
 

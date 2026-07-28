@@ -119,6 +119,8 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 **Intuition** — HTTP APIs are the standard way applications talk over the web, typically browser → server. Three components: **endpoint**, **request**, **response**.
 
+In one line: a client sends **method + URL + headers + optional body**, and the server sends back **status code + headers + optional body**.
+
 ```mermaid
 flowchart LR
     CL[Client<br/>browser / mobile app] -->|"HTTP request<br/>method + endpoint + body"| EP[API endpoint<br/>a URL]

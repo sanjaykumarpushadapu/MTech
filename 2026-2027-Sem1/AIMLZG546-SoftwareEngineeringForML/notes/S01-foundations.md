@@ -136,9 +136,9 @@ Three consequences follow directly, and each drives a later session:
 
 #### 2.3 Types of ML domains
 
-⚠️ *The session agenda lists "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but **the material ends before reaching it** (it stops at "Data Science — Hierarchy of Needs"). Filled in here because it is a named syllabus item. Expect it to reappear in session 2, which is titled "Foundations (cont.)".*
+⚠️ *The session agenda lists "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but the teaching material stops before reaching it. It is included here because it is a named syllabus item, and the later sessions assume the distinction.*
 
-**Intuition** — "ML domain" gets used for two different cuts, and both are worth holding because they answer different engineering questions.
+**Intuition** — "ML domain" gets used in two different senses, and each answers a different engineering question: **what kind of supervision does the model learn from, and what kind of data does it operate on?**
 
 **Cut 1 — by what the model learns from.** This decides what *data* you need:
 
