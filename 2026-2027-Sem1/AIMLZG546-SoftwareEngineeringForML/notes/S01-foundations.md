@@ -131,7 +131,7 @@ Three consequences follow directly, and each drives a later session:
 
 #### 2.3 Types of ML domains
 
-⚠️ *The session agenda promises "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but **the material ends before reaching it** (it stops at "Data Science — Hierarchy of Needs"), and the recording doesn't cover it either. Filled in here because it is a named syllabus item. Expect it to reappear in session 2, which is titled "Foundations (cont.)".*
+⚠️ *The session agenda lists "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but **the material ends before reaching it** (it stops at "Data Science — Hierarchy of Needs"). Filled in here because it is a named syllabus item. Expect it to reappear in session 2, which is titled "Foundations (cont.)".*
 
 **Intuition** — "ML domain" gets used for two different cuts, and both are worth holding because they answer different engineering questions.
 
@@ -198,7 +198,7 @@ flowchart LR
     M --> P
 ```
 
-**Shift-left testing** — move testing earlier ("left" on the timeline) rather than treating it as a final gate. Defects found in design cost a fraction of defects found in production. Called out explicitly on the roles slide, which usually signals exam-worthy.
+**Shift-left testing** — move testing earlier ("left" on the timeline) rather than treating it as a final gate. Defects found in design cost a fraction of defects found in production. Frequently flagged as exam-worthy.
 
 **Worked example** — Fraud detection. *Planning* — is fraud loss worth a project? *Analysis* — what counts as fraud, what data exists. *Design* — where the scorer sits in the payment flow. *Development* — build it. *Testing* — catches known fraud without blocking good customers. *Deployment* — shadow mode, then live. *Maintenance* — fraud patterns shift, retrain.
 
@@ -250,7 +250,7 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 
 ### 4. From Waterfall to ADLC
 
-**Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, which the report calls **ADLC** (AI-Driven Development Life Cycle) and names as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
+**Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, known as **ADLC** (AI-Driven Development Life Cycle) and named as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
 
 | Stage | Features | Challenges | Impact |
 |---|---|---|---|
@@ -258,11 +258,11 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 | **Iterative** | Evolving documentation; continuous testing for early detection | Document synchronisation; keeping test cases consistent across iterations | Higher operational overhead; inconsistent quality; unpredictable timelines |
 | **Agile** | Just-enough documentation; continuous integration, testing, deployment | Balancing detail with agility; robust automation suite is hard; needs experienced team | Depends on human skill; higher initial investment; efficiency/quality tradeoffs |
 | **Scaled Agile** | Consistent documentation; systematic integrated approach with continuous delivery pipeline | Consistent artifacts across many teams; cross-team test coordination cumbersome | Impact on time-to-market; high human dependence; reduced cross-team efficiency |
-| **ADLC** (desired) | AI-assisted automation of **all** SDLC activities — documents, design, code, test cases, test data, automation scripts, deployment scripts | *(the report lists none — that is itself the finding)* | Faster time-to-market; reduced dependence on human expertise; consistent quality |
+| **ADLC** (desired) | AI-assisted automation of **all** SDLC activities — documents, design, code, test cases, test data, automation scripts, deployment scripts | *(none listed — that absence is itself the finding)* | Faster time-to-market; reduced dependence on human expertise; consistent quality |
 
 **Worked example** — Fraud detector under Waterfall: a 60-page spec, then discovering in UAT that the label definition was wrong, then a six-month delay. Under ADLC: AI drafts the spec, generates test data covering fraud edge cases, writes the deployment scripts — so "the label definition is wrong" → corrected and redeployed takes days.
 
-#### What the report is actually about
+#### What ADLC is actually about
 
 *The evolution table is only the surface — the real subject is different, and more useful for this course.*
 
@@ -306,7 +306,7 @@ Claimed productivity improvement, by SDLC phase:
 | **Commercial** | Poor commercial structuring neutralising ROI |
 | **Stakeholder Management** | IT leaders fear **next year's budget cuts** because of this year's savings; inter-departmental barriers; **junior employees fear job loss** |
 
-That last row is worth pausing on. It's an *organisational* failure mode, not a technical one — the efficiency gain is real and gets resisted because of what it implies for budgets and jobs. The report's remedy is to **incentivise leaders for efficiency gains** rather than punish them with reduced budgets.
+That last row is worth pausing on. It's an *organisational* failure mode, not a technical one — the efficiency gain is real and gets resisted because of what it implies for budgets and jobs. The remedy is to **incentivise leaders for efficiency gains** rather than punish them with reduced budgets.
 
 #### The four-stage adoption journey
 
@@ -322,9 +322,9 @@ flowchart TD
 
 Two specifics worth carrying: **KPIs and a baseline must be established at the pilot stage** — you cannot demonstrate ROI without a before-measurement — and the sustain target is **at least 80% active utilisation**, monitored, with roadblocks actively removed.
 
-**Tradeoff / when NOT to use** — Read the Impact column downward: every stage reduces *human* dependence and increases *tooling* dependence. ADLC's stated benefit — "reduced dependence on human expertise" — is also its risk. Generated code, tests and specs need a human who can tell correct from plausible, and that judgment is exactly what atrophies when generation is automated. The report lists no ADLC challenges in its table; read that as *unproven*, not *solved* — and note that the rest of the paper is, in effect, thirteen pages of the challenges the table omits.
+**Tradeoff / when NOT to use** — Read the Impact column downward: every stage reduces *human* dependence and increases *tooling* dependence. ADLC's stated benefit — "reduced dependence on human expertise" — is also its risk. Generated code, tests and specs need a human who can tell correct from plausible, and that judgment is exactly what atrophies when generation is automated. No ADLC challenges are catalogued alongside it; read that as *unproven*, not *solved* — the surrounding analysis is, in effect, a long list of the very challenges the table omits.
 
-**The deeper tradeoff, and the one an exam would reward:** the report's own evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
+**The deeper tradeoff, and the one an exam would reward:** the evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
 
 ---
 
@@ -707,7 +707,7 @@ Both touch **every** phase. A team that plans to "do the fairness work in sprint
 
 No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blueprint, fraud detection.
 
-**Locked in:** fraud detection is the running example for all sixteen sessions. the same credit-card fraud decision tree is the standard worked example (section 2.2), so the textbook and the running example line up from page one.
+**Locked in:** fraud detection is the running example for all sixteen sessions — the same credit-card fraud decision tree recurs as the standard worked example throughout, so the theme is consistent from the very first session.
 
 ---
 

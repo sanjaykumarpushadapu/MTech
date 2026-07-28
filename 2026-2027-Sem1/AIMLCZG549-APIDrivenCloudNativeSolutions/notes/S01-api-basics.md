@@ -140,7 +140,7 @@ flowchart LR
 
 That `POST` exception is the practical one: a retried `POST` can create two orders, which is why payment APIs make you send an idempotency key. `PUT /products/101` with the same body is harmless to repeat; `POST /products` is not.
 
-**Endpoints** — simple URLs representing a collection of objects or a single object. Resources live on the server; each endpoint is a URL designed to perform **a single function**. The deck's phrasing is worth keeping: endpoints are the **"doors" or "paths"** through which a client sends requests.
+**Endpoints** — simple URLs representing a collection of objects or a single object. Resources live on the server; each endpoint is a URL designed to perform **a single function**. Endpoints are the **"doors" or "paths"** through which a client sends requests.
 
 *A student got this wrong in class: an endpoint is **not** just the resource path — it's **host + resource path together**.* Split `https://api.amazon.com/products/101`:
 
@@ -285,7 +285,7 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 #### 4.1 Mocking — building against a contract that has no implementation yet
 
-⚠️ *The handout lists **mocking** under this session ("OpenAPI spec, mocking, semantic versioning, tools") and the instructor read it out in class, but there was no slide on it. Filled in here from the OpenAPI toolchain, because it is named in the syllabus and is the practical payoff of writing the spec first.*
+⚠️ ***Mocking*** *is listed as a topic for this session ("OpenAPI spec, mocking, semantic versioning, tools") but wasn't covered in depth. Filled in here from the OpenAPI toolchain, because it is a named syllabus item and is the practical payoff of writing the spec first.*
 
 **Intuition** — Once the contract exists, it can be *served* before anyone writes the code behind it. A **mock server** reads the OpenAPI document and returns responses that match the schema — right shape, right status codes, fake data. The front-end team starts immediately instead of waiting for the back-end.
 
@@ -443,7 +443,7 @@ flowchart TD
     NS --> SES[Amazon SES Adapter]
 ```
 
-Two captions on that slide carry the actual lesson: **"Services have APIs"** and **"A service's data is private."** Every service owns its own database; nothing reaches into another service's data. That constraint is what makes independent deployment possible, and it's the microservices idea in one line.
+Two points carry the actual lesson: **"Services have APIs"** and **"A service's data is private."** Every service owns its own database; nothing reaches into another service's data. That constraint is what makes independent deployment possible, and it's the microservices idea in one line.
 
 **Benefits and drawbacks — the likeliest exam question in this session:**
 

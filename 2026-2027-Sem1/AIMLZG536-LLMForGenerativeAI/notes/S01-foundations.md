@@ -10,7 +10,7 @@ This is the session that makes you fluent in how modern AI actually works under 
 
 ## The whole thing in one picture
 
-*My own synthesis (not from one slide) — how the numbered sections below snap together into a single forward pass. Every decoder-only LLM is this loop:*
+*My own synthesis — how the numbered sections below snap together into a single forward pass. Every decoder-only LLM is this loop:*
 
 ```mermaid
 flowchart TD

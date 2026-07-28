@@ -22,7 +22,7 @@ Conversational AI — agents — is one of the most employable specialisations i
 
 **Intuition** — Her spoken version first, because it's the sharper one: *"It is not a chatbot alone. In simple terms, **it is a reasoning system that happens to speak your language**."*
 
-The formal definition from the opening slide, worth memorising verbatim because it enumerates exactly what the course teaches:
+The formal definition, worth memorising verbatim because it enumerates exactly what the course teaches:
 
 > Any AI system that engages humans through **natural language** to **understand intent**, **retain context**, **retrieve knowledge**, and **deliver information or take real-world action**.
 
@@ -36,7 +36,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 | 🧠 **Reason** | Plan, chain thoughts, decompose multi-step problems | Planning |
 | ⚡ **Act** | Call APIs, write code, retrieve docs, orchestrate agents | Tools |
 
-**The bot ladder** — a progression of sophistication, from the same slide:
+**The bot ladder** — a progression of sophistication:
 
 ```mermaid
 flowchart TD
@@ -86,12 +86,12 @@ timeline
 
 > Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
-**Detail worth holding from the deep-dive slides:**
+**Detail worth holding:**
 
 - **ELIZA (1966)** — literally `IF user_input contains "mother": RESPOND "Tell me more about your family"`. Brittle, no real understanding.
 - **Statistical era** — intent classification via SVM/Naive Bayes; NER via CRF/HMM; dialogue state tracking via **Markov models**. Frameworks: Microsoft LUIS, early IBM Watson.
 - **Deep learning era** — frameworks Rasa (open source) and Google Dialogflow.
-- **2025–early 2026** — multi-agent frameworks (agents spawning and supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), **1M+ token contexts**, specialised models (coding agents, science models). The deck's framing: *AI moves from assistant to autonomous collaborator.*
+- **2025–early 2026** — multi-agent frameworks (agents spawning and supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), **1M+ token contexts**, specialised models (coding agents, science models). In one line: *AI moves from assistant to autonomous collaborator.*
 
 **Tradeoff** — notice that each era's limitation is *architectural*, not a matter of effort. Rule-based systems didn't need more rules; they needed learning. LLMs don't need bigger models to take actions; they need tools. Recognising which kind of problem you have — "needs more of the same" vs "needs a different architecture" — is the judgment this table teaches.
 
@@ -153,7 +153,7 @@ Read the two dashed arrows — they are the entire architectural change. Everyth
 
 ### 3b. Workflows vs agents — and when not to build one
 
-**Intuition** — "Agentic AI" gets used as though it were one thing. Anthropic's guide draws a sharper line inside it, and this distinction is the most useful single idea in the primary textbook:
+**Intuition** — "Agentic AI" gets used as though it were one thing. There's a sharper line to draw inside it, and this distinction is one of the most useful single ideas here:
 
 | | Definition |
 |---|---|
@@ -186,7 +186,7 @@ An LLM enhanced with **retrieval, tools and memory**, where the model actively u
 - *Workflow*: code says `classify intent → if refund: check eligibility → if eligible: issue refund → confirm`. The LLM classifies and writes text; **the path is fixed**.
 - *Agent*: the model is given the tools `check_eligibility`, `issue_refund`, `lookup_order` and the goal "resolve this customer's refund request", and decides for itself which to call, in what order, and when it's done.
 
-**Tradeoff / when NOT to build an agent** — this is the guide's central argument and it runs directly against the enthusiasm, which makes it valuable:
+**Tradeoff / when NOT to build an agent** — this is the central caution and it runs directly against the hype, which makes it valuable:
 
 > Find the **simplest solution possible**, and only increase complexity when needed. This might mean **not building agentic systems at all.** Agentic systems often trade **latency and cost** for better task performance.
 
@@ -214,7 +214,7 @@ That is a direct argument for the instructor's own advice ("code every lecture�
 2. Prioritise **transparency** — explicitly show the agent's planning steps.
 3. Carefully craft the **agent-computer interface (ACI)** through thorough tool documentation and testing.
 
-On that third: the guide's rule of thumb is to invest as much effort in the **ACI** as teams normally invest in HCI. Building their SWE-bench agent, they *"spent more time optimising our tools than the overall prompt."*
+On that third: a good rule of thumb is to invest as much effort in the **ACI** as teams normally invest in HCI. In one well-known SWE-bench agent build, the team *"spent more time optimising our tools than the overall prompt."*
 
 ---
 
@@ -506,7 +506,7 @@ flowchart LR
 >     LLM --> A[grounded answer]
 > ```
 >
-> Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8 and `_shared/rag.md`.
+> Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8.
 
 ---
 
