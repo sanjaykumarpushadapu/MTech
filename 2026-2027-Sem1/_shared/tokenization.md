@@ -44,11 +44,15 @@ Tokenization sits under everything else in the degree. Context limits are counte
 
 ```mermaid
 flowchart LR
-    TR["Training corpus<br/>low · new · newer"] --> V["Word-level vocabulary<br/>low, new, newer"]
-    TEST(["Test word: <b>lower</b>"]) --> V
-    V --> UNK["❌ UNK<br/>meaning destroyed"]
-    TEST --> SUB["Subword tokenizer"]
-    SUB --> OK["✅ low + er<br/>both pieces already known"]
+    subgraph TRAIN["Seen in training"]
+        direction TB
+        TR["Corpus<br/>low · new · newer"] --> V["Word vocabulary<br/>low · new · newer"]
+    end
+    TEST["New test word<br/>lower"] --> W["Word-level lookup"]
+    V --> W
+    W --> UNK["❌ UNK<br/>word not in vocabulary"]
+    TEST --> S["Subword split"]
+    S --> OK["✅ low + er<br/>known pieces, usable meaning"]
 ```
 
 **The unknown-word problem, stated precisely** — J&M's example is cleaner than "mug":
@@ -132,11 +136,11 @@ All three share the same two-part structure — **definitional and examinable**:
 
 ```mermaid
 flowchart LR
-    C[(Raw training corpus)] --> TL["TOKEN LEARNER<br/>runs ONCE, at training time"]
-    TL --> VOC[["Vocabulary<br/>+ ordered merge list"]]
-    NEW(["New sentence, at inference"]) --> TS["TOKEN SEGMENTER<br/>runs on EVERY input"]
-    VOC --> TS
-    TS --> OUT([Tokens])
+    C[(Raw training corpus)] --> TL["Token learner<br/>runs once"]
+    TL --> VOC[["Vocabulary + ordered merges"]]
+    VOC --> TS["Token segmenter<br/>replays those merges"]
+    NEW(["New sentence"]) --> TS
+    TS --> OUT([Token sequence])
 ```
 
 ⚠️ **The trap this diagram prevents:** the segmenter replays the learner's merges **in the order they were learned**. Frequencies in the *test* data play no part whatsoever — only training frequencies ever mattered.
@@ -303,12 +307,12 @@ Google's tokenizer, built to pretrain **BERT**. Same training shape as BPE; **to
 
 ```mermaid
 flowchart TD
-    CORP["Identical corpus<br/>hug 10 · pug 5 · pun 12<br/>bun 4 · hugs 5"]
-    CORP --> BPE["<b>BPE</b><br/>pick the most FREQUENT pair"]
-    CORP --> WP["<b>WordPiece</b><br/>pick the highest SCORE<br/>freq ab ÷ freq a × freq b"]
-    BPE --> B1["first merge: <b>ug</b><br/>count 20, the commonest"]
-    WP --> W1["first merge: <b>##gs</b><br/>score 1/20, parts are rare"]
-    B1 -.->|"opposite answers,<br/>same input"| W1
+    CORP["Same corpus<br/>hug 10 · pug 5 · pun 12 · bun 4 · hugs 5"]
+    CORP --> PICK{"What rule chooses the next merge?"}
+    PICK --> BPE["BPE<br/>pick highest raw frequency"]
+    PICK --> WP["WordPiece<br/>pick highest pair score"]
+    BPE --> B1["First merge = ug<br/>because count = 20"]
+    WP --> W1["First merge = ##gs<br/>because the pair score wins"]
 ```
 
 **Merge criterion — score, not raw frequency:**
@@ -410,10 +414,10 @@ tiktoken BPE (Llama-3):
 
 ```mermaid
 flowchart TD
-    T["Two tokenizers,<br/>same algorithm,<br/>different behaviour"] --> A["① Tokenization METHOD<br/>BPE · unigram LM · WordPiece"]
-    T --> B["② Tokenizer PARAMETERS<br/>vocabulary size<br/>special tokens<br/>capitalisation handling"]
-    T --> C["③ Training DOMAIN<br/>English text · code<br/>multilingual · maths"]
-    C -.->|"the one people forget —<br/>it is why code models<br/>need their own tokenizer"| C
+    T["Tokenizer behaviour"] --> A["① Method<br/>BPE · unigram · WordPiece"]
+    T --> B["② Parameters<br/>vocab size · special tokens · casing"]
+    T --> C["③ Training domain<br/>English · code · multilingual · maths"]
+    C --> D["Why code models often need<br/>their own tokenizer"]
 ```
 
 **① Tokenization method** — BPE, unigram LM, WordPiece (section 3). The algorithm for choosing which tokens represent a dataset.
@@ -470,13 +474,13 @@ Counts are unintuitive — measure, don't assume:
 
 ```mermaid
 flowchart LR
-    TXT["Conversation text"] --> TK["Tokenizer<br/>~4 chars ≈ 1 token"]
-    TK --> IN["INPUT tokens<br/>system prompt + history<br/>+ retrieved context"]
-    TK --> OUT["OUTPUT tokens<br/>the reply"]
-    IN --> BILL["Bill = in × price_in<br/>+ out × price_out"]
-    OUT --> BILL
-    IN -.->|"grows every turn —<br/>history is re-sent<br/>on EVERY request"| IN
-    OUT -.->|"typically 3-5×<br/>the input price"| OUT
+    TXT["Conversation text"] --> TK["Tokenizer"]
+    TK --> IN["Input tokens<br/>system prompt + history + context"]
+    TK --> OUT["Output tokens<br/>the reply"]
+    IN --> COST["Total API bill"]
+    OUT --> COST
+    H["History is resent<br/>every turn"] -.-> IN
+    P["Output tokens often cost<br/>3-5× input tokens"] -.-> OUT
 ```
 
 **The two dashed notes are where the money goes.** History is resent in full on every turn, so a 20-turn conversation pays for turn 1 twenty times — which is what prompt caching (521 S11) exists to fix.
