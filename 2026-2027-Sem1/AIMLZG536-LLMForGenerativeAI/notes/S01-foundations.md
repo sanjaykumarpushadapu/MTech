@@ -55,7 +55,7 @@ All three run on the same machinery — only the *head* on top differs. That's w
 
 Equivalently: it assigns a probability to each possible next word — **a probability distribution over the vocabulary**.
 
-**Worked example — the own:**
+**Worked example — word order is the whole signal:**
 
 ```
 P(all of a sudden I notice three guys standing on the sidewalk)
@@ -79,7 +79,7 @@ Same words, different order. A language model that has learned English assigns f
 
 LLMs are **deep neural networks** trained on that data.
 
-*The three axes, and what each actually charges you (my own — usually listed without separating their cost curves):*
+*The three axes, and what each actually charges you:*
 
 ```mermaid
 flowchart LR
@@ -215,7 +215,7 @@ flowchart TD
 ```
 
 1. **Q · Kᵀ** — dot product: how similar is the query to each key? Higher = more relevant.
-2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Why √d_k specifically (my clarity — the effect is stated without the reason): each score is a dot product of two d_k-dimensional vectors, so its size grows with the dimension — variance ≈ d_k, typical magnitude ≈ √d_k. Dividing by √d_k renormalises scores back to unit scale. Skip it and, at d_k = 128, scores run into the tens; softmax of widely-spread inputs saturates to almost one-hot, its gradient collapses toward 0, and the layer stops learning. √d_k is exactly the factor that cancels the dimension's inflation.*
+2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Why √d_k specifically: each score is a dot product of two d_k-dimensional vectors, so its size grows with the dimension — variance ≈ d_k, typical magnitude ≈ √d_k. Dividing by √d_k renormalises scores back to unit scale. Skip it and, at d_k = 128, scores run into the tens; softmax of widely-spread inputs saturates to almost one-hot, its gradient collapses toward 0, and the layer stops learning. √d_k is exactly the factor that cancels the dimension's inflation.*
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
 As the original paper's block, which is the form to reproduce in an exam:
@@ -246,7 +246,7 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 | Original transformer | 512 | 8 | 64 |
 | Llama-3-8B | 4096 | 32 | 128 |
 
-**Worked example — attention by hand, with actual numbers** *(my own — usually only shapes are given, but you don't *have* attention until you've pushed numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
+**Worked example — attention by hand, with actual numbers** *(you don't* have *attention until you've pushed real numbers through it).* Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
 
 **① Scores `QKᵀ`** — every query dotted with every key:
 
@@ -276,7 +276,7 @@ That last line **is** attention: each token's output is a **weighted average of 
 
 **Tradeoff / the cost that defines the field** — the attention matrix is **n × n**. Double the context and you quadruple the attention compute and memory. Every efficiency topic in S4 — FlashAttention, Ring Attention, sliding-window, sparse and linear attention — exists to attack that single quadratic term. Self-attention buys an uncompressed view and parallel training; it charges O(n²).
 
-> ***In practice*** *(beyond the course — what this O(n²) means when you actually use LLMs):*
+> ***In practice*** *— what this O(n²) means when you actually use LLMs:*
 > - You **never implement attention yourself** in a real job — you call an optimised kernel (**FlashAttention**) inside a serving stack (**vLLM**, **TGI**, TensorRT-LLM). Knowing the maths is what lets you reason about *why* a 100K-token prompt is slow and expensive, not code the softmax.
 > - At **inference** the trick that makes generation fast is the **KV-cache**: keys and values for past tokens are cached so each new token is O(n) not O(n²). This is why the *first* token of a long prompt is slow ("prefill") and later tokens are fast ("decode") — a distinction you'll meet the moment you look at latency metrics.
 > - Practical consequence: **long prompts cost real money and time.** "Just paste the whole document in" runs straight into this quadratic. It's the reason retrieval (RAG) exists — fetch the relevant 4K tokens instead of paying for 100K.
@@ -316,7 +316,7 @@ Step 4 is the one people skip. Without `W_O` the heads never talk to each other 
 
 Weight-matrix notation: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ ℝ^(d×d_v), W_O ∈ ℝ^(h·d_v × d).
 
-*The same worked example as a picture (my own) — split the model width into h heads, attend in each, concatenate back, project once:*
+*The same worked example as a picture — split the model width into h heads, attend in each, concatenate back, project once:*
 
 ```mermaid
 flowchart TD
@@ -826,7 +826,7 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 | 3 | `+ un` | `("h","ug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("h","ug","s",5)` |
 | 4 | `+ hug` | `("hug",10) ("p","ug",5) ("p","un",12) ("b","un",4) ("hug","s",5)` |
 
-⚠️ **The trap, at merge 2 (my clarity — the merge order is given but the trap is never flagged):** once `ug` exists, the pair `("h","ug")` = 15 is sitting right there and *looks* like the obvious next merge. But `("u","n")` = pun(12) + bun(4) = **16** still beats it, so **`un` merges second, not `hug`.** Re-count every adjacent pair each round — never assume the pair you just created wins the next one.
+⚠️ **The trap, at merge 2:** once `ug` exists, the pair `("h","ug")` = 15 is sitting right there and *looks* like the obvious next merge. But `("u","n")` = pun(12) + bun(4) = **16** still beats it, so **`un` merges second, not `hug`.** Re-count every adjacent pair each round — never assume the pair you just created wins the next one.
 
 **Advantages** — efficient handling of rare words and subword units; reduces vocabulary size, making the model more efficient; better generalisation by breaking words into subword units.
 
@@ -881,7 +881,7 @@ tiktoken BPE (Llama-3):
 
 **Tradeoff / the whole tokenizer decision in one line** — bigger vocabulary means fewer tokens per document, which means shorter sequences and cheaper O(n²) attention — but a bigger embedding matrix and more rarely-seen tokens. That's why vocabulary sizes cluster between 32K and 256K rather than at either extreme, and why compression ratio (tokens per byte) is the metric people actually optimise.
 
-> ***In practice*** *(beyond the course — tokenization is where your API bill comes from):*
+> ***In practice*** *— tokenization is where your API bill comes from:*
 > - **You pay per token**, in and out. Tokenization is the invisible layer that decides how many tokens a document costs. `tiktoken.encoding_for_model("gpt-4o").encode(text)` counts them before you send — do this to estimate cost and to stay under the context window.
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure is mostly about tokens — fewer, cheaper tokens per call at the same quality.
@@ -892,7 +892,7 @@ tiktoken BPE (Llama-3):
 
 **Intuition** — Worth learning as a *causal chain*, not a list of names: each item made the next possible.
 
-*The chain implied but rarely drawn (my own) — each link forces the next:*
+*The chain, each link forcing the next:*
 
 ```mermaid
 flowchart TD

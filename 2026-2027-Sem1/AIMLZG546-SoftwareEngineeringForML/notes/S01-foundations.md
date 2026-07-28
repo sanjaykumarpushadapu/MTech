@@ -36,7 +36,7 @@ Three angles, one argument: the process history, the failure evidence (**87% of 
 
 **The line to remember** — the framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
 
-*The whole course in one picture (my own — the classic "hidden technical debt" point):*
+*The whole course in one picture — the classic "hidden technical debt" point:*
 
 ```mermaid
 flowchart LR
@@ -94,7 +94,7 @@ Three consequences follow directly, and each drives a later session:
 
 **Tradeoff / when the distinction bites** — Software engineers routinely conflate the two and then reason wrongly about deployment: shipping the whole training environment to production "because we need sklearn", inflating the container and the attack surface. This distinction is what makes model serving a separate architectural concern (S12).
 
-> ***In practice*** *(beyond the course — how "the model ships, not the algorithm" actually works):*
+> ***In practice*** *— how "the model ships, not the algorithm" actually works:*
 > - The model is **serialized** to a file and loaded by a runtime. Formats you'll meet: **pickle/joblib** (sklearn — convenient but unsafe to load from untrusted sources, and version-brittle), **ONNX** (framework-neutral, for cross-runtime serving), **safetensors** (the safe standard for deep-learning weights). "Which format" is a real deployment decision.
 > - Trained models live in a **model registry** (MLflow Model Registry, SageMaker) — versioned, staged (staging → production), and rolled back like any other artifact. The registry is to models what git is to code.
 > - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what S14's provenance section is about.
@@ -124,7 +124,7 @@ Three consequences follow directly, and each drives a later session:
 
 **Two consequences:**
 
-- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. *Where the randomness comes from (my clarity — the fact is stated, not the cause): **random weight initialisation**, the **random order of mini-batches** in stochastic gradient descent, randomised techniques like **dropout**, and even **floating-point addition being non-associative on a GPU** — parallel threads sum partial results in whatever order they finish, giving bit-level-different totals. Same data, same code, slightly different model. A compiler has none of these, which is why its output is reproducible and a trained model's isn't.*
+- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. *Where the randomness comes from: **random weight initialisation**, the **random order of mini-batches** in stochastic gradient descent, randomised techniques like **dropout**, and even **floating-point addition being non-associative on a GPU** — parallel threads sum partial results in whatever order they finish, giving bit-level-different totals. Same data, same code, slightly different model. A compiler has none of these, which is why its output is reproducible and a trained model's isn't.*
 - **Models are stored serialized, not as binaries** — an intermediate format of learned parameters, loaded by a runtime. Directly analogous to Java bytecode plus the JVM. Some infrastructure compiles models to native code for speed.
 
 **Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. The precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
@@ -631,7 +631,7 @@ A:
 
 Providing *internal data* in the prompt is the case that flags forward to **retrieval-augmented generation** — which is S6. The course's own tool list (LangChain, ChromaDB, OpenAI embeddings and LLM) confirms S6 is hands-on, not conceptual.
 
-*The full customisation ladder (my own — usually only two rungs are named; here's the full spectrum, cheapest first):*
+*The full customisation ladder, cheapest first:*
 
 ```mermaid
 flowchart LR
@@ -659,7 +659,7 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 
 **Responsible ML** — bluntly: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Attempted without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
 
-*Why "cross-cutting" is the whole claim (my own) — these aren't phases you can schedule:*
+*Why "cross-cutting" is the whole claim — these aren't phases you can schedule:*
 
 ```mermaid
 flowchart TD
@@ -685,13 +685,13 @@ Both touch **every** phase. A team that plans to "do the fairness work in sprint
 
 **Tradeoff** — the practical implication of "cross-cutting" is that you cannot schedule either as a phase. A team that plans to "do the fairness work in sprint 12" has already lost, because the decisions that determine fairness — what data, what labels, what the system does with a low-confidence prediction — were made in sprints 1 through 11.
 
-> ***In practice*** *(beyond the course — what MLOps actually looks like as a job):*
+> ***In practice*** *— what MLOps actually looks like as a job:*
 > MLOps is **CI/CD extended to data and models**. On top of the usual code pipeline (git, tests, containers), an ML pipeline adds three things software CI/CD never had:
 > - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. You can reproduce "the model from March" only if both are versioned alongside the code.
 > - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
 > - **Monitoring for drift** — the loop the S07 diagram shows: compare live predictions against ground truth as it arrives (Evidently AI), alert when recall slides, trigger retraining. This is the part that has no equivalent in traditional software, and it's where "ML engineer" and "MLOps engineer" spend most of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
 
-> ***Going deeper*** *(my own knowledge, beyond the course — the three ways a model actually serves predictions; picking the wrong one is a classic mistake):*
+> ***Going deeper*** *— the three ways a model actually serves predictions; picking the wrong one is a classic mistake:*
 >
 > | Pattern | How | When |
 > |---|---|---|

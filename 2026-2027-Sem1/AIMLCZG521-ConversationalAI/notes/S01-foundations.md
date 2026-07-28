@@ -226,7 +226,7 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 
 **Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, has to do the same six jobs: work out what you want, keep track of where the conversation is, look things up, do things, say something back, and remember. What changed over twenty years is not the list — it's that all six used to be separate hand-built modules, and now the LLM absorbs three of them (understanding, dialogue, generation) while the other three (knowledge, action, memory) became *harder* because we now expect them to work on open-ended input.
 
-*The six, arranged by what the LLM absorbed and what it didn't (my own — usually a flat table; the split is the insight):*
+*The six, arranged by what the LLM absorbed and what it didn't — the split is the insight:*
 
 ```mermaid
 flowchart TD
@@ -253,7 +253,7 @@ flowchart TD
 | 5 | **Response Generation** | Generate natural responses | Contextual generation, personality/tone, multi-modal output, structured responses | **LLM generation with control** |
 | 6 | **Memory Systems** | Remember user context | Short-term (conversation), long-term (user profile), **episodic**, **semantic** | **Vector + SQL hybrid** |
 
-*The four kinds of memory in row 6 (my own — the table names them but doesn't define them; the human-memory analogy is the fastest way in):*
+*The four kinds of memory in row 6 — the human-memory analogy is the fastest way in:*
 
 | Memory | What it holds | Analogy / where it lives |
 |---|---|---|
@@ -302,7 +302,7 @@ The generational split matters more than any individual row: the 2015 tools assu
 | **Haystack** | End-to-end NLP framework | Production RAG systems, search applications |
 | **AutoGen** | Multi-agent conversation framework | Complex workflows with agent collaboration |
 
-*What actually changed between the two generations (my own) — one assumption flipped, and the rest follows:*
+*What actually changed between the two generations — one assumption flipped, and the rest follows:*
 
 ```mermaid
 flowchart TD
@@ -425,9 +425,9 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 > **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG + memory systems** (Module 2).
 
-*Why it happens (my clarity — the effect is usually named without the cause): a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. So a fact buried mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
+*Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. So a fact buried mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
 
-*"Lost in the middle" drawn (my own) — recall accuracy against position in the context:*
+*"Lost in the middle" drawn — recall accuracy against position in the context:*
 
 ```mermaid
 flowchart LR
@@ -492,7 +492,7 @@ flowchart LR
 
 **Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (section 11) become a topic.
 
-> ***Going deeper*** *(my own knowledge, beyond the course — RAG in one picture, since it's named as the fix all through this note but never drawn):*
+> ***Going deeper*** *— RAG in one picture, since it's named as the fix all through this note but never drawn:*
 > **RAG = Retrieval-Augmented Generation.** Instead of hoping the model *memorised* a fact, you **fetch** the relevant text and hand it to the model in the prompt:
 >
 > ```mermaid
@@ -587,7 +587,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing (L11) is for.
 
-> ***In practice*** *(beyond the course — how you actually build these seven stages):*
+> ***In practice*** *— how you actually build these seven stages:*
 > - In real code the lifecycle is a **state machine**, and **LangGraph** is the tool the course uses for exactly this: each stage is a **node**, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Drawing the seven stages as a LangGraph is Lab-4-and-beyond work.
 > - Stages 1 and 6 (**safety**) are usually not your own code — you wire in **guardrails libraries** (NeMo Guardrails, Guardrails AI, Llama Guard) for prompt-injection defence, PII redaction and output filtering. "Never rely on a single safety layer" (section 11) means both ends, plus these.
 > - Stage 4 (**tool invocation**) is the one that acts on the world, so anything irreversible — a payment, a booking, a delete — gets a **human-in-the-loop** confirmation before execution, not after. This is the single most important production habit in the whole lifecycle.
@@ -614,7 +614,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 | **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery** across heterogeneous networks | Decentralised agent ecosystems |
 | **Custom REST / GraphQL** | — | Traditional service integration | Enterprise systems, legacy integrations |
 
-*What each protocol standardises — they solve different edges of the same picture, which is why they are not competitors (my own):*
+*What each protocol standardises — they solve different edges of the same picture, which is why they are not competitors:*
 
 ```mermaid
 flowchart TD
@@ -631,7 +631,7 @@ flowchart TD
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
 
-> ***In practice*** *(beyond the course — MCP is the one to actually know right now):*
+> ***In practice*** *— MCP is the one to actually know right now:*
 > **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.
 
 ---
@@ -640,7 +640,7 @@ flowchart TD
 
 **Intuition** — the framing: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
 
-*The four axes are not independent — every fix on one pushes on another (my own):*
+*The four axes are not independent — every fix on one pushes on another:*
 
 ```mermaid
 flowchart LR
@@ -700,7 +700,7 @@ Where research is active — useful for essay-style questions asking "what are t
 | **Safety & alignment at scale** | More autonomy → harder to ensure agents follow human intent without side-effects | Constitutional AI, RLAIF, interpretability |
 | **Compute & energy efficiency** | SOTA models need enormous infrastructure; efficient inference is an open engineering problem | Mamba, QLoRA, mixture-of-experts |
 
-*Sorting them — my own, and the more useful half of this section:*
+*Sorting them — the more useful half of this section:*
 
 | | Problem | Why |
 |---|---|---|
@@ -755,7 +755,7 @@ Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **10
 
 Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, four sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
 
-> ***Going deeper*** *(my own — what the ReAct trace you're about to watch actually is; full treatment L4):*
+> ***Going deeper*** *— what the ReAct trace you're about to watch actually is (full treatment L4):*
 > **ReAct = Reason + Act.** The agent doesn't answer in one shot — it runs a loop, thinking out loud between tool calls:
 >
 > ```mermaid
