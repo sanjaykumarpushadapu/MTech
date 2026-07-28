@@ -39,21 +39,18 @@ Three angles, one argument: the process history, the failure evidence (**87% of 
 *The whole course in one picture — the classic "hidden technical debt" point:*
 
 ```mermaid
-flowchart LR
-    subgraph SYS["A real ML system — what you actually build and operate"]
-        direction TB
-        DATA["data pipeline<br/>collection · cleaning<br/>labeling · validation"]
-        FEAT["feature engineering"]
-        ML[["trained model"]]
-        SERVE["serving layer<br/>APIs · scaling"]
-        MON["monitoring<br/>drift · performance"]
-        INFRA["infrastructure<br/>config · resources · process"]
-    end
+flowchart TD
+    INFRA["infrastructure<br/>config · resources · process"]
+    DATA["data pipeline<br/>collection · cleaning<br/>labeling · validation"]
+    FEAT["feature engineering"]
+    ML[["trained model"]]
+    SERVE["serving layer<br/>APIs · scaling"]
+    MON["monitoring<br/>drift · performance"]
+    INFRA --> DATA
+    INFRA --> ML
+    INFRA --> SERVE
+    INFRA --> MON
     DATA --> FEAT --> ML --> SERVE --> MON
-    INFRA -.-> DATA
-    INFRA -.-> ML
-    INFRA -.-> SERVE
-    INFRA -.-> MON
 ```
 
 The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
@@ -71,7 +68,7 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 **Intuition** — Two different things both get called "the ML", and keeping them apart is most of the clarity in this course. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs once, at training. The model runs a billion times, in production.
 
 ```mermaid
-flowchart LR
+flowchart TD
     TD[(Training data)] --> ALG[ML algorithm<br/>sklearn, TensorFlow]
     ALG -->|model training| MOD[Machine-learned model<br/>the learned function]
     NI[New input] --> MOD
@@ -193,7 +190,7 @@ This gets its own section, which signals it can be asked.
 **Intuition** — A structured, repeating process for building software: plan it, understand it, design it, build it, check it, ship it, keep it alive. A cycle, not a line — maintenance feeds back into planning.
 
 ```mermaid
-flowchart LR
+flowchart TD
     P[Planning] --> A[Analysis]
     A --> D[Design]
     D --> Dev[Development]

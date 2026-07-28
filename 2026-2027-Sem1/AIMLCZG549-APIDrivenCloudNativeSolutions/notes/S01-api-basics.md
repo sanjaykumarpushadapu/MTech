@@ -19,16 +19,12 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 *A restaurant analogy carries this whole section:* the **menu** is the API. It promises "ask for dish 12 and you'll get *this* meal" without telling you a thing about the kitchen. You order *from the menu* — you don't walk in and instruct the chef — and the restaurant is free to swap chefs, ovens, or suppliers; as long as the menu still delivers dish 12, you never notice and never care. The **menu is the contract; the kitchen is the implementation.** Keep this picture: almost everything below is a detail of how the menu is written or how it changes over time.
 
 ```mermaid
-flowchart LR
+flowchart TD
     CL["Client<br/>knows only the contract"] -->|"request"| API{{"API contract"}}
     API -->|"response"| CL
-    subgraph IMPL["Implementation hidden behind the contract"]
-        direction TB
-        APP["service code"]
-        DB["database"]
-        INF["servers / runtime"]
-    end
-    API --- APP
+    API -.->|"hides internals"| APP["service code"]
+    APP --> DB["database"]
+    APP --> INF["servers / runtime"]
 ```
 
 **Everything to the right of the contract can be rewritten** — new language, new database, new hardware — and no client notices. That independence *is* the product. It's also why a breaking change is such a big deal (section 9): it's the one thing that reaches across the line.
@@ -123,7 +119,7 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 In one line: a client sends **method + URL + headers + optional body**, and the server sends back **status code + headers + optional body**.
 
 ```mermaid
-flowchart LR
+flowchart TD
     CL[Client<br/>browser / mobile app] -->|"HTTP request<br/>method + endpoint + body"| EP[API endpoint<br/>a URL]
     EP --> SRV[API server]
     SRV -->|"HTTP response<br/>status code + JSON/XML"| CL
@@ -220,7 +216,7 @@ Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we d
 > The OAuth flow in one picture — the pattern behind every "Sign in with…" button:
 >
 > ```mermaid
-> flowchart LR
+> flowchart TD
 >     U["User"] -->|"clicks sign-in"| APP["Your app"]
 >     APP -->|"redirect to authorize"| AUTH["Auth server"]
 >     AUTH -->|"consent screen"| U
@@ -362,7 +358,7 @@ The front-end now imports typed methods instead of hand-building URLs and reques
 **Mechanism — the seven-step lifecycle**, built around a Books API:
 
 ```mermaid
-flowchart LR
+flowchart TD
     R[1. Requirements] --> D[2. Design]
     D --> C[3. Configure]
     C --> P[4. Publish]
@@ -821,7 +817,7 @@ That last one catches people — *adding* something can be a breaking change if 
 **The rollout sequence** — versioning is a *process*, not a number:
 
 ```mermaid
-flowchart LR
+flowchart TD
     S1["1 · Ship v2<br/>alongside v1"] --> S2["2 · Announce<br/>deprecation + date"]
     S2 --> S3["3 · Monitor<br/>who still calls v1"]
     S3 --> S4["4 · Contact<br/>the stragglers"]

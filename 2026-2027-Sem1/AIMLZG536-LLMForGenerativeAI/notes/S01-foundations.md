@@ -84,7 +84,7 @@ LLMs are **deep neural networks** trained on that data.
 *The three axes, and what each actually charges you:*
 
 ```mermaid
-flowchart LR
+flowchart TD
     L(("LARGE")) --> P["1 · Parameters<br/>7B → 70B → 400B+"]
     L --> D["2 · Training data<br/>trillions of tokens"]
     L --> C["3 · Compute<br/>GPU-months"]
@@ -106,11 +106,12 @@ flowchart LR
 A model used this way is an **autoregressive language model** — each generated token is fed back in to predict the next.
 
 ```mermaid
-flowchart LR
+flowchart TD
     P[Prompt] --> M[LLM]
     M -->|distribution over vocab| S[Sample a token]
     S --> O[Output token]
-    O -.->|append, feed back| M
+    O --> N[Append to context]
+    N --> M
 ```
 
 **Mechanism — the chain rule, then a loop.** A language model scores a whole sequence by factorising it into next-token predictions:

@@ -31,13 +31,13 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 **The bot ladder** — a progression of sophistication:
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["1 · Chatbot<br/>keyword match"] --> B["2 · Task bot<br/>slot filling"]
     B --> C["3 · FAQ bot<br/>context-aware"]
     C --> D["4 · Generative system<br/>fluent, open-ended"]
     D --> E["5 · Agent<br/>plans + acts"]
-    A --- L["cheap · deterministic · auditable"]
-    E --- R["adaptive · expensive · less predictable"]
+    A --> N1["cheap · deterministic · auditable"]
+    E --> N2["adaptive · expensive · less predictable"]
 ```
 
 Every step rightward buys coverage of a wider query space and pays for it in predictability. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
@@ -91,7 +91,7 @@ flowchart TD
 
 **Intuition** — The old pipeline classified then responded. The new one plans then acts. Everything else follows from that.
 
-*Both pipelines, side by side — the contrast is the content, so read across rather than down:*
+*Both pipelines, one after the other — the contrast is the content, and the shift box in the middle marks what changed:*
 
 ```mermaid
 flowchart TD
@@ -116,13 +116,9 @@ flowchart TD
         GEN --> SAFE["Safety & validation"]
         SAFE --> R2([Response])
     end
-    NLU -.-> MAP1["now inside<br/>LLM understanding"]
-    DM -.-> MAP2["now inside<br/>orchestration"]
-    MAP1 -.-> LLM
-    MAP2 -.-> ORC
 ```
 
-Read the two dashed arrows — they are the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
+Read the **shift box** in the middle — it is the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
 
 **Two structural differences to be able to name:**
 
@@ -163,11 +159,14 @@ The dividing question: **who decides the sequence of steps — you, in code, or 
 
 ```mermaid
 flowchart TD
-    IN[Input] --> LLM[LLM]
-    LLM <--> R[Retrieval]
-    LLM <--> T[Tools]
-    LLM <--> M[Memory]
-    LLM --> OUT[Output]
+    IN[Input] --> PLAN[LLM decides what it needs]
+    PLAN --> R[Retrieval]
+    PLAN --> T[Tools]
+    PLAN --> M[Memory]
+    R --> AUG[Augmented LLM context]
+    T --> AUG
+    M --> AUG
+    AUG --> OUT[Output]
 ```
 
 An LLM enhanced with **retrieval, tools and memory**, where the model actively uses them — generating its own search queries, selecting tools, deciding what to retain. This is the same claim as the "LLM is the brain but needs tools, memory and planning," stated more precisely.
@@ -329,12 +328,11 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 **Intuition** — Breaking text into subword units that LLMs process. BPE sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
 ```mermaid
-flowchart LR
+flowchart TD
     C["Character-level<br/>tiny vocabulary"] --> G["Subword / BPE<br/>the Goldilocks zone"]
     W["Word-level<br/>huge vocabulary"] --> G
-    C -.->|"sequences far too long<br/>little meaning per token"| C
-    W -.->|"fails on unseen words<br/>apology / apologize / apologetic"| W
-    G -.->|"new words representable<br/>sequence length manageable"| G
+    G --> B1["avoids very long sequences"]
+    G --> B2["still handles unseen words"]
 ```
 
 **Why it matters for conversational AI specifically** — four consequences, and this framing is what makes tokenization a conversational-AI topic, not just a modelling detail:
