@@ -132,3 +132,29 @@ Session 1's own slides make the same point internally: slides 61–69 are marked
 
 Recordings and slides stay in Google Drive / Canvas — never in this repo.
 Transcripts are **raw source, not committed** — `source/transcripts/` is gitignored. Read a transcript to build or update the note, fold the important content (instructor quotes, emphasis, off-slide clarifications) into it, then it's done. The note is the record.
+
+## R2 Bahree received — 27 Jul 2026
+
+**536 R2 = Amit Bahree, *Generative AI in Action*** (Manning, 698 pp) → `_library/536-R2-Bahree-GenerativeAIinAction.pdf`.
+Verified against the citation: Manning imprint, full TOC, and **ch7 is "Retrieval-augmented generation"** — exactly what the handout cites for S12.
+
+⚠️ **Not to be confused with** the 9-page vendor whitepaper of the same title uploaded the same day (*"Adoption Trends, Emerging Use Cases, and Tips for IT Leaders"*). That one was rejected and never filed.
+
+### Chapter → page map
+
+| Ch | Title | PDF page | Scope |
+|---|---|---|---|
+| 1 | Introduction to generative AI | 35 | ❌ OUT OF SCOPE |
+| 2 | Introduction to large language models | 71 | ❌ OUT OF SCOPE |
+| 3 | Working through an API: generating text | 116 | ❌ OUT OF SCOPE |
+| 4 | From pixels to pictures: generating images | 168 | ❌ OUT OF SCOPE |
+| 5 | What else can AI generate? | 221 | ❌ OUT OF SCOPE |
+| 6 | Guide to prompt engineering | 260 | ❌ OUT OF SCOPE |
+| **7** | **Retrieval-augmented generation: the secret weapon** | **308–351** | ✅ **S12 — the only cited chapter** |
+| 8 | Chatting with your data | 352 | ❌ OUT OF SCOPE |
+| 9 | Tailoring models with model adaptation and fine-tuning | 393 | ❌ OUT OF SCOPE |
+| 10 | Application architecture for generative AI apps | 454 | ❌ OUT OF SCOPE |
+| 11 | Scaling up: best practices for production deployment | 508 | ❌ OUT OF SCOPE |
+| 12 | Evaluations and benchmarks | 560 | ❌ OUT OF SCOPE |
+
+**Only ch7 (pp 308–351) is cited by the handout.** Eleven of twelve chapters are outside this semester — several cover material 536 teaches from other sources (ch6 prompt engineering → S10 from T1/T2; ch9 fine-tuning → S7/S9 from R1). Do not pull from them, and do not recommend reading them.

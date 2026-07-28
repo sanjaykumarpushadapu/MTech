@@ -108,3 +108,14 @@ occurrence of "mock" anywhere in the deck is *To Kill a Mockingbird* in a GraphQ
 
 Written up in note section 4.1 from the OpenAPI toolchain (Prism, openapi-generator, contract
 tests), flagged in the note as filled-in. It is a named syllabus item, so treat it as examinable.
+
+## R4 Treveil received — 27 Jul 2026
+
+**549 R4 = Treveil et al., *Introducing MLOps: How to Scale Machine Learning in the Enterprise*** (O'Reilly 2021,
+185 pp) is now in `_library/549-R4-Treveil-IntroducingMLOps.pdf`.
+
+⚠️ It arrived as `Comment-mettre-à-l'échelle-le-Machine-Learning-en-entreprise.pdf` — the French title of
+Dataiku's free-download landing page. Same book; the filename is marketing, not content. Verified from the
+title page and table of contents (Part I: MLOps: What and Why · ch1 Why Now and Challenges · ch2 People of MLOps).
+
+**First needed: S6, API-driven ML pipelines.** Chapter map to be built when S6 arrives.

@@ -263,7 +263,16 @@ The user has asked to be told **forcefully**. A gap mentioned softly at the end 
 - **Distinguish blocking from optional.** Never flatten them together.
 - **Flag deadline risk unprompted** when a `STUDY-PLAN.md` date nears with its `PROGRESS.md` milestone unticked.
 
-## 12 · Before finishing any task
+## 12 · The materials watchlist
+
+`2026-2027-Sem1/MATERIALS-WATCHLIST.md` tracks every outstanding deck, textbook and setup task **with the date it starts blocking work**.
+
+- **Read it at the start of any session-note task**, and check the item you're about to need.
+- **Raise its dated items unprompted**, in the response nearest the date — the user asked to be told forcefully, and a reminder that waits to be asked for is not a reminder.
+- **Update it whenever material arrives or a need is discovered.** A gap found and not recorded will be re-discovered from scratch three weeks later.
+- ⚠️ **Verify a delivered file is the cited work before filing it.** Titles collide: a 9-page vendor whitepaper called *Generative AI in Action* is not Bahree's Manning book of the same name. Check page count, publisher and table of contents, and say plainly when an upload doesn't match the reference.
+
+## 13 · Before finishing any task
 
 Run these, don't eyeball them:
 
@@ -277,6 +286,7 @@ git status --short                 # nothing binary or secret staged
 - [ ] Every concept has: `*Reference:*` · Intuition · Mechanism · Worked example · Tradeoff · diagram · `Cross-link:`
 - [ ] Any arithmetic in a worked example was actually executed
 - [ ] Master index row + `PROGRESS.md` row updated
+- [ ] `MATERIALS-WATCHLIST.md` updated if material arrived or a new gap appeared
 - [ ] If a condensed open-book page exists, it was derived from the note — not written first
 - [ ] `source/MATERIAL-LOG.md` records what arrived and what was missing
 - [ ] No PDFs, slides, datasets or secrets staged
@@ -284,7 +294,7 @@ git status --short                 # nothing binary or secret staged
 
 ⚠️ **Do not run `git commit` from the sandbox.** It creates `.git/*.lock` files it cannot then remove, and the next commit fails with a misleading "another git process is running". **Stage the work and give the user the commit command.**
 
-## 13 · Repo layout
+## 14 · Repo layout
 
 ```
 MTech/
@@ -308,7 +318,7 @@ MTech/
     └── _templates/  SESSION-TEMPLATE.md · OPENBOOK-TEMPLATE.md
 ```
 
-## 14 · Key dates (all four handouts, confirmed)
+## 15 · Key dates (all four handouts, confirmed)
 
 | Date | Event |
 |---|---|
