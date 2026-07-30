@@ -5,7 +5,7 @@
 
 > Revision homepage during the semester; **open-book front index** in December.
 
-**Primary path:** open this master first, then the session note. `_shared/` is optional background only.
+**Primary path (within this subject):** open this master first, then the session note. `_shared/` is optional background only. *(Semester-level entry is `2026-2027-Sem1/README.md` → `PROGRESS.md`.)*
 
 ## Evaluation
 

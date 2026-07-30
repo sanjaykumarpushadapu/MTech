@@ -247,7 +247,7 @@ Follow `_templates/OPENBOOK-TEMPLATE.md`. **Hard limit: two sides of A4.**
 
 **If it doesn't fit in two pages, cut prose.** Never cut a formula, a comparison table or a tradeoff line.
 
-**Bound file target: ~180 pages** — master index (4) + 64 condensed pages (~130) + 10 condensed shared notes (~40).
+**Bound file target: ~130 pages required, ~180 with optional extras.** Required core: master index (4) + 64 condensed session pages (~130). The 10 condensed `_shared/` pages (~40) are **optional synthesis** — print them only if they earn their space in revision; a subject's own condensed pages must stand alone without them (§9). Subject pages are the primary path; `_shared/` is secondary.
 
 ⚠️ **Order matters.** A note without its condensed page is recoverable in an afternoon in November. A condensed page written *before* the note is a summary of nothing, and the understanding it was supposed to compress never gets built. **Never write the condensed page first**, and when behind, always drop the condensed page rather than the note.
 
@@ -332,7 +332,7 @@ MTech/
     │       ├── README.md        ← links only
     │       ├── MATERIAL-LOG.md  ← what exists per session
     │       └── transcripts/     ← gitignored; read, fold in, discard
-    ├── _shared/                 ← cross-subject notes + README index
+    ├── _shared/                 ← optional synthesis notes (secondary to subject notes) + README index
     ├── _library/                ← 9 textbooks, gitignored — CHECK HERE FIRST
     └── _templates/  SESSION-TEMPLATE.md · OPENBOOK-TEMPLATE.md
 ```
