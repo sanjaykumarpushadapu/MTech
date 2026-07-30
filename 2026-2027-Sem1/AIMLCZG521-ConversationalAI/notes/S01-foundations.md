@@ -467,6 +467,16 @@ flowchart LR
     A --> CA[Conversational Agent]
 ```
 
+*Two boxes in that chain deserve a plain definition, since the table below and the rest of this note lean on them:*
+
+**What a transformer is** — the neural-network design behind every modern LLM (2017, *"Attention Is All You Need"*). Older models (RNNs/LSTMs) read a sentence **through a keyhole**, one word at a time, and forgot the start of long inputs. A transformer **lays the whole input on the table at once** and lets every word look at every other word — which is exactly why an agent can stay coherent across a long conversation *and* run fast (all words processed in parallel, not one after another).
+
+**What self-attention is** — the mechanism inside the transformer that does that "looking": **each word builds its meaning by deciding how much attention to pay to every other word.** For conversation this is the whole game — it resolves references and disambiguates:
+
+> User: *"I'd like a table for two. Can you book **it** for 8pm?"*
+
+The word **"it"** means nothing on its own; self-attention lets "it" attend back to *"a table"* and settle the reference — which is why an agent handles *"book it," "cancel that," "send them the details"* without you ever repeating the noun. (The Q/K/V internals — query, key, value — are a modelling-course topic; what matters *here* is the conversational payoff: reference resolution, disambiguation, and the multi-turn coherence in the table below.)
+
 **Technical capability → conversational consequence** — pair them; the pairing is the point:
 
 | Technical capability | Impact on conversations |
