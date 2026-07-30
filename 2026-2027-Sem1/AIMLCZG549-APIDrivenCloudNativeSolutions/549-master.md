@@ -5,6 +5,8 @@
 
 > Revision homepage during the semester; **open-book front index** in December.
 
+**Primary path:** open this master first, then the session note. `_shared/` is optional background only.
+
 ## Evaluation
 
 | EC | Component | Weight | Type | Date |
@@ -26,23 +28,23 @@
 
 ## Session index
 
-| S | Topic | Sub-topics | Source | Exam | Note file | Shared |
-|---|---|---|---|---|---|---|
-| 0 | **Python Programming — SELF STUDY** | Structure, variables, conditionals, functions, iteration, strings, files, lists, dicts, tuples, OOP, databases & SQL, visualising data | R1 Severance (free PDF) | prereq | `notes/S00-python-selfstudy.md` | ⚠️ do before classes |
-| 1 | API Basics | Intro to APIs; design/specify/build; RESTful standards & structure; OpenAPI spec, mocking, semantic versioning, tools; OpenAPI generators; REST vs GraphQL vs gRPC; API versioning; Google Maps / Rapid API | R2 ch1 + web | mid | `notes/S01-api-basics.md` | → `_shared/api-design.md` |
-| 2 | Cloud Native Application | Modern application requirements; cloud-native evolution; introducing cloud-native software; cloud-enabled vs cloud-based vs cloud-native; examples | R2 ch1, R3 ch1 | mid | `notes/S02-cloud-native.md` | — |
-| 3 | Cloud Native Ecosystem | CNCF landscape; ecosystem overview; DevOps & GitOps; microservices & service mesh; containers & Kubernetes; serverless computing & stack; case study | R3 ch1 + web | mid | `notes/S03-ecosystem.md` | → `_shared/docker-k8s.md` |
-| 4 | Data Science & Machine Learning | Big data & characteristics; DS and ML intro; data science process; ML lifecycle | Web + notes | mid | `notes/S04-ds-ml.md` | → `_shared/ml-lifecycle.md` · **546** |
-| 5 | API-driven Cloud-native Data Pipeline | Ingestion; (pre)processing; storage; integration; monitoring & alerting; scalability & reliability. **Lab 1** | Web + notes | mid | `notes/S05-data-pipeline.md` | → `_shared/ml-lifecycle.md` |
-| 6 | API-driven ML Pipelines | Model development & training; deployment; monitoring; scalability; MLOps practices | R4 Treveil | mid | `notes/S06-ml-pipeline.md` | → `_shared/ml-lifecycle.md` · **546** |
-| 7 | Tools Review & ML Deployment | Tools review; case study: API-driven ML model deployment. **Lab 2** | Web + notes | mid | `notes/S07-mlops-tools.md` | → `_shared/ml-lifecycle.md` |
-| 8 | AI & Cognitive Services — Part A | Hugging Face APIs; computer vision APIs; NLP APIs; speech recognition APIs; case study. **Lab 3** | Web + notes | mid | `notes/S08-ai-apis.md` | → **521 L2** |
-| 9 | AI & Cognitive Services — Part B | What are language models; LLM / SLM; MMLU; LLMOps; LangChain | Web + notes | comp | `notes/S09-language-models.md` | → **536, 521 L3** |
-| 10–11 | Language Models — RAG | Document loading; splitting; vectorstores & embedding; retrieval mechanisms; question answering; chatbot design; RAG metrics (deflection rate, context precision, context relevance); tools/APIs; case study. **Lab 4** | Ragas docs, LangChain | comp | `notes/S10-11-rag.md` | → `_shared/rag.md` · **521 L7–8** |
-| 12 | Cloud Native Deployment — Part C | Docker; containers; Kubernetes; deployment strategies | Web + notes | comp | `notes/S12-deployment.md` | → `_shared/docker-k8s.md` |
-| 13 | IoT & Data Analytics | Internet of Things; API integration for device communication; data analytics overview; types of analytics | Web + notes | comp | `notes/S13-iot.md` | — |
-| 14–15 | IoT & Data Analytics (cont.) | APIs for ingestion, preprocessing, analytics, monitoring; serverless functions in IoT; tools overview; case study. **Lab 5** | Web + notes | comp | `notes/S14-15-iot-analytics.md` | — |
-| 16 | Course Review | Review of contact sessions 1–16 | — | comp | — | — |
+| S | Topic | Sub-topics | Source | Exam | Note file |
+|---|---|---|---|---|---|
+| 0 | **Python Programming — SELF STUDY** | Structure, variables, conditionals, functions, iteration, strings, files, lists, dicts, tuples, OOP, databases & SQL, visualising data | R1 Severance (free PDF) | prereq | `notes/S00-python-selfstudy.md` |
+| 1 | API Basics | Intro to APIs; design/specify/build; RESTful standards & structure; OpenAPI spec, mocking, semantic versioning, tools; OpenAPI generators; REST vs GraphQL vs gRPC; API versioning; Google Maps / Rapid API | R2 ch1 + web | mid | `notes/S01-api-basics.md` |
+| 2 | Cloud Native Application | Modern application requirements; cloud-native evolution; introducing cloud-native software; cloud-enabled vs cloud-based vs cloud-native; examples | R2 ch1, R3 ch1 | mid | `notes/S02-cloud-native.md` |
+| 3 | Cloud Native Ecosystem | CNCF landscape; ecosystem overview; DevOps & GitOps; microservices & service mesh; containers & Kubernetes; serverless computing & stack; case study | R3 ch1 + web | mid | `notes/S03-ecosystem.md` |
+| 4 | Data Science & Machine Learning | Big data & characteristics; DS and ML intro; data science process; ML lifecycle | Web + notes | mid | `notes/S04-ds-ml.md` |
+| 5 | API-driven Cloud-native Data Pipeline | Ingestion; (pre)processing; storage; integration; monitoring & alerting; scalability & reliability. **Lab 1** | Web + notes | mid | `notes/S05-data-pipeline.md` |
+| 6 | API-driven ML Pipelines | Model development & training; deployment; monitoring; scalability; MLOps practices | R4 Treveil | mid | `notes/S06-ml-pipeline.md` |
+| 7 | Tools Review & ML Deployment | Tools review; case study: API-driven ML model deployment. **Lab 2** | Web + notes | mid | `notes/S07-mlops-tools.md` |
+| 8 | AI & Cognitive Services — Part A | Hugging Face APIs; computer vision APIs; NLP APIs; speech recognition APIs; case study. **Lab 3** | Web + notes | mid | `notes/S08-ai-apis.md` |
+| 9 | AI & Cognitive Services — Part B | What are language models; LLM / SLM; MMLU; LLMOps; LangChain | Web + notes | comp | `notes/S09-language-models.md` |
+| 10–11 | Language Models — RAG | Document loading; splitting; vectorstores & embedding; retrieval mechanisms; question answering; chatbot design; RAG metrics (deflection rate, context precision, context relevance); tools/APIs; case study. **Lab 4** | Ragas docs, LangChain | comp | `notes/S10-11-rag.md` |
+| 12 | Cloud Native Deployment — Part C | Docker; containers; Kubernetes; deployment strategies | Web + notes | comp | `notes/S12-deployment.md` |
+| 13 | IoT & Data Analytics | Internet of Things; API integration for device communication; data analytics overview; types of analytics | Web + notes | comp | `notes/S13-iot.md` |
+| 14–15 | IoT & Data Analytics (cont.) | APIs for ingestion, preprocessing, analytics, monitoring; serverless functions in IoT; tools overview; case study. **Lab 5** | Web + notes | comp | `notes/S14-15-iot-analytics.md` |
+| 16 | Course Review | Review of contact sessions 1–16 | — | comp | — |
 
 ## Labs (5)
 
@@ -78,5 +80,4 @@ Breadth, not depth. Build **one layer-map** — containers → orchestration →
 
 ## Overlap note
 
-Sessions 9–11 (language models, LangChain, RAG, RAG metrics) are a lighter pass over 521 L2/L3/L7–L8. Because 521 needs that material for its **closed-book mid-sem** and 549 only for the **open-book comprehensive**, writing `_shared/rag.md` and `_shared/retrieval.md` properly in Aug–Sep makes these October weeks nearly free.
-Similarly S3 previews S12 — one `_shared/docker-k8s.md` serves both.
+Sessions 9–11 (language models, LangChain, RAG, RAG metrics) overlap with 521, and S3 previews S12. Use that overlap for faster revision after your 549 session notes exist; do not make overlap the main navigation route.

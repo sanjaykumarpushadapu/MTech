@@ -1,8 +1,8 @@
 # Shared notes
 
-Topics that appear in more than one subject. **Written once, revised many times.**
+Topics that appear in more than one subject. These are **secondary synthesis notes**, not the primary path for studying a subject.
 
-When a second course reaches a topic that already has a file here, do not write a new note. Revise this file, add a row to its "course-specific angles" table, and cross-link from the session note.
+Use this folder only after the subject's own session note is already clear. If a topic appears in 521, 536, 549 or 546, the subject note must still stand on its own.
 
 | File | Topic | First taught | Also in | Due |
 |---|---|---|---|---|
@@ -28,6 +28,6 @@ Same shape for quantization and KV-cache: closed book for both 536 (S5–6) and 
 
 ## The payoff
 
-Ten shared files cover material that would otherwise be written 24 times across four subjects. Getting these right in August and September is what makes October and November survivable.
+These files are still useful for consolidation and cross-checking wording, but they should save rewrite effort for maintenance, not force study-time context switching.
 
 > ⚠️ Note: `agents.md` here is a **study note about AI agents**. It is unrelated to `/AGENTS.md` at the repo root, which is the working-rules file for AI coding agents.

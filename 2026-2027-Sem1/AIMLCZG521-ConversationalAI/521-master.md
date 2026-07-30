@@ -5,6 +5,8 @@
 
 > This file is the revision homepage during the semester, and the **open-book front index** in December.
 
+**Primary path:** open this master first, then the session note. `_shared/` is optional background only.
+
 🔴 **Session 8 is a REVISION session, not new material.** Instructor, S1 recording: *"In the pre-mid sem we will complete 7 sessions, and session 8 is dedicated for revising the contents from session 1 to session 7."* So the closed-book mid-sem covers **seven sessions of new content**, not eight. **536 is the same** — its deck marks S8 as revision too. Keep the "Note file" column accurate — in the exam it is how you find things.
 
 ## Evaluation
@@ -32,22 +34,22 @@ Strictly **no makeups** for quizzes and assignments. All assignments are plagiar
 
 ## Session index
 
-| S | Topic | Sub-topics | Source | Exam | Note file | Shared |
-|---|---|---|---|---|---|---|
-| L1 | Foundations of Conversational AI | Chatbots → agentic systems; **7-stage lifecycle**; architecture; **tokenization/BPE**; context windows; protocols; production concerns | *The Landscape of AI Agents* (2024), arXiv:2404.11584 | mid | `notes/S01-foundations.md` | → `_shared/agents.md` |
-| L2 | Embeddings, Vector Search & Hybrid Retrieval | Semantic vs keyword; vector DB architecture (HNSW, ANN); BM25 + dense + RRF | Dense Passage Retrieval (Karpukhin 2020) | mid | `notes/S02-retrieval.md` | → `_shared/retrieval.md` |
-| L3 | Model Landscape & Cost Engineering | LLM/MoE/SLM/SSM comparison; quantization; KV-cache; prompt caching; model routing | QLoRA (Dettmers 2023) | mid | `notes/S03-model-landscape.md` | → `_shared/quantization.md` · **536** |
-| L4 | Structured Outputs & Function Calling | Native function-calling APIs (OpenAI, Anthropic); ReAct (thought-action-observation); error handling & validation | ReAct (Yao 2023) | mid | `notes/S04-function-calling.md` | → `_shared/function-calling.md` |
-| L5 | Fine-Tuning & Preference Optimization | Fine-tune vs prompt engineering; QLoRA / PEFT; DPO, GRPO | DPO (Rafailov 2023) | mid | `notes/S05-finetuning.md` | → `_shared/finetuning.md` · **536** |
-| L6 | Agent Memory Systems | Short-term vs long-term; hybrid architecture (SQL + vector) | MemGPT (2023) + LangGraph memory docs | mid | `notes/S06-memory.md` | → `_shared/agents.md` |
-| L7 | RAG: Foundations to Advanced | Processing & chunking; re-ranking & contextual retrieval; agentic RAG (routing, iteration). *Mid-term revision* | Anthropic *Contextual Retrieval* (2024) | mid | `notes/S07-08-rag.md` | → `_shared/rag.md` · **549 S10–11** |
-| L9 | Agent Planning & Multi-Agent Systems | State management & planning; hierarchical & collaborative architectures; error recovery & iteration limits | MetaGPT (2024) | comp | `notes/S09-multi-agent.md` | → `_shared/agents.md` |
-| L10 | Evaluation: RAG to Agents | RAG & agent metrics; LLM-as-judge pattern & limits; benchmarks | MT-Bench (2023), GAIA | comp | `notes/S10-evaluation.md` | → `_shared/evaluation.md` · **546** |
-| L11 | Cost Optimization & Prompt Caching | Token economics & hidden costs; prompt caching; cache warming & invalidation; model routing | Anthropic prompt-caching docs | comp | `notes/S11-cost.md` | → `_shared/quantization.md` · **536** |
-| L12 | Security & Adversarial Robustness | Prompt injection (direct & indirect) defence; PII detection & redaction; red-teaming | ⚠️ handout cites OpenAI caching docs — likely a typo; expect a security reading in class | comp | `notes/S12-security.md` | → **546 governance** |
-| L13 | MCP (Model Context Protocol) Deep Dive | Client-server architecture; primitives (resources, tools, prompts); building MCP servers | MCP specification | comp | `notes/S13-mcp.md` | → `_shared/agents.md` |
-| L14 | A2A & Interoperability | Agent cards; task lifecycle; protocol comparison (A2A, Agent Protocol); orchestration patterns | A2A protocol spec | comp | `notes/S14-a2a.md` | → `_shared/agents.md` |
-| L15–L16 | Ethics, Governance & Bias Mitigation | Bias types & manifestations; mitigation & debiasing; self-improving agents & risks. *Final revision* | Anthropic Responsible Scaling Policy | comp | `notes/S15-16-ethics.md` | → **546** |
+| S | Topic | Sub-topics | Source | Exam | Note file |
+|---|---|---|---|---|---|
+| L1 | Foundations of Conversational AI | Chatbots → agentic systems; **7-stage lifecycle**; architecture; **tokenization/BPE**; context windows; protocols; production concerns | *The Landscape of AI Agents* (2024), arXiv:2404.11584 | mid | `notes/S01-foundations.md` |
+| L2 | Embeddings, Vector Search & Hybrid Retrieval | Semantic vs keyword; vector DB architecture (HNSW, ANN); BM25 + dense + RRF | Dense Passage Retrieval (Karpukhin 2020) | mid | `notes/S02-retrieval.md` |
+| L3 | Model Landscape & Cost Engineering | LLM/MoE/SLM/SSM comparison; quantization; KV-cache; prompt caching; model routing | QLoRA (Dettmers 2023) | mid | `notes/S03-model-landscape.md` |
+| L4 | Structured Outputs & Function Calling | Native function-calling APIs (OpenAI, Anthropic); ReAct (thought-action-observation); error handling & validation | ReAct (Yao 2023) | mid | `notes/S04-function-calling.md` |
+| L5 | Fine-Tuning & Preference Optimization | Fine-tune vs prompt engineering; QLoRA / PEFT; DPO, GRPO | DPO (Rafailov 2023) | mid | `notes/S05-finetuning.md` |
+| L6 | Agent Memory Systems | Short-term vs long-term; hybrid architecture (SQL + vector) | MemGPT (2023) + LangGraph memory docs | mid | `notes/S06-memory.md` |
+| L7 | RAG: Foundations to Advanced | Processing & chunking; re-ranking & contextual retrieval; agentic RAG (routing, iteration). *Mid-term revision* | Anthropic *Contextual Retrieval* (2024) | mid | `notes/S07-08-rag.md` |
+| L9 | Agent Planning & Multi-Agent Systems | State management & planning; hierarchical & collaborative architectures; error recovery & iteration limits | MetaGPT (2024) | comp | `notes/S09-multi-agent.md` |
+| L10 | Evaluation: RAG to Agents | RAG & agent metrics; LLM-as-judge pattern & limits; benchmarks | MT-Bench (2023), GAIA | comp | `notes/S10-evaluation.md` |
+| L11 | Cost Optimization & Prompt Caching | Token economics & hidden costs; prompt caching; cache warming & invalidation; model routing | Anthropic prompt-caching docs | comp | `notes/S11-cost.md` |
+| L12 | Security & Adversarial Robustness | Prompt injection (direct & indirect) defence; PII detection & redaction; red-teaming | ⚠️ handout cites OpenAI caching docs — likely a typo; expect a security reading in class | comp | `notes/S12-security.md` |
+| L13 | MCP (Model Context Protocol) Deep Dive | Client-server architecture; primitives (resources, tools, prompts); building MCP servers | MCP specification | comp | `notes/S13-mcp.md` |
+| L14 | A2A & Interoperability | Agent cards; task lifecycle; protocol comparison (A2A, Agent Protocol); orchestration patterns | A2A protocol spec | comp | `notes/S14-a2a.md` |
+| L15–L16 | Ethics, Governance & Bias Mitigation | Bias types & manifestations; mitigation & debiasing; self-improving agents & risks. *Final revision* | Anthropic Responsible Scaling Policy | comp | `notes/S15-16-ethics.md` |
 
 ## Labs (10 · tentative, from handout)
 

@@ -11,7 +11,7 @@ Weekends = 4 contact sessions (2h each) + a 2–3h lab block. Weekdays = 1h per 
 1. **Notes are written the same weekend the session happens.** 15 min after each class, while it's still warm. Never "I'll do it before the exam" — that is how the December cluster becomes unsurvivable.
 2. **Every weekday hour starts with cold recall, not reading.** Close the notes, say what last session covered, *then* open them and fix what was fuzzy. Re-reading feels productive and isn't.
 3. **Every concept gets a "when NOT to use this" line.** That single line is where the marks concentrate — mid-sem and comp questions are overwhelmingly tradeoff questions.
-4. **Shared topics are written once, in `_shared/`.** RAG, agents, fine-tuning, function-calling, Docker/K8s and evaluation each appear in 2–4 courses. The second course to reach a topic is revision, not new learning. This is the single biggest time saver in the semester.
+4. **Study from the subject notebook first.** Subject master -> session note is the default path. `_shared/` may help later as synthesis, but it must never be the place you are forced to jump to just to understand a session.
 5. **Bind the open-book file before December.** BITS rule: no loose sheets. Printing and binding is a 2-day errand — it goes in the calendar on 22 Nov, not 4 Dec.
 
 ---
