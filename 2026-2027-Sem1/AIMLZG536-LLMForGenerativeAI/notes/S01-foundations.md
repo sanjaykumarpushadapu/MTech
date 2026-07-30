@@ -354,6 +354,10 @@ Each head runs the exact same computation from section 4, just in 64 dimensions 
 
 **Intuition** — Attention alone only *mixes* information between tokens. The block adds the parts that *process* it: a feed-forward network to do computation, layer normalisation to keep training stable, and residual connections so gradients survive depth.
 
+*Two everyday analogies for the two supporting parts:*
+- **Residual connection** = a **highway with exits**. The `X +` keeps a straight through-lane running past each sublayer; a token can *take the exit* to be processed by attention or the FFN, but the through-lane always continues. So even in a 100-layer stack the original signal (and, during training, the gradient) never has to squeeze through every single exit — it always has a clear road home. That's why very deep transformers train at all.
+- **Layer normalisation** = **grading on a curve, per token**. Before each sublayer, it rescales one token's vector so its numbers sit in a consistent range (mean 0, unit spread), stopping values from drifting to extremes as they pass through many layers. `γ` and `β` then let the model stretch and shift that curve if it wants.
+
 **Mechanism — the block, as equations.** These are easy to miss — often shown as images, not text. **Learn the two-line form; be able to expand it to the six-line form.**
 
 Compact (pre-norm, which is what modern LLMs use):
@@ -707,6 +711,8 @@ Total                                          ≈ 6.65 B   → a "7B" model
 ```
 
 Read effects straight off the formula: **double the depth** N and you add another ~6.4 B; **widen** d from 4096 → 5120 and the stack grows by (5120/4096)² ≈ **1.56×**. Width is the expensive dial because it's squared.
+
+*Why depth is linear but width is squared — a building analogy:* adding a **layer** is like stacking one more **identical floor** onto a tower — the cost adds up floor by floor, so N floors cost N × (one floor). Widening **d** is different: every weight matrix inside a layer is `d × d`, so making the model wider enlarges each matrix in **both** directions at once — like growing a room's length *and* breadth, where the floor *area* goes up with the **square** of the side. Depth = more floors (linear); width = bigger floor area (squared). That single fact is why labs reach for depth before width when they want a cheaper way to grow a model.
 
 **Which block dominates** — of the 12 per-layer units, **8 are the feed-forward network and 4 are attention**: **⅔ of every layer is FFN**, ⅓ is attention, norms are rounding error. That is the exact arithmetic reason compression (S6) and Mixture-of-Experts (S3) both attack the FFN first — it's simply where the weights are.
 

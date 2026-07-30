@@ -616,6 +616,8 @@ flowchart TD
 
 The **stub** is the whole trick: client and server each hold a local object that hides the packing, sending and unpacking, so the caller writes an ordinary function call.
 
+*Think of the stub as a **bilingual receptionist**.* You (the client) speak your request in plain language to the receptionist at your desk; they translate it, phone the other office, get the answer, translate it back, and hand it to you — so *you* never deal with the phone line, the translation, or the wire at all. The client stub and server stub are the two receptionists; RPC's goal is that calling a function across the network *feels* exactly like calling one in the same room.
+
 **What gRPC changes:**
 
 | | Plain HTTP APIs | gRPC |
