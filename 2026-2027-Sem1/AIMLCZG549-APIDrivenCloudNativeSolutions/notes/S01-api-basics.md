@@ -29,7 +29,7 @@ flowchart TD
 
 **Everything to the right of the contract can be rewritten** — new language, new database, new hardware — and no client notices. That independence *is* the product. It's also why a breaking change is such a big deal (section 9): it's the one thing that reaches across the line.
 
-**Three definitions, in increasing usefulness:**
+**Mechanism — three definitions, in increasing usefulness:**
 
 1. "Application Programming Interface" — the acronym, tells you nothing.
 2. **A contract between a service and its clients** — the one to remember.
@@ -723,7 +723,7 @@ flowchart TD
 
 **The multiplier that makes this matter:** *"In a microservices-based architecture it is likely that **one north–south request will involve multiple east–west exchanges**."* So east–west inefficiency doesn't stay local — it cascades back to the user.
 
-**Three factors to weigh:**
+**Mechanism — three factors to weigh:**
 
 **High-traffic services** — if exchange frequency is high, payload size and protocol overhead compound, showing up as either transfer cost or total latency.
 
@@ -734,6 +734,8 @@ flowchart TD
 Also weigh **parsing cost** — turning payloads into language-level objects varies vastly by language, and many traditional server-side languages struggle with JSON versus a binary format.
 
 **Vintage formats** — not every service is modern; older components are an active consideration when evolving an architecture.
+
+**Worked example** — A checkout page makes one public request to `POST /checkout`, but the order service then calls pricing, inventory, payment and delivery internally. The public edge should stay REST or GraphQL because browsers and mobile clients need a stable, debuggable interface. The four internal calls can use gRPC because the same company controls both ends and the latency cost repeats on every checkout.
 
 **Tradeoff / the decision rule** — **gRPC beats REST when payload bandwidth is a cumulative concern or the service exchanges large volumes of data**, especially east–west where you own both ends. REST wins north–south where ubiquity, caching and consumer independence dominate. This is the same conclusion as the "REST/GraphQL at the edge, gRPC behind it" — but now with the reasoning attached.
 
@@ -766,6 +768,8 @@ flowchart TD
     Q3 -->|"yes — measured"| GRPC["<b>gRPC</b><br/>protobuf + HTTP/2"]
     Q3 -->|"no"| REST
 ```
+
+**Mechanism — ask about the consumer before the protocol.** Browser and third-party consumers push you toward REST or GraphQL because compatibility, caching and debuggability matter. Internal consumers you own let you optimise for generated clients, binary payloads and latency. Data shape then decides between REST's fixed resources and GraphQL's client-shaped graph.
 
 Notice **REST is the destination of two branches**. That's not an accident — it's the default, and the other two need a *measured* reason to win.
 

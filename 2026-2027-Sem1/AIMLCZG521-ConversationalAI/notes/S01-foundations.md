@@ -20,13 +20,15 @@ The formal definition is useful because it enumerates exactly what the course te
 
 Note the four verbs — understand, retain, retrieve, act. Each becomes a module.
 
-**The three-part frame** used throughout:
+**Mechanism — the three-part frame** used throughout:
 
 | | | |
 |---|---|---|
 | 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU — intent is the **verb**, the action; entity is the **nouns** |
 | 🧠 **Reason** | Plan, chain thoughts, decompose multi-step problems | Planning |
 | ⚡ **Act** | Call APIs, write code, retrieve docs, orchestrate agents | Tools |
+
+**Worked example** — A user says, *"Book a table for two near my office tonight."* The system must **understand** the intent (`book_restaurant`) and entities (`two`, `near my office`, `tonight`), **reason** about missing details such as time and cuisine, then **act** by calling location, restaurant-search and booking APIs. A chatbot that only replies with text stops at understanding; conversational AI becomes useful when it can carry the request through all three stages.
 
 **The bot ladder** — a progression of sophistication:
 
@@ -72,7 +74,7 @@ flowchart TD
 | **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** |
 | **2025–2026** | On-device & multi-modal (SLMs, native multimodality) | Real-time voice/video, privacy-first local processing | **Hardware constraints, fragmented ecosystems** |
 
-**The key driver:**
+**Mechanism — the key driver:**
 
 > Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
@@ -82,6 +84,8 @@ flowchart TD
 - **Statistical era** — intent classification via SVM/Naive Bayes; NER via CRF/HMM; dialogue state tracking via **Markov models**. Frameworks: Microsoft LUIS, early IBM Watson.
 - **Deep learning era** — frameworks Rasa (open source) and Google Dialogflow.
 - **2025–early 2026** — multi-agent frameworks (agents spawning and supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), **1M+ token contexts**, specialised models (coding agents, science models). In one line: *AI moves from assistant to autonomous collaborator.*
+
+**Worked example — why one era forces the next.** ELIZA could answer *"I feel anxious"* with a scripted prompt, but it could not remember that anxiety across turns. Statistical dialogue systems could classify the intent, but needed hand-written features. LLMs made the response fluent, but still could not book the appointment. Agentic systems add tools and memory because fluency alone does not complete the task.
 
 **Tradeoff** — notice that each era's limitation is *architectural*, not a matter of effort. Rule-based systems didn't need more rules; they needed learning. LLMs don't need bigger models to take actions; they need tools. Recognising which kind of problem you have — "needs more of the same" vs "needs a different architecture" — is the judgment this table teaches.
 
@@ -120,7 +124,7 @@ flowchart TD
 
 Read the **shift box** in the middle — it is the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
 
-**Two structural differences to be able to name:**
+**Mechanism — two structural differences to be able to name:**
 
 1. **Intent and entities collapse into one LLM pass** — no separate classifier and extractor.
 2. **A new orchestration layer appears** between understanding and generating, and it's where planning, tool selection and memory retrieval live. That layer is what makes it an agent.
@@ -136,6 +140,8 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 | One model, one task | **Multi-agent orchestration & delegation** |
 
 > The LLM is the brain — but it needs **tools, memory, and planning** to become a truly autonomous conversational agent.
+
+**Worked example** — In a traditional pizza bot, *"repeat my last order"* works only if the dialogue manager has an explicit state variable for previous order. In an agentic system, the LLM reads the request, retrieves the previous order from memory, decides whether confirmation is needed, then calls the ordering API. The extra capability comes from orchestration, not from prettier response text.
 
 **Tradeoff / what the old architecture was better at** — the traditional pipeline is *inspectable*. When it misfires you can point at the intent classifier or the dialogue policy and see exactly what went wrong. The agentic version replaces those legible stages with an LLM making decisions you cannot fully audit, which is precisely why safety (stage 6) and observability become their own topics rather than afterthoughts. **You trade debuggability for capability.**
 
@@ -155,7 +161,7 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 
 The dividing question: **who decides the sequence of steps — you, in code, or the model, at runtime?**
 
-**The building block both are made of — the augmented LLM:**
+**Mechanism — the building block both are made of: the augmented LLM.**
 
 ```mermaid
 flowchart TD
@@ -230,7 +236,7 @@ flowchart TD
     RG --> O([Reply])
 ```
 
-**The split that matters:** 1, 2 and 5 come almost free with the LLM — one model does all three in a single pass. **3, 4 and 6 do not.** They need a vector store, real API credentials, and somewhere to put user data. That is where the cost, the risk and the engineering live.
+**Mechanism — the split that matters:** 1, 2 and 5 come almost free with the LLM — one model does all three in a single pass. **3, 4 and 6 do not.** They need a vector store, real API credentials, and somewhere to put user data. That is where the cost, the risk and the engineering live.
 
 **Use this list as a checklist.** When a system misbehaves, the useful question is *which of the six failed?* "The bot gave a wrong answer" is not diagnosable; "knowledge access retrieved the wrong document" is.
 
@@ -254,7 +260,9 @@ flowchart TD
 
 Short-term is free (it *is* the prompt); the other three need real storage, which is why memory sits in the "expensive, touches the outside world" half below.
 
-| Approach | User: "I lost my card" → Bot |
+**Worked example — user says "I lost my card":**
+
+| Approach | Bot response |
 |---|---|
 | **Rule-based (2000s)** | *"For lost card, press 1. For stolen, press 2."* — rigid, frustrating |
 | **Intent-based (2015)** | *"I'll help you block your card. Which card — Credit or Debit?"* — better, but limited |
@@ -271,7 +279,7 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 
 **Intuition** — A framework is glue, not capability. Nothing in the tables below does anything you couldn't do with the model's HTTP API and a few hundred lines of Python — the Tavily lab proves it. What you're buying is **the conventions**: a standard way to describe a tool, a retry policy, a place to put memory, a trace you can read. That's worth real money on a team and close to nothing when you're learning, which is why the labs deliberately make you see the loop before the framework hides it.
 
-The generational split matters more than any individual row: the 2015 tools assume **you enumerate the intents in advance**; the 2023 tools assume **the model works out the intent at runtime**. Everything else follows from that one assumption change.
+**Mechanism — the generational split matters more than any individual row:** the 2015 tools assume **you enumerate the intents in advance**; the 2023 tools assume **the model works out the intent at runtime**. Everything else follows from that one assumption change.
 
 **Traditional (2015–2020)**
 
@@ -312,6 +320,8 @@ flowchart TD
 ```
 
 The bottom row is the honest trade: the old stack failed **loudly and predictably**; the new one fails **plausibly**. Rasa could not answer an unanticipated question. LangChain will answer it — correctly or not.
+
+**Worked example** — A student asks a college bot, *"Can I defer my quiz because my train is cancelled?"* A traditional intent bot works only if `quiz_deferment` exists and has a policy path. An agentic framework can infer the request, search the policy, ask for proof, and draft an escalation — but it also needs guardrails because it may invent an exception if the policy is unclear.
 
 **The key shift:** *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
 
@@ -450,6 +460,8 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 **Intuition** — The maximum tokens a model can hold, which for a conversation means how much history it can see at once.
 
+**Mechanism — context is a shared token budget.** System prompt, user turns, retrieved documents, tool output and the answer all consume the same finite window. As the conversation grows, the system must either summarise, retrieve selectively, forget older turns, or move memory outside the prompt.
+
 | Window tier | Approx size | ≈ words | Typical use |
 |---|---|---|---|
 | Standard | 8K-32K | ~6K-24K | ordinary chat, short documents |
@@ -518,11 +530,13 @@ flowchart LR
 
 **What a transformer is** — the neural-network design behind every modern LLM (2017, *"Attention Is All You Need"*). Older models (RNNs/LSTMs) read a sentence **through a keyhole**, one word at a time, and forgot the start of long inputs. A transformer **lays the whole input on the table at once** and lets every word look at every other word — which is exactly why an agent can stay coherent across a long conversation *and* run fast (all words processed in parallel, not one after another).
 
-**What self-attention is** — the mechanism inside the transformer that does that "looking": **each word builds its meaning by deciding how much attention to pay to every other word.** For conversation this is the whole game — it resolves references and disambiguates:
+**Mechanism — what self-attention is:** each word builds its meaning by deciding how much attention to pay to every other word. For conversation this is the whole game — it resolves references and disambiguates:
 
 > User: *"I'd like a table for two. Can you book **it** for 8pm?"*
 
 The word **"it"** means nothing on its own; self-attention lets "it" attend back to *"a table"* and settle the reference — which is why an agent handles *"book it," "cancel that," "send them the details"* without you ever repeating the noun. (The Q/K/V internals — query, key, value — are a modelling-course topic; what matters *here* is the conversational payoff: reference resolution, disambiguation, and the multi-turn coherence in the table below.)
+
+**Worked example** — In *"I need to replace my card. It was stolen yesterday,"* the model must connect **it** to **card**, not to yesterday or the user. That link is exactly the kind of cross-token relationship self-attention supplies.
 
 **Technical capability → conversational consequence** — pair them; the pairing is the point:
 
@@ -679,7 +693,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 | **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery** across heterogeneous networks | Decentralised agent ecosystems |
 | **Custom REST / GraphQL** | — | Traditional service integration | Enterprise systems, legacy integrations |
 
-*What each protocol standardises — they solve different edges of the same picture, which is why they are not competitors:*
+**Mechanism — what each protocol standardises:** they solve different edges of the same picture, which is why they are not competitors:
 
 ```mermaid
 flowchart TD
@@ -691,6 +705,8 @@ flowchart TD
 ```
 
 **The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges. USB-C is the natural analogy, and it's a good one — before it, every device needed its own cable.
+
+**Worked example** — A travel-planning agent can use **MCP** to read a calendar and call a flight-search tool, then use **A2A** to delegate visa-checking to another agent. MCP connects the agent downward to tools; A2A connects it sideways to peers.
 
 **A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes in L13–L14.
 
@@ -729,7 +745,7 @@ flowchart TD
     S -->|"more checks<br/>raise cost"| C
 ```
 
-**Observability comes first** — not because it matters most, but because the other three are unmanageable without it. You cannot tune a latency budget you are not measuring.
+**Mechanism — observability comes first:** not because it matters most, but because the other three are unmanageable without it. You cannot tune a latency budget you are not measuring.
 
 **📊 Observability — what to track**
 Conversation flows · tool invocations · **token usage per conversation** · response latencies & error traces.
@@ -754,6 +770,8 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 > **Principle: never rely on a single safety layer.**
 
+**Worked example** — A banking agent that is too slow might be slow because retrieval returns 40 chunks, one tool call retries twice, or the model is routed to a large reasoning model unnecessarily. Without traces, token counts and tool timing, the team can only guess. With observability, cost and latency become diagnosable engineering variables.
+
 **Tradeoff** — these four pull against each other, and naming the tension is what a good exam answer does. Every safety layer adds latency. Cheaper model routing costs quality. Prompt caching saves 50–90% but constrains how you structure prompts. There is no configuration that maximises all four; production work is **choosing which to sacrifice for this particular product.**
 
 ---
@@ -761,6 +779,16 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 ### 12. Open problems
 
 **Intuition** — Every item below is a limitation of the *current* generation, not a law. It's worth knowing which is which: some of these are engineering problems that money and iteration will close, and some are open research questions that may not close at all. Reading them as a single list of "things AI can't do yet" is the mistake — the useful skill is telling a **workaround** from a **wall**.
+
+```mermaid
+flowchart TD
+    P["Open problem"] --> E["Engineering workaround<br/>constrain the system"]
+    P --> R["Research wall<br/>no reliable guarantee yet"]
+    E --> W["workflows · memory stores<br/>RAG · checkpoints · routing"]
+    R --> Q["reasoning guarantees<br/>grounded truth · alignment"]
+    W --> S["ship safely by narrowing scope"]
+    Q --> S2["treat as unresolved risk"]
+```
 
 Where research is active — useful for essay-style questions asking "what are the limitations of current systems?"
 
@@ -773,7 +801,7 @@ Where research is active — useful for essay-style questions asking "what are t
 | **Safety & alignment at scale** | More autonomy → harder to ensure agents follow human intent without side-effects | Constitutional AI, RLAIF, interpretability |
 | **Compute & energy efficiency** | SOTA models need enormous infrastructure; efficient inference is an open engineering problem | Mamba, QLoRA, mixture-of-experts |
 
-*Sorting them — the more useful half of this section:*
+**Mechanism — sort each limitation by the kind of response it allows:**
 
 | | Problem | Why |
 |---|---|---|
@@ -795,11 +823,31 @@ Where research is active — useful for essay-style questions asking "what are t
 | Alignment | Layered safety — input filter, tool allow-list, output check (section 11) |
 | Cost | Route easy queries to a small model; cache aggressively (session 11) |
 
+**Worked example** — A travel agent asked to plan a three-week itinerary should not run freely for 100 tool calls. The production design turns the open problem into constraints: fixed workflow steps, a maximum tool-call budget, checkpoints after flight and hotel selection, and human approval before booking. The model is still imperfect, but the system no longer lets one imperfect step silently compound into a bad purchase.
+
 The honest summary: **none of these are solved, and all of them are survivable.** Production systems ship on top of every limitation in this table — by constraining the problem until the model's reliability is enough for it, which is the real design skill this course teaches.
 
 ---
 
 ### 13. Current capability landscape
+
+**Intuition** — Do not memorise a model leaderboard. Learn the axes that make one model family fit a conversational-AI product better than another.
+
+```mermaid
+flowchart TD
+    NEED["Product need"] --> Q["quality"]
+    NEED --> L["latency"]
+    NEED --> C["cost"]
+    NEED --> CTRL["control"]
+    NEED --> SAFE["safety"]
+    Q --> CHOICE["model choice"]
+    L --> CHOICE
+    C --> CHOICE
+    CTRL --> CHOICE
+    SAFE --> CHOICE
+```
+
+**Mechanism — choose by capability axis, not by provider name.** Each model family is a bundle of tradeoffs: managed frontier quality, open-weight control, long context, low cost, safety posture, or realtime multimodality.
 
 | Capability axis | What varies | Strong choice when you need | Typical tradeoff |
 |---|---|---|---|
@@ -809,6 +857,10 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 | **Low-cost serving models** | cheaper inference at scale | high-volume support bots and routing layers | weaker reasoning on hard tasks |
 | **Safety-focused models** | stricter moderation and conservative behavior | enterprise assistants in sensitive domains | may refuse more often or feel less flexible |
 | **Realtime / multimodal models** | audio, vision, live interaction | voice bots, screen assistants, multimodal UX | more moving parts, more testing complexity |
+
+**Worked example** — An internal HR policy bot with sensitive documents may prefer an open-weight model in a controlled environment, even if a closed frontier model scores higher on general reasoning. A public voice assistant may choose a realtime multimodal model despite extra testing work, because latency and audio handling dominate the product.
+
+**Tradeoff / how to study this section** — landscape tables go stale when treated as rankings. Use this table as a decision checklist: first name the product constraint, then pick the model family whose tradeoff is acceptable.
 
 The durable lesson is not a ranking of vendors; it is the decision rule. In conversational AI, model selection is usually a trade among **quality, latency, cost, control, and safety**. The names at the frontier change quickly; these axes are what stay useful.
 

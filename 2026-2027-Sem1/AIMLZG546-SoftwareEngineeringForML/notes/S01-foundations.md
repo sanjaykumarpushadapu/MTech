@@ -34,7 +34,7 @@ Three angles, one argument: the process history, the failure evidence (**87% of 
 | Medical diagnoses mistranscribed **with high confidence**; African American vernacular barely intelligible | Fairness, responsible ML (M7) |
 | No visibility into model performance unless a customer complained | Monitoring (M6), QA (M5) |
 
-**The line to remember** — the framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
+**Mechanism — the line to remember** — the framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
 
 *The whole course in one picture — the classic "hidden technical debt" point:*
 
@@ -185,6 +185,8 @@ This gets its own section, which signals it can be asked.
 
 ### 3. Two lifecycles: the SDLC and the ML pipeline
 
+**Mechanism — the SDLC wraps the ML pipeline.** The SDLC is the lifecycle of the whole product; the ML pipeline is the lifecycle of the learned component inside that product. Requirements and architecture decide whether a model should exist; the ML pipeline decides how that model is trained, evaluated, deployed and monitored.
+
 #### 3.1 The Software Development Life Cycle
 
 **Intuition** — A structured, repeating process for building software: plan it, understand it, design it, build it, check it, ship it, keep it alive. A cycle, not a line — maintenance feeds back into planning.
@@ -266,6 +268,8 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 ### 4. From Waterfall to ADLC
 
 **Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, known as **ADLC** (AI-Driven Development Life Cycle) and named as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
+
+**Mechanism — each rung shortens a feedback loop.** Waterfall delays feedback until the end; iterative development brings feedback into repeated cycles; Agile tightens team/customer feedback; Scaled Agile coordinates many teams; ADLC tries to automate artifacts across the lifecycle so requirements, design, code, tests and deployment move together.
 
 | Stage | Features | Challenges | Impact |
 |---|---|---|---|
@@ -362,6 +366,10 @@ Two specifics worth carrying: **KPIs and a baseline must be established at the p
 ```
 Cloud Native App = Agile + DevOps + Microservices + Containers + Cloud
 ```
+
+**Mechanism — the four layers reinforce each other.** Agile shortens planning cycles, DevOps shortens release cycles, microservices reduce deployment coupling, containers make environments repeatable, and cloud supplies elastic infrastructure. Remove one layer and the others lose force: microservices without DevOps become many slow releases; containers without cloud still leave capacity planning manual.
+
+**Worked example** — A fraud-scoring service in a monolith ships only when the whole payment system ships. In a cloud-native setup, the scoring service can be packaged in a container, deployed independently, scaled during sale traffic, and monitored separately from checkout. The architecture change only pays off because process, packaging and infrastructure changed together.
 
 **Tradeoff / when NOT to go cloud-native** — Microservices and containers buy independent deployment and scaling, and cost you distributed-system problems you didn't previously have: network failures between services, distributed tracing, eventual consistency, far more operational surface. A monolith on one server is genuinely right for a small team with modest load. "Cloud native" is not a maturity score.
 
@@ -473,6 +481,8 @@ flowchart TD
 
 **Intuition** — Roles exist because different failures need different specialists watching for them. In ML systems the roles come from two different traditions that were trained differently and mean different things by "done" — which is where the friction lives.
 
+**Mechanism — roles are handoff points.** Business roles define value and constraints, software roles turn them into a reliable system, data roles turn raw data into models or insight, and ML engineering keeps the learned component operating after handoff. The course cares about the seams because most failures happen when one role assumes another role has handled quality, monitoring, latency, or data meaning.
+
 #### 7.1 Roles in the SDLC
 
 | Role | Responsibility |
@@ -553,6 +563,8 @@ The evidence on the reverse direction is worth sitting with, since it describes 
 
 **Intuition** — There's an open debate about whether ML fundamentally changes engineering or just demands that we finally apply existing practice rigorously. There are three challenges, and for each the argument is the same: *harder* but *not new*. That two-part shape — challenge, then "but we've seen this before" — is what makes it exam-friendly, and you should reproduce both halves.
 
+**Mechanism — three engineering assumptions weaken.** Traditional software assumes a component can be specified, failures are often detectable, and scale is mostly an operational consequence. ML weakens all three: the learned function is induced from examples, wrong predictions can look normal, and more users can improve the model by producing more data.
+
 ```mermaid
 flowchart TD
     ML["What ML changes"] --> C1["8.1 · No specifications<br/>deductive → inductive"]
@@ -564,6 +576,8 @@ flowchart TD
 ```
 
 *Every row is a pair — the challenge, then the "we've seen this before". Reproduce both halves; section 8.4 is where the second half stops holding.*
+
+**Worked example** — A fraud model cannot be unit-tested like `compute_tax()`. You can test that the API returns a score, but not that every future fraud case is correctly classified. The engineering response is statistical evaluation, threshold design, human review for uncertain cases, monitoring for drift, and retraining when confirmed fraud patterns change.
 
 #### 8.1 Lack of specifications
 
@@ -644,6 +658,8 @@ flowchart LR
 
 **The thesis in one line:** ML doesn't make projects riskier — *we attempt riskier things with ML*. The judgment being taught is **locating your system on this line first**, then matching practice to position.
 
+**Mechanism — practice follows consequence.** Estimate the harm of a wrong prediction, the detectability of that harm, and the reversibility of the decision. Higher harm, harder detection, or irreversible action moves the system rightward and demands stronger requirements, testing, monitoring and human oversight.
+
 **Worked example** — Fraud detection is not a restaurant website. False negatives cost money; false positives block legitimate customers and can be discriminatory; the system runs on live payment traffic at scale. Mid-to-high on the spectrum, and the practices should match — which is what modules 2–7 supply.
 
 **Tradeoff / the symmetric error** — be careful here: "It is not that machine learning automatically makes projects riskier — and there certainly are also many low-risk systems with machine-learning components." Applying nuclear-grade rigour to a low-stakes recommender is its own failure. The judgment is *locating your system on the spectrum first*, then matching practice to position. That judgment is what 546 teaches.
@@ -714,6 +730,8 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 
 **Responsible ML** — bluntly: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Attempted without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
 
+**Mechanism — both concerns attach to every phase.** MLOps asks how the model moves safely from experiment to operation and back again. Responsible ML asks who can be harmed, how harm is detected, and what control exists when the model is wrong. Both questions must be asked at requirements, design, build, test, deploy and operate time.
+
 *Why "cross-cutting" is the whole claim — these aren't phases you can schedule:*
 
 ```mermaid
@@ -737,6 +755,8 @@ flowchart TD
 ```
 
 Both touch **every** phase — there is no single point in the timeline where either is "the current task."
+
+**Worked example** — In fraud detection, MLOps versions the training data, records the experiment, deploys the chosen model, monitors recall and triggers retraining. Responsible ML checks whether false positives concentrate on a customer segment, whether a blocked transaction can be appealed, and whether the model should be allowed to auto-decline without human review. Same system, different cross-cutting questions.
 
 **Tradeoff** — the practical implication of "cross-cutting" is that you cannot schedule either as a phase. A team that plans to "do the fairness work in sprint 12" has already lost, because the decisions that determine fairness — what data, what labels, what the system does with a low-confidence prediction — were made in sprints 1 through 11.
 

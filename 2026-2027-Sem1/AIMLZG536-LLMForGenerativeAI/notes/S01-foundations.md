@@ -81,6 +81,8 @@ Same words, different order. A language model that has learned English assigns f
 
 LLMs are **deep neural networks** trained on that data.
 
+**Mechanism — the three axes compound.** Parameters define how much the model can store and compute, training data supplies the statistical signal, and compute is the budget that turns data into learned parameters. Context is the runtime extension of the same idea: the model can condition on more tokens, but every extra token makes attention and KV-cache storage more expensive.
+
 *The three axes, and what each actually charges you:*
 
 ```mermaid
@@ -94,6 +96,8 @@ flowchart TD
 ```
 
 **Read the right-hand column, not the left.** Only the parameter axis charges you forever; data and compute are sunk costs. That asymmetry is the reason S6 compression attacks parameters and nothing else.
+
+**Worked example** — A 7B model and a 70B model may be trained once, but the 70B model costs roughly ten times as many parameter values to load for every request. If both serve 1M prompts per day, the larger model keeps charging memory and latency on every prompt. A larger training set does not charge per request in the same way; it was paid for during training.
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
 
@@ -517,7 +521,7 @@ flowchart TD
     HEAD --> DIST[distribution over vocabulary]
 ```
 
-**What each block contributes:**
+**Mechanism — what each block contributes:**
 
 | Block | Job |
 |---|---|
@@ -726,6 +730,8 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
+**Mechanism — the limit applies to prompt plus output.** At each decoding step, the model reads all tokens currently in the context, predicts one next-token distribution, appends one token, and repeats. That means the context window is a shared budget for system prompt, user prompt, retrieved text, tool output, conversation history and the answer itself.
+
 *The point people miss — **generated tokens count against the same budget as the prompt**:*
 
 ```mermaid
@@ -742,6 +748,14 @@ flowchart TD
 ```
 
 **The consequence:** a 512-token window with a 400-token prompt leaves room for about 112 tokens of answer, not 512. Every token generated shrinks what's left. This is why a long system prompt costs you twice — you pay for it on every request *and* it eats the answer budget.
+
+**Worked example** — With a 4,096-token context window, a 900-token system prompt, 1,700 tokens of retrieved passages, and 600 tokens of chat history leave:
+
+```
+4096 - (900 + 1700 + 600) = 896 tokens
+```
+
+So the answer can use at most about **896 tokens** before the request runs out of context. Asking for a 2,000-token answer is impossible unless you shorten the prompt, retrieve less, summarise history, or use a larger-window model.
 
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
 
@@ -763,7 +777,7 @@ flowchart TD
 | **Strengths** | Comprehension — classification, **NER**, sentiment — builds dense semantic representations | Open-ended generation, dialogue, code completion, story synthesis | Translation, summarisation, **multimodal pipelines where input and output domains differ** |
 | **Weaknesses** | **Not naturally generative** — needs adapter heads or fine-tuning for sequence output | Less efficient for classification or bidirectional reasoning | **Dual stacks increase training complexity and inference latency** |
 
-**The original transformer figure, which all three descend from** — worth being able to sketch:
+**Mechanism — the original transformer figure, which all three descend from** — worth being able to sketch:
 
 ```mermaid
 flowchart BT
@@ -963,7 +977,7 @@ flowchart TD
     F --> G["closed API<br/>open weights<br/>fully open"]
 ```
 
-**Why this matters for the course:** the middle link is why sessions 9–16 exist at all. If anyone could pre-train, the syllabus would be about pre-training. Because they can't, it's about adaptation.
+**Mechanism — why this matters for the course:** the middle link is why sessions 9–16 exist at all. If anyone could pre-train, the syllabus would be about pre-training. Because they can't, it's about adaptation.
 
 **Pre-neural (before 2010s)** — as early as 1950, a language model was used to measure the **entropy of English**; then decades of **n-gram** language models for machine translation and speech recognition.
 
@@ -994,6 +1008,8 @@ Note that attention, seq2seq and the transformer all arrived **for machine trans
 | **Chinchilla** | 70B | **Compute-optimal scaling laws** — smaller and better, correcting PaLM |
 
 PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 in two rows: bigger stopped being automatically better.
+
+**Worked example** — GPT-3 made scaling look like the main story: bigger model, better behaviour, new in-context learning. Chinchilla changed the lesson: a smaller model trained on more data can beat a larger undertrained one. That is why S2 treats data and compute as first-class design variables, not background details.
 
 **Open models** — EleutherAI (The Pile dataset, GPT-J) · Meta's OPT 175B (GPT-3 replication, lots of hardware issues) · HuggingFace/BigScience BLOOM (focused on data sourcing) · Meta Llama · Alibaba Qwen · DeepSeek · AI2 OLMo 2.
 
