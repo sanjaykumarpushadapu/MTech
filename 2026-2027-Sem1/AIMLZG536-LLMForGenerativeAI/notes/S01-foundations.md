@@ -1013,7 +1013,7 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 ---
 
-## Extra depth — WordPiece & byte-level BPE
+#### 12.7 Extra depth — WordPiece & byte-level BPE
 
 Deeper tokenization knowledge and the reference for **Lab 1** — out of exam scope, so it won't be on the closed-book mid-sem — but it's genuinely useful for the lab and the field, which is why it's kept.
 

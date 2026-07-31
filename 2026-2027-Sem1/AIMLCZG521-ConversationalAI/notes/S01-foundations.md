@@ -799,7 +799,7 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 
 ---
 
-## Current capability landscape (landscape, table only)
+### 13. Current capability landscape
 
 | Capability axis | What varies | Strong choice when you need | Typical tradeoff |
 |---|---|---|---|

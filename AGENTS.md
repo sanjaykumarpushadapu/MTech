@@ -180,7 +180,7 @@ The sources define **what** is examinable. They are often poor at making it **un
 
 **Never add:** new topics *into the exam-scoped body* (beyond-course material goes in marked depth blocks) · replacement terminology in the body (a better word that appears in no exam paper scores nothing) · **silent invention** — if it isn't in a source, mark it as your reasoning · padding.
 
-**Mark added material** with a light italic aside: *"the deck doesn't say why; here's the reason"*. In a disagreement with an instructor, only the course's version scores.
+**Mark model-added clarification only when it affects exam interpretation**, and do it without source-framing prose. Use a short italic aside such as *"filled-in reasoning for this syllabus item"*. In a disagreement with an instructor, only the course's version scores.
 
 **The test:** does this help the reader *reproduce the concept under exam pressure* or *use it competently on the job*? If neither, cut it.
 
@@ -206,7 +206,7 @@ The sources define **what** is examinable. They are often poor at making it **un
 Sources, in order of preference:
 
 1. **Convert the deck's own figure** — extract the images and look at them.
-2. **Convert a textbook figure** the deck reproduces, cited (`Raschka 2.18`, `Alammar 1-27`).
+2. **Convert a textbook figure** the deck reproduces, tracking the source in working notes or `source/MATERIAL-LOG.md`, not as a citation inside the session note.
 3. **Draw your own**, marked `(my own)`. A comparison table often hides a structure worth drawing; the point is usually the *relationship*, not the cells.
 
 **Carry labels across verbatim** — the exam uses the instructor's words. **Don't invent structure the image lacks**; if an arrow is ambiguous, say so in prose. The Mermaid block is the permanent record — never write "see the diagram on slide 16."

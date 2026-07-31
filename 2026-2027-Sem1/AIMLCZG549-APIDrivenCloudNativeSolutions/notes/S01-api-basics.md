@@ -866,7 +866,7 @@ Each version reachable at its own endpoint:
 /api/v2.1.0/movies/search
 ```
 
-**A real one** — Google Maps JavaScript API is at **3.63.10a** (13 Jan 2026): `3.63` is the major/minor series, `10` the patch within it, and `a`/`b`/`d` are sub-patch identifiers for minor updates and bug-fix builds. Worth noting that a real-world scheme extends semver rather than following it exactly.
+**A real-world pattern** — some public APIs extend semver with extra suffixes such as `3.63.10a`: `3.63` is the major/minor series, `10` is the patch within it, and `a`/`b`/`d` style suffixes are minor update or bug-fix build identifiers. The durable lesson is that real-world version schemes often extend semver rather than following it exactly.
 
 **Tradeoff / when NOT to version** — Every live major version is a codebase you maintain, test and secure. Version too eagerly and you're running four APIs; version too late and you break your consumers. The guidance — version only on breaking changes — is the balance point, and it implies the cheaper move is usually **designing the change to be non-breaking** (add an optional field rather than a required one).
 
@@ -885,13 +885,13 @@ Each version reachable at its own endpoint:
 
 ## Self-study — four APIs to explore
 
-*Self-study picks; each links to its source below.*
+*Self-study picks for making the API styles concrete.*
 
 | # | What | Where | Why |
 |---|---|---|---|
 | 1 | **Swagger Petstore** (OpenAPI 3.0) | https://editor.swagger.io/ | Observe the JSON-based API structure |
 | 2 | **Rapid API** | https://rapidapi.com/ | World's largest public API marketplace |
-| 3 | **Conference API** | *Mastering API Architecture* (O'Reilly) | A book's running example |
+| 3 | **Conference API** | course reference example | A larger API design example |
 | 4 | **AsyncAPI Specification** | https://www.asyncapi.com/en | The async counterpart to OpenAPI — **event-driven architectures** |
 
 AsyncAPI is the one to actually look at: it closes the loop on section 2 by showing that asynchronous APIs have their own description standard, exactly parallel to OpenAPI for synchronous ones.
