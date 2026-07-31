@@ -55,7 +55,7 @@ Every handout's **Part B: Learning Plan** table governs the course:
 |---|---|
 | A textbook chapter | **Check `/_library/` first.** Extract the cited chapter only |
 | A paper or public spec | **Fetch it yourself** — these are public. Don't make the user upload them |
-| "Web Resources" / "Lecture Notes" / blank | **Nothing exists behind the slides.** Deck + recording *are* the syllabus. Say so in the note |
+| "Web Resources" / "Lecture Notes" / blank | **Nothing exists behind the slides.** Treat the deck, and the recording if available, as the only teaching sources while building the note; do not invent a hidden textbook layer |
 
 ### Uncited chapters are out of scope
 
@@ -253,7 +253,7 @@ Follow `_templates/OPENBOOK-TEMPLATE.md`. **Hard limit: two sides of A4.**
 | Every formula, with symbols named | The Intuition prose |
 | Every comparison table | The full worked-example walkthrough |
 | **Every tradeoff line** — marks concentrate here | ***In practice*** / ***Going deeper*** blocks |
-| The diagrams — fastest thing to find on a page | Source attribution and cross-links |
+| The diagrams — fastest thing to find on a page | Longer explanatory prose and optional cross-links |
 | Worked-example *answers* | The reasoning that produced them |
 
 **If it doesn't fit in two pages, cut prose.** Never cut a formula, a comparison table or a tradeoff line.
