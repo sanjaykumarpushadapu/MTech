@@ -105,6 +105,8 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`.
 
 **A session file must stand on its own on any machine.** Another copy of the repo may not have `/_library/`, transcripts, handouts, or local scratch material available. Therefore the note itself must contain the explanation, mechanism, examples, diagrams, and tradeoffs needed to study the topic without depending on a local-only file being present.
 
+**The body must teach the topic before any optional follow-up.** A reader should be able to stop before `Self-study / Lab / build` and still have a complete study note for the session. Labs, notebooks, and optional exercises may reinforce the note; they must not carry missing core explanation.
+
 ### Structure
 
 1. **Title** — `<Subject Name> · Session NN · <Topic>`, then one line: `*Learned <date>*`. Nothing else.
@@ -125,6 +127,7 @@ Plus **at least one Mermaid diagram**. All are mandatory; the checklist in §11 
 
 - **No source references.** A note states the knowledge directly — no `*Reference:*` line, no "the deck says…", no textbook codes (`T1`, `R2`, `ch3`) or textbook-author citations in the prose. The knowledge stands on its own. Where an origin *is* the knowledge (REST = Fielding 2000, GraphQL = Facebook 2015, BPE = Sennrich 2016), that's a fact worth keeping — a citation of *the textbook* is not.
 - **No source-framing prose.** Do not write meta-phrases such as "in the instructor's own words", "spoken version first", "worth memorising verbatim", "quotable", "the deck copied", or "the source says". Convert them into direct knowledge statements. A note should read like the subject itself, not commentary about where the wording came from.
+- **Source-availability facts belong outside the teaching flow unless they change the knowledge.** "No textbook exists for this session", "the deck omitted this topic", or "the lab notebook differs from the slide demo" may be recorded only when they materially affect scope, grading, or how the concept must be interpreted. Do not let routine note prose drift into build-log commentary.
 - **No cross-subject links.** Each subject's notes are self-contained. Never link or point to another subject's session (`→ 546 S9`, "shared with 536", "you'll also see this in 521"). Same-*subject* navigation ("section 4", "S14") is fine. If a topic recurs in two subjects, each note covers it fully on its own — separateness over reuse.
 - **No hidden dependence on local resources.** Do not write notes that require the reader to open `/_library/`, a transcript, a deck image folder, or an optional `_shared/` note to understand the core content. Those resources can inform the note; they are not part of the note's delivery contract.
 - **Tradeoff is never blank** and never "depends on the use case." Name the specific situation where the simpler option wins.
@@ -165,6 +168,8 @@ Material arrives over time. **Rewrite the note in place. Never create a second f
 
 **Session notes outrank supporting notes.** If `_shared/` notes, labs, later uploads, or newly found references explain something better than the current session note does, the fix is to strengthen the session note. Never leave the best explanation only in `_shared/`, only in a lab README, or only in a local source file.
 
+**Revise with the smallest effective change.** When improving an existing session note, prefer the smallest edit that fully fixes the problem: add the missing subsection, replace the weak example, clarify the ambiguous paragraph, or redraw the confusing diagram. Do not widen the blast radius unless the current structure itself is the problem.
+
 ### You are a source too — add your own clarity
 
 The sources define **what** is examinable. They are often poor at making it **understood**. Closing that gap is expected on every session of every subject, not a special case.
@@ -190,6 +195,7 @@ The sources define **what** is examinable. They are often poor at making it **un
 - **Every handout topic and sub-topic must be explicitly covered in the note.** Do not treat a syllabus item as "covered" because it is only implied, briefly named, partially folded into another section, or matched by keyword search alone. On review, check each handout bullet against the note and record the exact heading or subsection where it is taught. If you cannot point to one immediately, treat the topic as missing and add the explanation, worked example, diagram, or decision rule until it is **clearly present, easy to find, and learnable on its own**.
 - **Review notes as growing artifacts, not one-shot writes.** A session note may start from slides and later gain clarity from transcripts, papers, labs, and comparisons with other sessions. On every later pass, actively look for what is still weak, compressed, missing, stale, or harder to understand than it needs to be, and strengthen the note in place.
 - **Once a note is study-stable, later edits must be minimal and structure-preserving.** Improve old notes when they are incomplete, unclear, stale, or weaker than later supporting material — but do not keep re-authoring them. After the main consolidation pass, prefer small targeted fixes (missing topic, clearer example, corrected fact, better diagram, tighter wording) over moving sections around or rewriting the whole teaching flow.
+- **Do not create “half in one place, half elsewhere” notes.** If a concept starts in the session note, finish teaching it there. Do not leave the intuition in the session note and the mechanism in a lab, or the overview in the session note and the worked example only in `_shared`.
 
 **The comprehension test:** could an average student, reading this section cold, follow it without reaching for a second source? If not, add the on-ramp or the analogy — don't just restate the formula louder.
 
@@ -315,6 +321,7 @@ git status --short                 # nothing binary or secret staged
 - [ ] Every concept has: Intuition · Mechanism · Worked example · Tradeoff · diagram
 - [ ] **An average student could follow every concept cold** — plain-language on-ramp before dense maths, one everyday analogy per hard concept, heavy arithmetic signposted as skimmable
 - [ ] The **session note itself** contains the strongest available explanation — nothing important left only in `_shared/`, labs, transcripts, or local source material
+- [ ] The **teaching flow is complete inside the note body** — no concept split across session note + lab/shared file in a way that forces the reader to jump out for core understanding
 - [ ] No source references (no `*Reference:*`, `T1`/`R2`/`ch3`, "the deck") and no cross-subject links
 - [ ] Any arithmetic in a worked example was actually executed
 - [ ] Master index row + `PROGRESS.md` row updated
