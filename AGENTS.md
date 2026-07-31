@@ -32,6 +32,7 @@ Read `2026-2027-Sem1/STUDY-PLAN.md` before planning work.
 7. **Lab code lives in `<subject>/labs/S<NN>-<slug>/`**, never in `notes/`.
 8. **Transcripts are never committed.** Read → fold into the note → done. `source/transcripts/` is gitignored.
 9. **Notes must remain portable across machines.** A session note must still be complete and understandable if `/_library/`, `/_shared/`, transcripts, local PDFs, or other gitignored resources are absent on another machine or under another model. Use those resources to build the note, but never make the note depend on them to carry core knowledge.
+10. **Every session-note touch includes a self-containment review.** Whenever you create, expand, or revise a session note, re-check that the session note itself still carries the full explanation needed for study. If a textbook chapter, transcript, handout bullet, paper, lab, or `_shared/` note contains a clearer explanation, extra mechanism, better example, or missing sub-topic, fold that value back into the session note instead of leaving it only in the auxiliary material.
 
 ## 3 · The handout is the contract
 
@@ -162,6 +163,8 @@ Material arrives over time. **Rewrite the note in place. Never create a second f
 
 **Use local resources as inputs, not crutches.** `/_library/`, gitignored transcripts, copied handouts, and optional shared notes are working materials for the agent, not study dependencies for the reader. Anything needed to understand or revise the session later must be folded into the session note itself.
 
+**Session notes outrank supporting notes.** If `_shared/` notes, labs, later uploads, or newly found references explain something better than the current session note does, the fix is to strengthen the session note. Never leave the best explanation only in `_shared/`, only in a lab README, or only in a local source file.
+
 ### You are a source too — add your own clarity
 
 The sources define **what** is examinable. They are often poor at making it **understood**. Closing that gap is expected on every session of every subject, not a special case.
@@ -185,6 +188,8 @@ The sources define **what** is examinable. They are often poor at making it **un
 - **Signpost heavy arithmetic as skimmable on a first pass**, and state the one sentence to walk away with, so cognitive load never blocks the idea. A worked example the reader skips in fear teaches nothing.
 - **More explanation belongs at the hard spots, not everywhere.** Padding an already-clear section raises load and works against comprehension — the enemy is confusion *and* volume. Add the on-ramp where a reader stalls; leave the easy sections tight.
 - **Every handout topic and sub-topic must be explicitly covered in the note.** Do not treat a syllabus item as "covered" because it is only implied, briefly named, partially folded into another section, or matched by keyword search alone. On review, check each handout bullet against the note and record the exact heading or subsection where it is taught. If you cannot point to one immediately, treat the topic as missing and add the explanation, worked example, diagram, or decision rule until it is **clearly present, easy to find, and learnable on its own**.
+- **Review notes as growing artifacts, not one-shot writes.** A session note may start from slides and later gain clarity from transcripts, papers, labs, and comparisons with other sessions. On every later pass, actively look for what is still weak, compressed, missing, stale, or harder to understand than it needs to be, and strengthen the note in place.
+- **Once a note is study-stable, later edits must be minimal and structure-preserving.** Improve old notes when they are incomplete, unclear, stale, or weaker than later supporting material — but do not keep re-authoring them. After the main consolidation pass, prefer small targeted fixes (missing topic, clearer example, corrected fact, better diagram, tighter wording) over moving sections around or rewriting the whole teaching flow.
 
 **The comprehension test:** could an average student, reading this section cold, follow it without reaching for a second source? If not, add the on-ramp or the analogy — don't just restate the formula louder.
 
@@ -264,6 +269,7 @@ Some topics appear in two to four subjects (RAG, tokenization, agents, …). **E
 - **No `_shared/` cross-links from session notes**, and no "→ 546 S9 / shared with 536" pointers anywhere.
 - Same-*subject* navigation ("section 4", "see S14") is fine.
 - The small duplication of re-explaining a shared topic per subject is the intended cost — it keeps each subject a clean, standalone reference on any machine, even when `_shared/` notes are missing or intentionally not printed.
+- **A session note may duplicate `_shared`; it must never depend on `_shared`.** If a shared note explains something better, more clearly, or more completely than a session note does, strengthen the session note. Never leave the better explanation only in `_shared`.
 
 ## 10 · Tone
 
@@ -308,6 +314,7 @@ git status --short                 # nothing binary or secret staged
 - [ ] Every deck agenda item explicitly covered, or the gap flagged inline in the note
 - [ ] Every concept has: Intuition · Mechanism · Worked example · Tradeoff · diagram
 - [ ] **An average student could follow every concept cold** — plain-language on-ramp before dense maths, one everyday analogy per hard concept, heavy arithmetic signposted as skimmable
+- [ ] The **session note itself** contains the strongest available explanation — nothing important left only in `_shared/`, labs, transcripts, or local source material
 - [ ] No source references (no `*Reference:*`, `T1`/`R2`/`ch3`, "the deck") and no cross-subject links
 - [ ] Any arithmetic in a worked example was actually executed
 - [ ] Master index row + `PROGRESS.md` row updated
