@@ -31,6 +31,7 @@ Read `2026-2027-Sem1/STUDY-PLAN.md` before planning work.
 6. **One file per session**, `<subject>/notes/S<NN>-<slug>.md` — **`S` prefix in every subject**, including 521 (whose handout says `L1…L16`; use `L3` in prose, `S03-` in the filename). Creating a note updates its row in `<code>-master.md` **and** `PROGRESS.md` in the same change.
 7. **Lab code lives in `<subject>/labs/S<NN>-<slug>/`**, never in `notes/`.
 8. **Transcripts are never committed.** Read → fold into the note → done. `source/transcripts/` is gitignored.
+9. **Notes must remain portable across machines.** A session note must still be complete and understandable if `/_library/`, `/_shared/`, transcripts, local PDFs, or other gitignored resources are absent on another machine or under another model. Use those resources to build the note, but never make the note depend on them to carry core knowledge.
 
 ## 3 · The handout is the contract
 
@@ -101,6 +102,8 @@ Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`.
 
 **A session file contains the subject's knowledge and nothing else.** No navigation aids, no admin, no logistics, no deck-errata to-dos. Test: *"is this knowledge, or is it about the note?"* If the latter, it doesn't belong.
 
+**A session file must stand on its own on any machine.** Another copy of the repo may not have `/_library/`, transcripts, handouts, or local scratch material available. Therefore the note itself must contain the explanation, mechanism, examples, diagrams, and tradeoffs needed to study the topic without depending on a local-only file being present.
+
 ### Structure
 
 1. **Title** — `<Subject Name> · Session NN · <Topic>`, then one line: `*Learned <date>*`. Nothing else.
@@ -122,6 +125,7 @@ Plus **at least one Mermaid diagram**. All are mandatory; the checklist in §11 
 - **No source references.** A note states the knowledge directly — no `*Reference:*` line, no "the deck says…", no textbook codes (`T1`, `R2`, `ch3`) or textbook-author citations in the prose. The knowledge stands on its own. Where an origin *is* the knowledge (REST = Fielding 2000, GraphQL = Facebook 2015, BPE = Sennrich 2016), that's a fact worth keeping — a citation of *the textbook* is not.
 - **No source-framing prose.** Do not write meta-phrases such as "in the instructor's own words", "spoken version first", "worth memorising verbatim", "quotable", "the deck copied", or "the source says". Convert them into direct knowledge statements. A note should read like the subject itself, not commentary about where the wording came from.
 - **No cross-subject links.** Each subject's notes are self-contained. Never link or point to another subject's session (`→ 546 S9`, "shared with 536", "you'll also see this in 521"). Same-*subject* navigation ("section 4", "S14") is fine. If a topic recurs in two subjects, each note covers it fully on its own — separateness over reuse.
+- **No hidden dependence on local resources.** Do not write notes that require the reader to open `/_library/`, a transcript, a deck image folder, or an optional `_shared/` note to understand the core content. Those resources can inform the note; they are not part of the note's delivery contract.
 - **Tradeoff is never blank** and never "depends on the use case." Name the specific situation where the simpler option wins.
 - **The worked example must be reproducible by hand or in ≤30 lines.** A *described* example is not an example. For mechanism topics, show arithmetic on small numbers — and **verify the arithmetic by running it** before writing it down.
 - **Landscape topics get a comparison table**, not prose.
@@ -155,6 +159,8 @@ Material arrives over time. **Rewrite the note in place. Never create a second f
 ⚠️ **The deck is not automatically more current than the handout.** Decks get rebuilt each offering and carry errors the handout doesn't. When they conflict on assessment, the handout wins unless the user says otherwise — this was learned by getting 521's quiz count wrong.
 
 **Request chapters, not whole books.** A 500-page book covers all 16 sessions; processing it for one pulls in concepts not yet introduced and makes the note worse.
+
+**Use local resources as inputs, not crutches.** `/_library/`, gitignored transcripts, copied handouts, and optional shared notes are working materials for the agent, not study dependencies for the reader. Anything needed to understand or revise the session later must be folded into the session note itself.
 
 ### You are a source too — add your own clarity
 
@@ -257,7 +263,7 @@ Some topics appear in two to four subjects (RAG, tokenization, agents, …). **E
 
 - **No `_shared/` cross-links from session notes**, and no "→ 546 S9 / shared with 536" pointers anywhere.
 - Same-*subject* navigation ("section 4", "see S14") is fine.
-- The small duplication of re-explaining a shared topic per subject is the intended cost — it keeps each subject a clean, standalone reference.
+- The small duplication of re-explaining a shared topic per subject is the intended cost — it keeps each subject a clean, standalone reference on any machine, even when `_shared/` notes are missing or intentionally not printed.
 
 ## 10 · Tone
 

@@ -1,20 +1,10 @@
 # Shared · Tokenization & BPE
 
-**Status:** ✅ written 26 Jul 2026
-**Written from:** 521 S1 · 536 S1 · HuggingFace LLM course ch6.5 · **T1 Jurafsky & Martin ch2 section 2.4** · **T2 Alammar ch2**
-**Reused by:** 521 S11 (cost optimisation) · 536 S6 (serving economics)
-
-> 🔴 **Closed-book scope in BOTH subjects** — 521 mid-sem (L1–L8) and 536 mid-sem (S1–8). You must reproduce BPE by hand for two different exams, one day apart. Highest-value shared note of the semester.
-
-> **Both decks copied the same source.** 521 and 536 independently reproduce HuggingFace LLM course ch6.5 — identical corpus (`hug/pug/pun/bun/hugs`), identical merges, identical `mug`/`thug`/`unhug` exercises. Learn it once, here.
-
 ## Why this matters
 
 Tokenization sits under everything else in the degree. Context limits are counted in tokens, API bills are priced in tokens, prompt-injection tricks exploit token boundaries, and when a model "can't count the r's in strawberry" the tokenizer is why. It is the least glamorous topic here and the one that explains the most surprising behaviour — which is why it's worth this much space.
 
-**Assembled from five sources.** 521 and 536 both taught it in session 1 from the same origin (HuggingFace ch6.5), so rather than two half-notes there is one, with J&M and Alammar filling the gaps both decks leave.
-
-**Two worked corpora, deliberately.** The HuggingFace one (section 4) is what both decks use. The J&M one (section 4, second pass) is the more instructive: BPE independently discovers the English prefix `re-` from raw frequency counts, with nobody telling it that prefixes exist. That is the point of the algorithm in one example.
+Two worked corpora appear on purpose. The `hug / pug / pun / bun / hugs` corpus is the cleanest way to practice merge ordering by hand. The `_new / _renew / _set / _reset` corpus is the clearest way to see BPE discover a reusable unit like `re-` from raw frequency alone. Together they show both the exam procedure and the intuition behind it.
 
 🔴 **A doing note, not a reading note.** The test is: given `hug, pug, pun, bun, hugs` with counts, can you produce the merge list in order from a blank page? If not, you have read section 4 but you do not have it.
 
@@ -43,7 +33,7 @@ Tokenization sits under everything else in the degree. Context limits are counte
 2. **Eliminating unknown words.** Tokenizations that include sub-word units remove the OOV problem.
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph TRAIN["Seen in training"]
         direction TB
         TR["Corpus<br/>low · new · newer"] --> V["Word vocabulary<br/>low · new · newer"]
@@ -299,7 +289,7 @@ J&M states the encoder rule precisely, and it's a common exam trap: the encoder 
 
 ## 5. WordPiece — the contrast that sharpens BPE
 
-*⚠️ 536 marks this **"Extra slides (Not for exams)"**; 521 doesn't teach it. **Out of exam scope for both** — kept for Lab 1, and because the contrast makes BPE's criterion concrete.*
+*This section sharpens the contrast with BPE. Even when two algorithms look similar at a distance, the merge rule can produce very different vocabularies and therefore different segmentations.*
 
 Google's tokenizer, built to pretrain **BERT**. Same training shape as BPE; **tokenization differs**.
 
@@ -389,13 +379,13 @@ tiktoken BPE (Llama-3):
 
 **tiktoken's byte-level + regex-pretokenized design gives better compression, no OOV, and byte-exact reversibility — which is why every frontier model after Llama-2 uses it or something like it.**
 
-| Tokenizer | Vocab | Models |
+| Tokenizer family | Vocab | Representative model families |
 |---|---|---|
-| SentencePiece unigram | 32K–250K | T5, mT5 |
-| SentencePiece BPE | 32K | Llama-2, Mistral-7B |
-| SentencePiece BPE | 256K | Gemma-2, Gemma-3 |
-| **tiktoken BPE** | 128K | Llama-3, Llama-4 |
-| tiktoken (o200k) | ~200K | GPT-4o, GPT-5 |
+| SentencePiece unigram | 32K-250K | T5, mT5 |
+| SentencePiece BPE | 32K | Llama-2, Mistral-class models |
+| SentencePiece BPE | 256K | Gemma-family models |
+| **tiktoken-style byte BPE** | 128K | Llama-3 and similar newer decoder-only families |
+| Larger byte-BPE vocabularies | ~200K | frontier chat models optimized for long prompts and code |
 
 ⚠️ **Llama-3 switched SentencePiece → tiktoken** for a better compression ratio — fewer tokens per byte of English and code.
 
@@ -489,48 +479,24 @@ flowchart LR
 
 ```
 40–60 turns × 15–25 tokens/turn  ≈  800–1,200 tokens per conversation
-GPT-4o:        ~$0.01–0.03 per conversation
-GPT-3.5 Turbo: ~$0.002–0.005 per conversation
-10,000 conversations/day on GPT-4o:  $100–300/day
+
+Suppose a provider charges:
+  input  = $0.002 per 1K tokens
+  output = $0.006 per 1K tokens
+
+Then one 1,000-token conversation costs roughly:
+  700 input tokens  →  0.7 × $0.002 = $0.0014
+  300 output tokens →  0.3 × $0.006 = $0.0018
+  total             →               ≈ $0.0032
+
+At 10,000 conversations/day:
+  10,000 × $0.0032  ≈  $32/day
 ```
 
-> **Model selection and prompt optimisation can cut token costs by 10–20×.**
+> **Model selection, retrieval quality, and prompt design all change cost mainly by changing token count.**
 
 **Tradeoff — the vocabulary-size dial, which ties the whole note together:** a bigger vocabulary means fewer tokens per document → shorter sequences → cheaper O(n²) attention *and* lower API cost. But it also means a bigger embedding matrix (`|V| × d` parameters) and more rare tokens with undertrained embeddings. Hence real vocabularies cluster between 32K and 256K rather than at either extreme, and **compression ratio (tokens per byte)** is the metric actually optimised.
 
 > **Closed-book card**
-> Matters for ConvAI via **cost** (per-token pricing), **context window** (200K ≈ 150K words), **latency**, **quality**. "GPT-4" = **4 tokens**. Support conversation ≈ **800–1,200 tokens**; GPT-4o ~$0.01–0.03; 10K/day ≈ **$100–300/day**. **Model selection + prompt optimisation cuts cost 10–20×.**
+> Matters for conversational systems via **cost** (per-token pricing), **context window**, **latency**, and **quality**. "GPT-4" = **4 tokens**. Support conversation ≈ **800–1,200 tokens**. The durable formula is: **conversation cost = input tokens × input rate + output tokens × output rate**.
 > Vocab-size tradeoff: bigger vocab → fewer tokens → cheaper attention and API, but bigger `|V|×d` matrix and undertrained rare tokens. Hence 32K–256K; optimise **compression ratio**.
-
----
-
-## Course-specific angles
-
-| Course | Session | Emphasis | What it adds |
-|---|---|---|---|
-| **521** | L1 | **Economics** — tokens price the conversation; context window caps dialogue | `[UNK]` failure case; `unhug` exercise; per-conversation cost model; SentencePiece vs tiktoken |
-| **536** | S1 | **Mechanism** — vocabulary size vs sequence length; tokenizer choice per model | Byte tokens vs BPE on `"Café 🚀"`; byte-level BPE and the 50,257 arithmetic; WordPiece scoring *(both not-for-exams)* |
-
-## Exam scope
-
-| Course | Mid-sem (closed) | Comprehensive (open) | Excluded |
-|---|---|---|---|
-| **521** | ✅ L1 | ✅ | — |
-| **536** | ✅ S1 | ✅ | **WordPiece · byte-level BPE · byte-vs-BPE** — "Extra slides (Not for exams)" |
-
-## Lab
-
-**536 Lab 1 and 521 Lab 1 are both tokenization, both at session 1.** One sitting:
-
-```python
-from transformers import AutoTokenizer
-
-for name in ["gpt2", "meta-llama/Llama-2-7b-hf", "meta-llama/Meta-Llama-3-8B"]:
-    tok = AutoTokenizer.from_pretrained(name)
-    for text in ["Tokenization matters", "Café 🚀", "Transformerify",
-                 "The sun is ☀️", "GPT-4", "Book a flight to NYC"]:
-        ids = tok.encode(text)
-        print(f"{name:35} {text:22} {len(ids):3} tokens  {tok.convert_ids_to_tokens(ids)}")
-```
-
-Then add 521's cost layer: multiply token counts by current per-token pricing and reproduce the $100–300/day figure.

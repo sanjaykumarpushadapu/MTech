@@ -926,22 +926,22 @@ tiktoken BPE (Llama-3):
 
 **tiktoken's byte-level + regex-pretokenized design gives better compression, no OOV, and byte-exact reversibility — which is why every frontier model released after Llama-2 uses it or something like it.**
 
-**Who uses what in 2026:**
+**Representative usage patterns:**
 
-| Tokenizer | Vocab | Models |
+| Tokenizer family | Vocab | Representative model families |
 |---|---|---|
-| SentencePiece unigram | 32K–250K | T5, mT5 |
-| SentencePiece BPE | 32K | Llama-2, Mistral-7B |
-| SentencePiece BPE | 256K | Gemma-2, Gemma-3 |
-| **tiktoken BPE** | 128K | Llama-3, Llama-4 |
-| tiktoken (o200k) | ~200K | GPT-4o, GPT-5 |
+| SentencePiece unigram | 32K-250K | T5, mT5 |
+| SentencePiece BPE | 32K | Llama-2, Mistral-class models |
+| SentencePiece BPE | 256K | Gemma-family models |
+| **tiktoken-style byte BPE** | 128K | Llama-3 and similar newer decoder-only families |
+| Larger byte-BPE vocabularies | ~200K | frontier chat models optimized for long prompts and code |
 
 ⚠️ **Llama-3 switched from SentencePiece → tiktoken** for a better compression ratio — fewer tokens per byte of English and code.
 
 **Tradeoff / the whole tokenizer decision in one line** — bigger vocabulary means fewer tokens per document, which means shorter sequences and cheaper O(n²) attention — but a bigger embedding matrix and more rarely-seen tokens. That's why vocabulary sizes cluster between 32K and 256K rather than at either extreme, and why compression ratio (tokens per byte) is the metric people actually optimise.
 
 > ***In practice*** *— tokenization is where your API bill comes from:*
-> - **You pay per token**, in and out. Tokenization is the invisible layer that decides how many tokens a document costs. `tiktoken.encoding_for_model("gpt-4o").encode(text)` counts them before you send — do this to estimate cost and to stay under the context window.
+> - **You pay per token**, in and out. Tokenization is the invisible layer that decides how many tokens a document costs. `encoding.encode(text)` with the tokenizer for your chosen model counts them before you send — do this to estimate cost and to stay under the context window.
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
@@ -999,11 +999,11 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 **Three levels of openness** — a favourite exam question because the middle case is counter-intuitive:
 
-| Level | Example | What you get |
+| Level | Representative case | What you get |
 |---|---|---|
-| **Closed** | GPT-4o | **API access only** |
-| **Open-weight** | DeepSeek | **Weights available**, paper with architecture and some training details, **no data details** |
-| **Open-source** | OLMo | **Weights and data available**, paper with most details — though not necessarily rationale or failed experiments |
+| **Closed** | managed proprietary model | **API access only** |
+| **Open-weight** | published weights without full training recipe | **Weights available**, paper with architecture and some training details, **no full reproducibility** |
+| **Open-source** | reproducible research release | **Weights and data available**, paper with most details — though not necessarily rationale or failed experiments |
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
 

@@ -335,6 +335,21 @@ flowchart TD
     G --> B2["still handles unseen words"]
 ```
 
+**Why tokenization exists at all** — two reasons matter:
+
+1. **Agreement and replicability** — a fixed tokenizer makes "how long is this text?" a precise question rather than an argument about whether `don't` is one token or two.
+2. **Unknown-word handling** — a pure word-level vocabulary fails on words it never saw in training, while a subword tokenizer can still break them into usable pieces.
+
+*The cleanest everyday example:* if training saw `low`, `new`, and `newer`, but never saw `lower`, a word-level system is stuck. A subword system can still split `lower` into known pieces and preserve some meaning.
+
+**Three token types, and why subwords win in practice:**
+
+| Type | Strength | Failure |
+|---|---|---|
+| **Word** | shortest sequences | fails on unseen words; wastes vocabulary on near-duplicates |
+| **Character** | tiny vocabulary; no unknown words | sequences become too long; each token carries little meaning |
+| **Subword** | handles new words while keeping sequences manageable | still imperfect on rare scripts, code, and morphology |
+
 **Why it matters for conversational AI specifically** — four consequences, and this framing is what makes tokenization a conversational-AI topic, not just a modelling detail:
 
 | | Why |
@@ -356,21 +371,42 @@ Token counts — note how unintuitive they are:
 **Worked example — the economics, which is the exam-worthy part:**
 
 ```
-Customer support conversation (2025 typical):
+Customer support conversation:
   40–60 turns × 15–25 tokens/turn  ≈  800–1,200 tokens per conversation
-  GPT-4o:        ~$0.01–0.03 per conversation
-  GPT-3.5 Turbo: ~$0.002–0.005 per conversation
-  At 10,000 conversations/day on GPT-4o:  $100–300/day
+
+If a provider charges:
+  input  = $0.002 per 1K tokens
+  output = $0.006 per 1K tokens
+
+Then one 1,000-token conversation costs roughly:
+  700 input tokens  →  0.7 × $0.002 = $0.0014
+  300 output tokens →  0.3 × $0.006 = $0.0018
+  total             →               ≈ $0.0032
+
+At 10,000 conversations/day:
+  10,000 × $0.0032  ≈  $32/day
 ```
 
-> **Key insight: model selection and prompt optimisation can cut token costs by 10–20×.** (Detail in L11.)
+> **Key insight: token count directly controls operating cost.** A cheaper model, a shorter prompt, or better retrieval can reduce cost by an order of magnitude without changing the product.
 
 **Mechanism — BPE, three steps:** ① **Training** — read a massive corpus, count adjacent pairs of characters. ② **Merging** — take the most frequent pair, add it to the vocabulary as a new unit. ③ **Iterating** — repeat thousands of times until the target vocabulary size.
 
 **Worked example — reproduce this by hand.** Corpus: `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
 Base vocabulary: `["b", "g", "h", "n", "p", "s", "u"]`, words split into characters.
 
-**Merge 1** — pair `("u","g")` appears in hug (10) + pug (5) + hugs (5) = **20 times**, the most frequent.
+**Merge 1** — count each adjacent pair across the whole corpus:
+
+| Pair | Where it appears | Total |
+|---|---|---|
+| **("u","g")** | hug 10 + pug 5 + hugs 5 | **20** ✅ most frequent |
+| ("p","u") | pug 5 + pun 12 | **17** |
+| ("u","n") | pun 12 + bun 4 | 16 |
+| ("h","u") | hug 10 + hugs 5 | 15 |
+| ("g","s") | hugs 5 | 5 |
+| ("b","u") | bun 4 | 4 |
+
+That makes `("u","g")` the first merge.
+
 Rule: `("u","g") → "ug"`
 Vocabulary: `[b, g, h, n, p, s, u, ug]`
 Corpus: `("h","ug",10) ("p","ug",5) ("p","u","n",12) ("b","u","n",4) ("h","ug","s",5)`
@@ -385,6 +421,8 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 *The trap in merge 2:* `("h","ug")` at 15 looks like the obvious next merge because it just became available, but `("u","n")` at 16 beats it. **Count before you assume.**
 
+*The deeper trap:* the pair `("p","u")` was at 17 in merge 1 and then quietly stopped mattering once `pug` became `p · ug`. A merge does not just create one new token; it also **destroys overlapping old pairs**, which is why every round must be recounted from scratch.
+
 **Segmenting new words with those three rules** — and this is where it goes further:
 
 | Word | Tokenized as | Why |
@@ -395,7 +433,16 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 **Exercise: how is `unhug` tokenized?** Split to characters `u n h u g` → apply rules in learned order: `("u","g")→"ug"` gives `u n h ug`; `("u","n")→"un"` gives `un h ug`; `("h","ug")→"hug"` gives **`["un", "hug"]`**. Every character was in the base vocabulary, so no `[UNK]`.
 
-**Tradeoff / where BPE fails** — the `mug` case is the whole limitation in one line: **character-level BPE has no fallback**. Any character absent from the base vocabulary becomes `[UNK]` and its meaning is lost entirely. That's what byte-level tokenizers fix, and it's why every frontier model after Llama-2 moved to byte-level (tiktoken). For conversational AI specifically, `[UNK]` on a customer's name or a product code is a silent failure that degrades the whole turn.
+**How modern tokenizers fix the `[UNK]` problem** — two common strategies:
+
+| Approach | What it does | Why it helps |
+|---|---|---|
+| **SentencePiece with byte fallback** | falls back to raw UTF-8 bytes for out-of-vocabulary text | arbitrary Unicode still becomes valid tokens |
+| **Byte-level BPE / tiktoken-style tokenizers** | starts from the 256 byte values instead of characters | there is always a fallback path, so no true unknown word |
+
+This is why modern chat systems handle emoji, mixed scripts, code, and product IDs much better than older character-based BPE examples would suggest.
+
+**Tradeoff / where BPE fails** — the `mug` case is the whole limitation in one line: **character-level BPE has no fallback**. Any character absent from the base vocabulary becomes `[UNK]` and its meaning is lost entirely. That's what byte-level tokenizers fix. For conversational AI specifically, `[UNK]` on a customer's name, location, or product code is a silent failure that degrades the whole turn.
 
 ---
 
@@ -403,12 +450,12 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 **Intuition** — The maximum tokens a model can hold, which for a conversation means how much history it can see at once.
 
-| Model | Window | ≈ words | Positioning |
+| Window tier | Approx size | ≈ words | Typical use |
 |---|---|---|---|
-| GPT-4 Turbo | 128K | ~96K | Standard production |
-| Claude 3.5 Sonnet | 200K | ~150K | Extended conversations |
-| Gemini 1.5 Pro | 1M | ~750K | Entire codebases |
-| Emerging models | 2M+ | — | Specialised use cases |
+| Standard | 8K-32K | ~6K-24K | ordinary chat, short documents |
+| Extended | 128K-200K | ~96K-150K | long conversations, many retrieved chunks |
+| Ultra-long | 1M+ | ~750K+ | whole books, large codebases, long reports |
+| Practical reality | any size | — | bigger windows help, but retrieval and memory still matter |
 
 **⚠️ The challenge — the exam-worthy bit, not the numbers:**
 
@@ -752,20 +799,18 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 
 ---
 
-## State of the art — 2026 (landscape, table only)
+## Current capability landscape (landscape, table only)
 
-| Model | Provider | Context | Strength | Best for |
-|---|---|---|---|---|
-| GPT-5.4 | OpenAI | 1M | Best all-rounder, computer use | Knowledge work, production APIs |
-| Claude Opus | Anthropic | 1M | Coding, safety, long reasoning | Complex agents, coding editors |
-| **Gemini 3.1 Pro** | Google | 1M | **Reasoning leader (94.3% GPQA Diamond)** | Research, multimodal, cost-efficient |
-| Grok 4.20 | xAI | 128K | Real-time data, multi-agent | Live info, social/market signals |
-| **Llama 4 Scout** (open) | Meta | **10M** | Open-weight, ultra-long context | On-prem / custom deployments |
-| DeepSeek V3.2 (open) | DeepSeek | 128K | ~90% of GPT-5.4 at **1/50th cost** | Budget-conscious, high-volume API |
+| Capability axis | What varies | Strong choice when you need | Typical tradeoff |
+|---|---|---|---|
+| **Closed frontier models** | strongest reasoning, polished tooling, managed APIs | fastest path to production quality | higher cost, less control, provider dependence |
+| **Open-weight models** | self-hosting, customization, data control | on-prem use, regulated data, deep customization | more infrastructure and tuning work |
+| **Long-context models** | very large prompt windows | long documents, codebases, multi-document assistants | higher latency and "lost in the middle" still remains |
+| **Low-cost serving models** | cheaper inference at scale | high-volume support bots and routing layers | weaker reasoning on hard tasks |
+| **Safety-focused models** | stricter moderation and conservative behavior | enterprise assistants in sensitive domains | may refuse more often or feel less flexible |
+| **Realtime / multimodal models** | audio, vision, live interaction | voice bots, screen assistants, multimodal UX | more moving parts, more testing complexity |
 
-Market context: **$41.39B** Conv-AI market by 2030 (Grand View Research) · **100M** ChatGPT users in 2 months (fastest-growing app in history) · **80%** of Fortune 500 using AI agents (Microsoft Copilot Studio telemetry, Nov 2025). Industry: banking 70% of Tier-1 queries handled by AI, up to 60% cost reduction; e-commerce 15–26% conversion lift.
-
-*Landscape material — comparison table only, per the subject's study rule. Specific model names date within months; the openness/context/cost axes don't.*
+The durable lesson is not a ranking of vendors; it is the decision rule. In conversational AI, model selection is usually a trade among **quality, latency, cost, control, and safety**. The names at the frontier change quickly; these axes are what stay useful.
 
 ---
 
