@@ -33,7 +33,7 @@
 | 0 | **Python Programming — SELF STUDY** | Structure, variables, conditionals, functions, iteration, strings, files, lists, dicts, tuples, OOP, databases & SQL, visualising data | R1 Severance (free PDF) | prereq | `notes/S00-python-selfstudy.md` |
 | 1 | API Basics | Intro to APIs; design/specify/build; RESTful standards & structure; OpenAPI spec, mocking, semantic versioning, tools; OpenAPI generators; REST vs GraphQL vs gRPC; API versioning; Google Maps / Rapid API | R2 ch1 + web | mid | `notes/S01-api-basics.md` |
 | 2 | Cloud Native Application | Modern application requirements; cloud-native evolution; introducing cloud-native software; cloud-enabled vs cloud-based vs cloud-native; examples | R2 ch1, R3 ch1 | mid | `notes/S02-cloud-native.md` |
-| 3 | Cloud Native Ecosystem | CNCF landscape; ecosystem overview; DevOps & GitOps; microservices & service mesh; containers & Kubernetes; serverless computing & stack; case study | R3 ch1 + web | mid | `notes/S03-ecosystem.md` |
+| 3 | Cloud Native Application | CNCF landscape; ecosystem overview; DevOps & GitOps; microservices & service mesh; containers & Kubernetes; serverless computing & stack; case study | R3 ch1 + web | mid | `notes/S03-ecosystem.md` |
 | 4 | Data Science & Machine Learning | Big data & characteristics; DS and ML intro; data science process; ML lifecycle | Web + notes | mid | `notes/S04-ds-ml.md` |
 | 5 | API-driven Cloud-native Data Pipeline | Ingestion; (pre)processing; storage; integration; monitoring & alerting; scalability & reliability. **Lab 1** | Web + notes | mid | `notes/S05-data-pipeline.md` |
 | 6 | API-driven ML Pipelines | Model development & training; deployment; monitoring; scalability; MLOps practices | R4 Treveil | mid | `notes/S06-ml-pipeline.md` |

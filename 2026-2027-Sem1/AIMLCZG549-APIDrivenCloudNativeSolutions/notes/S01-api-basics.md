@@ -32,6 +32,19 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 **Worked example** — Amazon Bedrock exposes `GET /models` to list models and `POST /models/{model-id}/invoke` to run inference. You never see the GPUs, the model weights, or the serving stack. You see a contract. Same for Hugging Face, LangChain and Prefect — which is exactly why this course is API-driven.
 
+#### Named examples: Google Maps API and Rapid API
+
+The handout names two concrete API examples because they show two different API ideas:
+
+| Example | What it exposes | What the client sends | What the client gets back |
+|---|---|---|---|
+| **Google Maps API** | maps, geocoding, routes, places | coordinates, address text, place query, travel mode | map tiles, latitude/longitude, directions, distance, ETA |
+| **Rapid API** | a marketplace of third-party APIs | provider-specific endpoint, headers, API key | the chosen provider's response through one marketplace account |
+
+**Worked example** — A food-delivery app can call a maps API to turn `"BITS Pilani Hyderabad Campus"` into coordinates, calculate rider distance, and estimate delivery time. The same app could use Rapid API to try a weather, SMS, or translation API without negotiating separately with every provider.
+
+**Tradeoff / when NOT to use** — Public APIs are fast to integrate but create external dependency, quota, pricing, and outage risk. For a core capability such as payments or identity, choose a provider deliberately and design fallbacks; do not treat a marketplace listing as production architecture by itself.
+
 **Tradeoff / the cost of the contract** — Once published, the contract binds you. Clients build against it and break when it changes, which is why section 9 (versioning) exists as a topic at all. An internal function can be refactored freely; a published API cannot. **Publishing an API is a commitment, not a feature.**
 
 > ***In practice*** *— what calling an API actually looks like on the job:*

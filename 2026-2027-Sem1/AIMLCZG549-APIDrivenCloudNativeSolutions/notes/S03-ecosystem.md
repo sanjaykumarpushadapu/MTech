@@ -1,4 +1,4 @@
-# API-driven Cloud Native Solutions · Session 03 · Cloud Native Ecosystem
+# API-driven Cloud Native Solutions · Session 03 · Cloud Native Application
 
 *Learned 1 Aug 2026*
 

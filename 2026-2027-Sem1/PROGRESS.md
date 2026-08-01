@@ -12,7 +12,7 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Deck | Note | Open | Lab |
 |---|---|---|---|---|---|
-| 1 | Foundations & tokenization | ✅ | ✅ | ☐ | ☐ L1 · *transcript ✅* |
+| 1 | Foundations of Large Language Models (LLMs) | ✅ | ✅ | ☐ | ☐ L1 · *transcript ✅* |
 | 2 | Pre-training & scaling laws | ☐ | ☐ | ☐ | ☐ |
 | 3 | Architecture advances (RoPE, MoE) | ☐ | ☐ | ☐ | ☐ L2 |
 | 4 | Training & attention efficiency | ☐ | ☐ | ☐ | ☐ |
@@ -36,7 +36,7 @@ One view across all four subjects. Update the same weekend the session happens.
 | 0 | **Python self-study** | ☐ | ☐ | — | — |
 | 1 | API basics & OpenAPI | ✅ | ✅ | ☐ | — · *transcript ✅* |
 | 2 | Cloud-native concepts | ✅ | ✅ | ☐ | ☐ |
-| 3 | CNCF ecosystem, containers, K8s | ✅ | ✅ | ☐ | ☐ |
+| 3 | Cloud Native Application | ✅ | ✅ | ☐ | ☐ |
 | 4 | Data science & ML lifecycle | ☐ | ☐ | ☐ | ☐ |
 | 5 | API-driven data pipeline | ☐ | ☐ | ☐ | ☐ L1 |
 | 6 | ML pipelines & MLOps | ☐ | ☐ | ☐ | ☐ |

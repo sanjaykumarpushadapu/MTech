@@ -1,4 +1,4 @@
-# Conversational AI · Session 02 · Embeddings, Vector Search and Hybrid Retrieval
+# Conversational AI · Session 02 · Embeddings, Vector Search & Hybrid Retrieval
 
 *Learned 1 Aug 2026*
 

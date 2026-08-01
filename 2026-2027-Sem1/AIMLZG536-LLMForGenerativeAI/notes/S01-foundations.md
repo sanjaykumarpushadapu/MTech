@@ -1,4 +1,4 @@
-# Large Language Models for Generative AI · Session 01 · Foundations of Large Language Models
+# Large Language Models for Generative AI · Session 01 · Foundations of Large Language Models (LLMs)
 
 *Learned 26 Jul 2026*
 
