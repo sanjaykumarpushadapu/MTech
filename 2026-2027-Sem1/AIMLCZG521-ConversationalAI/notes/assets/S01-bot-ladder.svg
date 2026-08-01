@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
+  <title id="title">Bot ladder from chatbot to agent</title>
+  <desc id="desc">Conversational systems progress from keyword chatbots to task bots, FAQ bots, generative systems, and agents, trading predictability for wider coverage.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <rect x="24" y="24" width="1052" height="372" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
+  <text x="550" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">The bot ladder: more general means less predictable</text>
+  <g font-family="Georgia,serif" fill="#17213a">
+    <rect x="60" y="150" width="170" height="90" rx="14" fill="#e4f2f4" stroke="#1f6570" stroke-width="2.2"/>
+    <text x="145" y="182" text-anchor="middle" font-size="19" font-weight="700">1 Chatbot</text><text x="145" y="210" text-anchor="middle" font-size="15">keyword match</text>
+    <rect x="260" y="150" width="170" height="90" rx="14" fill="#eaf2ff" stroke="#315a99" stroke-width="2.2"/>
+    <text x="345" y="182" text-anchor="middle" font-size="19" font-weight="700">2 Task bot</text><text x="345" y="210" text-anchor="middle" font-size="15">slot filling</text>
+    <rect x="460" y="150" width="170" height="90" rx="14" fill="#eaf2ff" stroke="#315a99" stroke-width="2.2"/>
+    <text x="545" y="182" text-anchor="middle" font-size="19" font-weight="700">3 FAQ bot</text><text x="545" y="210" text-anchor="middle" font-size="15">context-aware</text>
+    <rect x="660" y="150" width="170" height="90" rx="14" fill="#fff2bd" stroke="#8a6400" stroke-width="2.2"/>
+    <text x="745" y="182" text-anchor="middle" font-size="19" font-weight="700">4 Generative</text><text x="745" y="210" text-anchor="middle" font-size="15">fluent, open-ended</text>
+    <rect x="860" y="150" width="170" height="90" rx="14" fill="#f7e4e7" stroke="#914252" stroke-width="2.2"/>
+    <text x="945" y="182" text-anchor="middle" font-size="19" font-weight="700">5 Agent</text><text x="945" y="210" text-anchor="middle" font-size="15">plans + acts</text>
+    <text x="145" y="305" text-anchor="middle" font-size="18">cheap · deterministic · auditable</text>
+    <text x="945" y="305" text-anchor="middle" font-size="18">adaptive · expensive · less predictable</text>
+  </g>
+  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">
+    <line x1="230" y1="195" x2="250" y2="195"/><line x1="430" y1="195" x2="450" y2="195"/><line x1="630" y1="195" x2="650" y2="195"/><line x1="830" y1="195" x2="850" y2="195"/>
+  </g>
+</svg>

@@ -32,15 +32,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 **The bot ladder** — a progression of sophistication:
 
-```mermaid
-flowchart TD
-    A["1 · Chatbot<br/>keyword match"] --> B["2 · Task bot<br/>slot filling"]
-    B --> C["3 · FAQ bot<br/>context-aware"]
-    C --> D["4 · Generative system<br/>fluent, open-ended"]
-    D --> E["5 · Agent<br/>plans + acts"]
-    A --> N1["cheap · deterministic · auditable"]
-    E --> N2["adaptive · expensive · less predictable"]
-```
+![Bot ladder from chatbot to agent](assets/S01-bot-ladder.svg)
 
 Every step rightward buys coverage of a wider query space and pays for it in predictability. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
 
@@ -52,15 +44,7 @@ Every step rightward buys coverage of a wider query space and pays for it in pre
 
 **Intuition** — Seven eras, each fixing the previous one's fatal limitation and introducing a new one. Learn it by the **Limitations** column: that's what drives the next row.
 
-```mermaid
-flowchart TD
-    A["1960s–1990s<br/>Rule-based systems<br/>ELIZA · ALICE<br/>limit: no learning, no context"] --> B["2000–2010<br/>Statistical ML<br/>SVM · CRF · HMM<br/>limit: hand-crafted features"]
-    B --> C["2010–2017<br/>Deep learning<br/>RNN · LSTM · Seq2Seq<br/>limit: data hungry, task-specific"]
-    C --> D["2017–2020<br/>Transformers<br/>BERT · GPT-2 · T5<br/>limit: still needs fine-tuning"]
-    D --> E["2020–2023<br/>LLMs and GenAI<br/>GPT-3 · ChatGPT<br/>limit: hallucinations, no actions"]
-    E --> F["2023–2025<br/>Agentic AI<br/>tools · memory · planning<br/>limit: orchestration, cost"]
-    F --> G["2025–2026<br/>Protocols and multi-agent<br/>MCP · A2A<br/>limit: standards still settling"]
-```
+![Evolution of conversational AI](assets/S01-evolution-timeline.svg)
 
 *Read the last clause of each row — the limitation is what causes the next era.*
 
@@ -97,30 +81,7 @@ flowchart TD
 
 *Both pipelines, one after the other — the contrast is the content, and the shift box in the middle marks what changed:*
 
-```mermaid
-flowchart TD
-    subgraph T["TRADITIONAL · pre-2020"]
-        direction TB
-        U1([User input]) --> SR["Speech recognition<br/>if voice"]
-        SR --> NLU["NLU<br/>intent classification<br/>+ entity extraction<br/>two separate models"]
-        NLU --> DM["Dialogue manager<br/>state tracking<br/>policy: rules / ML"]
-        DM --> NLG["NLG<br/>template- or rule-based"]
-        NLG --> TTS["Text-to-speech<br/>if voice"]
-        TTS --> R1([Response])
-    end
-    T --> SHIFT["Agentic shift:<br/>NLU collapses into the LLM,<br/>and dialogue policy becomes orchestration"]
-    SHIFT --> A
-    subgraph A["AGENTIC · 2023+"]
-        direction TB
-        U2([User input]) --> LLM["LLM understanding<br/>intent + entities<br/>in ONE pass"]
-        LLM --> ORC["ORCHESTRATION LAYER<br/>planning · tool selection<br/>memory retrieval"]
-        ORC --> TOOL["Tool invocation<br/>APIs · DB · code"]
-        TOOL --> MEM["Memory update<br/>context · user profile"]
-        MEM --> GEN["LLM generation<br/>contextual response"]
-        GEN --> SAFE["Safety & validation"]
-        SAFE --> R2([Response])
-    end
-```
+![Traditional chatbot architecture versus agentic architecture](assets/S01-traditional-vs-agentic.svg)
 
 Read the **shift box** in the middle — it is the entire architectural change. Everything else on the right is **new capability the left side simply had no place for**: there is nowhere in the traditional pipeline to put a tool call, because nothing in it ever decided to do anything.
 
@@ -163,17 +124,7 @@ The dividing question: **who decides the sequence of steps — you, in code, or 
 
 **Mechanism — the building block both are made of: the augmented LLM.**
 
-```mermaid
-flowchart TD
-    IN[Input] --> PLAN[LLM decides what it needs]
-    PLAN --> R[Retrieval]
-    PLAN --> T[Tools]
-    PLAN --> M[Memory]
-    R --> AUG[Augmented LLM context]
-    T --> AUG
-    M --> AUG
-    AUG --> OUT[Output]
-```
+![Workflows versus agents](assets/S01-workflows-vs-agents.svg)
 
 An LLM enhanced with **retrieval, tools and memory**, where the model actively uses them — generating its own search queries, selecting tools, deciding what to retain. This is the same claim as the "LLM is the brain but needs tools, memory and planning," stated more precisely.
 
@@ -224,17 +175,7 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 
 *The six, arranged by what the LLM absorbed and what it didn't — the split is the insight:*
 
-```mermaid
-flowchart TD
-    U([User input]) --> N["1 · NLU<br/>intent = the verb<br/>entities = the nouns"]
-    N --> DM["2 · Dialogue management<br/>state, turns, errors"]
-    DM --> K["3 · Knowledge access<br/>vector DB, RAG"]
-    DM --> A["4 · Action execution<br/>tools, APIs, code"]
-    K --> RG["5 · Response generation"]
-    A --> RG
-    MEM["6 · Memory<br/>short-term · long-term<br/>episodic · semantic"] <--> DM
-    RG --> O([Reply])
-```
+![Six components of modern conversational AI](assets/S01-six-components.svg)
 
 **Mechanism — the split that matters:** 1, 2 and 5 come almost free with the LLM — one model does all three in a single pass. **3, 4 and 6 do not.** They need a vector store, real API credentials, and somewhere to put user data. That is where the cost, the risk and the engineering live.
 
@@ -302,22 +243,7 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 
 *What actually changed between the two generations — one assumption flipped, and the rest follows:*
 
-```mermaid
-flowchart TD
-    subgraph T["Traditional · 2015-2020"]
-        direction TB
-        T1["YOU enumerate the intents<br/>in advance"] --> T2["train a classifier<br/>per intent"]
-        T2 --> T3["write dialogue policies<br/>for each path"]
-        T3 --> T4["unlisted intent = failure"]
-    end
-    subgraph M["Agentic · 2023-2025"]
-        direction TB
-        M1["the MODEL infers<br/>the intent at runtime"] --> M2["you describe TOOLS,<br/>not intents"]
-        M2 --> M3["the model plans<br/>the path"]
-        M3 --> M4["unlisted intent = it tries<br/>anyway, right or wrong"]
-    end
-    T -.->|"the assumption that flipped"| M
-```
+![Framework shift from intents to tools](assets/S01-framework-shift.svg)
 
 The bottom row is the honest trade: the old stack failed **loudly and predictably**; the new one fails **plausibly**. Rasa could not answer an unanticipated question. LangChain will answer it — correctly or not.
 
@@ -337,13 +263,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 **Intuition** — Breaking text into subword units that LLMs process. BPE sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
-```mermaid
-flowchart TD
-    C["Character-level<br/>tiny vocabulary"] --> G["Subword / BPE<br/>the Goldilocks zone"]
-    W["Word-level<br/>huge vocabulary"] --> G
-    G --> B1["avoids very long sequences"]
-    G --> B2["still handles unseen words"]
-```
+![Tokenization and BPE](assets/S01-tokenization-bpe.svg)
 
 **Why tokenization exists at all** — two reasons matter:
 
@@ -477,12 +397,7 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 *"Lost in the middle" drawn — recall accuracy against position in the context:*
 
-```mermaid
-flowchart LR
-    S["START of context<br/>recalled well"] --> MID["MIDDLE of context<br/>frequently missed"]
-    MID --> E["END of context<br/>recalled well"]
-    MID -.->|"the trough is why<br/>200K is not 200K usable"| MID
-```
+![Context window as shared token budget](assets/S01-context-window.svg)
 
 Accuracy is U-shaped, not flat. A fact placed halfway through a long context is the one the model is most likely to overlook — so **where** you put something in the prompt matters as much as whether you put it there at all.
 
@@ -517,14 +432,7 @@ That's why the fixes below are all *architectural* rather than *model* fixes. Yo
 
 **The path from architecture to agent:**
 
-```mermaid
-flowchart LR
-    T[Transformer<br/>2017] --> P[Pre-training<br/>on massive data]
-    P --> LLM[LLM<br/>GPT / BERT / T5]
-    LLM --> IT[Instruction tuning]
-    IT --> A[+ Tools, Memory, Planning]
-    A --> CA[Conversational Agent]
-```
+![From transformer to conversational agent](assets/S01-llm-to-agent.svg)
 
 *Two boxes in that chain deserve a plain definition, since the table below and the rest of this note lean on them:*
 
@@ -574,16 +482,7 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 > ***Going deeper*** *— RAG in one picture, since it's named as the fix all through this note but never drawn:*
 > **RAG = Retrieval-Augmented Generation.** Instead of hoping the model *memorised* a fact, you **fetch** the relevant text and hand it to the model in the prompt:
 >
-> ```mermaid
-> flowchart TD
->     Q[user question] --> EMB[embed the question]
->     EMB --> VS[(vector store —<br/>your docs, pre-embedded)]
->     VS -->|top-k similar chunks| CTX[relevant context]
->     Q --> P["prompt =<br/>question + retrieved context"]
->     CTX --> P
->     P --> LLM[LLM]
->     LLM --> A[grounded answer]
-> ```
+> ![Retrieval-Augmented Generation flow](assets/S01-rag-flow.svg)
 >
 > Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8.
 
@@ -597,15 +496,7 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 
 **Intuition** — The spine of the whole course. Every later lecture deepens one stage. **Learn this cold; it's the single most likely structured question on the mid-sem.**
 
-```mermaid
-flowchart TD
-    R["1 · REQUEST<br/>receive & validate"] --> RT["2 · ROUTING<br/>classify intent"]
-    RT --> RS["3 · REASONING<br/>plan steps"]
-    RS --> TI["4 · TOOL INVOCATION<br/>execute calls"]
-    TI --> M["5 · MEMORY<br/>store & retrieve"]
-    M --> S["6 · SAFETY<br/>guardrails & validation"]
-    S --> RP["7 · RESPONSE<br/>deliver output"]
-```
+![Seven-stage agent lifecycle](assets/S01-agent-lifecycle.svg)
 
 | # | Stage | What happens |
 |---|---|---|
@@ -695,14 +586,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Mechanism — what each protocol standardises:** they solve different edges of the same picture, which is why they are not competitors:
 
-```mermaid
-flowchart TD
-    U([User]) --> AG["Agent"]
-    AG -->|"MCP · Anthropic 2024"| T["Tools and data sources<br/>DBs, files, APIs"]
-    AG -->|"A2A · Google"| AG2["Another agent"]
-    AG -->|"ANP · emerging"| NET["Open agent network<br/>discovery across orgs"]
-    AG2 -->|"MCP again"| T2["its own tools"]
-```
+![Protocol landscape for agents](assets/S01-protocol-landscape.svg)
 
 **The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges. USB-C is the natural analogy, and it's a good one — before it, every device needed its own cable.
 
@@ -734,16 +618,7 @@ The practical principle is the same as workflows vs agents in section 3b: **take
 
 *The four axes are not independent — every fix on one pushes on another:*
 
-```mermaid
-flowchart TD
-    O["Observability<br/>traces, tool success,<br/>latency, cost per session"]
-    O --> C["Cost<br/>caching, routing,<br/>token budgets"]
-    O --> L["Latency<br/>budget per stage"]
-    O --> S["Safety<br/>input · tool · output"]
-    C -->|"smaller model<br/>can hurt quality"| L
-    L -->|"fewer checks<br/>run faster"| S
-    S -->|"more checks<br/>raise cost"| C
-```
+![Production concerns for conversational agents](assets/S01-production-concerns.svg)
 
 **Mechanism — observability comes first:** not because it matters most, but because the other three are unmanageable without it. You cannot tune a latency budget you are not measuring.
 
@@ -780,15 +655,7 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 **Intuition** — Every item below is a limitation of the *current* generation, not a law. It's worth knowing which is which: some of these are engineering problems that money and iteration will close, and some are open research questions that may not close at all. Reading them as a single list of "things AI can't do yet" is the mistake — the useful skill is telling a **workaround** from a **wall**.
 
-```mermaid
-flowchart TD
-    P["Open problem"] --> E["Engineering workaround<br/>constrain the system"]
-    P --> R["Research wall<br/>no reliable guarantee yet"]
-    E --> W["workflows · memory stores<br/>RAG · checkpoints · routing"]
-    R --> Q["reasoning guarantees<br/>grounded truth · alignment"]
-    W --> S["ship safely by narrowing scope"]
-    Q --> S2["treat as unresolved risk"]
-```
+![Open problems in conversational AI](assets/S01-open-problems.svg)
 
 Where research is active — useful for essay-style questions asking "what are the limitations of current systems?"
 
@@ -833,19 +700,7 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 
 **Intuition** — Do not memorise a model leaderboard. Learn the axes that make one model family fit a conversational-AI product better than another.
 
-```mermaid
-flowchart TD
-    NEED["Product need"] --> Q["quality"]
-    NEED --> L["latency"]
-    NEED --> C["cost"]
-    NEED --> CTRL["control"]
-    NEED --> SAFE["safety"]
-    Q --> CHOICE["model choice"]
-    L --> CHOICE
-    C --> CHOICE
-    CTRL --> CHOICE
-    SAFE --> CHOICE
-```
+![Model selection capability axes](assets/S01-model-selection.svg)
 
 **Mechanism — choose by capability axis, not by provider name.** Each model family is a bundle of tradeoffs: managed frontier quality, open-weight control, long context, low cost, safety posture, or realtime multimodality.
 
@@ -893,15 +748,7 @@ Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running
 > ***Going deeper*** *— what the ReAct trace you're about to watch actually is (full treatment L4):*
 > **ReAct = Reason + Act.** The agent doesn't answer in one shot — it runs a loop, thinking out loud between tool calls:
 >
-> ```mermaid
-> flowchart LR
->     Q[user question] --> T["Thought:<br/>what do I need?"]
->     T --> A["Action:<br/>call a tool"]
->     A --> O["Observation:<br/>tool result"]
->     O --> D{enough<br/>to answer?}
->     D -->|no| T
->     D -->|yes| F[Final Answer]
-> ```
+> ![ReAct loop](assets/S01-react-loop.svg)
 >
 > For "weather in Tokyo?", `verbose=True` prints exactly this cycle:
 > ```

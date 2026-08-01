@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 560" role="img" aria-labelledby="title desc">
+  <title id="title">Tokenization and BPE</title>
+  <desc id="desc">BPE sits between word and character tokenization, repeatedly merging frequent adjacent pairs to create useful subword tokens.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <rect x="24" y="24" width="1132" height="512" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
+  <text x="590" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">BPE is the practical middle ground</text>
+  <g font-family="Georgia,serif" fill="#17213a">
+    <rect x="75" y="120" width="250" height="110" rx="16" fill="#eaf2ff" stroke="#315a99" stroke-width="2"/>
+    <text x="200" y="158" text-anchor="middle" font-size="23" font-weight="700">Word tokens</text><text x="200" y="190" text-anchor="middle" font-size="17">short sequences</text><text x="200" y="215" text-anchor="middle" font-size="15">huge vocab · unknown words</text>
+    <rect x="465" y="120" width="250" height="110" rx="16" fill="#fff2bd" stroke="#8a6400" stroke-width="2.4"/>
+    <text x="590" y="158" text-anchor="middle" font-size="23" font-weight="700">Subword / BPE</text><text x="590" y="190" text-anchor="middle" font-size="17">Goldilocks zone</text><text x="590" y="215" text-anchor="middle" font-size="15">handles new words</text>
+    <rect x="855" y="120" width="250" height="110" rx="16" fill="#e4f2f4" stroke="#1f6570" stroke-width="2"/>
+    <text x="980" y="158" text-anchor="middle" font-size="23" font-weight="700">Characters</text><text x="980" y="190" text-anchor="middle" font-size="17">tiny vocabulary</text><text x="980" y="215" text-anchor="middle" font-size="15">very long sequences</text>
+    <rect x="160" y="325" width="220" height="70" rx="13" fill="#fff" stroke="#24304a"/><text x="270" y="354" text-anchor="middle" font-size="18" font-weight="700">1 count pairs</text><text x="270" y="378" text-anchor="middle" font-size="15">("u","g") = 20</text>
+    <rect x="480" y="325" width="220" height="70" rx="13" fill="#fff" stroke="#24304a"/><text x="590" y="354" text-anchor="middle" font-size="18" font-weight="700">2 merge winner</text><text x="590" y="378" text-anchor="middle" font-size="15">u + g -> ug</text>
+    <rect x="800" y="325" width="220" height="70" rx="13" fill="#fff" stroke="#24304a"/><text x="910" y="354" text-anchor="middle" font-size="18" font-weight="700">3 repeat</text><text x="910" y="378" text-anchor="middle" font-size="15">build useful vocabulary</text>
+    <text x="590" y="470" text-anchor="middle" font-size="18">Modern byte-level tokenizers add a fallback path so names, emoji, code and mixed scripts do not become true unknowns.</text>
+  </g>
+  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">
+    <line x1="325" y1="175" x2="455" y2="175"/><line x1="855" y1="175" x2="725" y2="175"/>
+    <line x1="380" y1="360" x2="470" y2="360"/><line x1="700" y1="360" x2="790" y2="360"/>
+  </g>
+</svg>

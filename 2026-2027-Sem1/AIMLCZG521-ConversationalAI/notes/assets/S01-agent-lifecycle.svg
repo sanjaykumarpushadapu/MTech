@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 600" role="img" aria-labelledby="title desc">
+  <title id="title">Seven-stage agent lifecycle</title>
+  <desc id="desc">An agent request moves through request, routing, reasoning, tool invocation, memory, safety, and response, with reasoning-tool-memory cycling until enough information is available.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <rect x="24" y="24" width="1132" height="552" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
+  <text x="590" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Seven-stage agent lifecycle</text>
+  <g font-family="Georgia,serif" fill="#17213a">
+    <rect x="70" y="145" width="145" height="70" rx="12" fill="#e4f2f4" stroke="#1f6570" stroke-width="2"/><text x="142" y="174" text-anchor="middle" font-size="17" font-weight="700">1 Request</text><text x="142" y="197" text-anchor="middle" font-size="13">validate input</text>
+    <rect x="255" y="145" width="145" height="70" rx="12" fill="#e4f2f4" stroke="#1f6570" stroke-width="2"/><text x="328" y="174" text-anchor="middle" font-size="17" font-weight="700">2 Routing</text><text x="328" y="197" text-anchor="middle" font-size="13">intent + tools</text>
+    <rect x="440" y="145" width="145" height="70" rx="12" fill="#fff2bd" stroke="#8a6400" stroke-width="2"/><text x="512" y="174" text-anchor="middle" font-size="17" font-weight="700">3 Reasoning</text><text x="512" y="197" text-anchor="middle" font-size="13">plan steps</text>
+    <rect x="625" y="145" width="145" height="70" rx="12" fill="#fff2bd" stroke="#8a6400" stroke-width="2"/><text x="698" y="174" text-anchor="middle" font-size="17" font-weight="700">4 Tool</text><text x="698" y="197" text-anchor="middle" font-size="13">execute call</text>
+    <rect x="810" y="145" width="145" height="70" rx="12" fill="#fff2bd" stroke="#8a6400" stroke-width="2"/><text x="882" y="174" text-anchor="middle" font-size="17" font-weight="700">5 Memory</text><text x="882" y="197" text-anchor="middle" font-size="13">store/retrieve</text>
+    <rect x="625" y="355" width="145" height="70" rx="12" fill="#f7e4e7" stroke="#914252" stroke-width="2"/><text x="698" y="384" text-anchor="middle" font-size="17" font-weight="700">6 Safety</text><text x="698" y="407" text-anchor="middle" font-size="13">guardrails</text>
+    <rect x="810" y="355" width="145" height="70" rx="12" fill="#f7e4e7" stroke="#914252" stroke-width="2"/><text x="882" y="384" text-anchor="middle" font-size="17" font-weight="700">7 Response</text><text x="882" y="407" text-anchor="middle" font-size="13">deliver output</text>
+    <text x="590" y="510" text-anchor="middle" font-size="18">The loop is the agent: reasoning, tools and memory repeat until enough evidence exists or a step limit fires.</text>
+  </g>
+  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">
+    <line x1="215" y1="180" x2="245" y2="180"/><line x1="400" y1="180" x2="430" y2="180"/><line x1="585" y1="180" x2="615" y2="180"/><line x1="770" y1="180" x2="800" y2="180"/>
+    <path d="M882 215 C882 280 512 280 512 225"/><path d="M882 215 C930 295 760 320 710 348"/><line x1="770" y1="390" x2="800" y2="390"/>
+  </g>
+</svg>

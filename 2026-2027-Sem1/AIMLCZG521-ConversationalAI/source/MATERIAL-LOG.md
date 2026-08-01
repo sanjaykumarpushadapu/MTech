@@ -10,7 +10,7 @@ Legend: ✓ have · ✗ missing · — n/a
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
 | 1 | ✓ `Session-1-Foundations-of-ConvAI.pdf` (56 sl) | ✓ T1 *Building Effective Agents* · *Landscape of AI Agents* | ✓ Teams | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` |
-| 2 |  |  |  |  | ☐ |
+| 2 | ✓ `Session_02_Embeddings_Vector_Search.pdf` (48 sl) | ✓ Dense Passage Retrieval paper |  |  | ✅ `notes/S02-retrieval.md` |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
 | 5 |  |  |  |  | ☐ |

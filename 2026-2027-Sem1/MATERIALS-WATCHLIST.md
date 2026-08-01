@@ -2,7 +2,7 @@
 
 **Everything still needed, with the date it starts blocking work.** Checked at the start of every session that touches a listed item, and raised **unprompted** as its date approaches — the user asked to be told forcefully rather than politely.
 
-*Last checked: 27 Jul 2026 — 11 of 12 books held; only Kimothi (536 R3) outstanding.*
+*Last checked: 1 Aug 2026 — 11 of 12 books held; only Kimothi (536 R3) outstanding. 521 S2 deck received; L2 notebooks still missing.*
 
 ---
 
@@ -11,7 +11,7 @@
 | Item | Subject | Portal | Why it blocks |
 |---|---|---|---|
 | **S2 deck** | **549** | MS Teams | *No deck, no note.* 549 has **no textbook from S4 onward** — a deck not downloaded may be unrecoverable |
-| **S2 deck + L2 notebooks** | **521** | Canvas | 521 has **no textbook at all**. Every note is built from the deck |
+| **L2 notebooks** | **521** | Canvas | S2 note is written from the deck; Lab 2 still cannot be checked or completed without the notebooks |
 | **S2 deck** | 536 | Teams / Taxila | Reading (J&M ch7–8, Raschka ch2/5) already held |
 | **S2 deck** | 546 | Taxila | Reading (Kästner ch1–2) already held |
 | **S1–S2 transcripts** | all four | Teams export | Not blocking, but S1's resolved all four EC-1 conflicts |
