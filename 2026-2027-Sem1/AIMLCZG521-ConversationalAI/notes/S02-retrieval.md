@@ -26,14 +26,7 @@ An everyday analogy: imagine a library map where books are not arranged alphabet
 
 For retrieval, both stored documents and incoming queries are embedded into the same vector space. Search then becomes nearest-neighbor search: find document vectors closest to the query vector.
 
-```mermaid
-flowchart TD
-    A["Raw text"] --> B["Embedding model"]
-    B --> C["Dense vector"]
-    C --> D["Vector index"]
-    Q["User query"] --> B
-    D --> R["Nearest documents"]
-```
+![Embedding retrieval flow](assets/S02-embedding-retrieval.svg)
 
 **Worked example** — Suppose the query is `"reset my password"` and the store contains three snippets:
 
@@ -57,13 +50,7 @@ The key word is **contextual**: the vector for `"bank"` should change depending 
 
 **Mechanism** — An encoder transformer uses self-attention so every token can look at every other token in the input. The final token vectors are not just word meanings; they are word-in-sentence meanings.
 
-```mermaid
-flowchart TD
-    A["Sentence: river bank overflowed"] --> B["Encoder self-attention"]
-    C["Sentence: bank account opened"] --> B
-    B --> D["bank near water / geography"]
-    B --> E["bank near money / finance"]
-```
+![Contextual embedding disambiguation](assets/S02-contextual-bank.svg)
 
 For a token sequence `X`, an attention layer computes:
 
@@ -86,21 +73,7 @@ Plain language first: `QK^T` asks "which other tokens matter to this token?", so
 
 **Intuition** — The architecture decides what kind of task feels natural. Encoders understand, decoders generate, and encoder-decoders translate or transform one sequence into another.
 
-```mermaid
-flowchart TD
-    subgraph E["Encoder-only"]
-        direction TB
-        E1["See full input"] --> E2["Understand / classify / embed"]
-    end
-    subgraph D["Decoder-only"]
-        direction TB
-        D1["See left context"] --> D2["Generate next token"]
-    end
-    subgraph ED["Encoder-decoder"]
-        direction TB
-        ED1["Encode source"] --> ED2["Decode target with cross-attention"]
-    end
-```
+![Encoder decoder architecture choice](assets/S02-architecture-choice.svg)
 
 **Mechanism** — The masking pattern is the difference:
 
@@ -120,17 +93,7 @@ flowchart TD
 
 **Intuition** — A sentence embedding is not produced in one magic step. It is built through tokenization, lookup, positional addition, transformer layers, and pooling.
 
-```mermaid
-flowchart TD
-    A["Text"] --> B["Tokenize with special tokens"]
-    B --> C["Token IDs"]
-    C --> D["Token embedding lookup"]
-    D --> E["Add positional embeddings"]
-    E --> F["Encoder transformer layers"]
-    F --> G["Contextual token vectors"]
-    G --> H["Pooling"]
-    H --> I["One sentence vector"]
-```
+![BERT-style embedding pipeline](assets/S02-bert-embedding-pipeline.svg)
 
 **Mechanism** — For `"Machine learning is fascinating"` in a BERT-like encoder:
 
@@ -163,15 +126,7 @@ That input vector now carries both token identity and position.
 
 **Intuition** — The encoder outputs one vector per token, but search needs one vector for the whole sentence or chunk. Pooling compresses many token vectors into one vector.
 
-```mermaid
-flowchart TD
-    A["Contextual token vectors"] --> B["CLS pooling"]
-    A --> C["Mean pooling"]
-    A --> D["Max pooling"]
-    B --> E["One vector"]
-    C --> E
-    D --> E
-```
+![Pooling strategies](assets/S02-pooling-strategies.svg)
 
 **Mechanism** —
 
@@ -200,14 +155,7 @@ max pooling  = [max(1,3,5), max(4,2,0)] = [5, 4]
 
 **Intuition** — An embedding model is a production component, not a generic utility. Dimension, context window, language coverage, cost, and latency decide whether search works well.
 
-```mermaid
-flowchart TD
-    A["Choose embedding model"] --> B["Quality"]
-    A --> C["Context length"]
-    A --> D["Dimension and storage"]
-    A --> E["Latency and cost"]
-    A --> F["Open vs API"]
-```
+![Embedding model selection criteria](assets/S02-embedding-model-selection.svg)
 
 **Mechanism** — Common decision factors:
 
@@ -229,15 +177,7 @@ flowchart TD
 
 **Intuition** — Embedding quality comes from the training objective. The model must learn that related texts should be close and unrelated texts should be far.
 
-```mermaid
-flowchart TD
-    A["Training objective"] --> B["Contrastive learning"]
-    A --> C["Masked language modeling"]
-    A --> D["RetroMAE"]
-    B --> E["Retrieval-ready similarity"]
-    C --> F["Bidirectional language understanding"]
-    D --> G["Compressed robust representations"]
-```
+![Embedding training objectives](assets/S02-embedding-training-objectives.svg)
 
 **Mechanism** —
 
@@ -269,15 +209,7 @@ Plain language: reward the positive pair for scoring high, and punish it if nega
 
 **Intuition** — Similarity metrics define what "near" means. Cosine cares about direction, Euclidean distance cares about physical distance, and dot product combines direction with magnitude unless vectors are normalized.
 
-```mermaid
-flowchart TD
-    A["Two vectors"] --> B["Cosine similarity: angle"]
-    A --> C["Euclidean distance: distance"]
-    A --> D["Dot product: alignment and magnitude"]
-    B --> E["Text semantic search"]
-    C --> F["Geometry / image-like spaces"]
-    D --> G["Fast ranking when normalized"]
-```
+![Vector similarity metrics](assets/S02-vector-similarity-metrics.svg)
 
 **Mechanism** —
 
@@ -312,18 +244,7 @@ So `B` is very close to `A`; `C` is much farther and orthogonal by cosine.
 
 **Intuition** — Exact nearest-neighbor search is simple: compare the query with every stored vector. It also becomes impossible at production scale.
 
-```mermaid
-flowchart TD
-    A["Query vector"] --> B["Compare with document 1"]
-    A --> C["Compare with document 2"]
-    A --> D["Compare with document ..."]
-    A --> E["Compare with document 10M"]
-    B --> F["Sort all scores"]
-    C --> F
-    D --> F
-    E --> F
-    F --> G["Top k"]
-```
+![Linear scan computational wall](assets/S02-linear-scan-wall.svg)
 
 **Mechanism** — Linear scan cost is:
 
@@ -355,14 +276,7 @@ That is before network overhead, filters, reranking, and the LLM call.
 
 **Intuition** — Approximate Nearest Neighbor search avoids checking every vector. It accepts "close enough" top-k results in exchange for large speedups.
 
-```mermaid
-flowchart TD
-    A["Vector collection"] --> B["Build index"]
-    B --> C["Query enters index"]
-    C --> D["Visit promising regions only"]
-    D --> E["Approximate top k"]
-    E --> F["High recall, low latency"]
-```
+![Approximate nearest neighbor indexing](assets/S02-ann-index.svg)
 
 **Mechanism** — ANN indexes structure the vector space so the query can skip most candidates. Three common strategies:
 
@@ -382,15 +296,7 @@ flowchart TD
 
 **Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; bottom layers are local streets containing all points.
 
-```mermaid
-flowchart TD
-    A["Entry point at sparse top layer"] --> B["Greedy walk to closer neighbor"]
-    B --> C["No closer node found"]
-    C --> D["Drop to denser lower layer"]
-    D --> E["Repeat greedy walk"]
-    E --> F["Layer 0 beam search"]
-    F --> G["Approximate top k neighbors"]
-```
+![HNSW search process](assets/S02-hnsw-search.svg)
 
 **Mechanism** — HNSW stores vectors as graph nodes. Edges connect nearby nodes. Search starts at a high sparse layer, greedily moves closer to the query, then descends layer by layer until the dense base layer.
 
@@ -424,15 +330,7 @@ At 1M vectors, raw vectors alone are about 3.07 GB decimal. Production HNSW ofte
 
 **Intuition** — Semantic search answers "what means the same thing?" Keyword search answers "what contains the words or terms?" They fail differently, so hybrid retrieval combines them.
 
-```mermaid
-flowchart TD
-    Q["Query"] --> S["Semantic retrieval"]
-    Q --> K["Keyword retrieval"]
-    S --> A["Finds paraphrases"]
-    K --> B["Finds exact terms, IDs, names"]
-    A --> H["Hybrid retrieval"]
-    B --> H
-```
+![Semantic keyword hybrid retrieval](assets/S02-semantic-keyword-hybrid.svg)
 
 **Mechanism** —
 
@@ -458,15 +356,7 @@ flowchart TD
 
 **Intuition** — BM25 is the strong classical baseline for keyword search. It rewards documents that contain query terms, especially rare terms, while avoiding unlimited reward for repeated words.
 
-```mermaid
-flowchart TD
-    A["Query terms"] --> B["Term frequency in document"]
-    A --> C["Rarity across collection"]
-    B --> D["BM25 score"]
-    C --> D
-    E["Document length normalisation"] --> D
-    D --> F["Keyword ranking"]
-```
+![BM25 scoring components](assets/S02-bm25-scoring.svg)
 
 **Mechanism** — BM25 combines:
 
@@ -488,16 +378,7 @@ BM25 strongly rewards a document containing the exact rare term `"ef_search"`. A
 
 **Intuition** — Dense Passage Retrieval uses two encoders: one embeds the question, one embeds passages. Retrieval is then maximum similarity between the query vector and passage vectors.
 
-```mermaid
-flowchart TD
-    Q["Question"] --> QE["Question encoder"]
-    P["Passage"] --> PE["Passage encoder"]
-    QE --> QV["Question vector"]
-    PE --> PV["Passage vector"]
-    QV --> S["Dot product score"]
-    PV --> S
-    S --> R["Rank passages"]
-```
+![Dense Passage Retrieval dual encoder](assets/S02-dpr-dual-encoder.svg)
 
 **Mechanism** — DPR is a dual-encoder architecture:
 
@@ -525,14 +406,7 @@ Training pushes the question vector closer to the answer-bearing passage and far
 
 **Intuition** — RRF combines rankings, not raw scores. That matters because BM25 scores and dense similarity scores live on different scales.
 
-```mermaid
-flowchart TD
-    Q["Query"] --> B["BM25 rank list"]
-    Q --> D["Dense rank list"]
-    B --> R["RRF fusion"]
-    D --> R
-    R --> T["Final top k"]
-```
+![Reciprocal Rank Fusion](assets/S02-rrf-fusion.svg)
 
 **Mechanism** — RRF gives each document a score based on where it appears in each ranking:
 
@@ -560,21 +434,7 @@ Document B wins because it is strong in both systems.
 
 **Intuition** — A vector database is not just a table with vectors. It is a retrieval system around embeddings, indexes, metadata filters, update pipelines, and observability.
 
-```mermaid
-flowchart TD
-    A["Documents"] --> B["Chunking"]
-    B --> C["Embedding model"]
-    C --> D["Vector store"]
-    B --> E["Metadata store"]
-    D --> F["ANN index"]
-    Q["Query"] --> G["Query embedding"]
-    G --> F
-    E --> H["Filters"]
-    F --> I["Candidates"]
-    H --> I
-    I --> J["Rerank / fuse"]
-    J --> K["Context for agent"]
-```
+![Vector database architecture](assets/S02-vector-database-architecture.svg)
 
 **Mechanism** — A production retrieval layer usually includes:
 
