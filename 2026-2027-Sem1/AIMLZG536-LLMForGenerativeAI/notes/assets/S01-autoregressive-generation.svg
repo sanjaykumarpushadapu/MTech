@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1220 650" role="img" aria-labelledby="title desc">
+  <title id="title">Autoregressive generation</title>
+  <desc id="desc">A prompt enters an LLM, the model predicts a probability distribution, one token is selected, appended to the context, and the loop repeats.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1220" height="650" fill="#fff"/>
+  <text x="610" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700">Generation Is Prediction in a Loop</text>
+  <g font-family="Georgia, serif" font-size="22" text-anchor="middle">
+    <rect x="80" y="165" width="210" height="86" rx="14" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="185" y="199" font-weight="700">Prompt</text>
+    <text x="185" y="228" font-size="18">"The"</text>
+    <rect x="360" y="150" width="220" height="116" rx="14" fill="#fde8f1" stroke="#222" stroke-width="2"/>
+    <text x="470" y="197" font-weight="700" fill="#e64b8a">LLM</text>
+    <text x="470" y="230" font-size="18">one forward pass</text>
+    <rect x="650" y="135" width="250" height="146" rx="14" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="775" y="174" font-weight="700">Vocabulary distribution</text>
+    <text x="775" y="210" font-size="18">cat .204</text>
+    <text x="775" y="236" font-size="18">sat .124</text>
+    <text x="775" y="262" font-size="18">...</text>
+    <rect x="970" y="165" width="180" height="86" rx="14" fill="#f4e6ff" stroke="#222" stroke-width="2"/>
+    <text x="1060" y="198" font-weight="700">Sample</text>
+    <text x="1060" y="228" font-size="18">cat</text>
+    <line x1="290" y1="208" x2="360" y2="208" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="580" y1="208" x2="650" y2="208" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="900" y1="208" x2="970" y2="208" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="22" text-anchor="middle">
+    <rect x="430" y="390" width="360" height="86" rx="14" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="610" y="423" font-weight="700">Append token to context</text>
+    <text x="610" y="452" font-size="18">"The" + "cat" = "The cat"</text>
+    <path d="M 1060 251 C 1060 360, 790 380, 790 433" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M 430 433 C 250 433, 185 350, 185 251" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <rect x="115" y="540" width="990" height="58" rx="10" fill="#f7f1fb" stroke="#c8b3d8" stroke-width="2"/>
+  <text x="610" y="577" text-anchor="middle" font-family="Georgia, serif" font-size="23" font-style="italic">
+    Each generated token becomes part of the next input.
+  </text>
+</svg>

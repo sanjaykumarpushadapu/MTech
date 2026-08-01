@@ -122,6 +122,8 @@ Cited for **536 S1 (ch1–2), S2 (ch2, 5), S5 (ch5), S7 (ch7)**.
 
 **The deck's figures came from here.** Slides 29, 32 and 35 of `CS-1 Intro to LLM.pptx` reproduce Raschka figs 2.9, 2.16 and 2.18 — special tokens, the embedding-matrix row lookup, and token + positional embedding addition. All three are already extracted into `notes/S01-foundations.md` §8 with their numbers.
 
+**S1 visual consolidation (1 Aug).** Rechecked cited S1 textbook figures from T1 ch2/7/8, T2 ch1/2/3 and R1 ch1/2, plus public paper anchors for the original Transformer and BPE. Useful figure value was folded into authored SVGs under `notes/assets/S01-*.svg`; no original textbook, slide or paper images were copied into the repo. The original Transformer encoder-decoder blueprint was recreated as `S01-original-transformer-blueprint.svg`; BPE paper figures did not add a better visual than the tokenizer explanations already in §12.
+
 ## Scope rule
 
 **Only the chapters named in the handout's Reference column are in the syllabus.** For 536 these are: T1 (Jurafsky & Martin) ch2, 7, 8, 10, 11 · T2 (Alammar) ch1, 2, 3, 6, 7, 8, 12 · R1 (Raschka) ch1, 2, 5, 7 · R2 ch7 · R3 ch6. **Every other chapter in those books is out of scope** — not background, not optional extra reading.

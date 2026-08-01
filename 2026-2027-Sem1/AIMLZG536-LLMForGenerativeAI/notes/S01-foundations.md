@@ -12,17 +12,7 @@ This is the session that makes you fluent in how modern AI actually works under 
 
 *My own synthesis — how the numbered sections below snap together into a single forward pass. Every decoder-only LLM is this loop:*
 
-```mermaid
-flowchart TD
-    T[text] --> TOK["tokenizer<br/>(sec 12)"]
-    TOK --> ID[token IDs]
-    ID --> EM["token + positional<br/>embeddings (sec 7–8)"]
-    EM --> BL["N× transformer block<br/>attention (sec 4–5) + FFN (sec 6)"]
-    BL --> HN[final hidden state]
-    HN --> LMH["LM head / unembedding<br/>(sec 9)"]
-    LMH --> PR["distribution over vocabulary<br/>P(next token)"]
-    PR -.->|"sample → append → repeat"| ID
-```
+![Decoder-only LLM forward pass loop](assets/S01-forward-pass-loop.svg)
 
 One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture and every section below is "what happens at this one box." The **context length** (section 10) is just how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives entirely in the attention inside the block.
 
@@ -39,30 +29,6 @@ One pass turns the whole prompt into **one** probability distribution over the n
 *One input type, three different output types — this course mostly follows the generative branch, but the same text backbone can support the other two:*
 
 ![Language AI input and output tasks](assets/S01-language-ai.svg)
-
-<details>
-<summary>Mermaid structure</summary>
-
-```mermaid
-flowchart TD
-    TITLE["Text input<br/>Unstructured data"] --> TXT["text text text text<br/>text text text text<br/>text text text text<br/>text text text"]
-    TXT --> LAI["Language AI<br/>Processes the input text"]
-    LAI --> SPLIT{" "}
-    SPLIT --> G["Text output<br/>Generative modelling<br/><br/>text text text<br/>text text<br/>text text text"]
-    SPLIT --> E["Embeddings<br/>Numeric values<br/><br/>0.12 | -0.41 | 0.88 | 0.05"]
-    SPLIT --> C["Classification<br/>Identify targets<br/><br/>target A<br/>target B"]
-
-    classDef input fill:#eaf8ef,stroke:#333,stroke-width:1px,color:#111;
-    classDef processor fill:#e8ebfa,stroke:#333,stroke-width:1px,color:#1f3f96;
-    classDef output fill:#f8fbff,stroke:#333,stroke-width:1px,color:#111;
-    classDef hidden fill:#ffffff,stroke:#ffffff,color:#ffffff;
-    class TXT input;
-    class LAI processor;
-    class G,E,C output;
-    class SPLIT hidden;
-```
-
-</details>
 
 Language AI therefore does not always mean "chatbot". The input is text; the output may be **new text** (`write the answer`), an **embedding vector** (`represent this paragraph for retrieval`), or a **class label** (`is this review positive or negative?`). All three can run on a similar transformer backbone — the task-specific head on top decides what comes out. That's why section 9's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
 
@@ -103,15 +69,7 @@ LLMs are **deep neural networks** trained on that data.
 
 *The three axes, and what each actually charges you:*
 
-```mermaid
-flowchart TD
-    L(("LARGE")) --> P["1 · Parameters<br/>7B → 70B → 400B+"]
-    L --> D["2 · Training data<br/>trillions of tokens"]
-    L --> C["3 · Compute<br/>GPU-months"]
-    P --> PC["memory + latency<br/>paid on EVERY request"]
-    D --> DC["collection + cleaning<br/>paid once, up front"]
-    C --> CC["the training bill<br/>paid once, enormous"]
-```
+![Three axes that make a language model large](assets/S01-large-model-axes.svg)
 
 **Read the right-hand column, not the left.** Only the parameter axis charges you forever; data and compute are sunk costs. That asymmetry is the reason S6 compression attacks parameters and nothing else.
 
@@ -127,14 +85,7 @@ flowchart TD
 
 A model used this way is an **autoregressive language model** — each generated token is fed back in to predict the next.
 
-```mermaid
-flowchart TD
-    P[Prompt] --> M[LLM]
-    M -->|distribution over vocab| S[Sample a token]
-    S --> O[Output token]
-    O --> N[Append to context]
-    N --> M
-```
+![Autoregressive generation loop](assets/S01-autoregressive-generation.svg)
 
 **Mechanism — the chain rule, then a loop.** A language model scores a whole sequence by factorising it into next-token predictions:
 
@@ -235,19 +186,6 @@ If you remember only one sentence before the arithmetic starts, remember this on
 ![Q, K, V attention worked step](assets/S01-qkv-attention.svg)
 
 **The computation, in three steps:**
-
-```mermaid
-flowchart TD
-    X[Token embeddings X] --> Q[Q = X·WQ]
-    X --> K[K = X·WK]
-    X --> V[V = X·WV]
-    Q --> S["1 · Q·Kᵀ / √dk<br/>attention scores"]
-    K --> S
-    S --> A["2 · softmax<br/>attention weights"]
-    A --> Z["3 · A·V<br/>weighted sum"]
-    V --> Z
-    Z --> OUT[Context-aware representation]
-```
 
 1. **Q · Kᵀ** — dot product: how similar is the query to each key? Higher = more relevant.
 2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Plain-language first:* longer vectors naturally produce larger dot products, simply because you are summing more little products. If you feed those oversized scores straight into softmax, it becomes too peaky too early: one token gets almost all the probability, the rest get almost none, and learning becomes unstable. Dividing by `√d_k` shrinks the scores back to a sensible size so softmax stays responsive. The reason the divisor is `√d_k` rather than `d_k` is that a dot product's **variance** grows roughly like `d_k`, so its typical size grows like `√d_k`; dividing by `√d_k` cancels exactly that inflation.*
@@ -355,23 +293,6 @@ Step 4 is the one people skip. Without `W_O` the heads never talk to each other 
 
 Weight-matrix notation: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ ℝ^(d×d_v), W_O ∈ ℝ^(h·d_v × d).
 
-*The same worked example as a picture — split the model width into h heads, attend in each, concatenate back, project once:*
-
-```mermaid
-flowchart TD
-    X["X [4×512]"] --> S{"split into 8 heads"}
-    S --> H1["head 1<br/>[4×64] → attend → [4×64]"]
-    S --> H2["head 2<br/>[4×64] → attend → [4×64]"]
-    S --> H3["…"]
-    S --> H8["head 8<br/>[4×64] → attend → [4×64]"]
-    H1 --> C["concatenate<br/>[4×512]"]
-    H2 --> C
-    H3 --> C
-    H8 --> C
-    C --> WO["output projection W_O<br/>[512×512]"]
-    WO --> O["final output [4×512]"]
-```
-
 Each head runs the exact same computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
@@ -408,21 +329,7 @@ T⁵ = FFN(T⁴)
 H  = T⁵ + T³           ← residual 2
 ```
 
-```mermaid
-flowchart TD
-    X[X input] --> LN1["T¹ = LayerNorm(X)"]
-    LN1 --> MHA["T² = MultiHeadAttention(T¹)"]
-    MHA --> R1(("+"))
-    X --> R1
-    R1 --> T3["T³ residual 1"]
-    T3 --> LN2["T⁴ = LayerNorm(T³)"]
-    LN2 --> FFN["T⁵ = FFN(T⁴)"]
-    FFN --> R2(("+"))
-    T3 --> R2
-    R2 --> H["H output, same shape as X"]
-```
-
-Three things to read off it, all examinable:
+Three things to read off the figure and equations, all examinable:
 
 1. **Two residual connections**, one around attention and one around the FFN. `X` and `T³` both reappear as addends — that's what lets gradients reach the bottom of a deep stack.
 2. **LayerNorm comes *before* each sublayer, not after** — `LayerNorm(X)` feeds attention, and the residual adds the *un*-normalised `X`. This is **pre-norm**, and it's why deep transformers train stably.
@@ -516,15 +423,7 @@ i = 1  →  10000^(2/4)  = 100      → slow:  sin(pos/100), cos(pos/100)
 
 *The other key point: position is added on by an **elementwise sum**, not a concatenation — position and meaning share the same d dimensions:*
 
-```mermaid
-flowchart BT
-    TE1["token emb<br/>1, 1, 1"] --> S1(("+"))
-    PE1["positional emb, pos 0<br/>1.1, 1.2, 1.3"] --> S1
-    S1 --> IE1["input emb<br/>2.1, 2.2, 2.3"]
-    TE2["token emb<br/>1, 1, 1"] --> S2(("+"))
-    PE2["positional emb, pos 1<br/>2.1, 2.2, 2.3"] --> S2
-    S2 --> IE2["input emb<br/>3.1, 3.2, 3.3"]
-```
+![Token embeddings plus positional embeddings](assets/S01-positional-addition.svg)
 
 Both tokens carry the **identical** token embedding `[1,1,1]` — the same word — yet leave with different input embeddings. Position is the only thing that separated them. That is this whole section in one picture.
 
@@ -535,19 +434,6 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 **Intuition** — The handout names **"building blocks of LLM"** as its own item because by this point in the session you have seen all the pieces, just spread across several sections. This is the compact revision view. If asked *"what are the building blocks of a decoder-only LLM?"* this is the fast, exam-safe answer.
 
 ![Transformer LLM components](assets/S01-transformer-llm.svg)
-
-```mermaid
-flowchart TD
-    TXT[text] --> TOK[tokenizer]
-    TOK --> EMB[token embeddings]
-    EMB --> POS[positional encoding]
-    POS --> ATTN[self-attention]
-    ATTN --> FFN[feed-forward network]
-    FFN --> RN[residuals + normalization]
-    RN --> STACK["repeat N blocks"]
-    STACK --> HEAD[LM head / unembedding]
-    HEAD --> DIST[distribution over vocabulary]
-```
 
 **Mechanism — what each block contributes:**
 
@@ -586,16 +472,6 @@ That is the whole machine in miniature: **text → IDs → vectors → repeated 
 **Intuition** — A model can only do arithmetic, so text has to become numbers. Five stages, each with its own name, and the exam can ask for the order:
 
 ![Token IDs to token embeddings](assets/S01-token-embeddings.svg)
-
-```mermaid
-flowchart TD
-    T[Raw text] --> V[Vocabulary building]
-    V --> TK[Tokens]
-    TK --> ID[Token IDs<br/>integers]
-    ID --> EMB[Token embeddings<br/>dense vectors]
-    EMB --> PLUS[+ positional embeddings]
-    PLUS --> IN[Model input]
-```
 
 **Special context tokens** are added at this stage — end-of-text, unknown, padding and similar markers the model needs but the raw text doesn't contain.
 
@@ -660,34 +536,28 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 ### 9. The language modelling head, and weight tying
 
-**Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector back into a guess over the vocabulary. It's the mirror image of the embedding layer: embeddings map IDs → vectors, the LM head maps vectors → IDs.
+**Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector into a score for every vocabulary token, then softmax converts those scores into next-token probabilities. It is the mirror image of the embedding layer: embeddings read **token ID → vector**; the LM head scores **vector → likely token IDs**.
 
-![Language modelling head predicts token probabilities](assets/S01-lm-head.svg)
+Think of the embedding table as a dictionary shelf. On the way in, token ID `5` pulls one book from the shelf. On the way out, the final hidden vector is compared against every book on the shelf and asks: *which token vector am I closest to?*
+
+![Language modelling head and weight tying](assets/S01-lm-head.svg)
 
 **Mechanism**
 
-```mermaid
-flowchart TD
-    W["w₁ … w_N tokens"] --> TB["Layer L<br/>transformer block"]
-    TB --> H["h^L_N &nbsp; [1 × d]"]
-    H --> UE["Unembedding layer<br/>U = Eᵀ &nbsp; [d × |V|]"]
-    UE --> U["logits u &nbsp; [1 × |V|]"]
-    U --> SM["Softmax over vocabulary V"]
-    SM --> Y["word probabilities y &nbsp; [1 × |V|]"]
-```
-
-- **h_LN** = output token embedding at position N from the final block L, shape **[1 × d]**
-- **Unembedding layer U = Eᵀ**, shape **[d × |V|]**
+- **h_LN** = final hidden vector at position N after the last block and final normalisation, shape **[1 × d]**
+- **Embedding table E** = the input lookup matrix, shape **[|V| × d]**
+- **LM-head / unembedding matrix U**, shape **[d × |V|]**
+- If weights are **tied**, **U = Eᵀ**. If weights are **untied**, **U = W_out**, a separately learned matrix with the same shape.
 - Product → **u**, the **logit vector**, shape **[1 × |V|]** — one score per vocabulary item
 - **Softmax** turns logits u into probabilities **y**, shape **[1 × |V|]**
 
-Carry the three shapes — `[1 × d] → [d × |V|] → [1 × |V|]`. The whole head is one matrix multiply plus a softmax.
+Carry the three shapes — `[1 × d] → [d × |V|] → [1 × |V|]`. The whole head is one matrix multiply plus a softmax. For a tied model, the logit for token `j` is a dot product: `u_j = h_LN · E_j`, where `E_j` is token `j`'s row in the embedding table.
 
 Softmax probabilities y can then be used to **assign a probability to a given text**, or to **generate text by sampling a word from them** — the two directions of section 3, now concrete.
 
 Training vs inference differ in *which position* is used: during training **every position predicts its next token** (that's the parallelism paying off); during inference **only the last position** is used to generate. At training the logits go to cross-entropy against the next token; at inference they're sampled with **temperature, top-k or top-p** — all of S5.
 
-**Weight tying** — the same matrix **E [|V| × d]** maps token IDs ↔ hidden vectors in both directions. Weight tying means the LM head **reuses Eᵀ** instead of learning a fresh output projection. It is a long-standing technique, standard through GPT-2, BERT and RoBERTa.
+**Weight tying** — the same learned matrix **E [|V| × d]** is used on both sides. Input uses it as a lookup table; output reuses its transpose as the classifier over vocabulary. Tying only works when the hidden size `d` matches the embedding width, which is true for standard decoder-only LLMs.
 
 An implementation detail worth knowing: on the input side **no matrix multiplication actually happens** — the one-hot picks out row *t* of E, an **O(1) row lookup (gather)** per token.
 
@@ -699,17 +569,18 @@ E = 128,256 × 4,096 ≈ 525 M parameters
 
 Tied:    one E                    ≈ 525 M
 Untied:  E + separate lm_head     ≈ 1.05 B
-         1.05 B / 8 B ≈ 13% of an 8B model
+         extra untied head        ≈ 525 M ≈ 6.6% of an 8B model
+         E + head together        ≈ 13.1% of an 8B model
 ```
 
-**Who ties in 2026** — a **size-dependent design choice**:
+**Who ties** — a **size-dependent design choice**, not a law:
 
 | | Models |
 |---|---|
 | **Tied** (small models) | Gemma-3 · Llama-3.2-1B/3B · Qwen3-0.6B/4B · SmolLM2 |
-| **Untied** (frontier scale) | Llama-3/4 · DeepSeek-V3 · OLMo 2 · Qwen3-8B+ |
+| **Untied** (larger/general models) | Llama-3/3.1-8B+ · Qwen3-8B+ · many frontier-scale decoder LLMs |
 
-**Tradeoff / when NOT to tie** — untying costs ~13% of an 8B model's parameters, and **large models happily pay it for the perplexity gain**. For a 1B model that same matrix is a much larger fraction of the budget, so small models tie. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
+**Tradeoff / when NOT to tie** — tying saves one full `|V| × d` matrix and is attractive when the vocabulary matrix is a large fraction of the model budget. Untying costs extra parameters, but it lets the output classifier learn a geometry that is not forced to match the input embedding geometry, which can improve modelling quality. For very small models, tie; for larger models with enough budget, untying is often worth paying for. The decision is *ratio of vocabulary matrix to total parameters*, not a universal best practice — which makes it a good tradeoff question.
 
 ---
 
@@ -752,7 +623,7 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 
 **Which block dominates** — of the 12 per-layer units, **8 are the feed-forward network and 4 are attention**: **⅔ of every layer is FFN**, ⅓ is attention, norms are rounding error. That is the exact arithmetic reason compression (S6) and Mixture-of-Experts (S3) both attack the FFN first — it's simply where the weights are.
 
-**Where the head fits** — the LM head is the `|V| × d` matrix at the very top, ~0.5 B at 8B scale (the ~13% "untied" cost from the table above). Frontier models pay it; on a 1B model the *same* matrix is a far bigger slice, so small models **tie** it to the embedding and pay nothing. Embedding + head together are the **vocabulary tax**: fixed by |V|, felt most at small scale.
+**Where the head fits** — the LM head is the `|V| × d` matrix at the very top, ~0.5 B at 8B scale (about **6.6% extra** when untied; embedding + head together are about **13.1%**). Larger models can pay it; on a 1B model the *same* matrix is a far bigger slice, so small models often **tie** it to the embedding and pay nothing extra. Embedding + head together are the **vocabulary tax**: fixed by |V|, felt most at small scale.
 
 **The one picture to carry** — *where the parameters are is where the cost is and where every optimisation aims.* And keep two things separate that are easy to confuse: **parameters = the model's fixed size in memory** (set by d, N, |V|); **context length = work done per token at run time** (the O(n²) of section 4, which adds *no* parameters at all). Making a model "bigger" and giving it a "longer context" are different levers.
 
@@ -766,22 +637,7 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 
 ![Context length grows during autoregressive generation](assets/S01-context-length.svg)
 
-*The point people miss — **generated tokens count against the same budget as the prompt**:*
-
-```mermaid
-flowchart TD
-    subgraph CTX["current context length = 8"]
-        direction TB
-        P["prompt tokens 1-6<br/>Tell me something about llamas."]
-        G["generated tokens 7-8<br/>Llamas are"]
-    end
-    CTX --> M["Generative LLM<br/>maximum context length: 512"]
-    M --> O["token 9<br/>domesticated"]
-    O --> NCTX["new context length = 9<br/>prompt + generated tokens"]
-    NCTX --> NEXT["next decoding step"]
-```
-
-**The consequence:** a 512-token window with a 400-token prompt leaves room for about 112 tokens of answer, not 512. Every token generated shrinks what's left. This is why a long system prompt costs you twice — you pay for it on every request *and* it eats the answer budget.
+**The consequence:** generated tokens count against the same budget as the prompt. A 512-token window with a 400-token prompt leaves room for about 112 tokens of answer, not 512. Every token generated shrinks what's left. This is why a long system prompt costs you twice — you pay for it on every request *and* it eats the answer budget.
 
 **Worked example** — With a 4,096-token context window, a 900-token system prompt, 1,700 tokens of retrieved passages, and 600 tokens of chat history leave:
 
@@ -811,21 +667,13 @@ So the answer can use at most about **896 tokens** before the request runs out o
 | **Strengths** | Comprehension — classification, **NER**, sentiment — builds dense semantic representations | Open-ended generation, dialogue, code completion, story synthesis | Translation, summarisation, **multimodal pipelines where input and output domains differ** |
 | **Weaknesses** | **Not naturally generative** — needs adapter heads or fine-tuning for sequence output | Less efficient for classification or bidirectional reasoning | **Dual stacks increase training complexity and inference latency** |
 
-**Mechanism — the original transformer figure, which all three descend from** — worth being able to sketch:
+**Mechanism — the three architecture families all descend from the Transformer idea:**
 
-```mermaid
-flowchart BT
-    IN[Inputs] --> IE[Input embedding]
-    IE --> PE1((+ positional encoding))
-    PE1 --> ENC["ENCODER ×N<br/>Multi-Head Attention → Add & Norm<br/>Feed Forward → Add & Norm"]
-    OUT["Outputs<br/>shifted right"] --> OE[Output embedding]
-    OE --> PE2((+ positional encoding))
-    PE2 --> DEC["DECODER ×N<br/>MASKED Multi-Head Attention → Add & Norm<br/>Multi-Head Attention (cross) → Add & Norm<br/>Feed Forward → Add & Norm"]
-    ENC -->|K, V| DEC
-    DEC --> LIN[Linear]
-    LIN --> SM[Softmax]
-    SM --> P[Output probabilities]
-```
+![LLM architecture families](assets/S01-architecture-families.svg)
+
+**Mechanism — the original encoder-decoder blueprint, which all three descend from** — worth being able to sketch:
+
+![Original Transformer encoder-decoder blueprint](assets/S01-original-transformer-blueprint.svg)
 
 Three details the figure encodes that the prose doesn't:
 
@@ -864,14 +712,7 @@ Transformer##ify    →  novel items
 
 *One sentence through all four granularities. Read it top to bottom as a trade of vocabulary size against sequence length:*
 
-```mermaid
-flowchart TD
-    T["Text: Have the ♫ bards who preceded…"]
-    T --> W["Word tokens<br/>Have · the · ♫ · bards · who · preceded<br/>6 tokens · huge vocab · ♫ breaks it"]
-    T --> S["Subword tokens<br/>Have · the · ♫ · bard · s · who · preced · ed<br/>8 tokens · moderate vocab · the standard"]
-    T --> C["Character tokens<br/>H·a·v·e · t·h·e · ♫ · b·a·r·d·s<br/>very long · tiny vocab"]
-    T --> B["Byte tokens<br/>UTF-8 bytes, 256-entry vocab<br/>longest · never OOV · ByT5, CANINE"]
-```
+![Tokenization granularities](assets/S01-tokenization-granularity.svg)
 
 Going down the figure, **vocabulary shrinks and sequence length grows**. Since attention is O(n²) in sequence length (section 10), the bottom two buy robustness with compute. Subword sits where it does because that trade is least bad there.
 
@@ -1001,15 +842,7 @@ tiktoken BPE (Llama-3):
 
 *The chain, each link forcing the next:*
 
-```mermaid
-flowchart TD
-    A["Transformer<br/>2017"] --> B["scale works<br/>bigger = better, predictably"]
-    B --> C["only the well-funded<br/>can pre-train"]
-    C --> D["most teams ADAPT<br/>rather than train"]
-    D --> E["prompting · RAG · PEFT<br/>= the whole second half of 536"]
-    C --> F["openness becomes<br/>a strategic choice"]
-    F --> G["closed API<br/>open weights<br/>fully open"]
-```
+![LLM landscape causal chain](assets/S01-landscape-chain.svg)
 
 **Mechanism — why this matters for the course:** the middle link is why sessions 9–16 exist at all. If anyone could pre-train, the syllabus would be about pre-training. Because they can't, it's about adaptation.
 

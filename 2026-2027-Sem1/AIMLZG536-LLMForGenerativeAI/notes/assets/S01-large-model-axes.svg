@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 720" role="img" aria-labelledby="title desc">
+  <title id="title">Three axes that make a language model large</title>
+  <desc id="desc">Large language models scale through parameters, training data, and compute. Parameters charge every request, while data and compute are paid up front.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1180" height="720" fill="#fff"/>
+  <circle cx="590" cy="120" r="70" fill="#fff7c8" stroke="#222" stroke-width="2.4"/>
+  <text x="590" y="130" text-anchor="middle" font-family="Georgia, serif" font-size="36" font-weight="700">LARGE</text>
+  <g font-family="Georgia, serif" font-size="21" text-anchor="middle">
+    <rect x="70" y="265" width="280" height="120" rx="14" fill="#fde8f1" stroke="#222" stroke-width="2"/>
+    <text x="210" y="306" font-weight="700">1. Parameters</text>
+    <text x="210" y="338">7B - 70B - 400B+</text>
+    <text x="210" y="368" font-size="18">memory and latency</text>
+    <rect x="450" y="265" width="280" height="120" rx="14" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="590" y="306" font-weight="700">2. Training Data</text>
+    <text x="590" y="338">trillions of tokens</text>
+    <text x="590" y="368" font-size="18">collection and cleaning</text>
+    <rect x="830" y="265" width="280" height="120" rx="14" fill="#e9f7e7" stroke="#222" stroke-width="2"/>
+    <text x="970" y="306" font-weight="700">3. Compute</text>
+    <text x="970" y="338">GPU-months</text>
+    <text x="970" y="368" font-size="18">training bill</text>
+    <line x1="550" y1="180" x2="260" y2="265" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="590" y1="190" x2="590" y2="265" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="630" y1="180" x2="920" y2="265" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="21" text-anchor="middle">
+    <rect x="70" y="470" width="280" height="96" rx="12" fill="#fff" stroke="#d44b52" stroke-width="2.5"/>
+    <text x="210" y="508" font-weight="700" fill="#b52831">paid on every request</text>
+    <text x="210" y="538" font-size="18">the permanent inference tax</text>
+    <rect x="450" y="470" width="280" height="96" rx="12" fill="#fff" stroke="#6370c6" stroke-width="2.5"/>
+    <text x="590" y="508" font-weight="700" fill="#4550a6">paid once up front</text>
+    <text x="590" y="538" font-size="18">does not grow per prompt</text>
+    <rect x="830" y="470" width="280" height="96" rx="12" fill="#fff" stroke="#3c9b68" stroke-width="2.5"/>
+    <text x="970" y="508" font-weight="700" fill="#2f7e54">paid once, enormous</text>
+    <text x="970" y="538" font-size="18">turns data into weights</text>
+    <line x1="210" y1="385" x2="210" y2="470" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="590" y1="385" x2="590" y2="470" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="970" y1="385" x2="970" y2="470" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <text x="590" y="650" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-style="italic">
+    Parameters are the only axis that keeps charging at inference time.
+  </text>
+</svg>

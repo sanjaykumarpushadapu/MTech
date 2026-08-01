@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" role="img" aria-labelledby="title desc">
+  <title id="title">Original Transformer encoder-decoder blueprint</title>
+  <desc id="desc">Inputs pass through embeddings, positional encoding, and repeated encoder layers. Shifted outputs pass through decoder layers with masked self-attention, cross-attention to encoder outputs, feed-forward layers, linear projection, and softmax.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1240" height="820" fill="#fff"/>
+  <text x="620" y="54" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700">Original Transformer Blueprint</text>
+  <g font-family="Georgia, serif" font-size="19" text-anchor="middle">
+    <text x="330" y="105" font-size="27" font-weight="700" fill="#3553a4">Encoder stack</text>
+    <rect x="160" y="640" width="150" height="52" rx="8" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="235" y="674">Inputs</text>
+    <rect x="160" y="555" width="150" height="58" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="235" y="578">Input</text>
+    <text x="235" y="602">embedding</text>
+    <circle cx="235" cy="500" r="25" fill="#e9f7e7" stroke="#222" stroke-width="2"/>
+    <text x="235" y="508" font-size="28" font-weight="700">+</text>
+    <text x="130" y="506" text-anchor="middle" font-size="17">position</text>
+    <rect x="105" y="180" width="260" height="270" rx="14" fill="#eef3ff" stroke="#3553a4" stroke-width="3"/>
+    <text x="235" y="214" font-size="24" font-weight="700">Encoder x N</text>
+    <rect x="140" y="245" width="190" height="56" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+    <text x="235" y="278">Multi-head attention</text>
+    <rect x="140" y="325" width="190" height="48" rx="8" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="235" y="356">Add &amp; Norm</text>
+    <rect x="140" y="392" width="190" height="48" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+    <text x="235" y="423">Feed forward</text>
+    <line x1="235" y1="640" x2="235" y2="613" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="235" y1="555" x2="235" y2="525" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="235" y1="475" x2="235" y2="450" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="19" text-anchor="middle">
+    <text x="820" y="105" font-size="27" font-weight="700" fill="#c13d52">Decoder stack</text>
+    <rect x="650" y="640" width="170" height="52" rx="8" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="735" y="662">Outputs</text>
+    <text x="735" y="684" font-size="16">shifted right</text>
+    <rect x="650" y="555" width="170" height="58" rx="8" fill="#fde8f1" stroke="#222" stroke-width="2"/>
+    <text x="735" y="578">Output</text>
+    <text x="735" y="602">embedding</text>
+    <circle cx="735" cy="500" r="25" fill="#e9f7e7" stroke="#222" stroke-width="2"/>
+    <text x="735" y="508" font-size="28" font-weight="700">+</text>
+    <text x="805" y="506" text-anchor="start" font-size="17">position</text>
+    <rect x="600" y="165" width="270" height="300" rx="14" fill="#fff0f3" stroke="#c13d52" stroke-width="3"/>
+    <text x="735" y="199" font-size="24" font-weight="700">Decoder x N</text>
+    <rect x="635" y="225" width="200" height="52" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+    <text x="735" y="247">Masked</text>
+    <text x="735" y="269">multi-head attention</text>
+    <rect x="635" y="296" width="200" height="46" rx="8" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="735" y="326">Add &amp; Norm</text>
+    <rect x="635" y="360" width="200" height="52" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+    <text x="735" y="382">Cross-attention</text>
+    <text x="735" y="402" font-size="14">Q from decoder</text>
+    <text x="735" y="420" font-size="14">K,V from encoder</text>
+    <rect x="635" y="428" width="200" height="46" rx="8" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="735" y="458">Add &amp; Norm</text>
+    <line x1="735" y1="640" x2="735" y2="613" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="735" y1="555" x2="735" y2="525" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="735" y1="475" x2="735" y2="465" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="19" text-anchor="middle">
+    <rect x="970" y="250" width="170" height="58" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+    <text x="1055" y="286">Linear</text>
+    <rect x="970" y="345" width="170" height="58" rx="8" fill="#e9f7e7" stroke="#222" stroke-width="2"/>
+    <text x="1055" y="381">Softmax</text>
+    <rect x="945" y="465" width="220" height="70" rx="8" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="1055" y="495">Output probabilities</text>
+    <text x="1055" y="520" font-size="16">over vocabulary</text>
+    <line x1="870" y1="315" x2="970" y2="280" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="1055" y1="308" x2="1055" y2="345" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="1055" y1="403" x2="1055" y2="465" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <path d="M 365 315 C 455 315, 515 386, 635 386" fill="none" stroke="#333" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="500" y="356" text-anchor="middle" font-family="Georgia, serif" font-size="19">encoder output supplies K,V</text>
+  <rect x="80" y="735" width="1080" height="46" rx="9" fill="#f7f1fb" stroke="#c8b3d8" stroke-width="2"/>
+  <text x="620" y="765" text-anchor="middle" font-family="Georgia, serif" font-size="21" font-style="italic">
+    Decoder-only LLMs keep the masked decoder idea and drop the encoder/cross-attention path.
+  </text>
+</svg>
