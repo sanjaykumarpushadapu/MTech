@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="400" viewBox="0 0 1120 400" role="img" aria-labelledby="title desc">
+  <title id="title">API lifecycle stages</title>
+  <desc id="desc">Seven linear API lifecycle stages from requirements through deploy.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#254b5f"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.step{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.focus{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.num{font:700 18px Georgia,serif;fill:#93622a}.label{font:700 18px Georgia,serif;fill:#17313d}.arrow{stroke:#254b5f;stroke-width:3.5;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="400"/>
+  <text class="title" x="55" y="55">API lifecycle: design the contract before building behind it</text>
+  <rect class="step" x="60" y="165" width="130" height="90"/><text class="num" x="125" y="195" text-anchor="middle">1</text><text class="label" x="125" y="226" text-anchor="middle">Requirements</text>
+  <rect class="focus" x="215" y="165" width="130" height="90"/><text class="num" x="280" y="195" text-anchor="middle">2</text><text class="label" x="280" y="226" text-anchor="middle">Design</text>
+  <rect class="step" x="370" y="165" width="130" height="90"/><text class="num" x="435" y="195" text-anchor="middle">3</text><text class="label" x="435" y="226" text-anchor="middle">Configure</text>
+  <rect class="step" x="525" y="165" width="130" height="90"/><text class="num" x="590" y="195" text-anchor="middle">4</text><text class="label" x="590" y="226" text-anchor="middle">Publish</text>
+  <rect class="step" x="680" y="165" width="130" height="90"/><text class="num" x="745" y="195" text-anchor="middle">5</text><text class="label" x="745" y="226" text-anchor="middle">Develop</text>
+  <rect class="step" x="835" y="165" width="130" height="90"/><text class="num" x="900" y="195" text-anchor="middle">6</text><text class="label" x="900" y="226" text-anchor="middle">Test</text>
+  <rect class="step" x="990" y="165" width="90" height="90"/><text class="num" x="1035" y="195" text-anchor="middle">7</text><text class="label" x="1035" y="226" text-anchor="middle">Deploy</text>
+  <path class="arrow" d="M190 210 L215 210"/><path class="arrow" d="M345 210 L370 210"/><path class="arrow" d="M500 210 L525 210"/><path class="arrow" d="M655 210 L680 210"/><path class="arrow" d="M810 210 L835 210"/><path class="arrow" d="M965 210 L990 210"/>
+</svg>

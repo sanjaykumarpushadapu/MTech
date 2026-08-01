@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="500" viewBox="0 0 1050 500" role="img" aria-labelledby="title desc">
+  <title id="title">OpenAPI generator outputs</title>
+  <desc id="desc">One OpenAPI specification feeds a generator that produces SDKs, server stubs, docs, and test scaffolds.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.spec{fill:#e4f4ef;stroke:#2f7d68;stroke-width:3;rx:24}.gen{fill:#ffe8c7;stroke:#c6762d;stroke-width:3;rx:24}.out{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 20px Georgia,serif;fill:#17313d}.small{font:500 15px Georgia,serif;fill:#3f5861}
+      .arrow{stroke:#28536b;stroke-width:3.5;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1050" height="500"/>
+  <text class="title" x="54" y="56">OpenAPI generator: documentation becomes a build input</text>
+  <rect class="spec" x="70" y="205" width="210" height="90"/><text class="label" x="175" y="244" text-anchor="middle">openapi.yaml</text><text class="small" x="175" y="270" text-anchor="middle">one written contract</text>
+  <rect class="gen" x="410" y="190" width="220" height="120"/><text class="label" x="520" y="240" text-anchor="middle">OpenAPI</text><text class="label" x="520" y="267" text-anchor="middle">generator</text>
+  <rect class="out" x="780" y="75" width="210" height="75"/><text class="label" x="885" y="108" text-anchor="middle">Client SDKs</text><text class="small" x="885" y="132" text-anchor="middle">TS, Python, Java</text>
+  <rect class="out" x="780" y="175" width="210" height="75"/><text class="label" x="885" y="208" text-anchor="middle">Server stubs</text><text class="small" x="885" y="232" text-anchor="middle">handlers + models</text>
+  <rect class="out" x="780" y="275" width="210" height="75"/><text class="label" x="885" y="321" text-anchor="middle">Reference docs</text>
+  <rect class="out" x="780" y="375" width="210" height="75"/><text class="label" x="885" y="407" text-anchor="middle">Contract tests</text><text class="small" x="885" y="431" text-anchor="middle">scaffold</text>
+  <path class="arrow" d="M280 250 L410 250"/>
+  <path class="arrow" d="M630 240 C690 240 710 112 780 112"/>
+  <path class="arrow" d="M630 245 C700 245 710 212 780 212"/>
+  <path class="arrow" d="M630 255 C700 255 710 312 780 312"/>
+  <path class="arrow" d="M630 260 C690 260 710 412 780 412"/>
+</svg>

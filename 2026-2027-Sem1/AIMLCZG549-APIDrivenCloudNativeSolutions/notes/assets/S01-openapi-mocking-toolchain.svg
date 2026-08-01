@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">OpenAPI mocking and contract toolchain</title>
+  <desc id="desc">One OpenAPI contract feeds a mock server, client SDKs, and contract tests before the backend is complete.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#275467"/>
+    </marker>
+    <style>
+      .bg{fill:#f7f2e8}.spec{fill:#e4f4ef;stroke:#2f7d68;stroke-width:3;rx:24}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.out{fill:#eef3f7;stroke:#6e8ea2;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 20px Georgia,serif;fill:#17313d}.small{font:500 15px Georgia,serif;fill:#3f5861}
+      .arrow{stroke:#275467;stroke-width:3.5;fill:none;marker-end:url(#arrow)}
+      .dash{stroke:#839ba6;stroke-width:3;stroke-dasharray:8 8;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1100" height="560"/>
+  <text class="title" x="58" y="56">OpenAPI first: implementation can be hidden behind the contract</text>
+  <rect class="spec" x="420" y="155" width="260" height="150"/><text class="label" x="550" y="215" text-anchor="middle">openapi.yaml</text><text class="small" x="550" y="245" text-anchor="middle">single contract</text>
+
+  <rect class="box" x="85" y="92" width="215" height="88"/><text class="label" x="192" y="143" text-anchor="middle">Mock server</text>
+  <rect class="out" x="85" y="360" width="215" height="88"/><text class="label" x="192" y="395" text-anchor="middle">Front-end</text><text class="small" x="192" y="420" text-anchor="middle">builds early</text>
+
+  <rect class="box" x="442" y="390" width="215" height="88"/><text class="label" x="550" y="425" text-anchor="middle">Contract tests</text><text class="small" x="550" y="450" text-anchor="middle">prove conformance</text>
+
+  <rect class="box" x="800" y="92" width="215" height="88"/><text class="label" x="908" y="143" text-anchor="middle">Client SDKs</text>
+  <rect class="out" x="800" y="360" width="215" height="88"/><text class="label" x="908" y="395" text-anchor="middle">Consumers</text><text class="small" x="908" y="420" text-anchor="middle">typed calls</text>
+
+  <rect class="out" x="442" y="18" width="215" height="74"/><text class="label" x="550" y="63" text-anchor="middle">Back-end</text>
+
+  <path class="arrow" d="M420 200 C360 160 345 136 300 136"/>
+  <path class="arrow" d="M192 180 L192 360"/>
+  <path class="arrow" d="M550 305 L550 390"/>
+  <path class="arrow" d="M680 200 C740 160 755 136 800 136"/>
+  <path class="arrow" d="M908 180 L908 360"/>
+  <path class="arrow" d="M550 155 L550 92"/>
+  <path class="dash" d="M300 404 C390 520 710 520 800 404"/>
+  <text class="small" x="550" y="526" text-anchor="middle">The same contract lets teams work before real service code exists.</text>
+</svg>

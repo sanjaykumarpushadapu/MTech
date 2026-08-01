@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="450" viewBox="0 0 1120 450" role="img" aria-labelledby="title desc">
+  <title id="title">API version rollout sequence</title>
+  <desc id="desc">Version rollout sequence from shipping v2 alongside v1 through monitoring, contacting consumers, and sunsetting v1.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.step{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.watch{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.done{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.debt{fill:#ffe7dd;stroke:#c85a3d;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 17px Georgia,serif;fill:#17313d}.small{font:500 13px Georgia,serif;fill:#3f5861}.edge{font:700 13px Georgia,serif;fill:#586b72}
+      .arrow{stroke:#28536b;stroke-width:3.2;fill:none;marker-end:url(#arrow)}.dash{stroke:#c85a3d;stroke-width:3;stroke-dasharray:7 7;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="450"/>
+  <text class="title" x="55" y="55">API versioning is a rollout process, not just a number</text>
+  <rect class="step" x="55" y="170" width="165" height="86"/><text class="label" x="138" y="203" text-anchor="middle">1. Ship v2</text><text class="small" x="138" y="229" text-anchor="middle">keep v1 alive</text>
+  <rect class="step" x="265" y="170" width="175" height="86"/><text class="label" x="352" y="203" text-anchor="middle">2. Announce</text><text class="small" x="352" y="229" text-anchor="middle">deprecation date</text>
+  <rect class="watch" x="485" y="170" width="180" height="86"/><text class="label" x="575" y="203" text-anchor="middle">3. Monitor</text><text class="small" x="575" y="229" text-anchor="middle">who still calls v1</text>
+  <rect class="step" x="710" y="170" width="175" height="86"/><text class="label" x="798" y="203" text-anchor="middle">4. Contact</text><text class="small" x="798" y="229" text-anchor="middle">stragglers</text>
+  <rect class="done" x="930" y="170" width="145" height="86"/><text class="label" x="1002" y="203" text-anchor="middle">5. Sunset</text><text class="small" x="1002" y="229" text-anchor="middle">traffic near zero</text>
+  <rect class="debt" x="485" y="325" width="180" height="70"/><text class="label" x="575" y="354" text-anchor="middle">Skip monitoring</text><text class="small" x="575" y="378" text-anchor="middle">maintain v1 forever</text>
+  <path class="arrow" d="M220 213 L265 213"/><path class="arrow" d="M440 213 L485 213"/><path class="arrow" d="M665 213 L710 213"/><text class="edge" x="690" y="192">traffic remains</text>
+  <path class="arrow" d="M885 213 L930 213"/><text class="edge" x="908" y="192" text-anchor="middle">near zero</text>
+  <path class="arrow" d="M798 256 C798 305 620 305 575 256"/><text class="edge" x="693" y="302" text-anchor="middle">repeat until quiet</text>
+  <path class="dash" d="M575 256 L575 325"/>
+</svg>

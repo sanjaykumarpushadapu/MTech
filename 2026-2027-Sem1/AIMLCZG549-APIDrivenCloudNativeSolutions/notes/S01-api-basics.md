@@ -18,14 +18,7 @@ This is career-load-bearing, not just coursework. **Every backend, every cloud s
 
 *A restaurant analogy carries this whole section:* the **menu** is the API. It promises "ask for dish 12 and you'll get *this* meal" without telling you a thing about the kitchen. You order *from the menu* — you don't walk in and instruct the chef — and the restaurant is free to swap chefs, ovens, or suppliers; as long as the menu still delivers dish 12, you never notice and never care. The **menu is the contract; the kitchen is the implementation.** Keep this picture: almost everything below is a detail of how the menu is written or how it changes over time.
 
-```mermaid
-flowchart TD
-    CL["Client<br/>knows only the contract"] -->|"request"| API{{"API contract"}}
-    API -->|"response"| CL
-    API -.->|"hides internals"| APP["service code"]
-    APP --> DB["database"]
-    APP --> INF["servers / runtime"]
-```
+![API contract boundary](assets/S01-api-contract-boundary.svg)
 
 **Everything to the right of the contract can be rewritten** — new language, new database, new hardware — and no client notices. That independence *is* the product. It's also why a breaking change is such a big deal (section 9): it's the one thing that reaches across the line.
 
@@ -77,30 +70,11 @@ That last row is why real systems are usually both. The user-facing read (`GET /
 
 Synchronous (REST): the order service calls each downstream service directly and waits.
 
-```mermaid
-flowchart LR
-    C[Client] -->|POST /orders| OS[Order Service]
-    OS -->|GET /consumers/id| CS[Consumer Service]
-    OS -->|GET /restaurant/id| RS[Restaurant Service]
-```
+![Synchronous order service calls](assets/S01-sync-order-service.svg)
 
 Asynchronous (message broker): every hop becomes a channel, and nothing blocks.
 
-```mermaid
-flowchart TD
-    C[Client] -->|create order request| ORC[[Order request channel]]
-    ORC --> OS[Order Service]
-    OS --> CRC[[Consumer request channel]]
-    CRC --> CS[Consumer Service]
-    OS --> RRC[[Restaurant request channel]]
-    RRC --> RS[Restaurant Service]
-    CS --> CSR[[Consumer reply]]
-    RS --> RSR[[Restaurant reply]]
-    CSR --> OS
-    RSR --> OS
-    OS --> CRP[[Client reply channel]]
-    CRP -->|create order response| C
-```
+![Asynchronous order flow through message channels](assets/S01-async-order-broker.svg)
 
 Note what the second diagram costs: **six channels instead of two direct calls**, plus a broker to run and monitor. That visual is the tradeoff.
 
@@ -118,12 +92,7 @@ Note what the second diagram costs: **six channels instead of two direct calls**
 
 In one line: a client sends **method + URL + headers + optional body**, and the server sends back **status code + headers + optional body**.
 
-```mermaid
-flowchart TD
-    CL[Client<br/>browser / mobile app] -->|"HTTP request<br/>method + endpoint + body"| EP[API endpoint<br/>a URL]
-    EP --> SRV[API server]
-    SRV -->|"HTTP response<br/>status code + JSON/XML"| CL
-```
+![HTTP request and response exchange](assets/S01-http-exchange.svg)
 
 **Mechanism — what one HTTP exchange actually contains.** Four parts on the way out, three on the way back:
 
@@ -172,7 +141,7 @@ That last part carries the collection-vs-item split (section 4): `/products` = t
 
 **Responses** — data sent back after processing, formatted as **JSON or XML**, with a status code.
 
-**Read the first digit first** — it puts every code in one of **five classes**. The instructor drilled this: learn the classes, not just the codes. The quickest way to remember them is to hear what the server is *saying* in each:
+**Read the first digit first** — it puts every code in one of **five classes**. Learn the classes, not just isolated codes: the quickest way to remember them is to hear what the server is *saying* in each:
 
 | Class | Meaning | What the server is saying | You'll meet |
 |---|---|---|---|
@@ -215,18 +184,7 @@ Learn the **401 vs 403** distinction — it's the classic exam pair. 401 = *we d
 >
 > The OAuth flow in one picture — the pattern behind every "Sign in with…" button:
 >
-> ```mermaid
-> flowchart TD
->     U["User"] -->|"clicks sign-in"| APP["Your app"]
->     APP -->|"redirect to authorize"| AUTH["Auth server"]
->     AUTH -->|"consent screen"| U
->     U -->|"approve"| AUTH
->     AUTH -->|"authorization code"| APP
->     APP -->|"code + app secret"| AUTH
->     AUTH -->|"short-lived access token"| APP
->     APP -->|"request + Bearer token"| API["Resource API"]
->     API -->|"data (200) or 401"| APP
-> ```
+> ![OAuth authorization code flow](assets/S01-oauth-flow.svg)
 >
 > The line that connects it all: **authentication (*who are you?*) → `401`; authorization (*are you allowed?*) → `403`.** OAuth **scopes** are exactly how a `403` gets decided — the token says *what* the app may do, not just *who* it is.
 
@@ -289,22 +247,13 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 
 #### 4.1 Mocking — building against a contract that has no implementation yet
 
-⚠️ ***Mocking*** *is listed as a topic for this session ("OpenAPI spec, mocking, semantic versioning, tools") but wasn't covered in depth. Filled in here from the OpenAPI toolchain, because it is a named syllabus item and is the practical payoff of writing the spec first.*
+⚠️ ***Mocking*** *is an examinable OpenAPI toolchain topic. The practical idea is simple: a contract can be served before the real implementation exists.*
 
 **Intuition** — Once the contract exists, it can be *served* before anyone writes the code behind it. A **mock server** reads the OpenAPI document and returns responses that match the schema — right shape, right status codes, fake data. The front-end team starts immediately instead of waiting for the back-end.
 
 **Mechanism** — the spec is the single input; three things get generated from it:
 
-```mermaid
-flowchart TD
-    SPEC[["openapi.yaml<br/>single contract"]] --> MOCK["Mock server"]
-    SPEC --> CLIENT["Client SDKs"]
-    SPEC --> TESTS["Contract tests"]
-    MOCK --> FE["Front-end builds early"]
-    CLIENT --> CONS["Consumers call typed SDKs"]
-    TESTS --> BE["Back-end proves conformance"]
-    FE -.->|"same contract"| BE
-```
+![OpenAPI mocking and contract toolchain](assets/S01-openapi-mocking-toolchain.svg)
 
 **Worked example** — `openapi.yaml` declares `GET /books/{id}` returning `{id, title, author}`. Run a mock:
 
@@ -325,14 +274,7 @@ The front-end now builds real screens. When the back-end ships, the URL changes 
 
 **Mechanism** — one OpenAPI file can feed several teams at once:
 
-```mermaid
-flowchart TD
-    SPEC[["openapi.yaml"]] --> GEN["OpenAPI generator"]
-    GEN --> SDK["Client SDK<br/>TypeScript · Python · Java"]
-    GEN --> STUB["Server stub<br/>handlers + models"]
-    GEN --> DOC["Reference docs"]
-    GEN --> TEST["Contract-test scaffold"]
-```
+![OpenAPI generator outputs](assets/S01-openapi-generator.svg)
 
 The pattern is the same one you already saw with mocking: **one contract, many downstream artifacts**. Here the output is code rather than a fake server.
 
@@ -357,15 +299,7 @@ The front-end now imports typed methods instead of hand-building URLs and reques
 
 **Mechanism — the seven-step lifecycle**, built around a Books API:
 
-```mermaid
-flowchart TD
-    R[1. Requirements] --> D[2. Design]
-    D --> C[3. Configure]
-    C --> P[4. Publish]
-    P --> Dev[5. Develop]
-    Dev --> T[6. Test]
-    T --> Dep[7. Deploy]
-```
+![API lifecycle stages](assets/S01-api-lifecycle.svg)
 
 **Worked example — the Books API, end to end:**
 
@@ -464,24 +398,7 @@ Same resource, two representations:
 
 **A whole system built this way** — the food-delivery architecture, and the best single diagram here — a preview of microservices (S3):
 
-```mermaid
-flowchart TD
-    Courier[Courier<br/>mobile] --> GW[API Gateway]
-    Consumer[Consumer<br/>mobile] --> GW
-    Restaurant[Restaurant<br/>web UI] --> RUI[Restaurant Web UI]
-    GW --> OS[Order Service]
-    GW --> RS[Restaurant Service]
-    RUI --> RS
-    RUI --> KS[Kitchen Service]
-    RUI --> DS[Delivery Service]
-    GW --> DS
-    OS --> AS[Accounting Service]
-    RS --> NS[Notification Service]
-    DS --> AS
-    AS --> Stripe[Stripe Adapter]
-    NS --> Twilio[Twilio Adapter]
-    NS --> SES[Amazon SES Adapter]
-```
+![Food delivery microservices API topology](assets/S01-food-delivery-microservices.svg)
 
 Two points carry the actual lesson: **"Services have APIs"** and **"A service's data is private."** Every service owns its own database; nothing reaches into another service's data. That constraint is what makes independent deployment possible, and it's the microservices idea in one line.
 
@@ -518,21 +435,7 @@ The "fetching multiple resources" drawback is the setup for GraphQL: fetching a 
 
 **Mechanism**
 
-```mermaid
-flowchart TD
-    C[Client] -->|HTTP POST to /graphql| S[GraphQL Server]
-    S --> V{Validate against schema}
-    V -->|invalid| E[Error]
-    V -->|valid| X[Execute]
-    X --> D1[(Database)]
-    X --> D2[(Other service)]
-    X --> D3[(REST API)]
-    D1 --> RESP[Form JSON response]
-    D2 --> RESP
-    D3 --> RESP
-    RESP --> C
-    SDL[Schema — GraphQL SDL<br/>types + relationships<br/>the blueprint] -.-> V
-```
+![GraphQL request processing flow](assets/S01-graphql-flow.svg)
 
 - The server defines a **schema** in **SDL** (Schema Definition Language) before serving anything — the types that can be queried and the relationships between them. It is the **blueprint both server and client understand**.
 - A request arrives by **HTTP POST** to a single `/graphql` endpoint.
@@ -600,19 +503,7 @@ query {
 
 **Mechanism — how plain RPC works**, which you need before gRPC makes sense:
 
-```mermaid
-flowchart TD
-    CN[Client node] -->|procedure call| CST[Client stub]
-    CST -->|packages call into message| NET[Network]
-    NET --> SST[Server stub]
-    SST -->|unpacks, passes call| SN[Server node]
-    SN -->|result| SST
-    SST -->|return message| NET2[Network]
-    NET2 --> CST2[Client stub]
-    CST2 -->|unpacks, delivers| CN2[Client node]
-    CN -.->|"local-call illusion"| CST
-    CST2 -.->|"result looks local again"| CN2
-```
+![RPC stub mechanism](assets/S01-rpc-stubs.svg)
 
 The **stub** is the whole trick: client and server each hold a local object that hides the packing, sending and unpacking, so the caller writes an ordinary function call.
 
@@ -628,13 +519,7 @@ The **stub** is the whole trick: client and server each hold a local object that
 | Tooling | — | **`protoc`** compiler |
 | Languages | — | **10+** — C#/.NET, C++, Dart, Go, Java, Kotlin, Node, Objective-C, PHP, Python, Ruby |
 
-```mermaid
-flowchart TD
-    RC[Ruby client<br/>gRPC stub] -->|"proto request"| GS[gRPC server<br/>C++ service]
-    AJ[Android-Java client<br/>gRPC stub] -->|"proto request"| GS
-    GS -->|"proto response"| RC
-    GS -->|"proto response"| AJ
-```
+![gRPC polyglot stubs from a proto file](assets/S01-grpc-polyglot-stubs.svg)
 
 That diagram is the point of gRPC in one picture: **a C++ service, a Ruby client and an Android/Java client, all generated from one `.proto` file.**
 
@@ -710,14 +595,7 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 | Control | You don't control the consumer | You control **both ends** |
 | Implication | Prioritise ubiquity, caching, stability | Can trade readability for **efficiency** |
 
-```mermaid
-flowchart TD
-    U([Users / browsers / mobile]) ==>|"NORTH-SOUTH<br/>REST · GraphQL<br/>public, cacheable, versioned"| GW["API Gateway"]
-    GW --> A["Order service"]
-    A <-->|"EAST-WEST · gRPC"| B["Consumer service"]
-    A <-->|"EAST-WEST · gRPC"| C["Restaurant service"]
-    A <-->|"EAST-WEST · gRPC"| D["Payment service"]
-```
+![North-south and east-west API traffic](assets/S01-north-south-east-west.svg)
 
 **The axis decides the style.** North–south crosses a trust and control boundary: you don't own the caller, so you need ubiquity, caching and stable versions → REST or GraphQL. East–west stays inside: you own both ends, deploy them together, and care only about speed → gRPC.
 
@@ -758,20 +636,11 @@ The comparison table, close to guaranteed exam material:
 
 *The three questions as a decision tree — ask them in this order and the style picks itself:*
 
-```mermaid
-flowchart TD
-    Q1{"Who calls it?"}
-    Q1 -->|"a browser or a third party<br/>you don't control"| Q2{"Does one screen need<br/>data from many resources?"}
-    Q1 -->|"another service you own"| Q3{"Is latency or payload<br/>size a real budget?"}
-    Q2 -->|"no — flat resources"| REST["<b>REST</b><br/>ubiquity + HTTP caching"]
-    Q2 -->|"yes — 3+ round trips today"| GQL["<b>GraphQL</b><br/>one call, client picks fields"]
-    Q3 -->|"yes — measured"| GRPC["<b>gRPC</b><br/>protobuf + HTTP/2"]
-    Q3 -->|"no"| REST
-```
+![REST GraphQL and gRPC decision tree](assets/S01-api-style-decision-tree.svg)
 
 **Mechanism — ask about the consumer before the protocol.** Browser and third-party consumers push you toward REST or GraphQL because compatibility, caching and debuggability matter. Internal consumers you own let you optimise for generated clients, binary payloads and latency. Data shape then decides between REST's fixed resources and GraphQL's client-shaped graph.
 
-Notice **REST is the destination of two branches**. That's not an accident — it's the default, and the other two need a *measured* reason to win.
+Notice **REST is the destination of two leaves**. That's not an accident — it's the default, and the other two need a *measured* reason to win.
 
 **The one-line summary worth carrying:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
 
@@ -822,15 +691,7 @@ That last one catches people — *adding* something can be a breaking change if 
 
 **The rollout sequence** — versioning is a *process*, not a number:
 
-```mermaid
-flowchart TD
-    S1["1 · Ship v2<br/>alongside v1"] --> S2["2 · Announce<br/>deprecation + date"]
-    S2 --> S3["3 · Monitor<br/>who still calls v1"]
-    S3 --> S4["4 · Contact<br/>the stragglers"]
-    S4 --> S3
-    S3 --> S5["5 · Sunset v1<br/>only when traffic ≈ 0"]
-    S3 -.->|"skip this and you<br/>maintain v1 forever"| S3
-```
+![API version rollout sequence](assets/S01-api-version-rollout.svg)
 
 ```
 1  Ship v2 alongside v1        both live, clients unchanged
@@ -895,7 +756,7 @@ Each version reachable at its own endpoint:
 |---|---|---|---|
 | 1 | **Swagger Petstore** (OpenAPI 3.0) | https://editor.swagger.io/ | Observe the JSON-based API structure |
 | 2 | **Rapid API** | https://rapidapi.com/ | World's largest public API marketplace |
-| 3 | **Conference API** | course reference example | A larger API design example |
+| 3 | **Conference API** | conference-management domain | A larger API design example |
 | 4 | **AsyncAPI Specification** | https://www.asyncapi.com/en | The async counterpart to OpenAPI — **event-driven architectures** |
 
 AsyncAPI is the one to actually look at: it closes the loop on section 2 by showing that asynchronous APIs have their own description standard, exactly parallel to OpenAPI for synchronous ones.

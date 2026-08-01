@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="680" viewBox="0 0 1180 680" role="img" aria-labelledby="title desc">
+  <title id="title">OAuth authorization code flow</title>
+  <desc id="desc">Sequence-style OAuth flow: user, app, auth server, and resource API exchange redirects, code, token, and protected data.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.actor{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.app{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.auth{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.api{fill:#f3edf7;stroke:#8e6aa5;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 18px Georgia,serif;fill:#17313d}.small{font:500 14px Georgia,serif;fill:#3f5861}.step{font:700 14px Georgia,serif;fill:#334d56}
+      .lane{stroke:#d7c8a7;stroke-width:2;stroke-dasharray:8 8}.arrow{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1180" height="680"/>
+  <text class="title" x="55" y="55">OAuth: prove consent, then call the API with a bearer token</text>
+
+  <rect class="actor" x="70" y="105" width="170" height="64"/><text class="label" x="155" y="143" text-anchor="middle">User</text>
+  <rect class="app" x="360" y="105" width="180" height="64"/><text class="label" x="450" y="143" text-anchor="middle">Your app</text>
+  <rect class="auth" x="650" y="105" width="190" height="64"/><text class="label" x="745" y="143" text-anchor="middle">Auth server</text>
+  <rect class="api" x="950" y="105" width="170" height="64"/><text class="label" x="1035" y="143" text-anchor="middle">Resource API</text>
+
+  <line class="lane" x1="155" y1="169" x2="155" y2="620"/>
+  <line class="lane" x1="450" y1="169" x2="450" y2="620"/>
+  <line class="lane" x1="745" y1="169" x2="745" y2="620"/>
+  <line class="lane" x1="1035" y1="169" x2="1035" y2="620"/>
+
+  <path class="arrow" d="M155 210 L450 210"/><text class="step" x="302" y="198" text-anchor="middle">1. click sign-in</text>
+  <path class="arrow" d="M450 260 L745 260"/><text class="step" x="598" y="248" text-anchor="middle">2. redirect to authorize</text>
+  <path class="arrow" d="M745 310 L155 310"/><text class="step" x="450" y="298" text-anchor="middle">3. consent screen</text>
+  <path class="arrow" d="M155 360 L745 360"/><text class="step" x="450" y="348" text-anchor="middle">4. approve</text>
+  <path class="arrow" d="M745 410 L450 410"/><text class="step" x="598" y="398" text-anchor="middle">5. authorization code</text>
+  <path class="arrow" d="M450 460 L745 460"/><text class="step" x="598" y="448" text-anchor="middle">6. code + app secret</text>
+  <path class="arrow" d="M745 510 L450 510"/><text class="step" x="598" y="498" text-anchor="middle">7. access token</text>
+  <path class="arrow" d="M450 560 L1035 560"/><text class="step" x="742" y="548" text-anchor="middle">8. request + Bearer token</text>
+  <path class="arrow" d="M1035 610 L450 610"/><text class="step" x="742" y="598" text-anchor="middle">9. data, or 401 if token fails</text>
+</svg>

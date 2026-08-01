@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="620" viewBox="0 0 1140 620" role="img" aria-labelledby="title desc">
+  <title id="title">GraphQL request processing flow</title>
+  <desc id="desc">A GraphQL server receives one HTTP POST, validates it against a schema, executes against sources, and forms a JSON response.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.server{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:20}.schema{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.source{fill:#f3edf7;stroke:#8e6aa5;stroke-width:2;rx:18}.err{fill:#ffe7dd;stroke:#c85a3d;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 18px Georgia,serif;fill:#17313d}.small{font:500 14px Georgia,serif;fill:#3f5861}
+      .arrow{stroke:#28536b;stroke-width:3.5;fill:none;marker-end:url(#arrow)}.dash{stroke:#6b8d76;stroke-width:3;stroke-dasharray:7 7;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1140" height="620"/>
+  <text class="title" x="56" y="55">GraphQL: one client-shaped query, many backend sources</text>
+  <rect class="box" x="70" y="260" width="165" height="80"/><text class="label" x="152" y="292" text-anchor="middle">Client</text><text class="small" x="152" y="316" text-anchor="middle">HTTP POST</text>
+  <rect class="server" x="330" y="235" width="185" height="130"/><text class="label" x="422" y="285" text-anchor="middle">GraphQL Server</text><text class="small" x="422" y="312" text-anchor="middle">/graphql endpoint</text>
+  <rect class="schema" x="600" y="110" width="205" height="95"/><text class="label" x="702" y="147" text-anchor="middle">Schema SDL</text><text class="small" x="702" y="173" text-anchor="middle">types + relationships</text>
+  <rect class="server" x="600" y="255" width="205" height="90"/><text class="label" x="702" y="292" text-anchor="middle">Validate</text><text class="small" x="702" y="318" text-anchor="middle">allowed fields?</text>
+  <rect class="err" x="600" y="410" width="205" height="72"/><text class="label" x="702" y="454" text-anchor="middle">Error response</text>
+  <rect class="server" x="885" y="255" width="170" height="90"/><text class="label" x="970" y="309" text-anchor="middle">Execute</text>
+  <rect class="source" x="880" y="80" width="175" height="62"/><text class="label" x="968" y="118" text-anchor="middle">Database</text>
+  <rect class="source" x="880" y="160" width="175" height="62"/><text class="label" x="968" y="198" text-anchor="middle">Other service</text>
+  <rect class="source" x="880" y="390" width="175" height="62"/><text class="label" x="968" y="428" text-anchor="middle">REST API</text>
+  <rect class="box" x="330" y="455" width="185" height="86"/><text class="label" x="422" y="490" text-anchor="middle">JSON response</text><text class="small" x="422" y="516" text-anchor="middle">matches query shape</text>
+  <path class="arrow" d="M235 300 L330 300"/><text class="small" x="282" y="279" text-anchor="middle">query</text>
+  <path class="arrow" d="M515 300 L600 300"/>
+  <path class="dash" d="M702 205 L702 255"/>
+  <path class="arrow" d="M805 300 L885 300"/>
+  <path class="arrow" d="M970 255 C970 225 968 160 968 142"/>
+  <path class="arrow" d="M970 255 C970 238 968 222 968 222"/>
+  <path class="arrow" d="M970 345 C970 360 968 375 968 390"/>
+  <path class="arrow" d="M885 324 C770 520 640 498 515 498"/>
+  <path class="arrow" d="M330 498 C245 498 235 342 235 320"/>
+  <path class="arrow" d="M702 345 L702 410"/><text class="small" x="736" y="384">invalid</text>
+</svg>

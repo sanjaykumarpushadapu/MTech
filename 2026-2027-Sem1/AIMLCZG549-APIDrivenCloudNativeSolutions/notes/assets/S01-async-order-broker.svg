@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">Asynchronous order flow through channels</title>
+  <desc id="desc">An order service publishes and consumes messages through channels instead of blocking on direct calls.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f7f2e8}.svc{fill:#fffdf7;stroke:#c8b88f;stroke-width:2;rx:22}.chan{fill:#e8f3ee;stroke:#3d856f;stroke-width:2;rx:20}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 19px Georgia,serif;fill:#17313d}.small{font:500 15px Georgia,serif;fill:#3e5961}
+      .arrow{stroke:#28536b;stroke-width:3.5;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="640"/>
+  <text class="title" x="56" y="56">Asynchronous API flow: channels decouple the services</text>
+
+  <rect class="svc" x="70" y="260" width="145" height="80"/><text class="label" x="142" y="306" text-anchor="middle">Client</text>
+  <rect class="chan" x="285" y="250" width="175" height="100"/><text class="label" x="372" y="293" text-anchor="middle">Order request</text><text class="small" x="372" y="319" text-anchor="middle">channel</text>
+  <rect class="svc" x="535" y="250" width="170" height="100"/><text class="label" x="620" y="294" text-anchor="middle">Order</text><text class="small" x="620" y="320" text-anchor="middle">Service</text>
+
+  <rect class="chan" x="780" y="115" width="175" height="86"/><text class="label" x="868" y="152" text-anchor="middle">Consumer</text><text class="small" x="868" y="176" text-anchor="middle">request</text>
+  <rect class="svc" x="995" y="115" width="115" height="86"/><text class="label" x="1052" y="151" text-anchor="middle">Consumer</text><text class="small" x="1052" y="176" text-anchor="middle">Service</text>
+  <rect class="chan" x="780" y="399" width="175" height="86"/><text class="label" x="868" y="436" text-anchor="middle">Restaurant</text><text class="small" x="868" y="460" text-anchor="middle">request</text>
+  <rect class="svc" x="995" y="399" width="115" height="86"/><text class="label" x="1052" y="435" text-anchor="middle">Restaurant</text><text class="small" x="1052" y="460" text-anchor="middle">Service</text>
+
+  <rect class="chan" x="780" y="245" width="175" height="70"/><text class="label" x="868" y="288" text-anchor="middle">Consumer reply</text>
+  <rect class="chan" x="780" y="325" width="175" height="70"/><text class="label" x="868" y="368" text-anchor="middle">Restaurant reply</text>
+  <rect class="chan" x="285" y="450" width="175" height="90"/><text class="label" x="372" y="489" text-anchor="middle">Client reply</text><text class="small" x="372" y="514" text-anchor="middle">channel</text>
+
+  <path class="arrow" d="M215 300 L285 300"/><text class="small" x="250" y="279" text-anchor="middle">publish</text>
+  <path class="arrow" d="M460 300 L535 300"/>
+  <path class="arrow" d="M705 280 C735 280 735 158 780 158"/>
+  <path class="arrow" d="M955 158 L995 158"/>
+  <path class="arrow" d="M995 280 L955 280"/>
+  <path class="arrow" d="M780 280 C735 280 735 285 705 285"/>
+  <path class="arrow" d="M705 325 C735 325 735 442 780 442"/>
+  <path class="arrow" d="M955 442 L995 442"/>
+  <path class="arrow" d="M995 360 L955 360"/>
+  <path class="arrow" d="M780 360 C735 360 735 315 705 315"/>
+  <path class="arrow" d="M535 325 C500 325 500 495 460 495"/>
+  <path class="arrow" d="M285 495 C240 495 235 340 215 325"/>
+  <text class="small" x="620" y="590" text-anchor="middle">Survives partial failure, but introduces broker operations, delayed completion, and more paths to trace.</text>
+</svg>

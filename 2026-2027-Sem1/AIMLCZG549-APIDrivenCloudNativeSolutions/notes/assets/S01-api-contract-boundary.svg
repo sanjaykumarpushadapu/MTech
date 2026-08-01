@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">API contract boundary</title>
+  <desc id="desc">A client talks only to the API contract while implementation details stay hidden behind it.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f4f5f"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#12313b" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .bg{fill:#f6f2e8}
+      .card{fill:#fffaf0;stroke:#d8c9a7;stroke-width:2;rx:24;filter:url(#shadow)}
+      .contract{fill:#e4f4ef;stroke:#2f7d68;stroke-width:3;rx:28;filter:url(#shadow)}
+      .impl{fill:#eef3f7;stroke:#7592a6;stroke-width:2;rx:20}
+      .title{font:700 28px Georgia,serif;fill:#17313a}
+      .label{font:700 22px Georgia,serif;fill:#17313a}
+      .small{font:500 17px Georgia,serif;fill:#3d5961}
+      .arrow{stroke:#1f4f5f;stroke-width:4;fill:none;marker-end:url(#arrow)}
+      .dash{stroke:#8aa0aa;stroke-width:3;stroke-dasharray:8 8;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1100" height="560"/>
+  <text class="title" x="60" y="58">The API is the promise; the implementation is hidden</text>
+
+  <rect class="card" x="65" y="170" width="250" height="170"/>
+  <text class="label" x="190" y="235" text-anchor="middle">Client</text>
+  <text class="small" x="190" y="270" text-anchor="middle">knows the contract</text>
+  <text class="small" x="190" y="300" text-anchor="middle">not the kitchen</text>
+
+  <rect class="contract" x="430" y="155" width="260" height="200"/>
+  <text class="label" x="560" y="235" text-anchor="middle">API contract</text>
+  <text class="small" x="560" y="270" text-anchor="middle">request shape</text>
+  <text class="small" x="560" y="300" text-anchor="middle">response shape</text>
+
+  <rect class="impl" x="815" y="100" width="220" height="95"/>
+  <text class="label" x="925" y="150" text-anchor="middle">Service code</text>
+  <rect class="impl" x="815" y="232" width="220" height="95"/>
+  <text class="label" x="925" y="282" text-anchor="middle">Database</text>
+  <rect class="impl" x="815" y="364" width="220" height="95"/>
+  <text class="label" x="925" y="414" text-anchor="middle">Runtime</text>
+
+  <path class="arrow" d="M 315 235 C 360 235 380 235 430 235"/>
+  <text class="small" x="373" y="214" text-anchor="middle">request</text>
+  <path class="arrow" d="M 430 300 C 380 300 360 300 315 300"/>
+  <text class="small" x="373" y="333" text-anchor="middle">response</text>
+
+  <path class="dash" d="M 690 255 C 740 255 765 148 815 148"/>
+  <path class="dash" d="M 690 255 C 742 255 765 280 815 280"/>
+  <path class="dash" d="M 690 255 C 740 255 765 412 815 412"/>
+
+  <line x1="740" y1="85" x2="740" y2="480" stroke="#c85a3d" stroke-width="3" stroke-dasharray="10 10"/>
+  <text class="small" x="750" y="80">implementation boundary</text>
+  <text class="small" x="560" y="500" text-anchor="middle">Clients can keep working while internals change, as long as this contract stays stable.</text>
+</svg>

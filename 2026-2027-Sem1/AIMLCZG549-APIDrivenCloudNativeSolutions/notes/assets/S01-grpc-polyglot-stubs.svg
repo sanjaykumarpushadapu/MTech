@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="560" viewBox="0 0 1080 560" role="img" aria-labelledby="title desc">
+  <title id="title">gRPC polyglot stubs from a proto file</title>
+  <desc id="desc">A proto contract generates client stubs and a server stub; Ruby and Android Java clients exchange proto requests and responses with a C++ server.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.proto{fill:#e4f4ef;stroke:#2f7d68;stroke-width:3;rx:22}.client{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.server{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:22}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 19px Georgia,serif;fill:#17313d}.small{font:500 14px Georgia,serif;fill:#3f5861}
+      .arrow{stroke:#28536b;stroke-width:3.4;fill:none;marker-end:url(#arrow)}.return{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#arrow)}.dash{stroke:#7b919b;stroke-width:3;stroke-dasharray:7 7;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1080" height="560"/>
+  <text class="title" x="54" y="55">gRPC: one .proto contract generates callers in many languages</text>
+  <rect class="proto" x="420" y="95" width="240" height="86"/><text class="label" x="540" y="130" text-anchor="middle">calculator.proto</text><text class="small" x="540" y="156" text-anchor="middle">service + messages</text>
+  <text class="small" x="540" y="218" text-anchor="middle">protoc generates language-specific stubs</text>
+
+  <rect class="client" x="85" y="270" width="220" height="82"/><text class="label" x="195" y="304" text-anchor="middle">Ruby client</text><text class="small" x="195" y="329" text-anchor="middle">generated stub</text>
+  <rect class="client" x="85" y="400" width="220" height="82"/><text class="label" x="195" y="434" text-anchor="middle">Android-Java</text><text class="small" x="195" y="459" text-anchor="middle">generated stub</text>
+  <rect class="server" x="780" y="305" width="220" height="135"/><text class="label" x="890" y="358" text-anchor="middle">gRPC server</text><text class="small" x="890" y="384" text-anchor="middle">C++ service stub</text>
+
+  <path class="dash" d="M455 181 C345 225 260 245 210 270"/>
+  <path class="dash" d="M510 181 C390 295 275 370 210 400"/>
+  <path class="dash" d="M625 181 C735 235 825 275 875 305"/>
+
+  <path class="arrow" d="M305 300 C470 260 630 270 780 330"/><text class="small" x="540" y="275" text-anchor="middle">Ruby proto request</text>
+  <path class="return" d="M780 360 C630 390 475 382 305 332"/><text class="small" x="540" y="392" text-anchor="middle">Ruby proto response</text>
+  <path class="arrow" d="M305 430 C470 410 630 405 780 395"/><text class="small" x="540" y="432" text-anchor="middle">Android proto request</text>
+  <path class="return" d="M780 420 C630 480 470 482 305 462"/><text class="small" x="540" y="500" text-anchor="middle">Android proto response</text>
+</svg>

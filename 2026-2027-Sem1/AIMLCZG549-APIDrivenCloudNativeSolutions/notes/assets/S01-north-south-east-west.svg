@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">North-south and east-west API traffic</title>
+  <desc id="desc">Users call an API gateway over north-south traffic; internal services call each other over east-west traffic.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.internet{fill:#fff8e8;stroke:#dfc28a;stroke-width:2;rx:28}.inside{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:28}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.gw{fill:#e8f3f6;stroke:#4c8191;stroke-width:3;rx:22}.svc{fill:#fffdf7;stroke:#3b856d;stroke-width:2;rx:18}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 19px Georgia,serif;fill:#17313d}.small{font:500 14px Georgia,serif;fill:#3f5861}.tag{font:700 15px Georgia,serif;fill:#8a5b20}
+      .arrow{stroke:#28536b;stroke-width:3.5;fill:none;marker-end:url(#arrow)}.bi{stroke:#2f7d68;stroke-width:3.5;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1100" height="620"/>
+  <text class="title" x="55" y="55">Choose API style by traffic direction</text>
+  <rect class="internet" x="70" y="105" width="255" height="405"/>
+  <text class="tag" x="198" y="137" text-anchor="middle">outside your ecosystem</text>
+  <rect class="box" x="105" y="245" width="185" height="95"/><text class="label" x="198" y="285" text-anchor="middle">Users</text><text class="small" x="198" y="312" text-anchor="middle">browser / mobile</text>
+  <rect class="gw" x="450" y="245" width="210" height="95"/><text class="label" x="555" y="285" text-anchor="middle">API Gateway</text><text class="small" x="555" y="312" text-anchor="middle">public edge</text>
+  <rect class="inside" x="760" y="105" width="270" height="405"/>
+  <text class="tag" x="895" y="137" text-anchor="middle">inside your system</text>
+  <rect class="svc" x="805" y="175" width="180" height="62"/><text class="label" x="895" y="213" text-anchor="middle">Order service</text>
+  <rect class="svc" x="805" y="265" width="180" height="62"/><text class="label" x="895" y="303" text-anchor="middle">Consumer service</text>
+  <rect class="svc" x="805" y="355" width="180" height="62"/><text class="label" x="895" y="393" text-anchor="middle">Payment service</text>
+  <path class="arrow" d="M290 292 L450 292"/><text class="label" x="370" y="266" text-anchor="middle">NORTH-SOUTH</text><text class="small" x="370" y="318" text-anchor="middle">REST or GraphQL</text>
+  <path class="arrow" d="M660 292 C700 250 735 206 805 206"/>
+  <path class="bi" d="M805 238 C760 260 760 282 805 296"/>
+  <path class="bi" d="M805 328 C760 348 760 372 805 386"/>
+  <text class="label" x="720" y="450" text-anchor="middle">EAST-WEST</text><text class="small" x="720" y="475" text-anchor="middle">gRPC when speed/payload matters</text>
+</svg>

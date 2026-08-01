@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="680" viewBox="0 0 1160 680" role="img" aria-labelledby="title desc">
+  <title id="title">REST GraphQL gRPC decision tree</title>
+  <desc id="desc">Choose an API style by asking who calls it, whether the data is graph-shaped, and whether latency or payload size is measured pain.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.q{fill:#fff8e8;stroke:#cfa65a;stroke-width:2;rx:24}.rest{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:20}.gql{fill:#f3edf7;stroke:#8e6aa5;stroke-width:2;rx:20}.grpc{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:20}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 18px Georgia,serif;fill:#17313d}.small{font:500 14px Georgia,serif;fill:#3f5861}.edge{font:700 13px Georgia,serif;fill:#586b72}
+      .arrow{stroke:#28536b;stroke-width:3.3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1160" height="680"/>
+  <text class="title" x="55" y="55">API style decision tree: start with the consumer</text>
+  <rect class="q" x="455" y="95" width="250" height="86"/><text class="label" x="580" y="130" text-anchor="middle">Who calls it?</text><text class="small" x="580" y="154" text-anchor="middle">consumer boundary first</text>
+  <rect class="q" x="145" y="275" width="270" height="98"/><text class="label" x="280" y="310" text-anchor="middle">Browser or third party?</text><text class="small" x="280" y="336" text-anchor="middle">Do screens need many</text><text class="small" x="280" y="358" text-anchor="middle">connected resources?</text>
+  <rect class="q" x="745" y="275" width="270" height="98"/><text class="label" x="880" y="310" text-anchor="middle">Service you own?</text><text class="small" x="880" y="336" text-anchor="middle">Is latency or payload</text><text class="small" x="880" y="358" text-anchor="middle">size measured pain?</text>
+  <rect class="rest" x="70" y="510" width="220" height="92"/><text class="label" x="180" y="546" text-anchor="middle">REST</text><text class="small" x="180" y="571" text-anchor="middle">flat resources</text><text class="small" x="180" y="592" text-anchor="middle">HTTP caching</text>
+  <rect class="gql" x="340" y="510" width="220" height="92"/><text class="label" x="450" y="546" text-anchor="middle">GraphQL</text><text class="small" x="450" y="571" text-anchor="middle">one call, client</text><text class="small" x="450" y="592" text-anchor="middle">picks fields</text>
+  <rect class="grpc" x="700" y="510" width="220" height="92"/><text class="label" x="810" y="546" text-anchor="middle">gRPC</text><text class="small" x="810" y="571" text-anchor="middle">protobuf + HTTP/2</text><text class="small" x="810" y="592" text-anchor="middle">between services</text>
+  <rect class="rest" x="950" y="510" width="150" height="92"/><text class="label" x="1025" y="546" text-anchor="middle">REST</text><text class="small" x="1025" y="571" text-anchor="middle">default</text><text class="small" x="1025" y="592" text-anchor="middle">still wins</text>
+  <path class="arrow" d="M515 181 C410 218 345 245 280 275"/><text class="edge" x="375" y="222" text-anchor="middle">outside caller</text>
+  <path class="arrow" d="M645 181 C750 218 815 245 880 275"/><text class="edge" x="786" y="222" text-anchor="middle">internal caller</text>
+  <path class="arrow" d="M250 373 L180 510"/><text class="edge" x="190" y="444" text-anchor="middle">no</text>
+  <path class="arrow" d="M330 373 L450 510"/><text class="edge" x="409" y="444" text-anchor="middle">yes</text>
+  <path class="arrow" d="M850 373 L810 510"/><text class="edge" x="808" y="444" text-anchor="middle">yes</text>
+  <path class="arrow" d="M930 373 L1025 510"/><text class="edge" x="1000" y="444" text-anchor="middle">no</text>
+</svg>

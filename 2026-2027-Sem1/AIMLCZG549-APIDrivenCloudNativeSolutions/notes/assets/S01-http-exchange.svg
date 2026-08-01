@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="460" viewBox="0 0 1080 460" role="img" aria-labelledby="title desc">
+  <title id="title">HTTP request and response exchange</title>
+  <desc id="desc">A client sends method, endpoint, headers and body to an API endpoint, then receives status, headers and body.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#274b5f"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cfbe92;stroke-width:2;rx:22}.api{fill:#e6f3f6;stroke:#4c8191;stroke-width:2;rx:22}.payload{fill:#f4eee1;stroke:#d1a852;stroke-width:2;rx:16}
+      .title{font:700 27px Georgia,serif;fill:#16313d}.label{font:700 21px Georgia,serif;fill:#16313d}.small{font:500 16px Georgia,serif;fill:#405861}
+      .arrow{stroke:#274b5f;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1080" height="460"/>
+  <text class="title" x="54" y="56">HTTP API: one request, one response</text>
+  <rect class="box" x="70" y="178" width="180" height="100"/><text class="label" x="160" y="222" text-anchor="middle">Client</text><text class="small" x="160" y="249" text-anchor="middle">browser or app</text>
+  <rect class="api" x="445" y="170" width="210" height="116"/><text class="label" x="550" y="218" text-anchor="middle">API endpoint</text><text class="small" x="550" y="247" text-anchor="middle">URL door</text>
+  <rect class="box" x="835" y="178" width="180" height="100"/><text class="label" x="925" y="222" text-anchor="middle">API server</text><text class="small" x="925" y="249" text-anchor="middle">does the work</text>
+
+  <rect class="payload" x="310" y="94" width="460" height="76"/><text class="label" x="540" y="124" text-anchor="middle">Request</text><text class="small" x="540" y="150" text-anchor="middle">method + URL + headers + optional body</text>
+  <rect class="payload" x="310" y="304" width="460" height="76"/><text class="label" x="540" y="334" text-anchor="middle">Response</text><text class="small" x="540" y="360" text-anchor="middle">status code + headers + optional body</text>
+
+  <path class="arrow" d="M250 205 C330 112 360 112 445 205"/>
+  <path class="arrow" d="M655 205 C730 112 765 112 835 205"/>
+  <path class="arrow" d="M835 255 C760 350 730 350 655 255"/>
+  <path class="arrow" d="M445 255 C365 350 330 350 250 255"/>
+  <text class="small" x="540" y="420" text-anchor="middle">HTTP is the wire shape underneath REST, GraphQL-over-HTTP, SDKs, curl, and Postman.</text>
+</svg>

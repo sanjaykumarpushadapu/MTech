@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="520" viewBox="0 0 1160 520" role="img" aria-labelledby="title desc">
+  <title id="title">RPC stub mechanism</title>
+  <desc id="desc">Client and server stubs package, send, unpack and return a remote procedure call so it looks local to the caller.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.node{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:22}.stub{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:22}.net{fill:#ffe8c7;stroke:#c6762d;stroke-width:2;rx:22}
+      .title{font:700 26px Georgia,serif;fill:#17313d}.label{font:700 19px Georgia,serif;fill:#17313d}.small{font:500 14px Georgia,serif;fill:#3f5861}
+      .arrow{stroke:#28536b;stroke-width:3.5;fill:none;marker-end:url(#arrow)}.dash{stroke:#7b919b;stroke-width:3;stroke-dasharray:7 7;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1160" height="520"/>
+  <text class="title" x="55" y="55">RPC: stubs make a network call feel like a local function call</text>
+  <rect class="node" x="65" y="185" width="150" height="95"/><text class="label" x="140" y="224" text-anchor="middle">Client</text><text class="small" x="140" y="250" text-anchor="middle">calls Add()</text>
+  <rect class="stub" x="270" y="185" width="165" height="95"/><text class="label" x="352" y="224" text-anchor="middle">Client stub</text><text class="small" x="352" y="250" text-anchor="middle">packs message</text>
+  <rect class="net" x="500" y="185" width="160" height="95"/><text class="label" x="580" y="224" text-anchor="middle">Network</text><text class="small" x="580" y="250" text-anchor="middle">request bytes</text>
+  <rect class="stub" x="725" y="185" width="165" height="95"/><text class="label" x="807" y="224" text-anchor="middle">Server stub</text><text class="small" x="807" y="250" text-anchor="middle">unpacks call</text>
+  <rect class="node" x="945" y="185" width="150" height="95"/><text class="label" x="1020" y="224" text-anchor="middle">Server</text><text class="small" x="1020" y="250" text-anchor="middle">runs method</text>
+  <path class="arrow" d="M215 232 L270 232"/><path class="arrow" d="M435 232 L500 232"/><path class="arrow" d="M660 232 L725 232"/><path class="arrow" d="M890 232 L945 232"/>
+  <path class="arrow" d="M945 300 C815 410 340 410 215 300"/><text class="small" x="580" y="433" text-anchor="middle">result returns through the same hidden packing/unpacking path</text>
+  <path class="dash" d="M140 185 C160 115 320 115 352 185"/><text class="small" x="246" y="107" text-anchor="middle">local-call illusion</text>
+</svg>
