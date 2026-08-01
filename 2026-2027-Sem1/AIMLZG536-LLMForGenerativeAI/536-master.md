@@ -32,7 +32,7 @@
 
 | S | Topic | Sub-topics | Source | Exam | Note file |
 |---|---|---|---|---|---|
-| 1 | Foundations of LLMs | Intro to LLMs & GenAI; attention & transformer (review); building blocks; LLM architectures; **tokenization**; LLM landscape | T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | mid | `notes/S01-foundations.md` |
+| 1 | Foundations of Large Language Models (LLMs) | Introduction to LLMs and Generative AI; attention mechanism & transformer (review); building blocks of LLM; LLM architectures; **tokenization**; LLM landscape | T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | mid | `notes/S01-foundations.md` |
 | 2 | LLM Pre-Training | Pre-training objectives; pre-training data; continuous pre-training (CPT) & domain adaptation; **scaling laws**; frontier model pretraining | T1 ch7,8 · R1 ch2,5 | mid | `notes/S02-pretraining.md` |
 | 3 | Advancements in LLM Architecture | Normalization (LayerNorm, RMSNorm, placement); positional encoding (relative PE, **RoPE**, NoPE); activations (GELU, Swish, GLU, SwiGLU); **MoE** sparse activation & routing; emerging architectures | T2 ch3 · papers | mid | `notes/S03-architecture.md` |
 | 4 | Training & Attention Efficiency | Memory bottlenecks; mixed-precision training; IO-aware attention (**FlashAttention**); long context (Ring Attention); efficiency variants (sliding window, sparse, linear) | T2 ch3 · papers | mid | `notes/S04-efficiency.md` |
