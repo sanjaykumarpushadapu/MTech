@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">What ML changes about engineering</title>
+  <desc id="desc">ML changes specifications, real-world interaction, and data-focused scalability, but each has older engineering parallels.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.root{fill:#e8f3f6;stroke:#4c8191;stroke-width:3;rx:22}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.old{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 16px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1100" height="560"/><text class="t" x="54" y="55">What ML changes: new pressure, old engineering lessons</text>
+  <rect class="root" x="425" y="95" width="250" height="70"/><text class="l" x="550" y="137" text-anchor="middle">What ML changes</text>
+  <rect class="box" x="70" y="245" width="280" height="85"/><text class="l" x="210" y="278" text-anchor="middle">No exact specification</text><text class="s" x="210" y="304" text-anchor="middle">deductive to inductive</text>
+  <rect class="box" x="410" y="245" width="280" height="85"/><text class="l" x="550" y="278" text-anchor="middle">Interacts with world</text><text class="s" x="550" y="304" text-anchor="middle">feedback and drift</text>
+  <rect class="box" x="750" y="245" width="280" height="85"/><text class="l" x="890" y="278" text-anchor="middle">Data-focused scaling</text><text class="s" x="890" y="304" text-anchor="middle">pipelines become product</text>
+  <rect class="old" x="70" y="390" width="280" height="75"/><text class="l" x="210" y="422" text-anchor="middle">Parallel</text><text class="s" x="210" y="447" text-anchor="middle">safe systems from unreliable parts</text>
+  <rect class="old" x="410" y="390" width="280" height="75"/><text class="l" x="550" y="422" text-anchor="middle">Parallel</text><text class="s" x="550" y="447" text-anchor="middle">hazard analysis, threat models</text>
+  <rect class="old" x="750" y="390" width="280" height="75"/><text class="l" x="890" y="422" text-anchor="middle">Parallel</text><text class="s" x="890" y="447" text-anchor="middle">cloud and big data predate ML</text>
+  <path class="arr" d="M475 165 L210 245"/><path class="arr" d="M550 165 L550 245"/><path class="arr" d="M625 165 L890 245"/><path class="arr" d="M210 330 L210 390"/><path class="arr" d="M550 330 L550 390"/><path class="arr" d="M890 330 L890 390"/>
+</svg>

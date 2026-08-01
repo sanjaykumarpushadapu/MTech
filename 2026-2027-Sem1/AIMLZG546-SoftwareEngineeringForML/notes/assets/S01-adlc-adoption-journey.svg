@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">ADLC adoption journey</title>
+  <desc id="desc">Four stages of GenAI adoption: experiment, onboard and pilot, scale and soar, sustain.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.focus{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 17px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}.fb{stroke:#c85a3d;stroke-width:2.5;stroke-dasharray:7 7;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1120" height="420"/><text class="t" x="54" y="55">ADLC adoption journey: value comes from sustained usage</text>
+  <rect class="box" x="60" y="155" width="220" height="105"/><text class="l" x="170" y="190" text-anchor="middle">1. Experiment</text><text class="s" x="170" y="218" text-anchor="middle">POCs, vetting, guidelines</text>
+  <rect class="box" x="330" y="155" width="220" height="105"/><text class="l" x="440" y="190" text-anchor="middle">2. Onboard and pilot</text><text class="s" x="440" y="218" text-anchor="middle">licenses, training, KPIs</text>
+  <rect class="box" x="600" y="155" width="220" height="105"/><text class="l" x="710" y="190" text-anchor="middle">3. Scale and soar</text><text class="s" x="710" y="218" text-anchor="middle">champions, rollout, stories</text>
+  <rect class="focus" x="870" y="155" width="220" height="105"/><text class="l" x="980" y="190" text-anchor="middle">4. Sustain</text><text class="s" x="980" y="218" text-anchor="middle">over 80% usage, improve</text>
+  <path class="arr" d="M280 208 L330 208"/><path class="arr" d="M550 208 L600 208"/><path class="arr" d="M820 208 L870 208"/>
+  <path class="fb" d="M980 260 C850 350 285 350 170 260"/><text class="s" x="575" y="360" text-anchor="middle">feedback resets the next experiment</text>
+</svg>

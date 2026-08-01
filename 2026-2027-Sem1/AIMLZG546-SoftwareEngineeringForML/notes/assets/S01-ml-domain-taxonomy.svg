@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">Types of ML domains</title>
+  <desc id="desc">Machine learning domains can be cut by supervision type and by data type.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.root{fill:#e8f3f6;stroke:#4c8191;stroke-width:3;rx:22}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.warn{fill:#ffe7dd;stroke:#c85a3d;stroke-width:2;rx:18}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 17px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1100" height="620"/><text class="t" x="54" y="55">ML domain means two useful cuts: supervision and data type</text>
+  <rect class="root" x="435" y="95" width="230" height="70"/><text class="l" x="550" y="137" text-anchor="middle">Machine learning</text>
+  <rect class="box" x="80" y="245" width="260" height="92"/><text class="l" x="210" y="282" text-anchor="middle">Supervised</text><text class="s" x="210" y="308" text-anchor="middle">input plus label pairs</text>
+  <rect class="box" x="420" y="245" width="260" height="92"/><text class="l" x="550" y="282" text-anchor="middle">Unsupervised</text><text class="s" x="550" y="308" text-anchor="middle">structure without labels</text>
+  <rect class="box" x="760" y="245" width="260" height="92"/><text class="l" x="890" y="282" text-anchor="middle">Reinforcement</text><text class="s" x="890" y="308" text-anchor="middle">learns from reward</text>
+  <rect class="warn" x="80" y="395" width="260" height="90"/><text class="l" x="210" y="430" text-anchor="middle">Classification, regression</text><text class="s" x="210" y="456" text-anchor="middle">labels become pipeline cost</text>
+  <rect class="box" x="420" y="395" width="260" height="90"/><text class="l" x="550" y="430" text-anchor="middle">Clustering, anomaly</text><text class="s" x="550" y="456" text-anchor="middle">patterns are discovered</text>
+  <rect class="box" x="760" y="395" width="260" height="90"/><text class="l" x="890" y="430" text-anchor="middle">Control, games, RLHF</text><text class="s" x="890" y="456" text-anchor="middle">reward shapes behavior</text>
+  <path class="arr" d="M500 165 L210 245"/><path class="arr" d="M550 165 L550 245"/><path class="arr" d="M600 165 L890 245"/><path class="arr" d="M210 337 L210 395"/><path class="arr" d="M550 337 L550 395"/><path class="arr" d="M890 337 L890 395"/>
+  <text class="s" x="550" y="560" text-anchor="middle">A second cut is data type: tabular, vision, text, speech, time series, recommender logs.</text>
+</svg>

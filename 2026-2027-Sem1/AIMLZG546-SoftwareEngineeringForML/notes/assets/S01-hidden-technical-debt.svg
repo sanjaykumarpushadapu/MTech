@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img" aria-labelledby="title desc">
+  <title id="title">Hidden technical debt in ML systems</title>
+  <desc id="desc">The trained model is a small part of a production ML system surrounded by infrastructure, data, serving, and monitoring.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.model{fill:#e8f3f6;stroke:#4c8191;stroke-width:3;rx:24}.sys{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 18px Georgia,serif;fill:#17313d}.s{font:500 14px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1080" height="620"/>
+  <text class="t" x="54" y="55">Production ML: the model is small; the system around it is large</text>
+  <rect class="sys" x="80" y="110" width="920" height="430"/>
+  <text class="l" x="540" y="145" text-anchor="middle">Infrastructure, config, resources, process</text>
+  <rect class="box" x="145" y="235" width="180" height="92"/><text class="l" x="235" y="272" text-anchor="middle">Data pipeline</text><text class="s" x="235" y="298" text-anchor="middle">collect, clean, label</text>
+  <rect class="box" x="375" y="235" width="170" height="92"/><text class="l" x="460" y="272" text-anchor="middle">Features</text><text class="s" x="460" y="298" text-anchor="middle">engineering</text>
+  <rect class="model" x="600" y="215" width="170" height="132"/><text class="l" x="685" y="270" text-anchor="middle">Trained</text><text class="l" x="685" y="298" text-anchor="middle">model</text>
+  <rect class="box" x="825" y="235" width="140" height="92"/><text class="l" x="895" y="272" text-anchor="middle">Serving</text><text class="s" x="895" y="298" text-anchor="middle">API, scaling</text>
+  <rect class="box" x="600" y="395" width="200" height="92"/><text class="l" x="700" y="432" text-anchor="middle">Monitoring</text><text class="s" x="700" y="458" text-anchor="middle">drift, quality, cost</text>
+  <path class="arr" d="M325 281 L375 281"/><path class="arr" d="M545 281 L600 281"/><path class="arr" d="M770 281 L825 281"/><path class="arr" d="M895 327 C880 395 820 430 800 440"/><path class="arr" d="M700 395 C640 360 640 350 685 347"/>
+  <text class="s" x="540" y="575" text-anchor="middle">The course studies these surrounding boxes: data, requirements, deployment, monitoring, process, and responsibility.</text>
+</svg>

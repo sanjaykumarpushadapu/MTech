@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" role="img" aria-labelledby="title desc">
+  <title id="title">Software development life cycle</title>
+  <desc id="desc">Planning, analysis, design, development, testing, deployment, and maintenance form a repeating cycle.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 17px Georgia,serif;fill:#17313d}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="900" height="620"/><text class="t" x="54" y="55">SDLC: the whole product lifecycle repeats</text>
+  <rect class="box" x="365" y="105" width="170" height="58"/><text class="l" x="450" y="141" text-anchor="middle">Planning</text>
+  <rect class="box" x="610" y="200" width="170" height="58"/><text class="l" x="695" y="236" text-anchor="middle">Analysis</text>
+  <rect class="box" x="610" y="370" width="170" height="58"/><text class="l" x="695" y="406" text-anchor="middle">Design</text>
+  <rect class="box" x="365" y="465" width="170" height="58"/><text class="l" x="450" y="501" text-anchor="middle">Development</text>
+  <rect class="box" x="120" y="370" width="170" height="58"/><text class="l" x="205" y="406" text-anchor="middle">Testing</text>
+  <rect class="box" x="120" y="200" width="170" height="58"/><text class="l" x="205" y="236" text-anchor="middle">Deployment</text>
+  <rect class="box" x="365" y="285" width="170" height="58"/><text class="l" x="450" y="321" text-anchor="middle">Maintenance</text>
+  <path class="arr" d="M535 134 C590 145 640 170 680 200"/><path class="arr" d="M695 258 L695 370"/><path class="arr" d="M610 410 C565 450 520 465 535 494"/><path class="arr" d="M365 494 C320 465 270 445 250 428"/><path class="arr" d="M205 370 L205 258"/><path class="arr" d="M290 220 C340 195 380 165 365 134"/><path class="arr" d="M450 343 L450 465"/>
+</svg>

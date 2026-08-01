@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360" role="img" aria-labelledby="title desc">
+  <title id="title">Data engineering ETL to BI</title>
+  <desc id="desc">Data source is extracted to staging, transformed into a warehouse, and loaded for business intelligence.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.store{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.t{font:700 24px Georgia,serif;fill:#17313d}.l{font:700 17px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="900" height="360"/><text class="t" x="54" y="55">Data engineer view: ETL feeds BI</text>
+  <rect class="box" x="70" y="155" width="150" height="72"/><text class="l" x="145" y="198" text-anchor="middle">Data source</text>
+  <rect class="box" x="290" y="155" width="150" height="72"/><text class="l" x="365" y="198" text-anchor="middle">Staging</text>
+  <rect class="store" x="510" y="155" width="150" height="72"/><text class="l" x="585" y="188" text-anchor="middle">Data</text><text class="l" x="585" y="210" text-anchor="middle">warehouse</text>
+  <rect class="box" x="730" y="155" width="110" height="72"/><text class="l" x="785" y="198" text-anchor="middle">BI</text>
+  <path class="arr" d="M220 191 L290 191"/><text class="s" x="255" y="170" text-anchor="middle">Extract</text>
+  <path class="arr" d="M440 191 L510 191"/><text class="s" x="475" y="170" text-anchor="middle">Transform</text>
+  <path class="arr" d="M660 191 L730 191"/><text class="s" x="695" y="170" text-anchor="middle">Load</text>
+</svg>

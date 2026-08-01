@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="720" viewBox="0 0 900 720" role="img" aria-labelledby="title desc">
+  <title id="title">Data science hierarchy of needs</title>
+  <desc id="desc">A pyramid from collect through move and store, explore and transform, aggregate and label, learn and optimize, to AI and deep learning.</desc>
+  <style>.bg{fill:#f8f4ea}.tier{stroke:#cdbb90;stroke-width:2}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 18px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.role{font:700 13px Georgia,serif;fill:#7b5a22}</style>
+  <rect class="bg" width="900" height="720"/><text class="t" x="54" y="55">Data science hierarchy of needs</text>
+  <polygon class="tier" points="110,625 790,625 730,545 170,545" fill="#fffdf7"/><text class="l" x="450" y="582" text-anchor="middle">Collect</text><text class="s" x="450" y="606" text-anchor="middle">instrumentation, logs, sensors, external data</text>
+  <polygon class="tier" points="170,545 730,545 675,465 225,465" fill="#fff8e8"/><text class="l" x="450" y="502" text-anchor="middle">Move / store</text><text class="s" x="450" y="526" text-anchor="middle">reliable flow, ETL, structured and unstructured storage</text>
+  <polygon class="tier" points="225,465 675,465 620,385 280,385" fill="#eaf5ef"/><text class="l" x="450" y="422" text-anchor="middle">Explore / transform</text><text class="s" x="450" y="446" text-anchor="middle">cleaning, anomaly detection, preparation</text>
+  <polygon class="tier" points="280,385 620,385 565,305 335,305" fill="#e8f3f6"/><text class="l" x="450" y="342" text-anchor="middle">Aggregate / label</text><text class="s" x="450" y="366" text-anchor="middle">metrics, features, training labels</text>
+  <polygon class="tier" points="335,305 565,305 515,225 385,225" fill="#f3edf7"/><text class="l" x="450" y="262" text-anchor="middle">Learn / optimize</text><text class="s" x="450" y="286" text-anchor="middle">experiments, simple ML</text>
+  <polygon class="tier" points="385,225 515,225 450,125" fill="#ffe8c7"/><text class="l" x="450" y="192" text-anchor="middle">AI / DL</text>
+  <text class="role" x="705" y="590">Data infrastructure engineer</text><text class="role" x="705" y="510">Data engineer</text><text class="role" x="665" y="350">Data scientist / analyst</text><text class="role" x="650" y="195">ML engineer</text>
+</svg>

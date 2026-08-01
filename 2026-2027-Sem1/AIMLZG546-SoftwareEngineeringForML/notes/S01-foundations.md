@@ -38,20 +38,7 @@ Three angles, one argument: the process history, the failure evidence (**87% of 
 
 *The whole course in one picture — the classic "hidden technical debt" point:*
 
-```mermaid
-flowchart TD
-    INFRA["infrastructure<br/>config · resources · process"]
-    DATA["data pipeline<br/>collection · cleaning<br/>labeling · validation"]
-    FEAT["feature engineering"]
-    ML[["trained model"]]
-    SERVE["serving layer<br/>APIs · scaling"]
-    MON["monitoring<br/>drift · performance"]
-    INFRA --> DATA
-    INFRA --> ML
-    INFRA --> SERVE
-    INFRA --> MON
-    DATA --> FEAT --> ML --> SERVE --> MON
-```
+![Hidden technical debt in ML systems](assets/S01-hidden-technical-debt.svg)
 
 The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
 
@@ -67,13 +54,7 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 **Intuition** — Two different things both get called "the ML", and keeping them apart is most of the clarity in this course. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs once, at training. The model runs a billion times, in production.
 
-```mermaid
-flowchart TD
-    TD[(Training data)] --> ALG[ML algorithm<br/>sklearn, TensorFlow]
-    ALG -->|model training| MOD[Machine-learned model<br/>the learned function]
-    NI[New input] --> MOD
-    MOD -->|model inference| PRED[Prediction]
-```
+![Training versus inference](assets/S01-training-vs-inference.svg)
 
 The nesting: **AI ⊃ machine learning ⊃ deep learning**, with **foundation models** a kind of large model typically produced by deep learning. Supervised ML learns from *(data, label)* pairs, where the label is the expected output.
 
@@ -133,22 +114,13 @@ Three consequences follow directly, and each drives a later session:
 
 #### 2.3 Types of ML domains
 
-⚠️ *The session agenda lists "Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**", but the teaching material stops before reaching it. It is included here because it is a named syllabus item, and the later sessions assume the distinction.*
+⚠️ *Types of ML domains is an examinable foundation topic. The practical value is knowing which data, validation, and failure modes the system inherits before you design the pipeline.*
 
 **Intuition** — "ML domain" gets used in two different senses, and each answers a different engineering question: **what kind of supervision does the model learn from, and what kind of data does it operate on?**
 
 **Cut 1 — by what the model learns from.** This decides what *data* you need:
 
-```mermaid
-flowchart TD
-    ML["Machine learning"] --> SUP["Supervised<br/>learns from (input, label) pairs"]
-    ML --> UNS["Unsupervised<br/>finds structure, no labels"]
-    ML --> RL["Reinforcement<br/>learns from reward signal"]
-    SUP --> S1["classification · regression<br/>fraud detection lives here"]
-    UNS --> U1["clustering · anomaly detection<br/>dimensionality reduction"]
-    RL --> R1["control · game playing<br/>RLHF for LLMs"]
-    SUP -.->|"labels are the<br/>expensive part"| SUP
-```
+![Types of ML domains](assets/S01-ml-domain-taxonomy.svg)
 
 The engineering consequence is the dashed note: **supervised learning makes labelling a first-class cost**, which is why the ML pipeline (section 3) has a *Data labeling* stage that no traditional SDLC has.
 
@@ -191,16 +163,7 @@ This gets its own section, which signals it can be asked.
 
 **Intuition** — A structured, repeating process for building software: plan it, understand it, design it, build it, check it, ship it, keep it alive. A cycle, not a line — maintenance feeds back into planning.
 
-```mermaid
-flowchart TD
-    P[Planning] --> A[Analysis]
-    A --> D[Design]
-    D --> Dev[Development]
-    Dev --> T[Testing]
-    T --> Dep[Deployment]
-    Dep --> M[Maintenance]
-    M --> P
-```
+![Software development life cycle](assets/S01-sdlc-cycle.svg)
 
 **Shift-left testing** — move testing earlier ("left" on the timeline) rather than treating it as a final gate. Defects found in design cost a fraction of defects found in production. Frequently flagged as exam-worthy.
 
@@ -212,33 +175,7 @@ flowchart TD
 
 **Intuition** — Training is one step of many. Everything before it is making data fit to learn from; everything after is deciding whether it's good enough and keeping it alive.
 
-```mermaid
-flowchart TD
-    R["Model requirements"] --> DC
-
-    subgraph PREP["Prepare the data"]
-        direction LR
-        DC["Data collection"] --> DL["Data labeling"] --> CL["Data cleaning and<br/>feature engineering"]
-    end
-
-    subgraph BUILD["Learn and judge"]
-        direction LR
-        TR["Model training"] --> EV["Model evaluation"]
-    end
-
-    subgraph RUN["Run in production"]
-        direction LR
-        DEP["Deployment"] --> MON["Monitoring"]
-    end
-
-    CL --> TR
-    EV --> DEP
-
-    EV -.->|"need more data"| DC
-    EV -.->|"need different features"| CL
-    EV -.->|"need a different algorithm<br/>or hyperparameters"| TR
-    MON -.->|"production feedback"| R
-```
+![Machine learning pipeline](assets/S01-ml-pipeline.svg)
 
 Two engineering-relevant properties:
 
@@ -329,15 +266,7 @@ That last row is worth pausing on. It's an *organisational* failure mode, not a 
 
 #### The four-stage adoption journey
 
-```mermaid
-flowchart TD
-    E["1 · EXPERIMENT<br/>find what fits<br/>POCs · security & legal vetting<br/>usage guidelines"]
-    O["2 · ONBOARD & PILOT<br/>license management<br/>training, hackathons<br/>establish KPIs, ROI, baseline"]
-    S["3 · SCALE & SOAR<br/>org-level rollout<br/>train champions<br/>publish success stories"]
-    Su["4 · SUSTAIN<br/>maintain >80% usage<br/>remove roadblocks<br/>continuous improvement"]
-    E --> O --> S --> Su
-    Su -.->|feedback| E
-```
+![ADLC adoption journey](assets/S01-adlc-adoption-journey.svg)
 
 Two specifics worth carrying: **KPIs and a baseline must be established at the pilot stage** — you cannot demonstrate ROI without a before-measurement — and the sustain target is **at least 80% active utilisation**, monitored, with roadblocks actively removed.
 
@@ -377,16 +306,7 @@ Cloud Native App = Agile + DevOps + Microservices + Containers + Cloud
 
 **Intuition** — Sixty years of one pressure: more data than the previous generation's tools could hold, forcing a new layer each time.
 
-```mermaid
-flowchart TD
-    A["1960s<br/>files and spreadsheets<br/>manual, limited sharing"] --> B["1970<br/>relational model<br/>foundation for RDBMS"]
-    B --> C["1989<br/>KDD and data mining<br/>classification · regression · clustering"]
-    C --> D["early 2000s<br/>warehousing and ETL<br/>transactional → analytical"]
-    D --> E["mid 2000s<br/>social media data<br/>supervised ML expands"]
-    E --> F["2006–2008<br/>cloud computing<br/>scalable storage and compute"]
-    F --> G["2010–2015<br/>big data deluge<br/>mobile · IoT · deep learning"]
-    G --> H["2018<br/>transformers at scale<br/>attention + large data + compute"]
-```
+![Evolution of data](assets/S01-data-evolution-timeline.svg)
 
 **The through-line** — storage → compute → algorithms → data volume, each unlock enabling the next. Transformers didn't arrive because someone had a clever idea in 2018; they arrived because the 2010–2015 data deluge and cloud compute made them trainable.
 
@@ -409,21 +329,7 @@ That third row is a favourite exam question because it's counter-intuitive: ML s
 
 **The hierarchy of needs** — you cannot do the fun layer until the boring layers underneath work. AI sits at the apex of a pyramid whose base is instrumentation and logging.
 
-```mermaid
-flowchart BT
-    C["COLLECT<br/>instrumentation, logging, sensors,<br/>external data, user-generated content"]
-    M["MOVE / STORE<br/>reliable data flow, infrastructure,<br/>pipelines, ETL, structured + unstructured storage"]
-    E["EXPLORE / TRANSFORM<br/>cleaning, anomaly detection, prep"]
-    A["AGGREGATE / LABEL<br/>analytics, metrics, segments,<br/>aggregates, features, training data"]
-    L["LEARN / OPTIMIZE<br/>A/B testing, experimentation,<br/>simple ML algorithms"]
-    AI["AI, DEEP LEARNING"]
-    C --> M --> E --> A --> L --> AI
-
-    C -.- r1["Data Infrastructure Engineer"]
-    M -.- r2["Data Engineer"]
-    A -.- r3["Data Scientist / Data Analyst"]
-    AI -.- r4["ML Engineer"]
-```
+![Data science hierarchy of needs](assets/S01-data-hierarchy-needs.svg)
 
 **Worked example** — A team wants an LLM assistant over company documents. Apex layer. But if documents aren't collected in one place (COLLECT), or the sync pipeline is unreliable (MOVE/STORE), or they're full of duplicates and dead links (EXPLORE/TRANSFORM), the assistant produces confident nonsense. It looks like a model problem; it's a base-of-pyramid problem.
 
@@ -435,15 +341,7 @@ flowchart BT
 
 *Shortest memory hook:* the **ML pipeline is model-centric**; the **data-science pipeline is insight-centric**.
 
-```mermaid
-flowchart TD
-    C["Collect<br/>raw data arrives"] --> CL["Clean<br/>fix missing values, bad rows"]
-    CL --> E["Explore<br/>patterns, anomalies, bias"]
-    E --> F["Feature / transform<br/>shape data into something useful"]
-    F --> M["Model or analysis<br/>learn or estimate"]
-    M --> I["Interpret<br/>metrics, visuals, story"]
-    I --> D["Decision / action<br/>what changes next"]
-```
+![Data science pipeline](assets/S01-data-science-pipeline.svg)
 
 **Mechanism** — each stage removes one kind of ambiguity before the next stage can do useful work:
 
@@ -504,33 +402,15 @@ Distinguished by **what they hand over**, and the handovers get progressively ha
 
 **Data engineer** — moves and stores data reliably.
 
-```mermaid
-flowchart LR
-    S[Data source] -->|Extract| ST[Staging area]
-    ST -->|Transform| DW[(Data warehouse)]
-    DW -->|Load| BI[Business intelligence]
-```
+![Data engineering ETL to BI](assets/S01-etl-bi.svg)
 
 **Data scientist** — produces a model and an answer, typically once.
 
-```mermaid
-flowchart LR
-    D[(Data)] --> M[ML model]
-    M --> F[One-time forecast]
-```
+![One-time forecast](assets/S01-one-time-forecast.svg)
 
 **ML engineer** — runs a model continuously in production, with feedback.
 
-```mermaid
-flowchart LR
-    CD[(Client data)] --> M[ML model]
-    AD[(Additional data)] --> M
-    M --> PD[(Prediction data)]
-    GT[(Ground truth data)] --> MON[Monitoring and analysis]
-    PD --> MON
-    MON -.->|drift detected, retrain| M
-    CD --> GT
-```
+![Production ML feedback loop](assets/S01-production-ml-feedback.svg)
 
 **Worked example** — Fraud detection. The *data engineer* guarantees last night's transactions land in the warehouse by 6am. The *data scientist* shows a model catches 82% of fraud on last year's data. The *ML engineer* runs it on live traffic, compares predictions against confirmed-fraud ground truth as it arrives, notices recall sliding from 82% to 61% as tactics change, and retrains.
 
@@ -565,15 +445,7 @@ The evidence on the reverse direction is worth sitting with, since it describes 
 
 **Mechanism — three engineering assumptions weaken.** Traditional software assumes a component can be specified, failures are often detectable, and scale is mostly an operational consequence. ML weakens all three: the learned function is induced from examples, wrong predictions can look normal, and more users can improve the model by producing more data.
 
-```mermaid
-flowchart TD
-    ML["What ML changes"] --> C1["8.1 · No specifications<br/>deductive → inductive"]
-    ML --> C2["8.2 · Interacting with<br/>the real world"]
-    ML --> C3["8.3 · Data-focused<br/>and scalable"]
-    C1 --> N1["but not new:<br/>safe systems from<br/>unreliable parts"]
-    C2 --> N2["but not new:<br/>hazard analysis,<br/>threat modelling"]
-    C3 --> N3["but not new:<br/>cloud + big data<br/>predate ML"]
-```
+![What ML changes about engineering](assets/S01-what-ml-changes.svg)
 
 *Every row is a pair — the challenge, then the "we've seen this before". Reproduce both halves; section 8.4 is where the second half stops holding.*
 
@@ -648,13 +520,7 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 > **The conjecture:** software products with ML components tend to fall toward the more complex and more risky end of the spectrum, compared to traditional products — calling for more investment in rigorous engineering practices.
 
-```mermaid
-flowchart LR
-    L["LOW RISK<br/>music recommender<br/>photo tagging"] --> M["MEDIUM<br/>fraud detection<br/>hiring screen"]
-    M --> H["HIGH RISK<br/>medical diagnosis<br/>autonomous driving"]
-    L -.->|"heavy process here<br/>is its own failure"| L
-    H -.->|"light process here<br/>is negligence"| H
-```
+![ML risk spectrum](assets/S01-risk-spectrum.svg)
 
 **The thesis in one line:** ML doesn't make projects riskier — *we attempt riskier things with ML*. The judgment being taught is **locating your system on this line first**, then matching practice to position.
 
@@ -704,13 +570,7 @@ Providing *internal data* in the prompt is the case that flags forward to **retr
 
 *The full customisation ladder, cheapest first:*
 
-```mermaid
-flowchart LR
-    A["1 · Prompt<br/>zero-shot"] --> B["2 · Few-shot<br/>examples in prompt"]
-    B --> C["3 · RAG<br/>retrieve your data<br/>into the prompt"]
-    C --> D["4 · Fine-tune<br/>train a copy"]
-    D --> E["5 · Pre-train<br/>your own model"]
-```
+![Foundation model adaptation ladder](assets/S01-foundation-model-adaptation.svg)
 
 Cost, effort and *how much of the model you change* all rise left → right, and the engineering rule is: **reach for the leftmost rung that works.** Prompt and few-shot change nothing but the text; RAG adds a retrieval system but no training; fine-tuning produces a model you own, host and version; pre-training is for the few orgs building foundation models. The classic mistake is fine-tuning something a better prompt or RAG would have fixed — the expensive rung reached for too early. (RAG's mechanics → S6.)
 
@@ -734,25 +594,7 @@ That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, 
 
 *Why "cross-cutting" is the whole claim — these aren't phases you can schedule:*
 
-```mermaid
-flowchart TD
-    subgraph P["The lifecycle phases"]
-        direction LR
-        R["Requirements"] --> D["Design"] --> B["Build"] --> T["Test"] --> DEP["Deploy"] --> O["Operate"]
-    end
-    MLO["MLOps"] -.-> R
-    MLO -.-> D
-    MLO -.-> B
-    MLO -.-> T
-    MLO -.-> DEP
-    MLO -.-> O
-    RML["Responsible ML"] -.-> R
-    RML -.-> D
-    RML -.-> B
-    RML -.-> T
-    RML -.-> DEP
-    RML -.-> O
-```
+![MLOps and responsible ML overlay](assets/S01-mlops-responsible-overlay.svg)
 
 Both touch **every** phase — there is no single point in the timeline where either is "the current task."
 

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">Foundation model adaptation ladder</title>
+  <desc id="desc">Five ways to adapt foundation models: zero-shot prompting, few-shot prompting, RAG, fine-tuning, and pre-training.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.deep{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.hard{fill:#ffe7dd;stroke:#c85a3d;stroke-width:2;rx:18}.t{font:700 25px Georgia,serif;fill:#17313d}.l{font:700 16px Georgia,serif;fill:#17313d}.s{font:500 12px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1120" height="420"/><text class="t" x="54" y="55">Foundation model adaptation: start simple, move right only when needed</text>
+  <rect class="box" x="55" y="160" width="170" height="90"/><text class="l" x="140" y="194" text-anchor="middle">1. Prompt</text><text class="s" x="140" y="220" text-anchor="middle">zero-shot</text>
+  <rect class="box" x="270" y="160" width="170" height="90"/><text class="l" x="355" y="194" text-anchor="middle">2. Few-shot</text><text class="s" x="355" y="220" text-anchor="middle">examples in prompt</text>
+  <rect class="deep" x="485" y="160" width="170" height="90"/><text class="l" x="570" y="194" text-anchor="middle">3. RAG</text><text class="s" x="570" y="220" text-anchor="middle">retrieve your data</text>
+  <rect class="deep" x="700" y="160" width="170" height="90"/><text class="l" x="785" y="194" text-anchor="middle">4. Fine-tune</text><text class="s" x="785" y="220" text-anchor="middle">train a copy</text>
+  <rect class="hard" x="915" y="160" width="170" height="90"/><text class="l" x="1000" y="194" text-anchor="middle">5. Pre-train</text><text class="s" x="1000" y="220" text-anchor="middle">own model</text>
+  <path class="arr" d="M225 205 L270 205"/><path class="arr" d="M440 205 L485 205"/><path class="arr" d="M655 205 L700 205"/><path class="arr" d="M870 205 L915 205"/>
+  <text class="s" x="570" y="315" text-anchor="middle">Cost, data need, and operational risk increase from left to right.</text>
+</svg>

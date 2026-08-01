@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">Data science pipeline</title>
+  <desc id="desc">Collect, clean, explore, feature or transform, model or analyze, interpret, and decide.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.model{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 16px Georgia,serif;fill:#17313d}.s{font:500 12px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1120" height="420"/><text class="t" x="54" y="55">Data science pipeline: turn raw data into a decision</text>
+  <rect class="box" x="55" y="175" width="130" height="82"/><text class="l" x="120" y="207" text-anchor="middle">Collect</text><text class="s" x="120" y="230" text-anchor="middle">raw data</text>
+  <rect class="box" x="210" y="175" width="130" height="82"/><text class="l" x="275" y="207" text-anchor="middle">Clean</text><text class="s" x="275" y="230" text-anchor="middle">bad rows</text>
+  <rect class="box" x="365" y="175" width="130" height="82"/><text class="l" x="430" y="207" text-anchor="middle">Explore</text><text class="s" x="430" y="230" text-anchor="middle">patterns, bias</text>
+  <rect class="box" x="520" y="175" width="140" height="82"/><text class="l" x="590" y="207" text-anchor="middle">Feature</text><text class="s" x="590" y="230" text-anchor="middle">transform</text>
+  <rect class="model" x="685" y="175" width="140" height="82"/><text class="l" x="755" y="207" text-anchor="middle">Model</text><text class="s" x="755" y="230" text-anchor="middle">or analysis</text>
+  <rect class="box" x="850" y="175" width="130" height="82"/><text class="l" x="915" y="207" text-anchor="middle">Interpret</text><text class="s" x="915" y="230" text-anchor="middle">metrics, story</text>
+  <rect class="box" x="1005" y="175" width="90" height="82"/><text class="l" x="1050" y="207" text-anchor="middle">Act</text><text class="s" x="1050" y="230" text-anchor="middle">decision</text>
+  <path class="arr" d="M185 216 L210 216"/><path class="arr" d="M340 216 L365 216"/><path class="arr" d="M495 216 L520 216"/><path class="arr" d="M660 216 L685 216"/><path class="arr" d="M825 216 L850 216"/><path class="arr" d="M980 216 L1005 216"/>
+</svg>

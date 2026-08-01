@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="520" viewBox="0 0 1050 520" role="img" aria-labelledby="title desc">
+  <title id="title">Training versus inference</title>
+  <desc id="desc">Training data and an ML algorithm create a model; new input uses the model for inference.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.train{fill:#fff2d7;stroke:#c98937;stroke-width:2;rx:22}.prod{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:22}.model{fill:#e8f3f6;stroke:#4c8191;stroke-width:3;rx:24}.t{font:700 26px Georgia,serif;fill:#17313d}.l{font:700 19px Georgia,serif;fill:#17313d}.s{font:500 14px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1050" height="520"/>
+  <text class="t" x="54" y="55">Algorithm creates the model; the model serves predictions</text>
+  <rect class="train" x="80" y="120" width="400" height="270"/><text class="l" x="280" y="155" text-anchor="middle">Training time</text>
+  <rect class="train" x="130" y="215" width="145" height="80"/><text class="l" x="203" y="263" text-anchor="middle">Training data</text>
+  <rect class="train" x="310" y="215" width="135" height="80"/><text class="l" x="378" y="251" text-anchor="middle">ML</text><text class="s" x="378" y="274" text-anchor="middle">algorithm</text>
+  <rect class="model" x="565" y="215" width="155" height="80"/><text class="l" x="642" y="251" text-anchor="middle">Learned</text><text class="s" x="642" y="274" text-anchor="middle">model</text>
+  <rect class="prod" x="795" y="120" width="185" height="270"/><text class="l" x="888" y="155" text-anchor="middle">Inference time</text>
+  <rect class="prod" x="815" y="205" width="145" height="64"/><text class="l" x="888" y="243" text-anchor="middle">New input</text>
+  <rect class="prod" x="815" y="305" width="145" height="64"/><text class="l" x="888" y="343" text-anchor="middle">Prediction</text>
+  <path class="arr" d="M275 255 L310 255"/><path class="arr" d="M445 255 L565 255"/><path class="arr" d="M720 255 L815 237"/><path class="arr" d="M720 270 L815 337"/>
+  <text class="s" x="525" y="455" text-anchor="middle">Only the trained model has to run in production; training infrastructure can stay separate.</text>
+</svg>

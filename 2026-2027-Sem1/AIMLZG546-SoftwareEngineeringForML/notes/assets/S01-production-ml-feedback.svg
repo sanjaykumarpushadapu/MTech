@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="520" viewBox="0 0 1040 520" role="img" aria-labelledby="title desc">
+  <title id="title">Production ML feedback loop</title>
+  <desc id="desc">Client and additional data feed an ML model, predictions and ground truth are monitored, and drift triggers retraining.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.data{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.model{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:20}.mon{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:20}.t{font:700 25px Georgia,serif;fill:#17313d}.l{font:700 17px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}.fb{stroke:#c85a3d;stroke-width:2.5;stroke-dasharray:7 7;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1040" height="520"/><text class="t" x="54" y="55">ML engineer view: production feedback keeps the model alive</text>
+  <rect class="data" x="80" y="150" width="170" height="68"/><text class="l" x="165" y="191" text-anchor="middle">Client data</text>
+  <rect class="data" x="80" y="280" width="170" height="68"/><text class="l" x="165" y="321" text-anchor="middle">Additional data</text>
+  <rect class="model" x="365" y="205" width="160" height="88"/><text class="l" x="445" y="242" text-anchor="middle">ML model</text><text class="s" x="445" y="266" text-anchor="middle">serving</text>
+  <rect class="data" x="640" y="150" width="170" height="68"/><text class="l" x="725" y="191" text-anchor="middle">Prediction data</text>
+  <rect class="data" x="640" y="280" width="170" height="68"/><text class="l" x="725" y="321" text-anchor="middle">Ground truth</text>
+  <rect class="mon" x="850" y="205" width="145" height="88"/><text class="l" x="922" y="242" text-anchor="middle">Monitoring</text><text class="s" x="922" y="266" text-anchor="middle">drift, quality</text>
+  <path class="arr" d="M250 184 C300 190 330 220 365 238"/><path class="arr" d="M250 314 C300 305 330 275 365 260"/><path class="arr" d="M525 238 L640 184"/><path class="arr" d="M810 184 C835 190 850 215 850 238"/><path class="arr" d="M810 314 C835 305 850 275 850 260"/><path class="fb" d="M922 293 C900 420 480 430 445 293"/><text class="s" x="672" y="435" text-anchor="middle">drift detected: retrain or revise data pipeline</text>
+</svg>

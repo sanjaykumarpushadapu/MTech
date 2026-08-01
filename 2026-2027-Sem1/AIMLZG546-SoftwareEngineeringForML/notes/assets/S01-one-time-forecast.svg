@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" role="img" aria-labelledby="title desc">
+  <title id="title">One-time forecast</title>
+  <desc id="desc">Data goes into an ML model and produces a one-time forecast.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.model{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.t{font:700 24px Georgia,serif;fill:#17313d}.l{font:700 18px Georgia,serif;fill:#17313d}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="760" height="340"/><text class="t" x="54" y="55">Data scientist view: one-time forecast</text>
+  <rect class="box" x="80" y="150" width="140" height="72"/><text class="l" x="150" y="193" text-anchor="middle">Data</text>
+  <rect class="model" x="315" y="150" width="150" height="72"/><text class="l" x="390" y="193" text-anchor="middle">ML model</text>
+  <rect class="box" x="560" y="150" width="130" height="72"/><text class="l" x="625" y="183" text-anchor="middle">One-time</text><text class="l" x="625" y="205" text-anchor="middle">forecast</text>
+  <path class="arr" d="M220 186 L315 186"/><path class="arr" d="M465 186 L560 186"/>
+</svg>

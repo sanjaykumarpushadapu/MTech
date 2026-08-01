@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760" role="img" aria-labelledby="title desc">
+  <title id="title">Evolution of data</title>
+  <desc id="desc">A connected milestone ladder from files and spreadsheets to relational databases, data mining, warehousing, social data, cloud computing, big data, and transformer-scale AI.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#28536b"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}
+      .spine{stroke:#28536b;stroke-width:4;fill:none;marker-end:url(#arrow)}
+      .tick{stroke:#28536b;stroke-width:3}
+      .card{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}
+      .modern{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}
+      .title{font:700 27px Georgia,serif;fill:#17313d}
+      .year{font:700 18px Georgia,serif;fill:#17313d}
+      .label{font:700 16px Georgia,serif;fill:#17313d}
+      .small{font:500 13px Georgia,serif;fill:#3f5861}
+      .why{font:500 14px Georgia,serif;fill:#3f5861}
+    </style>
+  </defs>
+  <rect class="bg" width="1100" height="760"/>
+  <text class="title" x="54" y="55">Evolution of data: each jump made larger-scale ML more practical</text>
+
+  <path class="spine" d="M150 120 L150 640"/>
+
+  <line class="tick" x1="150" y1="135" x2="205" y2="135"/>
+  <rect class="card" x="225" y="100" width="780" height="72"/>
+  <text class="year" x="255" y="132">1960s</text>
+  <text class="label" x="360" y="132">Files and spreadsheets</text>
+  <text class="why" x="360" y="154">Manual storage and limited sharing; analysis stayed small and local.</text>
+
+  <line class="tick" x1="150" y1="205" x2="205" y2="205"/>
+  <rect class="card" x="225" y="170" width="780" height="72"/>
+  <text class="year" x="255" y="202">1970</text>
+  <text class="label" x="360" y="202">Relational model</text>
+  <text class="why" x="360" y="224">Tables and SQL made structured data reliable, queryable, and shareable.</text>
+
+  <line class="tick" x1="150" y1="275" x2="205" y2="275"/>
+  <rect class="card" x="225" y="240" width="780" height="72"/>
+  <text class="year" x="255" y="272">1989</text>
+  <text class="label" x="360" y="272">KDD and data mining</text>
+  <text class="why" x="360" y="294">Classification, regression, and clustering became organised ways to discover patterns.</text>
+
+  <line class="tick" x1="150" y1="345" x2="205" y2="345"/>
+  <rect class="card" x="225" y="310" width="780" height="72"/>
+  <text class="year" x="255" y="342">early 2000s</text>
+  <text class="label" x="400" y="342">Warehousing and ETL</text>
+  <text class="why" x="400" y="364">Transactional data could be moved into analytical stores for repeatable reporting.</text>
+
+  <line class="tick" x1="150" y1="415" x2="205" y2="415"/>
+  <rect class="card" x="225" y="380" width="780" height="72"/>
+  <text class="year" x="255" y="412">mid 2000s</text>
+  <text class="label" x="400" y="412">Social-media data</text>
+  <text class="why" x="400" y="434">User-generated data expanded supervised-learning opportunities and scale.</text>
+
+  <line class="tick" x1="150" y1="485" x2="205" y2="485"/>
+  <rect class="modern" x="225" y="450" width="780" height="72"/>
+  <text class="year" x="255" y="482">2006-2008</text>
+  <text class="label" x="400" y="482">Cloud computing</text>
+  <text class="why" x="400" y="504">Elastic storage and compute made large experiments affordable without owning hardware.</text>
+
+  <line class="tick" x1="150" y1="555" x2="205" y2="555"/>
+  <rect class="modern" x="225" y="520" width="780" height="72"/>
+  <text class="year" x="255" y="552">2010-2015</text>
+  <text class="label" x="400" y="552">Big data, mobile, IoT, deep learning</text>
+  <text class="why" x="400" y="574">Data volume and GPU-friendly methods pushed models beyond hand-engineered analytics.</text>
+
+  <line class="tick" x1="150" y1="625" x2="205" y2="625"/>
+  <rect class="modern" x="225" y="590" width="780" height="72"/>
+  <text class="year" x="255" y="622">2018</text>
+  <text class="label" x="400" y="622">Transformers at scale</text>
+  <text class="why" x="400" y="644">Attention, very large datasets, and compute became the foundation of modern GenAI.</text>
+</svg>

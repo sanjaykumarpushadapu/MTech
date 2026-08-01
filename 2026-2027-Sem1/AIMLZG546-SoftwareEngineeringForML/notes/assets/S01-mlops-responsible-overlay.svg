@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">MLOps and responsible ML overlay</title>
+  <desc id="desc">MLOps and responsible ML cut across all lifecycle phases from requirements through operation.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.phase{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:16}.ops{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:20}.resp{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:20}.t{font:700 25px Georgia,serif;fill:#17313d}.l{font:700 15px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}.dash1{stroke:#4c8191;stroke-width:2.5;stroke-dasharray:7 7}.dash2{stroke:#3b856d;stroke-width:2.5;stroke-dasharray:7 7}</style></defs>
+  <rect class="bg" width="1120" height="520"/><text class="t" x="54" y="55">MLOps and responsible ML are cross-cutting, not final phases</text>
+  <rect class="phase" x="70" y="215" width="135" height="64"/><text class="l" x="138" y="254" text-anchor="middle">Requirements</text>
+  <rect class="phase" x="230" y="215" width="115" height="64"/><text class="l" x="288" y="254" text-anchor="middle">Design</text>
+  <rect class="phase" x="370" y="215" width="115" height="64"/><text class="l" x="428" y="254" text-anchor="middle">Build</text>
+  <rect class="phase" x="510" y="215" width="115" height="64"/><text class="l" x="568" y="254" text-anchor="middle">Test</text>
+  <rect class="phase" x="650" y="215" width="115" height="64"/><text class="l" x="708" y="254" text-anchor="middle">Deploy</text>
+  <rect class="phase" x="790" y="215" width="115" height="64"/><text class="l" x="848" y="254" text-anchor="middle">Operate</text>
+  <path class="arr" d="M205 247 L230 247"/><path class="arr" d="M345 247 L370 247"/><path class="arr" d="M485 247 L510 247"/><path class="arr" d="M625 247 L650 247"/><path class="arr" d="M765 247 L790 247"/>
+  <rect class="ops" x="935" y="125" width="135" height="64"/><text class="l" x="1002" y="164" text-anchor="middle">MLOps</text>
+  <rect class="resp" x="935" y="315" width="135" height="64"/><text class="l" x="1002" y="340" text-anchor="middle">Responsible</text><text class="l" x="1002" y="360" text-anchor="middle">ML</text>
+  <line class="dash1" x1="1002" y1="189" x2="138" y2="215"/><line class="dash1" x1="1002" y1="189" x2="848" y2="215"/>
+  <line class="dash2" x1="1002" y1="315" x2="138" y2="279"/><line class="dash2" x1="1002" y1="315" x2="848" y2="279"/>
+  <text class="s" x="488" y="385" text-anchor="middle">Automation, reproducibility, monitoring, fairness, privacy, and explainability must be designed in from the start.</text>
+</svg>

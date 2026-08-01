@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="430" viewBox="0 0 1040 430" role="img" aria-labelledby="title desc">
+  <title id="title">ML risk spectrum</title>
+  <desc id="desc">Low, medium, and high risk ML applications require different levels of process.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.low{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:20}.mid{fill:#fff2d7;stroke:#c98937;stroke-width:2;rx:20}.high{fill:#ffe7dd;stroke:#c85a3d;stroke-width:2;rx:20}.t{font:700 25px Georgia,serif;fill:#17313d}.l{font:700 18px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs>
+  <rect class="bg" width="1040" height="430"/><text class="t" x="54" y="55">Risk spectrum: process should match consequences</text>
+  <rect class="low" x="70" y="150" width="250" height="110"/><text class="l" x="195" y="190" text-anchor="middle">Low risk</text><text class="s" x="195" y="218" text-anchor="middle">music recommender, photo tagging</text><text class="s" x="195" y="242" text-anchor="middle">heavy process can be failure</text>
+  <rect class="mid" x="395" y="150" width="250" height="110"/><text class="l" x="520" y="190" text-anchor="middle">Medium risk</text><text class="s" x="520" y="218" text-anchor="middle">fraud detection, hiring screen</text><text class="s" x="520" y="242" text-anchor="middle">measure cost of mistakes</text>
+  <rect class="high" x="720" y="150" width="250" height="110"/><text class="l" x="845" y="190" text-anchor="middle">High risk</text><text class="s" x="845" y="218" text-anchor="middle">medical diagnosis, autonomous driving</text><text class="s" x="845" y="242" text-anchor="middle">light process is negligence</text>
+  <path class="arr" d="M320 205 L395 205"/><path class="arr" d="M645 205 L720 205"/>
+</svg>
