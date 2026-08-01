@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="540" viewBox="0 0 1120 540" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud-native architecture case-study checklist</title>
+  <desc id="desc">A sale-day architecture is analyzed through traffic, bottlenecks, scaling, resilience, data consistency, and observability.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.risk{fill:#fff0e8;stroke:#d86f45;stroke-width:2;rx:18}.safe{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 18px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+  <rect class="bg" width="1120" height="540"/>
+  <text class="title" x="56" y="54">Case-study lens: ask what fails when traffic jumps suddenly</text>
+  <rect class="risk" x="90" y="150" width="230" height="220"/><text class="head" x="205" y="190" text-anchor="middle">Symptoms</text><text class="body" x="205" y="230" text-anchor="middle">site crash</text><text class="body" x="205" y="264" text-anchor="middle">cart loss</text><text class="body" x="205" y="298" text-anchor="middle">payment without order</text><text class="body" x="205" y="332" text-anchor="middle">refund/cancel failure</text>
+  <rect class="box" x="445" y="125" width="240" height="270"/><text class="head" x="565" y="165" text-anchor="middle">Architecture questions</text><text class="body" x="565" y="205" text-anchor="middle">Which service is hot?</text><text class="body" x="565" y="238" text-anchor="middle">Can it scale alone?</text><text class="body" x="565" y="271" text-anchor="middle">Where are queues needed?</text><text class="body" x="565" y="304" text-anchor="middle">What data must be consistent?</text><text class="body" x="565" y="337" text-anchor="middle">What telemetry proves it?</text>
+  <rect class="safe" x="810" y="150" width="230" height="220"/><text class="head" x="925" y="190" text-anchor="middle">Better design</text><text class="body" x="925" y="230" text-anchor="middle">separate cart/order/payment</text><text class="body" x="925" y="264" text-anchor="middle">autoscale bottlenecks</text><text class="body" x="925" y="298" text-anchor="middle">use queues for bursts</text><text class="body" x="925" y="332" text-anchor="middle">monitor and rollback</text>
+  <path class="arrow" d="M320 260 L445 260"/><path class="arrow" d="M685 260 L810 260"/>
+</svg>

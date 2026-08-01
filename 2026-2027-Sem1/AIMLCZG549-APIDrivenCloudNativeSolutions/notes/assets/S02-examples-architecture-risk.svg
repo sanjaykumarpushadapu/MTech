@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud native examples and architecture risk</title>
+  <desc id="desc">High traffic products require independent scaling, resilience, and observability to avoid sale-day failures.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+    <style>
+      .bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.risk{fill:#fff0e8;stroke:#d86f45;stroke-width:2;rx:18}.safe{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 20px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="title" x="56" y="54">Traffic spikes punish tightly coupled architecture</text>
+  <rect class="box" x="70" y="125" width="230" height="105"/><text class="head" x="185" y="163" text-anchor="middle">Streaming</text><text class="body" x="185" y="196" text-anchor="middle">millions watch at once</text>
+  <rect class="box" x="70" y="270" width="230" height="105"/><text class="head" x="185" y="308" text-anchor="middle">Ride sharing</text><text class="body" x="185" y="341" text-anchor="middle">maps, pricing, payments</text>
+  <rect class="box" x="70" y="415" width="230" height="60"/><text class="head" x="185" y="452" text-anchor="middle">Travel marketplace</text>
+  <rect class="risk" x="425" y="145" width="270" height="185"/>
+  <text class="head" x="560" y="185" text-anchor="middle">Sale-day failure mode</text>
+  <text class="body" x="560" y="222" text-anchor="middle">cart disappears, payment deducted,</text>
+  <text class="body" x="560" y="250" text-anchor="middle">order not created, site crashes</text>
+  <text class="body" x="560" y="288" text-anchor="middle">Coupling turns one bottleneck</text>
+  <text class="body" x="560" y="314" text-anchor="middle">into a customer-visible outage.</text>
+  <rect class="safe" x="810" y="125" width="245" height="250"/>
+  <text class="head" x="932" y="165" text-anchor="middle">Cloud-native response</text>
+  <text class="body" x="932" y="205" text-anchor="middle">scale hot services only</text>
+  <text class="body" x="932" y="238" text-anchor="middle">isolate failures</text>
+  <text class="body" x="932" y="271" text-anchor="middle">queue bursty work</text>
+  <text class="body" x="932" y="304" text-anchor="middle">observe bottlenecks</text>
+  <text class="body" x="932" y="337" text-anchor="middle">deploy fixes safely</text>
+  <path class="arrow" d="M300 177 L425 205"/>
+  <path class="arrow" d="M300 322 L425 245"/>
+  <path class="arrow" d="M300 445 L425 285"/>
+  <path class="arrow" d="M695 238 L810 238"/>
+</svg>

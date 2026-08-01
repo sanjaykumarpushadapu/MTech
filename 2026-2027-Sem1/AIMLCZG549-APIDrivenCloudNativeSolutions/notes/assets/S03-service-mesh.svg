@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Service mesh sidecar pattern</title>
+  <desc id="desc">A service mesh moves service-to-service traffic concerns into sidecar proxies controlled by a control plane.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea}.svc{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.proxy{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:14}.plane{fill:#17313d;stroke:#17313d;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 18px Georgia,serif;fill:#17313d}.body{font:14px Georgia,serif;fill:#24465a}.white{font:700 18px Georgia,serif;fill:#fffdf7}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}.dash{stroke:#93622a;stroke-width:2.5;stroke-dasharray:7 7;fill:none;marker-end:url(#arrow)}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="54">Service mesh: traffic policy beside services, not inside services</text>
+  <rect class="svc" x="120" y="170" width="170" height="90"/><text class="head" x="205" y="205" text-anchor="middle">Order service</text><text class="body" x="205" y="235" text-anchor="middle">business code</text>
+  <rect class="proxy" x="120" y="285" width="170" height="64"/><text class="head" x="205" y="325" text-anchor="middle">sidecar proxy</text>
+  <rect class="svc" x="475" y="170" width="170" height="90"/><text class="head" x="560" y="205" text-anchor="middle">Payment service</text><text class="body" x="560" y="235" text-anchor="middle">business code</text>
+  <rect class="proxy" x="475" y="285" width="170" height="64"/><text class="head" x="560" y="325" text-anchor="middle">sidecar proxy</text>
+  <rect class="svc" x="830" y="170" width="170" height="90"/><text class="head" x="915" y="205" text-anchor="middle">Delivery service</text><text class="body" x="915" y="235" text-anchor="middle">business code</text>
+  <rect class="proxy" x="830" y="285" width="170" height="64"/><text class="head" x="915" y="325" text-anchor="middle">sidecar proxy</text>
+  <path class="arrow" d="M290 317 L475 317"/><path class="arrow" d="M645 317 L830 317"/>
+  <rect class="plane" x="350" y="420" width="420" height="70"/><text class="white" x="560" y="448" text-anchor="middle">control plane</text><text class="white" x="560" y="474" text-anchor="middle">mTLS · retries · routing · telemetry policy</text>
+  <path class="dash" d="M455 420 L220 350"/><path class="dash" d="M560 420 L560 350"/><path class="dash" d="M665 420 L900 350"/>
+</svg>

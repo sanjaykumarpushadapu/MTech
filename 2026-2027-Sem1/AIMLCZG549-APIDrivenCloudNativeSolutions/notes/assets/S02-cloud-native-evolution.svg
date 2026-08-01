@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Evolution toward cloud-native applications</title>
+  <desc id="desc">Application delivery evolves from monolith on premises to cloud-native systems combining agile, DevOps, microservices, containers, and cloud.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#24465a"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.stage{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.focus{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 19px Georgia,serif;fill:#17313d}.body{font:14px Georgia,serif;fill:#24465a}.tag{fill:#d86f45;rx:12}.tagtext{font:700 14px Georgia,serif;fill:#fffdf7}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="title" x="56" y="54">Evolution: from hosting software to designing for cloud operation</text>
+  <rect class="stage" x="70" y="155" width="180" height="135"/>
+  <text class="head" x="160" y="192" text-anchor="middle">Monolith</text>
+  <text class="body" x="160" y="224" text-anchor="middle">one deployable unit</text>
+  <text class="body" x="160" y="250" text-anchor="middle">whole app scales together</text>
+  <rect class="stage" x="300" y="155" width="180" height="135"/>
+  <text class="head" x="390" y="192" text-anchor="middle">Cloud enabled</text>
+  <text class="body" x="390" y="224" text-anchor="middle">legacy app touches cloud</text>
+  <text class="body" x="390" y="250" text-anchor="middle">architecture mostly unchanged</text>
+  <rect class="stage" x="530" y="155" width="180" height="135"/>
+  <text class="head" x="620" y="192" text-anchor="middle">Cloud based</text>
+  <text class="body" x="620" y="224" text-anchor="middle">runs on cloud resources</text>
+  <text class="body" x="620" y="250" text-anchor="middle">uses managed capacity</text>
+  <rect class="focus" x="760" y="130" width="290" height="185"/>
+  <text class="head" x="905" y="170" text-anchor="middle">Cloud native</text>
+  <text class="body" x="905" y="203" text-anchor="middle">built for change, scale, and failure</text>
+  <text class="body" x="905" y="230" text-anchor="middle">small services + automation</text>
+  <text class="body" x="905" y="257" text-anchor="middle">containerized and observable</text>
+  <path class="arrow" d="M250 222 L300 222"/>
+  <path class="arrow" d="M480 222 L530 222"/>
+  <path class="arrow" d="M710 222 L760 222"/>
+  <rect class="tag" x="284" y="370" width="92" height="34"/><text class="tagtext" x="330" y="392" text-anchor="middle">Agile</text>
+  <rect class="tag" x="390" y="370" width="100" height="34"/><text class="tagtext" x="440" y="392" text-anchor="middle">DevOps</text>
+  <rect class="tag" x="504" y="370" width="138" height="34"/><text class="tagtext" x="573" y="392" text-anchor="middle">Microservices</text>
+  <rect class="tag" x="656" y="370" width="118" height="34"/><text class="tagtext" x="715" y="392" text-anchor="middle">Containers</text>
+  <rect class="tag" x="788" y="370" width="88" height="34"/><text class="tagtext" x="832" y="392" text-anchor="middle">Cloud</text>
+  <text class="body" x="560" y="444" text-anchor="middle">Cloud native = these practices designed together, not merely a server location.</text>
+</svg>

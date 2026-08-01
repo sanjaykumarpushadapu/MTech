@@ -606,7 +606,7 @@ Both touch **every** phase — there is no single point in the timeline where ei
 > MLOps is **CI/CD extended to data and models**. On top of the usual code pipeline (git, tests, containers), an ML pipeline adds three things software CI/CD never had:
 > - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. You can reproduce "the model from March" only if both are versioned alongside the code.
 > - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
-> - **Monitoring for drift** — the loop the S07 diagram shows: compare live predictions against ground truth as it arrives (Evidently AI), alert when recall slides, trigger retraining. This is the part that has no equivalent in traditional software, and it's where "ML engineer" and "MLOps engineer" spend most of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
+> - **Monitoring for drift** — compare live predictions against ground truth as it arrives, alert when recall slides, and trigger retraining. This is the part that has no equivalent in traditional software, and it is where ML engineers and MLOps engineers spend much of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
 
 > ***Going deeper*** *— the three ways a model actually serves predictions; picking the wrong one is a classic mistake:*
 >

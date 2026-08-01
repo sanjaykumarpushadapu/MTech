@@ -35,8 +35,8 @@ One view across all four subjects. Update the same weekend the session happens.
 |---|---|---|---|---|---|
 | 0 | **Python self-study** | ☐ | ☐ | — | — |
 | 1 | API basics & OpenAPI | ✅ | ✅ | ☐ | — · *transcript ✅* |
-| 2 | Cloud-native concepts | ☐ | ☐ | ☐ | ☐ |
-| 3 | CNCF ecosystem, containers, K8s | ☐ | ☐ | ☐ | ☐ |
+| 2 | Cloud-native concepts | ✅ | ✅ | ☐ | ☐ |
+| 3 | CNCF ecosystem, containers, K8s | ✅ | ✅ | ☐ | ☐ |
 | 4 | Data science & ML lifecycle | ☐ | ☐ | ☐ | ☐ |
 | 5 | API-driven data pipeline | ☐ | ☐ | ☐ | ☐ L1 |
 | 6 | ML pipelines & MLOps | ☐ | ☐ | ☐ | ☐ |

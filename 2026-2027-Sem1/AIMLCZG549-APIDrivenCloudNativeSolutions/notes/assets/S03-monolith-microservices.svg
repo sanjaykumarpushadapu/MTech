@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Monolith versus microservices</title>
+  <desc id="desc">A monolith deploys all capabilities together while microservices separate business capabilities into independently deployable services.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea}.panel{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.service{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:14}.mono{fill:#fff0e8;stroke:#d86f45;stroke-width:2;rx:20}.db{fill:#24465a}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 22px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.white{font:700 16px Georgia,serif;fill:#fffdf7}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="54">Microservices split change by business capability</text>
+  <rect class="panel" x="70" y="105" width="450" height="360"/>
+  <text class="head" x="295" y="145" text-anchor="middle">Monolith</text>
+  <rect class="mono" x="140" y="190" width="310" height="150"/>
+  <text class="body" x="295" y="225" text-anchor="middle">UI + order + payment + delivery</text>
+  <text class="body" x="295" y="257" text-anchor="middle">one codebase, one deploy, one scale unit</text>
+  <rect class="db" x="215" y="375" width="160" height="50" rx="10"/><text class="white" x="295" y="407" text-anchor="middle">shared database</text>
+  <path class="arrow" d="M295 340 L295 375"/>
+  <rect class="panel" x="600" y="105" width="450" height="360"/>
+  <text class="head" x="825" y="145" text-anchor="middle">Microservices</text>
+  <rect class="service" x="645" y="190" width="125" height="70"/><text class="body" x="707" y="232" text-anchor="middle">Order</text>
+  <rect class="service" x="795" y="190" width="125" height="70"/><text class="body" x="857" y="232" text-anchor="middle">Payment</text>
+  <rect class="service" x="645" y="300" width="125" height="70"/><text class="body" x="707" y="342" text-anchor="middle">Delivery</text>
+  <rect class="service" x="795" y="300" width="125" height="70"/><text class="body" x="857" y="342" text-anchor="middle">Menu</text>
+  <rect class="db" x="940" y="230" width="70" height="100" rx="10"/><text class="white" x="975" y="285" text-anchor="middle">data</text>
+  <path class="arrow" d="M770 225 L795 225"/><path class="arrow" d="M770 335 L795 335"/><path class="arrow" d="M920 225 L940 252"/><path class="arrow" d="M920 335 L940 310"/>
+</svg>

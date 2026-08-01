@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud enabled, cloud based, and cloud native comparison</title>
+  <desc id="desc">Three columns compare whether cloud is an integration point, a hosting platform, or a design model.</desc>
+  <style>
+    .bg{fill:#f8f4ea}.card{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.native{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:20}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 22px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.label{font:700 14px Georgia,serif;fill:#93622a}
+  </style>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="title" x="56" y="54">Cloud-enabled vs cloud-based vs cloud-native</text>
+  <rect class="card" x="70" y="120" width="300" height="315"/>
+  <text class="head" x="220" y="165" text-anchor="middle">Cloud enabled</text>
+  <text class="label" x="220" y="205" text-anchor="middle">Cloud is an add-on</text>
+  <text class="body" x="100" y="246">Legacy monolith remains intact.</text>
+  <text class="body" x="100" y="280">It integrates with one or more</text>
+  <text class="body" x="100" y="304">cloud services, but cannot exploit</text>
+  <text class="body" x="100" y="328">elasticity by design.</text>
+  <text class="body" x="100" y="376">Example: on-prem ERP sending</text>
+  <text class="body" x="100" y="400">backup files to cloud storage.</text>
+  <rect class="card" x="410" y="120" width="300" height="315"/>
+  <text class="head" x="560" y="165" text-anchor="middle">Cloud based</text>
+  <text class="label" x="560" y="205" text-anchor="middle">Cloud is the hosting platform</text>
+  <text class="body" x="440" y="246">Application moves to AWS, Azure,</text>
+  <text class="body" x="440" y="280">or GCP and uses cloud compute,</text>
+  <text class="body" x="440" y="304">storage, backup, and scaling.</text>
+  <text class="body" x="440" y="352">Example: a web app lifted into</text>
+  <text class="body" x="440" y="376">VMs with managed database.</text>
+  <rect class="native" x="750" y="120" width="300" height="315"/>
+  <text class="head" x="900" y="165" text-anchor="middle">Cloud native</text>
+  <text class="label" x="900" y="205" text-anchor="middle">Cloud is the design model</text>
+  <text class="body" x="780" y="246">Small independent services,</text>
+  <text class="body" x="780" y="280">containers, automation, telemetry,</text>
+  <text class="body" x="780" y="304">and failure-aware architecture.</text>
+  <text class="body" x="780" y="352">Example: order, payment, and</text>
+  <text class="body" x="780" y="376">delivery services deploy separately.</text>
+</svg>

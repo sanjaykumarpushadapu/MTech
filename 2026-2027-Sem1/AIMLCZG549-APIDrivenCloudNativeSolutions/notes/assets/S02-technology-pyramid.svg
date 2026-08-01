@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud native technology pyramid</title>
+  <desc id="desc">Cloud platforms support containers, orchestration, CI CD, and small services that deliver cloud native applications.</desc>
+  <style>
+    .bg{fill:#f8f4ea}.layer{stroke:#fffdf7;stroke-width:4}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 20px Georgia,serif;fill:#fffdf7}.dark{font:700 20px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.base{fill:#24465a}.mid1{fill:#2f7d68}.mid2{fill:#5f9f8b}.top{fill:#d86f45}.cap{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="54">Cloud-native technology stack: each layer supports the one above</text>
+  <polygon class="layer base" points="170,450 950,450 850,360 270,360"/>
+  <polygon class="layer mid1" points="270,360 850,360 745,270 375,270"/>
+  <polygon class="layer mid2" points="375,270 745,270 650,185 470,185"/>
+  <polygon class="layer top" points="470,185 650,185 560,105"/>
+  <text class="head" x="560" y="156" text-anchor="middle">Cloud-native app</text>
+  <text class="head" x="560" y="232" text-anchor="middle">Microservices + APIs</text>
+  <text class="head" x="560" y="318" text-anchor="middle">Containers + orchestrators</text>
+  <text class="head" x="560" y="412" text-anchor="middle">Cloud platform, storage, network, observability</text>
+  <rect class="cap" x="130" y="475" width="860" height="46"/>
+  <text class="body" x="560" y="504" text-anchor="middle">CI/CD and DevOps cut through every layer: build, test, release, observe, and improve.</text>
+</svg>

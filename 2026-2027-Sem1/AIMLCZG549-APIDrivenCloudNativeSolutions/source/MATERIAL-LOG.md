@@ -10,8 +10,8 @@ Legend: ✓ have · ✗ missing · — n/a
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
 | 1 | ✓ `API driven_Lecture 1_25Jul.pptx` (72 sl) | ✓ **R2 ch1 read** | ✓ Teams | ✅ received & extracted into note (not stored) | ✅ `notes/S01-api-basics.md` |
-| 2 |  |  |  |  | ☐ |
-| 3 |  |  |  |  | ☐ |
+| 2 | ✓ `Lecture 2 and 3.pptx` (mixed deck; slides 4-17) | ✓ R2 ch1 + R3 ch1 held | ☐ | ☐ | ✅ `notes/S02-cloud-native.md` |
+| 3 | ✓ `Lecture 2 and 3.pptx` (mixed deck; slides 18-71) | ✓ R3 ch1 held | ☐ | ☐ | ✅ `notes/S03-ecosystem.md` |
 | 4 |  |  |  |  | ☐ |
 | 5 |  |  |  |  | ☐ |
 | 6 |  |  |  |  | ☐ |
@@ -108,6 +108,15 @@ occurrence of "mock" anywhere in the deck is *To Kill a Mockingbird* in a GraphQ
 
 Written up in note section 4.1 from the OpenAPI toolchain (Prism, openapi-generator, contract
 tests), flagged in the note as filled-in. It is a named syllabus item, so treat it as examinable.
+
+## Mixed deck — sessions 2 and 3
+
+`Lecture 2 and 3.pptx` contains both contact sessions in one file. Split by the handout Learning Plan:
+
+- **S2:** slides 4-17 — modern application requirements, cloud-native evolution, cloud-enabled/cloud-based/cloud-native, examples.
+- **S3:** slides 18-71 — CNCF, case studies, microservices, serverless, DevOps, GitOps, containers, Kubernetes.
+
+The agenda names **Service Mesh**, but the deck does not teach it as a dedicated slide. The S3 note includes a short filled-in service-mesh subsection because the handout names it explicitly.
 
 ## R4 Treveil received — 27 Jul 2026
 

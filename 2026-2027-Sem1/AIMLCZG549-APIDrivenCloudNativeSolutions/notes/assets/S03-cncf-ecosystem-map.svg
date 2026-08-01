@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">CNCF ecosystem map</title>
+  <desc id="desc">The cloud-native ecosystem groups projects by job: runtime, orchestration, service connectivity, observability, delivery, and operations.</desc>
+  <style>
+    .bg{fill:#f8f4ea}.core{fill:#17313d;stroke:#17313d;stroke-width:2;rx:22}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.soft{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.white{font:700 22px Georgia,serif;fill:#fffdf7}.head{font:700 18px Georgia,serif;fill:#17313d}.body{font:14px Georgia,serif;fill:#24465a}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="54">CNCF landscape: read it as layers, not as hundreds of logos</text>
+  <rect class="core" x="385" y="220" width="350" height="105"/>
+  <text class="white" x="560" y="262" text-anchor="middle">Cloud-native ecosystem</text>
+  <text class="white" x="560" y="294" text-anchor="middle">building blocks by layer</text>
+  <rect class="box" x="70" y="120" width="245" height="90"/><text class="head" x="192" y="154" text-anchor="middle">Runtime</text><text class="body" x="192" y="184" text-anchor="middle">containers, images, registries</text>
+  <rect class="box" x="70" y="350" width="245" height="90"/><text class="head" x="192" y="384" text-anchor="middle">Orchestration</text><text class="body" x="192" y="414" text-anchor="middle">Kubernetes schedules and heals</text>
+  <rect class="soft" x="438" y="95" width="245" height="90"/><text class="head" x="560" y="129" text-anchor="middle">Service connectivity</text><text class="body" x="560" y="159" text-anchor="middle">ingress, mesh, proxy, discovery</text>
+  <rect class="box" x="805" y="120" width="245" height="90"/><text class="head" x="928" y="154" text-anchor="middle">Observability</text><text class="body" x="928" y="184" text-anchor="middle">metrics, logs, traces, alerts</text>
+  <rect class="box" x="805" y="350" width="245" height="90"/><text class="head" x="928" y="384" text-anchor="middle">Delivery</text><text class="body" x="928" y="414" text-anchor="middle">CI/CD, GitOps, release control</text>
+  <rect class="box" x="438" y="390" width="245" height="90"/><text class="head" x="560" y="424" text-anchor="middle">Operations</text><text class="body" x="560" y="454" text-anchor="middle">policy, config, secrets, governance</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Virtual machines versus containers</title>
+  <desc id="desc">Virtual machines package a guest OS per app while containers share the host OS and package app dependencies.</desc>
+  <style>
+    .bg{fill:#f8f4ea}.panel{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:20}.vm{fill:#fff0e8;stroke:#d86f45;stroke-width:2;rx:12}.ct{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:12}.base{fill:#24465a;rx:10}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 22px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.white{font:700 15px Georgia,serif;fill:#fffdf7}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="54">Containers package the app environment without a full guest OS per app</text>
+  <rect class="panel" x="80" y="110" width="460" height="360"/>
+  <text class="head" x="310" y="150" text-anchor="middle">Virtual machines</text>
+  <rect class="vm" x="130" y="185" width="110" height="120"/><text class="body" x="185" y="222" text-anchor="middle">App</text><text class="body" x="185" y="252" text-anchor="middle">Bins/libs</text><text class="body" x="185" y="282" text-anchor="middle">Guest OS</text>
+  <rect class="vm" x="260" y="185" width="110" height="120"/><text class="body" x="315" y="222" text-anchor="middle">App</text><text class="body" x="315" y="252" text-anchor="middle">Bins/libs</text><text class="body" x="315" y="282" text-anchor="middle">Guest OS</text>
+  <rect class="vm" x="390" y="185" width="110" height="120"/><text class="body" x="445" y="222" text-anchor="middle">App</text><text class="body" x="445" y="252" text-anchor="middle">Bins/libs</text><text class="body" x="445" y="282" text-anchor="middle">Guest OS</text>
+  <rect class="base" x="130" y="335" width="370" height="46"/><text class="white" x="315" y="364" text-anchor="middle">Hypervisor</text>
+  <rect class="base" x="130" y="395" width="370" height="46"/><text class="white" x="315" y="424" text-anchor="middle">Host operating system + hardware</text>
+  <rect class="panel" x="580" y="110" width="460" height="360"/>
+  <text class="head" x="810" y="150" text-anchor="middle">Containers</text>
+  <rect class="ct" x="630" y="185" width="110" height="90"/><text class="body" x="685" y="222" text-anchor="middle">App</text><text class="body" x="685" y="252" text-anchor="middle">Bins/libs</text>
+  <rect class="ct" x="760" y="185" width="110" height="90"/><text class="body" x="815" y="222" text-anchor="middle">App</text><text class="body" x="815" y="252" text-anchor="middle">Bins/libs</text>
+  <rect class="ct" x="890" y="185" width="110" height="90"/><text class="body" x="945" y="222" text-anchor="middle">App</text><text class="body" x="945" y="252" text-anchor="middle">Bins/libs</text>
+  <rect class="base" x="630" y="305" width="370" height="46"/><text class="white" x="815" y="334" text-anchor="middle">Container runtime</text>
+  <rect class="base" x="630" y="365" width="370" height="46"/><text class="white" x="815" y="394" text-anchor="middle">Shared host operating system + hardware</text>
+</svg>

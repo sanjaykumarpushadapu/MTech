@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Modern application pressure map</title>
+  <desc id="desc">Modern applications are pressured by always-on users, many devices, data volume, and quality attributes.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#24465a"/>
+    </marker>
+    <style>
+      .bg{fill:#f8f4ea}.core{fill:#17313d;stroke:#17313d;stroke-width:2}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.soft{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 20px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.white{font:700 22px Georgia,serif;fill:#fffdf7}.small{font:13px Georgia,serif;fill:#24465a}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="title" x="56" y="54">Modern applications: why cloud-native became necessary</text>
+  <rect class="core" x="430" y="190" width="260" height="120" rx="24"/>
+  <text class="white" x="560" y="235" text-anchor="middle">Modern app</text>
+  <text class="white" x="560" y="267" text-anchor="middle">must change safely</text>
+  <rect class="box" x="70" y="130" width="270" height="92"/>
+  <text class="head" x="205" y="164" text-anchor="middle">Always online</text>
+  <text class="body" x="205" y="195" text-anchor="middle">zero downtime, no maintenance window</text>
+  <rect class="box" x="70" y="300" width="270" height="92"/>
+  <text class="head" x="205" y="334" text-anchor="middle">Short feedback cycles</text>
+  <text class="body" x="205" y="365" text-anchor="middle">release small changes and learn fast</text>
+  <rect class="box" x="780" y="130" width="270" height="92"/>
+  <text class="head" x="915" y="164" text-anchor="middle">Many devices</text>
+  <text class="body" x="915" y="195" text-anchor="middle">web, mobile, TV, connected devices</text>
+  <rect class="box" x="780" y="300" width="270" height="92"/>
+  <text class="head" x="915" y="334" text-anchor="middle">Data driven</text>
+  <text class="body" x="915" y="365" text-anchor="middle">streaming events, analytics, personalization</text>
+  <rect class="soft" x="400" y="385" width="320" height="72"/>
+  <text class="head" x="560" y="416" text-anchor="middle">Quality attributes</text>
+  <text class="small" x="560" y="442" text-anchor="middle">scalability · performance · availability · security · maintainability</text>
+  <path class="arrow" d="M340 176 L428 218"/>
+  <path class="arrow" d="M340 346 L428 282"/>
+  <path class="arrow" d="M780 176 L692 218"/>
+  <path class="arrow" d="M780 346 L692 282"/>
+  <path class="arrow" d="M560 310 L560 385"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="540" viewBox="0 0 1120 540" role="img" aria-labelledby="title desc">
+  <title id="title">Kubernetes desired-state control loop</title>
+  <desc id="desc">Kubernetes compares desired state with actual state and schedules pods to nodes to keep applications running.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.focus{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.node{fill:#fff0e8;stroke:#d86f45;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 19px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+  <rect class="bg" width="1120" height="540"/>
+  <text class="title" x="56" y="54">Kubernetes: keep the running cluster close to desired state</text>
+  <rect class="box" x="80" y="170" width="185" height="100"/><text class="head" x="172" y="207" text-anchor="middle">Desired state</text><text class="body" x="172" y="240" text-anchor="middle">deploy 3 replicas</text>
+  <rect class="focus" x="340" y="140" width="230" height="160"/><text class="head" x="455" y="180" text-anchor="middle">Control plane</text><text class="body" x="455" y="215" text-anchor="middle">API server, scheduler,</text><text class="body" x="455" y="243" text-anchor="middle">controllers compare</text><text class="body" x="455" y="271" text-anchor="middle">desired vs actual</text>
+  <rect class="node" x="650" y="110" width="360" height="230"/><text class="head" x="830" y="150" text-anchor="middle">Worker nodes</text><rect class="box" x="700" y="190" width="85" height="55"/><text class="body" x="742" y="224" text-anchor="middle">Pod 1</text><rect class="box" x="795" y="190" width="85" height="55"/><text class="body" x="837" y="224" text-anchor="middle">Pod 2</text><rect class="box" x="890" y="190" width="85" height="55"/><text class="body" x="932" y="224" text-anchor="middle">Pod 3</text>
+  <rect class="box" x="340" y="380" width="230" height="78"/><text class="head" x="455" y="414" text-anchor="middle">Observe health</text><text class="body" x="455" y="440" text-anchor="middle">restart, reschedule, scale</text>
+  <path class="arrow" d="M265 220 L340 220"/><path class="arrow" d="M570 220 L650 220"/><path class="arrow" d="M830 340 C785 420 650 435 570 420"/><path class="arrow" d="M455 380 L455 300"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">DevOps and CI CD loop</title>
+  <desc id="desc">DevOps aligns people, process, and tools into a CI CD loop from code to deployment and monitoring.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea}.box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2;rx:18}.focus{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2;rx:18}.title{font:700 28px Georgia,serif;fill:#17313d}.head{font:700 18px Georgia,serif;fill:#17313d}.body{font:15px Georgia,serif;fill:#24465a}.arrow{stroke:#24465a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="54">DevOps: shorten the path from code change to customer value</text>
+  <rect class="box" x="110" y="195" width="140" height="78"/><text class="head" x="180" y="241" text-anchor="middle">Code</text>
+  <rect class="box" x="315" y="115" width="140" height="78"/><text class="head" x="385" y="161" text-anchor="middle">Build</text>
+  <rect class="box" x="520" y="115" width="140" height="78"/><text class="head" x="590" y="161" text-anchor="middle">Test</text>
+  <rect class="box" x="725" y="195" width="140" height="78"/><text class="head" x="795" y="241" text-anchor="middle">Release</text>
+  <rect class="focus" x="520" y="345" width="140" height="78"/><text class="head" x="590" y="391" text-anchor="middle">Monitor</text>
+  <rect class="focus" x="315" y="345" width="140" height="78"/><text class="head" x="385" y="391" text-anchor="middle">Learn</text>
+  <path class="arrow" d="M250 218 C285 170 285 154 315 154"/><path class="arrow" d="M455 154 L520 154"/><path class="arrow" d="M660 154 C705 162 717 186 725 218"/><path class="arrow" d="M795 273 C765 350 725 384 660 384"/><path class="arrow" d="M520 384 L455 384"/><path class="arrow" d="M315 384 C250 365 215 315 180 273"/>
+  <rect class="box" x="890" y="130" width="165" height="260"/><text class="head" x="972" y="170" text-anchor="middle">Three dimensions</text><text class="body" x="972" y="215" text-anchor="middle">People: culture</text><text class="body" x="972" y="260" text-anchor="middle">Process: CI/CD</text><text class="body" x="972" y="305" text-anchor="middle">Products: tools</text>
+</svg>
