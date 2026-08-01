@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+  <title id="title">Token IDs to token embeddings</title>
+  <desc id="desc">Input text is tokenized, mapped to token IDs, and then each ID selects a row from the language model embedding table.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <text x="550" y="54" text-anchor="middle" font-family="Georgia, serif" font-size="28" font-weight="700">Creating input token embeddings</text>
+
+  <text x="330" y="118" text-anchor="end" font-family="Georgia, serif" font-size="20">Token embeddings:</text>
+  <g transform="translate(355 96)">
+    <g fill="#f7f7f7" stroke="#555" stroke-width="1.8">
+      <rect x="0" y="0" width="18" height="18"/><rect x="18" y="0" width="18" height="18"/><rect x="36" y="0" width="18" height="18"/>
+      <rect x="85" y="0" width="18" height="18"/><rect x="103" y="0" width="18" height="18"/><rect x="121" y="0" width="18" height="18"/>
+      <rect x="170" y="0" width="18" height="18"/><rect x="188" y="0" width="18" height="18"/><rect x="206" y="0" width="18" height="18"/>
+      <rect x="255" y="0" width="18" height="18"/><rect x="273" y="0" width="18" height="18"/><rect x="291" y="0" width="18" height="18"/>
+      <rect x="340" y="0" width="18" height="18"/><rect x="358" y="0" width="18" height="18"/><rect x="376" y="0" width="18" height="18"/>
+    </g>
+  </g>
+
+  <text x="330" y="208" text-anchor="end" font-family="Georgia, serif" font-size="20">Token IDs:</text>
+  <g font-family="Georgia, serif" font-size="18" text-anchor="middle">
+    <rect x="355" y="184" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="382" y="205">40134</text>
+    <rect x="440" y="184" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="467" y="205">2052</text>
+    <rect x="525" y="184" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="552" y="205">133</text>
+    <rect x="610" y="184" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="637" y="205">389</text>
+    <rect x="695" y="184" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="722" y="205">12</text>
+  </g>
+
+  <text x="330" y="300" text-anchor="end" font-family="Georgia, serif" font-size="20">Tokenized text:</text>
+  <g font-family="Georgia, serif" font-size="18" text-anchor="middle" font-style="italic">
+    <rect x="355" y="276" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="382" y="297">This</text>
+    <rect x="440" y="276" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="467" y="297">is</text>
+    <rect x="525" y="276" width="54" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="552" y="297">an</text>
+    <rect x="610" y="276" width="74" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="647" y="297">example</text>
+    <rect x="695" y="276" width="28" height="28" fill="#fff" stroke="#555" stroke-width="1.8"/><text x="709" y="297">.</text>
+  </g>
+
+  <text x="330" y="384" text-anchor="end" font-family="Georgia, serif" font-size="20">Input text:</text>
+  <rect x="500" y="360" width="150" height="32" fill="#fff" stroke="#777" stroke-width="1.8"/>
+  <text x="575" y="382" text-anchor="middle" font-family="Georgia, serif" font-size="18">This is an example.</text>
+
+  <line x1="575" y1="360" x2="575" y2="310" stroke="#444" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <line x1="552" y1="276" x2="552" y2="218" stroke="#444" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <line x1="552" y1="184" x2="552" y2="122" stroke="#444" stroke-width="2.2" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="440" width="800" height="118" fill="#fff" stroke="#555" stroke-width="2"/>
+  <text x="335" y="474" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#d44b52">Trained tokenizer</text>
+  <text x="720" y="474" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#6370c6">Language model</text>
+  <rect x="235" y="492" width="200" height="50" rx="7" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+  <text x="335" y="523" text-anchor="middle" font-family="Georgia, serif" font-size="20">Token ID → Token</text>
+  <rect x="600" y="492" width="240" height="50" fill="#e9ebff" stroke="#6370c6" stroke-width="3"/>
+  <text x="720" y="523" text-anchor="middle" font-family="Georgia, serif" font-size="20">Token embeddings table</text>
+
+  <text x="150" y="608" font-family="Georgia, serif" font-size="22" font-style="italic" fill="#111">
+    A language model holds an embedding vector associated with each token in its tokenizer.
+  </text>
+</svg>

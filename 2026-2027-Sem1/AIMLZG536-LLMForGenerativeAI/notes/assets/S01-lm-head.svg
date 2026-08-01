@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 590" role="img" aria-labelledby="title desc">
+  <title id="title">Language modelling head predicts token probabilities</title>
+  <desc id="desc">The LM head maps the Transformer LLM hidden state to a probability distribution over vocabulary tokens.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <rect x="32" y="32" width="1036" height="420" fill="#fff" stroke="#555" stroke-width="2"/>
+  <rect x="44" y="78" width="340" height="258" fill="#fde8f1" stroke="#222" stroke-width="2"/>
+  <text x="98" y="105" font-family="Georgia, serif" font-size="25" fill="#e64b8a" font-weight="700">Transformer LLM</text>
+  <rect x="64" y="124" width="300" height="40" rx="7" fill="#efc3c8" stroke="#222" stroke-width="2"/>
+  <text x="214" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700">Tokenizer</text>
+  <rect x="64" y="174" width="300" height="112" rx="7" fill="#edf5fa" stroke="#00a2df" stroke-width="4"/>
+  <text x="116" y="224" text-anchor="middle" font-family="Georgia, serif" font-size="21" font-weight="700">Stack of</text>
+  <text x="116" y="249" text-anchor="middle" font-family="Georgia, serif" font-size="21" font-weight="700">Transformer</text>
+  <text x="116" y="274" text-anchor="middle" font-family="Georgia, serif" font-size="21" font-weight="700">blocks</text>
+  <rect x="174" y="188" width="165" height="25" rx="6" fill="#d8eef8" stroke="#222" stroke-width="1.8"/>
+  <rect x="174" y="224" width="165" height="25" rx="6" fill="#d8eef8" stroke="#222" stroke-width="1.8"/>
+  <rect x="174" y="260" width="165" height="25" rx="6" fill="#d8eef8" stroke="#222" stroke-width="1.8"/>
+  <text x="256" y="207" text-anchor="middle" font-family="Georgia, serif" font-size="14">Transformer block 1</text>
+  <text x="256" y="243" text-anchor="middle" font-family="Georgia, serif" font-size="14">Transformer block 2</text>
+  <text x="256" y="279" text-anchor="middle" font-family="Georgia, serif" font-size="14">Transformer block N</text>
+  <rect x="64" y="296" width="300" height="34" rx="6" fill="#efc3c8" stroke="#222" stroke-width="2"/>
+  <text x="214" y="319" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="700">LM head</text>
+  <circle cx="384" cy="313" r="9" fill="#cc3344"/>
+  <line x1="393" y1="313" x2="448" y2="313" stroke="#cc3344" stroke-width="4"/>
+  <circle cx="457" cy="313" r="9" fill="#cc3344"/>
+
+  <rect x="468" y="105" width="400" height="228" rx="8" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+  <text x="668" y="139" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700">Output</text>
+  <text x="668" y="178" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700">Token probability</text>
+  <rect x="500" y="202" width="160" height="40" fill="#efc3c8" stroke="#222" stroke-width="2"/>
+  <line x1="580" y1="202" x2="580" y2="333" stroke="#222" stroke-width="2"/>
+  <text x="540" y="229" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="700">Token ID</text>
+  <text x="620" y="229" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="700">Token</text>
+  <g font-family="Georgia, serif" font-size="19">
+    <rect x="500" y="242" width="160" height="30" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+    <text x="540" y="264" text-anchor="middle">0</text><text x="620" y="264" text-anchor="middle">!</text>
+    <rect x="500" y="272" width="160" height="30" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+    <text x="540" y="294" text-anchor="middle">1</text><text x="620" y="294" text-anchor="middle">"</text>
+    <rect x="500" y="302" width="160" height="30" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+    <text x="540" y="324" text-anchor="middle">1,102</text><text x="620" y="324" text-anchor="middle">Dear</text>
+    <rect x="500" y="332" width="160" height="30" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+    <text x="540" y="354" text-anchor="middle">50,000</text><text x="620" y="354" text-anchor="middle">Zyzzyva</text>
+  </g>
+  <line x1="700" y1="212" x2="700" y2="324" stroke="#111" stroke-width="5"/>
+  <rect x="715" y="225" width="32" height="16" fill="#f6d3d6" stroke="#222" stroke-width="1.5"/>
+  <text x="756" y="240" font-family="Georgia, serif" font-size="17">0.01%</text>
+  <rect x="715" y="254" width="44" height="16" fill="#f6d3d6" stroke="#222" stroke-width="1.5"/>
+  <text x="772" y="269" font-family="Georgia, serif" font-size="17">0.03%</text>
+  <rect x="715" y="291" width="120" height="18" fill="#e84959" stroke="#222" stroke-width="1.5"/>
+  <text x="846" y="308" font-family="Georgia, serif" font-size="18" font-weight="700">40%</text>
+  <rect x="715" y="326" width="54" height="16" fill="#f6d3d6" stroke="#222" stroke-width="1.5"/>
+  <text x="782" y="341" font-family="Georgia, serif" font-size="17">1.00%</text>
+
+  <text x="60" y="526" font-family="Georgia, serif" font-size="22" font-style="italic" fill="#111">
+    At the end of the forward pass, the model predicts a probability score for each token in the vocabulary.
+  </text>
+</svg>

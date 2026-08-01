@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 600" role="img" aria-labelledby="title desc">
+  <title id="title">Language AI input and output tasks</title>
+  <desc id="desc">Text input flows into Language AI, which produces text output, embeddings, or classification.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#424242"/>
+    </marker>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect x="18" y="18" width="884" height="510" fill="#ffffff" stroke="#555555" stroke-width="1.8"/>
+
+  <text x="460" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#111111">Text input</text>
+  <text x="460" y="84" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#666666">Unstructured data</text>
+
+  <rect x="300" y="104" width="320" height="86" rx="9" fill="#eef1f4" stroke="#2f2f2f" stroke-width="2.2" filter="url(#softShadow)"/>
+  <rect x="318" y="122" width="284" height="12" rx="6" fill="#66c998"/>
+  <rect x="318" y="143" width="284" height="12" rx="6" fill="#66c998"/>
+  <rect x="318" y="164" width="246" height="12" rx="6" fill="#66c998"/>
+
+  <line x1="460" y1="190" x2="460" y2="224" stroke="#424242" stroke-width="2.4"/>
+
+  <rect x="300" y="224" width="320" height="86" rx="9" fill="#e7e9f9" stroke="#2f2f2f" stroke-width="2.2" filter="url(#softShadow)"/>
+  <text x="460" y="261" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#5064a8">Language AI</text>
+  <text x="460" y="291" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#111111">Processes the input text</text>
+
+  <line x1="460" y1="310" x2="460" y2="338" stroke="#424242" stroke-width="2.4"/>
+  <line x1="200" y1="338" x2="720" y2="338" stroke="#424242" stroke-width="2.4"/>
+  <line x1="200" y1="338" x2="200" y2="374" stroke="#424242" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="460" y1="338" x2="460" y2="374" stroke="#424242" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="720" y1="338" x2="720" y2="374" stroke="#424242" stroke-width="2.4" marker-end="url(#arrow)"/>
+
+  <text x="200" y="390" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#111111">Text output</text>
+  <text x="200" y="416" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#666666">Generative modelling</text>
+  <rect x="105" y="432" width="190" height="60" rx="6" fill="#f0f2f3" stroke="#2f2f2f" stroke-width="2"/>
+  <rect x="122" y="448" width="156" height="9" rx="5" fill="#4aa7d8"/>
+  <rect x="122" y="466" width="92" height="9" rx="5" fill="#4aa7d8"/>
+  <rect x="122" y="484" width="132" height="9" rx="5" fill="#4aa7d8"/>
+
+  <text x="460" y="390" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#111111">Embeddings</text>
+  <text x="460" y="416" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#666666">Numeric values</text>
+  <g transform="translate(375 432)">
+    <rect x="0" y="0" width="34" height="34" fill="#9fd5ed" stroke="#2a89b7" stroke-width="2"/>
+    <rect x="34" y="0" width="34" height="34" fill="#e7f1f7" stroke="#2a89b7" stroke-width="2"/>
+    <rect x="68" y="0" width="34" height="34" fill="#2e91c6" stroke="#2a89b7" stroke-width="2"/>
+    <rect x="102" y="0" width="34" height="34" fill="#8fc6e2" stroke="#2a89b7" stroke-width="2"/>
+    <rect x="136" y="0" width="34" height="34" fill="#167eb9" stroke="#2a89b7" stroke-width="2"/>
+  </g>
+
+  <text x="720" y="390" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#111111">Classification</text>
+  <text x="720" y="416" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#666666">Identify targets</text>
+  <rect x="645" y="440" width="150" height="10" rx="5" fill="#56a9d6"/>
+  <rect x="645" y="462" width="96" height="10" rx="5" fill="#777777"/>
+  <rect x="645" y="484" width="126" height="10" rx="5" fill="#777777"/>
+
+  <line x1="90" y1="522" x2="830" y2="522" stroke="#d0d0d0" stroke-width="1.2"/>
+  <text x="460" y="564" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-style="italic" fill="#111111">
+    Language AI is capable of many tasks by processing textual input.
+  </text>
+</svg>

@@ -32,21 +32,39 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 *Start here. What "language model" and "large" actually mean — and the one idea everything else rests on: **predicting text and generating text are the same machine**, run in two directions.*
 
-### 1. What a language model is
+### 1. Language AI and language models
 
-**Intuition** — A language model answers one question: *given what came before, what comes next?* Everything else in this course is built on that.
+**Intuition** — **Language AI** is the umbrella: systems that take unstructured text and turn it into something useful. A **language model** is the generative branch of that umbrella, and it answers one question: *given what came before, what comes next?* Everything else in this course is built on that.
 
-*One input type, three different output types — this session follows only the first:*
+*One input type, three different output types — this course mostly follows the generative branch, but the same text backbone can support the other two:*
+
+![Language AI input and output tasks](assets/S01-language-ai.svg)
+
+<details>
+<summary>Mermaid structure</summary>
 
 ```mermaid
 flowchart TD
-    T["Text input<br/>unstructured data"] --> LAI["Language AI<br/>processes the input text"]
-    LAI --> G["Text output<br/>generative modelling"]
-    LAI --> E["Embeddings<br/>numeric values"]
-    LAI --> C["Classification<br/>identify targets"]
+    TITLE["Text input<br/>Unstructured data"] --> TXT["text text text text<br/>text text text text<br/>text text text text<br/>text text text"]
+    TXT --> LAI["Language AI<br/>Processes the input text"]
+    LAI --> SPLIT{" "}
+    SPLIT --> G["Text output<br/>Generative modelling<br/><br/>text text text<br/>text text<br/>text text text"]
+    SPLIT --> E["Embeddings<br/>Numeric values<br/><br/>0.12 | -0.41 | 0.88 | 0.05"]
+    SPLIT --> C["Classification<br/>Identify targets<br/><br/>target A<br/>target B"]
+
+    classDef input fill:#eaf8ef,stroke:#333,stroke-width:1px,color:#111;
+    classDef processor fill:#e8ebfa,stroke:#333,stroke-width:1px,color:#1f3f96;
+    classDef output fill:#f8fbff,stroke:#333,stroke-width:1px,color:#111;
+    classDef hidden fill:#ffffff,stroke:#ffffff,color:#ffffff;
+    class TXT input;
+    class LAI processor;
+    class G,E,C output;
+    class SPLIT hidden;
 ```
 
-All three run on the same machinery — only the *head* on top differs. That's why section 9's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
+</details>
+
+Language AI therefore does not always mean "chatbot". The input is text; the output may be **new text** (`write the answer`), an **embedding vector** (`represent this paragraph for retrieval`), or a **class label** (`is this review positive or negative?`). All three can run on a similar transformer backbone — the task-specific head on top decides what comes out. That's why section 9's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
 
 **Mechanism** — formally, a model that computes either:
 
@@ -200,6 +218,8 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 It builds a matrix comparing each token with every token before it, weighted by **how relevant the token pairs are to one another**. During training the whole matrix is computed **in one go**, which is what enables **parallelisation** — and that, not accuracy alone, is why transformers won.
 
+![Self-attention matrix](assets/S01-self-attention-matrix.svg)
+
 **Mechanism — the three vectors.** Every token produces three projections, and each one plays a distinct role:
 
 | | Name | The question it asks |
@@ -211,6 +231,8 @@ It builds a matrix comparing each token with every token before it, weighted by 
 If you remember only one sentence before the arithmetic starts, remember this one: **Q asks, K advertises, V supplies the content.**
 
 *An everyday analogy for Q, K, V — hold this and the maths below is just the analogy with numbers:* imagine you post a question in a group chat. Your **query** is what you're looking for. Every earlier message carries a **key** — a little label advertising what that message is about — and a **value** — its actual content. You mentally compare your query against each key to judge relevance, then you pull in the values of the relevant messages, paying most attention to the most relevant. Self-attention does exactly this, except "compare" is a dot product and "pay attention in proportion" is a softmax.
+
+![Q, K, V attention worked step](assets/S01-qkv-attention.svg)
 
 **The computation, in three steps:**
 
@@ -315,6 +337,8 @@ Step 4 is the one people skip. Without `W_O` the heads never talk to each other 
 
 **The key economy** — because each head works in a *reduced* dimension d_k = d_v = d/h, **the total computational cost is similar to single-head attention at full dimensionality.** You get multiple views for roughly the price of one. That sentence is a likely exam question.
 
+![Multi-head attention layer](assets/S01-multihead-attention.svg)
+
 **Worked example — reproduce this by hand.** Input length N = 4, d = 512, heads h = 8, so d_k = d_v = 512/8 = **64**.
 
 | Tensor | Shape | Why |
@@ -363,6 +387,8 @@ Each head runs the exact same computation from section 4, just in 64 dimensions 
 - **Layer normalisation** = **grading on a curve, per token**. Before each sublayer, it rescales one token's vector so its numbers sit in a consistent range (mean 0, unit spread), stopping values from drifting to extremes as they pass through many layers. `γ` and `β` then let the model stretch and shift that curve if it wants.
 
 **Mechanism — the block, as equations.** These are easy to miss — often shown as images, not text. **Learn the two-line form; be able to expand it to the six-line form.**
+
+![Transformer decoder block](assets/S01-transformer-block.svg)
 
 Compact (pre-norm, which is what modern LLMs use):
 
@@ -508,6 +534,8 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 
 **Intuition** — The handout names **"building blocks of LLM"** as its own item because by this point in the session you have seen all the pieces, just spread across several sections. This is the compact revision view. If asked *"what are the building blocks of a decoder-only LLM?"* this is the fast, exam-safe answer.
 
+![Transformer LLM components](assets/S01-transformer-llm.svg)
+
 ```mermaid
 flowchart TD
     TXT[text] --> TOK[tokenizer]
@@ -556,6 +584,8 @@ That is the whole machine in miniature: **text → IDs → vectors → repeated 
 ### 8. From text to tokens to embeddings
 
 **Intuition** — A model can only do arithmetic, so text has to become numbers. Five stages, each with its own name, and the exam can ask for the order:
+
+![Token IDs to token embeddings](assets/S01-token-embeddings.svg)
 
 ```mermaid
 flowchart TD
@@ -631,6 +661,8 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 ### 9. The language modelling head, and weight tying
 
 **Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector back into a guess over the vocabulary. It's the mirror image of the embedding layer: embeddings map IDs → vectors, the LM head maps vectors → IDs.
+
+![Language modelling head predicts token probabilities](assets/S01-lm-head.svg)
 
 **Mechanism**
 
@@ -731,6 +763,8 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 **Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
 **Mechanism — the limit applies to prompt plus output.** At each decoding step, the model reads all tokens currently in the context, predicts one next-token distribution, appends one token, and repeats. That means the context window is a shared budget for system prompt, user prompt, retrieved text, tool output, conversation history and the answer itself.
+
+![Context length grows during autoregressive generation](assets/S01-context-length.svg)
 
 *The point people miss — **generated tokens count against the same budget as the prompt**:*
 

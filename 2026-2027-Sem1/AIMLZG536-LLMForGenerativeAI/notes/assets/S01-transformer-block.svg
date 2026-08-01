@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" role="img" aria-labelledby="title desc">
+  <title id="title">Transformer decoder block</title>
+  <desc id="desc">A token embedding plus position flows through layer norm, masked multi-head attention, layer norm, feed-forward network, unembedding and softmax, with a residual stream bypassing sublayers.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <rect x="18" y="18" width="964" height="565" fill="#fff" stroke="#555" stroke-width="2"/>
+
+  <text x="420" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#203a8f">output probabilities over tokens</text>
+  <rect x="372" y="68" width="96" height="34" rx="4" fill="#d8f1c9" stroke="#222" stroke-width="2"/>
+  <text x="420" y="91" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700">Softmax</text>
+  <polygon points="350,122 490,122 466,154 374,154" fill="#f6d2d2" stroke="#222" stroke-width="2"/>
+  <text x="420" y="144" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700">Unembedding</text>
+
+  <rect x="314" y="188" width="212" height="214" rx="12" fill="#f7f7f7" stroke="#222" stroke-width="2"/>
+  <rect x="360" y="352" width="120" height="34" rx="4" fill="#fff6a9" stroke="#222" stroke-width="2"/>
+  <text x="420" y="375" text-anchor="middle" font-family="Georgia, serif" font-size="17">Layer Norm</text>
+  <rect x="340" y="293" width="160" height="47" rx="5" fill="#f5c65c" stroke="#222" stroke-width="2"/>
+  <text x="420" y="313" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="700">Masked</text>
+  <text x="420" y="332" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="700">Multi-Head Attention</text>
+  <rect x="360" y="244" width="120" height="34" rx="4" fill="#fff6a9" stroke="#222" stroke-width="2"/>
+  <text x="420" y="267" text-anchor="middle" font-family="Georgia, serif" font-size="17">Layer Norm</text>
+  <rect x="352" y="195" width="136" height="38" rx="5" fill="#c7f0c4" stroke="#222" stroke-width="2"/>
+  <text x="420" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700">Feedforward</text>
+  <text x="548" y="305" font-family="Georgia, serif" font-size="22" font-weight="700">N times</text>
+
+  <rect x="360" y="430" width="120" height="34" rx="4" fill="#fff6a9" stroke="#222" stroke-width="2"/>
+  <text x="420" y="453" text-anchor="middle" font-family="Georgia, serif" font-size="17">Positional</text>
+  <polygon points="348,482 492,482 470,514 370,514" fill="#f6d2d2" stroke="#222" stroke-width="2"/>
+  <text x="420" y="505" text-anchor="middle" font-family="Georgia, serif" font-size="18">Embedding</text>
+  <text x="420" y="535" text-anchor="middle" font-family="Georgia, serif" font-size="18">input token</text>
+
+  <line x1="420" y1="514" x2="420" y2="464" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="420" y1="430" x2="420" y2="402" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="420" y1="352" x2="420" y2="340" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="420" y1="293" x2="420" y2="278" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="420" y1="244" x2="420" y2="233" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="420" y1="195" x2="420" y2="154" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="420" y1="122" x2="420" y2="102" stroke="#444" stroke-width="2.4" marker-end="url(#arrow)"/>
+
+  <path d="M 292 500 C 235 470, 235 220, 292 195" fill="none" stroke="#7e9aac" stroke-width="15" opacity="0.45"/>
+  <path d="M 300 500 C 250 470, 250 220, 300 195" fill="none" stroke="#333" stroke-width="2"/>
+  <text x="152" y="338" font-family="Georgia, serif" font-size="21" font-weight="700">residual</text>
+  <text x="155" y="366" font-family="Georgia, serif" font-size="21" font-weight="700">stream</text>
+
+  <circle cx="420" cy="468" r="13" fill="#d8f7d4" stroke="#222" stroke-width="1.8"/>
+  <text x="420" y="475" text-anchor="middle" font-family="Georgia, serif" font-size="18">+</text>
+  <circle cx="420" cy="286" r="13" fill="#d8f7d4" stroke="#222" stroke-width="1.8"/>
+  <text x="420" y="293" text-anchor="middle" font-family="Georgia, serif" font-size="18">+</text>
+  <circle cx="420" cy="176" r="13" fill="#d8f7d4" stroke="#222" stroke-width="1.8"/>
+  <text x="420" y="183" text-anchor="middle" font-family="Georgia, serif" font-size="18">+</text>
+
+  <text x="50" y="632" font-family="Georgia, serif" font-size="22" font-style="italic" fill="#111">
+    Decoder block: residual stream carries state; attention and feed-forward add information.
+  </text>
+</svg>

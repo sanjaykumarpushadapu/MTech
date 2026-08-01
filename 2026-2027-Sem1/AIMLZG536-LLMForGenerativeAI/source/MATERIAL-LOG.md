@@ -9,8 +9,8 @@ Legend: ✓ have · ✗ missing · — n/a
 
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
-| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read) | ✅ **all three held**: T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | ✓ Teams 2h05 | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` (slides + 3 books + transcript) |
-| 2 |  |  |  |  | ☐ |
+| 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read; **mixed/overlap deck**) | ✅ **all three held**: T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | ✓ Teams 2h05 | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` (S1 scope only: intro, attention/transformer review, building blocks, architectures, tokenization, LLM landscape) |
+| 2 | ◐ **partial overlap** in `CS-1 Intro to LLM.pptx` slides 57–59 only: scaling laws / frontier-model landscape. **Not a complete S2 deck**: missing dedicated pre-training objectives, pre-training data, CPT/domain adaptation | ✅ readings held: T1 ch7,8 · R1 ch2,5 |  |  | ☐ |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
 | 5 |  |  |  |  | ☐ |

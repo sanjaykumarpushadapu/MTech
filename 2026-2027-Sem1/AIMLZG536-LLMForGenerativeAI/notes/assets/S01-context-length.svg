@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 560" role="img" aria-labelledby="title desc">
+  <title id="title">Context length grows during autoregressive generation</title>
+  <desc id="desc">Prompt tokens and previously generated tokens form the current context. One new token is generated, then appended to the input, increasing context length.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <rect x="18" y="18" width="1124" height="430" fill="#fff" stroke="#555" stroke-width="2"/>
+  <text x="140" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="23" font-weight="700">Input</text>
+  <text x="140" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="21" fill="#555">(both prompt and</text>
+  <text x="140" y="126" text-anchor="middle" font-family="Georgia, serif" font-size="21" fill="#555">generated tokens)</text>
+
+  <text x="480" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#2fa36f">Tell me something about llamas.</text>
+  <text x="780" y="82" text-anchor="middle" font-family="Georgia, serif" font-size="23" font-weight="700" fill="#e8a13a">Previously</text>
+  <text x="780" y="110" text-anchor="middle" font-family="Georgia, serif" font-size="23" font-weight="700" fill="#e8a13a">generated tokens</text>
+  <g font-family="Georgia, serif" font-size="21" text-anchor="middle">
+    <rect x="250" y="132" width="56" height="54" rx="6" fill="#bfe8d6" stroke="#222" stroke-width="2"/><text x="278" y="166">Tell</text>
+    <rect x="314" y="132" width="56" height="54" rx="6" fill="#bfe8d6" stroke="#222" stroke-width="2"/><text x="342" y="166">me</text>
+    <rect x="378" y="132" width="110" height="54" rx="6" fill="#bfe8d6" stroke="#222" stroke-width="2"/><text x="433" y="166">something</text>
+    <rect x="496" y="132" width="78" height="54" rx="6" fill="#bfe8d6" stroke="#222" stroke-width="2"/><text x="535" y="166">about</text>
+    <rect x="582" y="132" width="82" height="54" rx="6" fill="#bfe8d6" stroke="#222" stroke-width="2"/><text x="623" y="166">llamas</text>
+    <rect x="672" y="132" width="44" height="54" rx="6" fill="#bfe8d6" stroke="#222" stroke-width="2"/><text x="694" y="166">.</text>
+    <rect x="740" y="132" width="86" height="54" rx="6" fill="#ffdca8" stroke="#222" stroke-width="2"/><text x="783" y="166">Llamas</text>
+    <rect x="834" y="132" width="54" height="54" rx="6" fill="#ffdca8" stroke="#222" stroke-width="2"/><text x="861" y="166">are</text>
+    <rect x="916" y="132" width="116" height="54" rx="6" fill="#f4c6cf" stroke="#222" stroke-width="2"/><text x="974" y="166">domesticated</text>
+  </g>
+  <rect x="234" y="118" width="670" height="92" fill="none" stroke="#555" stroke-width="2.5" stroke-dasharray="4 8"/>
+  <text x="600" y="226" font-family="Georgia, serif" font-size="22" font-style="italic" fill="#666">Current context length = 8</text>
+  <g font-family="Georgia, serif" font-size="20" text-anchor="middle" fill="#333">
+    <text x="278" y="216">1</text><text x="342" y="216">2</text><text x="433" y="216">3</text><text x="535" y="216">4</text><text x="623" y="216">5</text><text x="694" y="216">6</text><text x="783" y="216">7</text><text x="861" y="216">8</text><text x="974" y="216">9</text>
+  </g>
+
+  <line x1="480" y1="186" x2="480" y2="250" stroke="#444" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="365" y="250" width="230" height="78" rx="6" fill="#fde8f1" stroke="#222" stroke-width="2.2"/>
+  <text x="480" y="283" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#e64b8a">Generative LLM</text>
+  <text x="480" y="312" text-anchor="middle" font-family="Georgia, serif" font-size="21" font-weight="700">Maximum context length: 512</text>
+  <line x1="480" y1="328" x2="480" y2="358" stroke="#444" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="395" y="358" width="170" height="48" rx="6" fill="#f4c6cf" stroke="#222" stroke-width="2.2"/>
+  <text x="480" y="389" text-anchor="middle" font-family="Georgia, serif" font-size="24">domesticated</text>
+  <text x="170" y="326" text-anchor="middle" font-family="Georgia, serif" font-size="23" font-weight="700">Output</text>
+  <text x="170" y="354" text-anchor="middle" font-family="Georgia, serif" font-size="21" fill="#555">(generate one</text>
+  <text x="170" y="380" text-anchor="middle" font-family="Georgia, serif" font-size="21" fill="#555">token at a time)</text>
+  <path d="M 565 382 H 974 V 216" fill="none" stroke="#444" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="945" y="286" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700">Update input</text>
+  <text x="945" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#555">(increases current</text>
+  <text x="945" y="341" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#555">context length)</text>
+
+  <text x="42" y="515" font-family="Georgia, serif" font-size="23" font-style="italic" fill="#111">
+    Context length is the maximum context an LLM can handle; generation appends one token at a time.
+  </text>
+</svg>

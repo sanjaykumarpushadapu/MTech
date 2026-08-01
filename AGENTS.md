@@ -82,6 +82,8 @@ Every handout's **Part B: Learning Plan** table governs the course:
 
 The user uploads per session and says **subject, session number, file type**. If the session number is missing, infer from the master index and **state the inference**.
 
+**Never trust a deck filename alone.** PPTs/slides are sometimes mixed across sessions, reused from older offerings, or bundled with extra material. Before using any deck, verify its session identity from the title slide, agenda slide, slide footers, section dividers, and topic sequence against the **handout Learning Plan row**. If slides from multiple sessions appear in one file, split the extraction **by handout session scope**: match slide topics to the handout's Contact Session, Topic Title, and Sub-Topics, then use only the matching slides for the current note. Record the mixed-deck fact and the session split in `source/MATERIAL-LOG.md`. If the handout-based boundary is ambiguous, stop and ask for the correct session mapping; do not blend two sessions into one note.
+
 | Format | Extract with | Note |
 |---|---|---|
 | `.pptx` | `python-pptx` | **Always read speaker notes AND embedded images** (`shape.image.blob`) |
@@ -211,6 +213,12 @@ Sources, in order of preference:
 
 **Carry labels across verbatim** — the exam uses the instructor's words. **Don't invent structure the image lacks**; if an arrow is ambiguous, say so in prose. The Mermaid block is the permanent record — never write "see the diagram on slide 16."
 
+**Match the source figure's teaching shape when possible.** Mermaid diagrams should resemble the slide/textbook diagram in **structure and learning intent**: same main boxes, same grouping, same flow direction when it is readable, same contrast, and same important arrows. They do **not** need to be pixel-perfect, decorative, or visually identical. If the source figure is crowded, has crossing arrows, or cannot be represented cleanly in Mermaid, simplify the layout while preserving the information and state any lost visual nuance in prose.
+
+**Use authored SVG recreations when Mermaid is not visually enough.** For any important figure from a **slide, textbook chapter, paper, public spec, or research diagram** where the learner needs the *same visual feel* — boxes, miniature bars, grouped panels, captions, or visual hierarchy that Mermaid cannot express clearly — create a clean SVG from scratch under `<subject>/notes/assets/S<NN>-<figure-slug>.svg` and embed it in the session note. Do **not** commit the original slide screenshot, extracted deck image, textbook image, or paper figure. The SVG must be self-contained, readable at note width, and clear at the bottom/caption area; if a Mermaid version is still useful for structure or validation, keep it as a collapsed fallback under the SVG. Apply this rule consistently across **all session notes**, not only 536.
+
+**Visual QA is mandatory, not user-policed.** After creating or editing Mermaid/SVG diagrams, review every touched diagram as an examiner-reader: labels correct, source figure's main shape preserved, no cramped bottom/caption area, no tiny unreadable text, no decorative clutter, and no misleading simplification. If a diagram is one of several source-figure recreations in the same note, scan the whole touched group for the same class of issue; do not fix only the one the user named. When tooling allows, render the SVG/diagram and inspect the image, not only the XML/text. If rendering is unavailable, keep the diagram simpler and state that only syntax/link validation was possible.
+
 **Prefer clean diagrams over exhaustive ones.** A Mermaid block should expose the structure at a glance, not reproduce every sentence from the source. Fewer boxes, shorter labels, and a clear stage flow beat dense diagrams with crossing lines. If `timeline` or `sequenceDiagram` becomes cluttered or tool-fragile, rewrite it as a clean `flowchart TD` instead.
 **Do not leave overlapping or crossing arrows when a clearer layout is possible.** If arrows overlap, reverse the flow direction (`LR` ↔ `TD`), stack the stages vertically, split one busy node into two simpler nodes, or replace a loop-back arrow with a "next state" box. The reader should be able to trace every path without visual ambiguity.
 
@@ -318,7 +326,10 @@ git status --short                 # nothing binary or secret staged
 
 - [ ] **Every handout topic and sub-topic explicitly covered** — checked against the handout file itself, not the master index; no implied coverage, no keyword-only matches
 - [ ] Every deck agenda item explicitly covered, or the gap flagged inline in the note
+- [ ] Deck/session identity verified from slide contents and the handout Learning Plan, not filename alone; mixed-session slide decks were split by handout scope or flagged before writing
 - [ ] Every concept has: Intuition · Mechanism · Worked example · Tradeoff · diagram
+- [ ] Important source figures recreated as clean Mermaid or authored SVG; original slide/textbook/paper images were not committed
+- [ ] Touched diagrams were visually QA'd for readability, source-shape fit, correct labels, and clear bottom/caption spacing
 - [ ] **An average student could follow every concept cold** — plain-language on-ramp before dense maths, one everyday analogy per hard concept, heavy arithmetic signposted as skimmable
 - [ ] The **session note itself** contains the strongest available explanation — nothing important left only in `_shared/`, labs, transcripts, or local source material
 - [ ] The **teaching flow is complete inside the note body** — no concept split across session note + lab/shared file in a way that forces the reader to jump out for core understanding

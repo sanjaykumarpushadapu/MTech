@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 650" role="img" aria-labelledby="title desc">
+  <title id="title">Multi-head attention layer</title>
+  <desc id="desc">Input sequence is projected into multiple attention heads, their outputs are concatenated, and an output projection returns to model dimension.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <text x="58" y="58" font-family="Georgia, serif" font-size="38" font-weight="700" fill="#c00000">Multihead-Attention</text>
+  <rect x="34" y="132" width="705" height="275" rx="14" fill="#f3f3ff" stroke="#888" stroke-width="2"/>
+  <text x="90" y="170" font-family="Georgia, serif" font-size="23">Project down to d</text>
+  <text x="72" y="238" text-anchor="middle" font-family="Georgia, serif" font-size="22">Concatenate</text>
+  <text x="72" y="266" text-anchor="middle" font-family="Georgia, serif" font-size="22">outputs</text>
+  <text x="88" y="318" text-anchor="middle" font-family="Georgia, serif" font-size="26">Multihead</text>
+  <text x="88" y="348" text-anchor="middle" font-family="Georgia, serif" font-size="26">Attention</text>
+  <text x="88" y="378" text-anchor="middle" font-family="Georgia, serif" font-size="26">Layer</text>
+  <polygon points="160,190 260,150 610,150 710,190" fill="#bfe8fb" stroke="#222" stroke-width="1.6"/>
+  <text x="435" y="177" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700">Wᴼ</text>
+  <g font-family="Georgia, serif" font-size="16" text-anchor="middle">
+    <rect x="160" y="202" width="145" height="30" rx="4" fill="#bab7ff" stroke="#222"/><text x="232" y="223">head1</text>
+    <rect x="305" y="202" width="145" height="30" rx="4" fill="#bab7ff" stroke="#222"/><text x="377" y="223">head2</text>
+    <rect x="450" y="202" width="145" height="30" rx="4" fill="#bab7ff" stroke="#222"/><text x="522" y="223">head3</text>
+    <rect x="595" y="202" width="145" height="30" rx="4" fill="#bab7ff" stroke="#222"/><text x="667" y="223">head4</text>
+  </g>
+  <g fill="#b7b3f5" stroke="#777" stroke-width="2" font-family="Georgia, serif" font-size="18">
+    <rect x="235" y="350" width="210" height="36" rx="8"/><text x="340" y="374" text-anchor="middle">Head 1: Q, K, V</text>
+    <rect x="320" y="305" width="210" height="36" rx="8"/><text x="425" y="329" text-anchor="middle">Head 2: Q, K, V</text>
+    <rect x="405" y="260" width="210" height="36" rx="8"/><text x="510" y="284" text-anchor="middle">Head 3: Q, K, V</text>
+    <rect x="490" y="215" width="190" height="36" rx="8"/><text x="585" y="239" text-anchor="middle">Head 4: Q, K, V</text>
+  </g>
+  <rect x="180" y="436" width="520" height="38" rx="18" fill="#fff" stroke="#222" stroke-width="1.6"/>
+  <g font-family="Georgia, serif" font-size="17" text-anchor="middle">
+    <rect x="210" y="440" width="24" height="30" rx="7" fill="#fff"/><text x="222" y="462">x₁</text>
+    <rect x="310" y="440" width="24" height="30" rx="7" fill="#fff"/><text x="322" y="462">x₂</text>
+    <rect x="410" y="440" width="24" height="30" rx="7" fill="#fff"/><text x="422" y="462">x₃</text>
+    <text x="550" y="462">...</text>
+    <rect x="620" y="440" width="24" height="30" rx="7" fill="#fff"/><text x="632" y="462">xₙ</text>
+  </g>
+  <line x1="420" y1="436" x2="330" y2="386" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="436" x2="455" y2="341" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="436" x2="575" y2="296" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="436" x2="600" y2="251" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="230" y1="350" x2="230" y2="232" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="377" y1="305" x2="377" y2="232" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="522" y1="260" x2="522" y2="232" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="667" y1="215" x2="667" y2="190" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="500" y1="150" x2="500" y2="106" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="500" cy="95" r="13" fill="#fff" stroke="#222"/>
+  <text x="500" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="14">yₙ</text>
+
+  <g font-family="Georgia, serif" font-size="24">
+    <text x="790" y="155">h = 8 parallel attention heads</text>
+    <text x="790" y="215">Each head has its own Q, K, V</text>
+    <text x="790" y="250">projection matrices.</text>
+    <text x="790" y="310">Head outputs are concatenated</text>
+    <text x="790" y="345">and projected back by Wᴼ.</text>
+    <text x="790" y="405">Per-head width: dₖ = dᵥ = d_model / h</text>
+  </g>
+  <rect x="46" y="536" width="1188" height="46" fill="#fff36a"/>
+  <text x="640" y="566" text-anchor="middle" font-family="Georgia, serif" font-size="21" font-weight="700" fill="#d00000">
+    Each head attends differently; concatenation plus Wᴼ restores the original model dimension.
+  </text>
+</svg>
