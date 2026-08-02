@@ -256,6 +256,10 @@ That last line **is** attention: each token's output is a **weighted average of 
 > - At **inference** the trick that makes generation fast is the **KV-cache**: keys and values for past tokens are cached so each new token is O(n) not O(n²). This is why the *first* token of a long prompt is slow ("prefill") and later tokens are fast ("decode") — a distinction you'll meet the moment you look at latency metrics.
 > - Practical consequence: **long prompts cost real money and time.** "Just paste the whole document in" runs straight into this quadratic. It's the reason retrieval (RAG) exists — fetch the relevant 4K tokens instead of paying for 100K.
 
+**Tools to try — watch this section run instead of just reading it:**
+- [Transformer Explainer](https://poloclub.github.io/transformer-explainer/) (Georgia Tech Polo Club) — type any sentence and watch a real GPT-2 run on it live: tokenization → embeddings → each attention head lighting up → softmax into next-token probabilities.
+- [Transformer & Attention Visualizer](https://ai.williamtheisen.com/transformer.html) — toggle BERT / GPT-2 / the original encoder-decoder, expand a layer, and see the actual Q, K, V projections and the attention heatmap for the worked example above. Also makes the encoder-vs-decoder masking difference (section 11) visible side by side.
+
 ---
 
 ### 5. Multi-head attention
