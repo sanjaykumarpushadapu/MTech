@@ -886,7 +886,17 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 **Worked example** — GPT-3 made scaling look like the main story: bigger model, better behaviour, new in-context learning. Chinchilla changed the lesson: a smaller model trained on more data can beat a larger undertrained one. That is why S2 treats data and compute as first-class design variables, not background details.
 
-**Open models** — EleutherAI (The Pile dataset, GPT-J) · Meta's OPT 175B (GPT-3 replication, lots of hardware issues) · HuggingFace/BigScience BLOOM (focused on data sourcing) · Meta Llama · Alibaba Qwen · DeepSeek · AI2 OLMo 2.
+**Open models:**
+
+| Org | Flagship model | Notable fact |
+|---|---|---|
+| EleutherAI | GPT-J | Built on The Pile dataset |
+| Meta | OPT 175B | GPT-3 replication attempt; well-documented hardware issues |
+| HuggingFace / BigScience | BLOOM | Focused on data sourcing transparency |
+| Meta | Llama | — |
+| Alibaba | Qwen | — |
+| DeepSeek | DeepSeek | — |
+| AI2 | OLMo 2 | — |
 
 **Three levels of openness** — a favourite exam question because the middle case is counter-intuitive:
 
@@ -898,7 +908,15 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
 
-**Current frontier families** — large closed models, open-weight models, reasoning-tuned models, multimodal models, and sparse-MoE systems. The names in this row change quickly; the durable thing to learn is *what kind of capability each family is pushing*: stronger reasoning, longer context, tool use, multimodality, or lower inference cost through sparse activation.
+**Current frontier families** — the names change quickly; the durable thing to learn is *what kind of capability each family is pushing*:
+
+| Family | What it's optimizing for |
+|---|---|
+| Large closed models | Overall capability, served via API |
+| Open-weight models | Reproducible deployment without full training recipe |
+| Reasoning-tuned models | Stronger multi-step reasoning (often via test-time compute) |
+| Multimodal models | Beyond text — images, audio, video |
+| Sparse-MoE systems | Lower inference cost through sparse activation |
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
 
@@ -908,7 +926,13 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 Deeper tokenization knowledge and the reference for **Lab 1** — out of exam scope, so it won't be on the closed-book mid-sem — but it's genuinely useful for the lab and the field, which is why it's kept.
 
-**Byte tokens vs BPE** — byte tokens never merge anything, so they're extremely inefficient (long sequences) but can read **any file or character**. BPE is efficient for what it knows and **"blind" to what it doesn't**. On `"Café 🚀"`: byte tokens give 10 tokens (`[67][97][102][195][169][32][240][159][154][128]` — note `é` takes two bytes and the rocket takes four); BPE gives 3, **one of which is `[UNK]` — the failure**.
+**Byte tokens vs BPE:**
+
+| | Byte tokens | BPE |
+|---|---|---|
+| Efficiency | Extremely inefficient — never merges anything, so sequences are long | Efficient for what it has seen |
+| OOV handling | Can read **any** file or character — nothing is ever unknown | **"Blind" to what it doesn't know** — falls back to `[UNK]` |
+| `"Café 🚀"` result | 10 tokens: `[67][97][102][195][169][32][240][159][154][128]` (`é` takes two bytes, the rocket takes four) | 3 tokens, **one of which is `[UNK]` — the failure** |
 
 **Byte-level BPE (GPT-2)** — UTF-8 encodes each Unicode character into 1–4 bytes, so a sentence is modelled as a **sequence of bytes rather than characters**. Starts with 256 bytes and learns to "glue" them into useful words. **Zero unknown words**, because it can always fall back to individual bytes. GPT-2's vocabulary is **50,257 = 256 byte tokens + 50,000 merges + 1 special end-of-text token** — worth knowing where that odd number comes from. `"Café 🚀"` → 2 tokens.
 

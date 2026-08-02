@@ -419,13 +419,9 @@ Two points carry the actual lesson: **"Services have APIs"** and **"A service's 
 
 **Benefits and drawbacks — the likeliest exam question in this session:**
 
-| Benefits | Drawbacks |
-|---|---|
-| **Mature and ubiquitous** — the de facto standard | **Reduced availability** — every synchronous dependency can fail |
-| Testing a REST API is simple | **Fetching multiple resources** needs multiple calls |
-| Supports synchronous request-response | |
-| **No intermediate broker** | |
-| Supported by most languages and frameworks | |
+Benefits: **mature and ubiquitous** (the de facto standard) · testing a REST API is simple · supports synchronous request-response · **no intermediate broker** · supported by most languages and frameworks.
+
+Drawbacks: **reduced availability** — every synchronous dependency can fail · **fetching multiple resources** needs multiple calls.
 
 The "fetching multiple resources" drawback is the setup for GraphQL: fetching a user's profile, their posts, and comments on those posts takes **three separate API calls**.
 
@@ -590,12 +586,9 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 
 **Advantages and disadvantages:**
 
-| Advantages | Disadvantages |
-|---|---|
-| Simple, well-defined service interfaces and schema | **May not suit external-facing services** |
-| **Polyglot** — many languages | **Browser and mobile support still primitive** (`grpc-Web` extension, limited browsers) |
-| Lightweight and fast | |
-| **Best for inter-service communication** | |
+Advantages: simple, well-defined service interfaces and schema · **polyglot** — many languages · lightweight and fast · **best for inter-service communication**.
+
+Disadvantages: **may not suit external-facing services** · **browser and mobile support still primitive** (`grpc-Web` extension, limited browsers).
 
 **Tradeoff / when NOT to use gRPC** — The disadvantages column is the answer, and it's sharp: gRPC is for **service-to-service** traffic where you control both ends. Put it on a public, browser-facing edge and you've chosen a protocol browsers can't natively speak, for consumers who can't debug it with `curl`. The usual architecture is REST or GraphQL at the edge, gRPC behind it.
 

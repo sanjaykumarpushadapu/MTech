@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 560" role="img" aria-labelledby="title desc">
+  <title id="title">Catastrophic forgetting and its mitigations</title>
+  <desc id="desc">Continued pretraining risks overwriting old knowledge with new-domain updates; five mitigations attack this differently: lower learning rate, learning rate warmup, data replay, elastic weight consolidation, and LoRA or PEFT.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="560" fill="#fff"/>
+  <text x="650" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="28" font-weight="700">Catastrophic Forgetting: One Problem, Five Mitigations</text>
+
+  <rect x="350" y="90" width="600" height="90" rx="14" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+  <text x="650" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700">Continued pretraining on new-domain data</text>
+  <text x="650" y="155" text-anchor="middle" font-family="Georgia, serif" font-size="16">can overwrite previously learned knowledge</text>
+
+  <line x1="500" y1="180" x2="220" y2="245" stroke="#333" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="600" y1="180" x2="480" y2="245" stroke="#333" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="700" y1="180" x2="740" y2="245" stroke="#333" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="800" y1="180" x2="1000" y2="245" stroke="#333" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <rect x="60" y="250" width="320" height="110" rx="12" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="220" y="282" font-size="19" font-weight="700">Lower learning rate</text>
+    <text x="220" y="308" font-size="14">smaller updates disturb</text>
+    <text x="220" y="328" font-size="14">existing weights less</text>
+
+    <rect x="400" y="250" width="320" height="110" rx="12" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="560" y="282" font-size="19" font-weight="700">LR warmup</text>
+    <text x="560" y="308" font-size="14">gradual ramp avoids</text>
+    <text x="560" y="328" font-size="14">aggressive early overwrites</text>
+
+    <rect x="740" y="250" width="320" height="110" rx="12" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="900" y="282" font-size="19" font-weight="700">Data replay</text>
+    <text x="900" y="308" font-size="14">mix in old-domain data</text>
+    <text x="900" y="328" font-size="14">so old examples keep reinforcing</text>
+
+    <rect x="220" y="400" width="320" height="110" rx="12" fill="#e9f7e7" stroke="#222" stroke-width="2"/>
+    <text x="380" y="432" font-size="19" font-weight="700">EWC</text>
+    <text x="380" y="458" font-size="14">penalise changes to weights</text>
+    <text x="380" y="478" font-size="14">critical to the old task</text>
+
+    <rect x="580" y="400" width="320" height="110" rx="12" fill="#f4e6ff" stroke="#222" stroke-width="2"/>
+    <text x="740" y="432" font-size="19" font-weight="700">LoRA / PEFT</text>
+    <text x="740" y="458" font-size="14">freeze base weights entirely,</text>
+    <text x="740" y="478" font-size="14">train only small adapters</text>
+  </g>
+
+  <line x1="380" y1="360" x2="380" y2="400" stroke="#333" stroke-width="2" stroke-dasharray="5 4"/>
+  <line x1="900" y1="360" x2="740" y2="400" stroke="#333" stroke-width="2" stroke-dasharray="5 4"/>
+</svg>

@@ -48,26 +48,21 @@ Every step rightward buys coverage of a wider query space and pays for it in pre
 
 *Read the last clause of each row — the limitation is what causes the next era.*
 
-| Era | Technology | Capabilities | Limitations |
-|---|---|---|---|
-| **1960s–1990s** | Rule-based (ELIZA, ALICE) | Pattern matching, keyword detection, scripted Q&A | **No learning, rigid, no context** |
-| **2000–2010** | Statistical ML (SVMs, CRFs, HMMs) | Intent classification, entity extraction | **Limited context, hand-crafted features** |
-| **2010–2017** | Deep learning (RNNs, LSTMs, Seq2Seq, attention) | End-to-end learning, better context | **Data hungry, task-specific training** |
-| **2017–2020** | Transformers (BERT, GPT-2, T5) | Transfer learning, contextual embeddings | **Still needs task-specific fine-tuning** |
-| **2020–2023** | LLMs & GenAI (GPT-3, ChatGPT, Claude, PaLM) | Few-shot learning, general-purpose, fluent | **Hallucinations, no real-time data, no actions** |
-| **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** |
-| **2025–2026** | On-device & multi-modal (SLMs, native multimodality) | Real-time voice/video, privacy-first local processing | **Hardware constraints, fragmented ecosystems** |
+| Era | Technology | Capabilities | Limitations | Concrete example / framework |
+|---|---|---|---|---|
+| **1960s–1990s** | Rule-based (ELIZA, ALICE) | Pattern matching, keyword detection, scripted Q&A | **No learning, rigid, no context** | ELIZA (1966): `IF input contains "mother": RESPOND "Tell me more about your family"` — brittle, no real understanding |
+| **2000–2010** | Statistical ML (SVMs, CRFs, HMMs) | Intent classification, entity extraction | **Limited context, hand-crafted features** | Intent via SVM/Naive Bayes; NER via CRF/HMM; dialogue-state tracking via **Markov models**. Frameworks: Microsoft LUIS, early IBM Watson |
+| **2010–2017** | Deep learning (RNNs, LSTMs, Seq2Seq, attention) | End-to-end learning, better context | **Data hungry, task-specific training** | Frameworks: Rasa (open source), Google Dialogflow |
+| **2017–2020** | Transformers (BERT, GPT-2, T5) | Transfer learning, contextual embeddings | **Still needs task-specific fine-tuning** | — |
+| **2020–2023** | LLMs & GenAI (GPT-3, ChatGPT, Claude, PaLM) | Few-shot learning, general-purpose, fluent | **Hallucinations, no real-time data, no actions** | — |
+| **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** | Multi-agent frameworks (agents spawning/supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), 1M+ token contexts, specialised models |
+| **2025–2026** | On-device & multi-modal (SLMs, native multimodality) | Real-time voice/video, privacy-first local processing | **Hardware constraints, fragmented ecosystems** | — |
 
 **Mechanism — the key driver:**
 
 > Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
-**Detail worth holding:**
-
-- **ELIZA (1966)** — literally `IF user_input contains "mother": RESPOND "Tell me more about your family"`. Brittle, no real understanding.
-- **Statistical era** — intent classification via SVM/Naive Bayes; NER via CRF/HMM; dialogue state tracking via **Markov models**. Frameworks: Microsoft LUIS, early IBM Watson.
-- **Deep learning era** — frameworks Rasa (open source) and Google Dialogflow.
-- **2025–early 2026** — multi-agent frameworks (agents spawning and supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), **1M+ token contexts**, specialised models (coding agents, science models). In one line: *AI moves from assistant to autonomous collaborator.*
+The 2023–2025 row's detail is the fastest-moving one to hold onto: in one line, *AI moves from assistant to autonomous collaborator.*
 
 **Worked example — why one era forces the next.** ELIZA could answer *"I feel anxious"* with a scripted prompt, but it could not remember that anxiety across turns. Statistical dialogue systems could classify the intent, but needed hand-written features. LLMs made the response fluent, but still could not book the appointment. Agentic systems add tools and memory because fluency alone does not complete the task.
 

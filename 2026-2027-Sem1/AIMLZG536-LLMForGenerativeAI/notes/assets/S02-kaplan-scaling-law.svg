@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 560" role="img" aria-labelledby="title desc">
+  <title id="title">Kaplan scaling law curve and the GPT-3 parameter count</title>
+  <desc id="desc">Loss falls smoothly as a power law with model size; the parameter-count formula N approximately equals twelve times layers times hidden dimension squared, applied to GPT-3's 96 layers and 12288 hidden dimension, gives approximately 175 billion parameters.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="560" fill="#fff"/>
+  <text x="650" y="46" text-anchor="middle" font-family="Georgia, serif" font-size="27" font-weight="700">Kaplan (2020): Loss as a Power Law in Model Size</text>
+
+  <!-- left panel: curve -->
+  <rect x="50" y="80" width="580" height="420" rx="14" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="340" y="115" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700">L(N) = (Nc / N) ^ 0.076</text>
+
+  <line x1="120" y1="440" x2="580" y2="440" stroke="#333" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="120" y1="440" x2="120" y2="150" stroke="#333" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="350" y="475" text-anchor="middle" font-family="Georgia, serif" font-size="16">model size N (log scale) &#8594;</text>
+  <text x="95" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="16" transform="rotate(-90 95 290)">loss &#8594; (lower is better)</text>
+
+  <path d="M 130 170 C 220 210 320 320 570 425" fill="none" stroke="#c0392b" stroke-width="4"/>
+  <text x="330" y="200" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#c0392b" font-style="italic">smooth, predictable —</text>
+  <text x="330" y="222" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#c0392b" font-style="italic">test small, extrapolate big</text>
+
+  <!-- right panel: worked example -->
+  <rect x="670" y="80" width="580" height="420" rx="14" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+  <text x="960" y="118" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="700">Worked example — GPT-3's parameter count</text>
+
+  <text x="700" y="160" font-family="Georgia, serif" font-size="17">Formula:</text>
+  <text x="700" y="188" font-family="Georgia, serif" font-size="18" font-weight="700">N &#8776; 12 &#215; n_layer &#215; d&#178;</text>
+
+  <text x="700" y="230" font-family="Georgia, serif" font-size="17">GPT-3's numbers:</text>
+  <text x="720" y="258" font-family="Georgia, serif" font-size="16">n_layer = 96</text>
+  <text x="720" y="284" font-family="Georgia, serif" font-size="16">d = 12,288</text>
+
+  <line x1="700" y1="304" x2="1220" y2="304" stroke="#999" stroke-width="1.5"/>
+
+  <text x="700" y="336" font-family="Georgia, serif" font-size="16">N &#8776; 12 &#215; 96 &#215; 12,288&#178;</text>
+  <text x="700" y="364" font-family="Georgia, serif" font-size="16">N &#8776; 1,152 &#215; 150,994,944</text>
+  <text x="700" y="400" font-family="Georgia, serif" font-size="21" font-weight="700" fill="#1a6b1a">N &#8776; 174.0 billion parameters</text>
+  <text x="700" y="430" font-family="Georgia, serif" font-size="15" font-style="italic">matches GPT-3's known ~175B, from</text>
+  <text x="700" y="452" font-family="Georgia, serif" font-size="15" font-style="italic">just two architectural numbers.</text>
+</svg>

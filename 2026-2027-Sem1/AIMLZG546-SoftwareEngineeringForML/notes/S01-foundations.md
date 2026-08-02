@@ -595,7 +595,17 @@ Cost, effort and *how much of the model you change* all rise left → right, and
 
 **Intuition** — both are *cross-cutting concerns*, not chapters. That framing is itself examinable, because it's the argument against believing a tool can solve either.
 
-**MLOps** — automating ML pipelines so models can be deployed, updated, monitored and operated reliably. Usually discussed as a tool market: Kubeflow (scalable workflows), Great Expectations (data quality testing), MLflow (experiment tracking), Evidently AI (model monitoring), Amazon SageMaker (end-to-end platform). The *fundamentals* run across the whole course, with the closest dedicated treatment in **Planning for Operations** (tooling landscape) and **Interdisciplinary Teams** (the collaboration culture — joint goals, joint vocabulary, joint tools).
+**MLOps** — automating ML pipelines so models can be deployed, updated, monitored and operated reliably. Usually discussed as a tool market:
+
+| Tool | Category | What it does |
+|---|---|---|
+| Kubeflow | Orchestration | Scalable ML workflows |
+| Great Expectations | Data quality | Automated data quality testing |
+| MLflow | Experiment tracking | Logs runs, versions, and serves as a model registry |
+| Evidently AI | Monitoring | Detects model/data drift in production |
+| Amazon SageMaker | Platform | End-to-end managed ML platform |
+
+The *fundamentals* run across the whole course, with the closest dedicated treatment in **Planning for Operations** (tooling landscape) and **Interdisciplinary Teams** (the collaboration culture — joint goals, joint vocabulary, joint tools).
 
 That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, SageMaker, plus DVC, Prefect, Docker/K8s, FastAPI, PyTest.
 

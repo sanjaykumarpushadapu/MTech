@@ -10,7 +10,7 @@ Legend: ✓ have · ✗ missing · — n/a
 | S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
 |---|---|---|---|---|---|
 | 1 | ✓ `CS-1 Intro to LLM.pptx` (69 sl, 47 images read; **mixed/overlap deck**) | ✅ **all three held**: T1 ch2,7,8 · T2 ch1,2,3 · R1 ch1,2 | ✓ Teams 2h05 | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` (S1 scope only: intro, attention/transformer review, building blocks, architectures, tokenization, LLM landscape) |
-| 2 | ◐ **partial overlap** in `CS-1 Intro to LLM.pptx` slides 57–59 only: scaling laws / frontier-model landscape. **Not a complete S2 deck**: missing dedicated pre-training objectives, pre-training data, CPT/domain adaptation | ✅ readings held: T1 ch7,8 · R1 ch2,5 |  |  | ☐ |
+| 2 | ✓ `CS-2 LLM Training.pptx` (52 sl; verified via title slide "AIML* ZG536" + agenda vs handout row) — supersedes the earlier partial S1-deck overlap (slides 57–59) as the actual dedicated S2 deck | ✅ **both held & read**: T1 ch7,8 (pp154–206) · R1 ch2 (pp7–20), ch5 (pp72–89, OCR'd — see R1 note below) |  |  | ✅ `notes/S02-pretraining.md` |
 | 3 |  |  |  |  | ☐ |
 | 4 |  |  |  |  | ☐ |
 | 5 |  |  |  |  | ☐ |
@@ -101,7 +101,7 @@ Cited for **536 S1 (ch1–2), S2 (ch2, 5), S5 (ch5), S7 (ch7)**.
 | **2** | **Working with Text Data** | **7** | **S1, S2** ✅ |
 | 3 | Coding Attention Mechanisms | ~20 | ✗ **OUT OF SCOPE** |
 | 4 | Implementing a GPT Model from Scratch | 48 | ✗ **OUT OF SCOPE** |
-| **5** | **Pretraining on Unlabeled Data** | **72** | **S2, S5** |
+| **5** | **Pretraining on Unlabeled Data** | **72** | **S2** ✅ **, S5** |
 | 6 | Fine-tuning for Classification | 90 | ✗ **OUT OF SCOPE** |
 | **7** | **Fine-tuning to Follow Instructions** | **108** | **S7** |
 
@@ -121,6 +121,8 @@ Cited for **536 S1 (ch1–2), S2 (ch2, 5), S5 (ch5), S7 (ch7)**.
 | 2.8 | **Encoding word positions** | **17** | ✅ §8 — source of the fig 2.18 positional-addition figure |
 
 **The deck's figures came from here.** Slides 29, 32 and 35 of `CS-1 Intro to LLM.pptx` reproduce Raschka figs 2.9, 2.16 and 2.18 — special tokens, the embedding-matrix row lookup, and token + positional embedding addition. All three are already extracted into `notes/S01-foundations.md` §8 with their numbers.
+
+**S2 read of R1 ch2 (pp7–20) and ch5 (pp72–89), 2 Aug.** Confirmed this PDF is not raw book text but a personal reading-notes export (screenshots of book figures/code interleaved with the reader's own summaries). Ch2's pipeline diagrams, tokenizer worked example, and sliding-window/packing worked example (real GPT-2 token IDs) read cleanly via plain text extraction. Ch5 required rendering the relevant pages and OCR to recover the embedded code/figure screenshots; the recovered numbers (the 10.7940-loss worked example, the training-run log) carry minor OCR digit noise, so `notes/S02-pretraining.md`'s worked cross-entropy example was **independently recomputed from the extracted probabilities** rather than copied verbatim — see that note's concept 3. One sidebar ("The cost of pretraining LLMs," ch5 §5.1.3) did not survive OCR; if a training-cost figure is needed later, verify independently rather than trusting this extraction.
 
 **S1 visual consolidation (1 Aug).** Rechecked cited S1 textbook figures from T1 ch2/7/8, T2 ch1/2/3 and R1 ch1/2, plus public paper anchors for the original Transformer and BPE. Useful figure value was folded into authored SVGs under `notes/assets/S01-*.svg`; no original textbook, slide or paper images were copied into the repo. The original Transformer encoder-decoder blueprint was recreated as `S01-original-transformer-blueprint.svg`; BPE paper figures did not add a better visual than the tokenizer explanations already in §12.
 
