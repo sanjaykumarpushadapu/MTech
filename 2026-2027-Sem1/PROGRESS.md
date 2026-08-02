@@ -98,8 +98,8 @@ One view across all four subjects. Update the same weekend the session happens.
 | Note | Status | Due |
 |---|---|---|
 | `tokenization.md` | ✅ | done 26 Jul — 521 S1 + 536 S1, both closed-book |
-| `retrieval.md` | ☐ | 9 Aug |
-| `api-design.md` | ☐ | 9 Aug |
+| `retrieval.md` | ✅ | done 2 Aug (early, target was 9 Aug) — from 521 S2, closed-book |
+| `api-design.md` | ✅ | done 2 Aug (early, target was 9 Aug) — from 549 S1, closed-book |
 | `quantization.md` | ☐ | 16 Aug |
 | `docker-k8s.md` | ☐ | 16 Aug |
 | `function-calling.md` | ☐ | 23 Aug |

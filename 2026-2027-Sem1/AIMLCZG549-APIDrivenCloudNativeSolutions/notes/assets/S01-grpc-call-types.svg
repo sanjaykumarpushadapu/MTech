@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="680" viewBox="0 0 1080 680" role="img" aria-labelledby="title desc">
+  <title id="title">gRPC's four call shapes</title>
+  <desc id="desc">Four gRPC call types differ in the cardinality of requests versus responses: unary is one-to-one, server streaming is one request to many responses, client streaming is many requests to one response, and bidirectional streams both ways at once.</desc>
+  <defs>
+    <marker id="req" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker>
+    <marker id="resp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#2f7d68"/></marker>
+    <style>
+      .bg{fill:#f8f4ea}
+      .panel{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+      .client{fill:#fff2e2;stroke:#b8752e;stroke-width:2}
+      .server{fill:#e8f3f6;stroke:#4c8191;stroke-width:2}
+      .maint{font:700 26px Georgia,serif;fill:#17313d}
+      .mains{font:italic 15px Georgia,serif;fill:#3f5861}
+      .pt{font:700 19px Georgia,serif;fill:#17313d}
+      .ps{font:italic 13px Georgia,serif;fill:#3f5861}
+      .boxl{font:700 15px Georgia,serif;fill:#17313d}
+      .reqL{font:12px Georgia,serif;fill:#28536b}
+      .respL{font:12px Georgia,serif;fill:#2f7d68}
+      .ex{font:italic 13px Georgia,serif;fill:#5a5540}
+      .reqLine{stroke:#28536b;stroke-width:2.6;marker-end:url(#req)}
+      .respLine{stroke:#2f7d68;stroke-width:2.6;marker-end:url(#resp)}
+    </style>
+  </defs>
+  <rect class="bg" width="1080" height="680"/>
+  <text class="maint" x="540" y="45" text-anchor="middle">gRPC's four call shapes — cardinality of request vs response</text>
+  <text class="mains" x="540" y="68" text-anchor="middle">the calculator (section 7) is the unary case; the rest is what HTTP/2 multiplexing unlocks</text>
+
+  <!-- Panel A: Unary -->
+  <rect class="panel" x="40" y="100" width="480" height="260" rx="14"/>
+  <text class="pt" x="280" y="130" text-anchor="middle">Unary</text>
+  <text class="ps" x="280" y="150" text-anchor="middle">1 request → 1 response (like REST)</text>
+  <rect class="client" x="120" y="185" width="120" height="80" rx="10"/><text class="boxl" x="180" y="230" text-anchor="middle">Client</text>
+  <rect class="server" x="400" y="185" width="120" height="80" rx="10"/><text class="boxl" x="460" y="230" text-anchor="middle">Server</text>
+  <line class="reqLine" x1="240" y1="210" x2="400" y2="210"/>
+  <text class="reqL" x="320" y="200" text-anchor="middle">request</text>
+  <line class="respLine" x1="400" y1="245" x2="240" y2="245"/>
+  <text class="respL" x="320" y="262" text-anchor="middle">response</text>
+  <text class="ex" x="280" y="340" text-anchor="middle">Add(a, b) → sum — the calculator</text>
+
+  <!-- Panel B: Server streaming -->
+  <rect class="panel" x="560" y="100" width="480" height="260" rx="14"/>
+  <text class="pt" x="800" y="130" text-anchor="middle">Server streaming</text>
+  <text class="ps" x="800" y="150" text-anchor="middle">1 request → stream of responses</text>
+  <rect class="client" x="640" y="185" width="120" height="80" rx="10"/><text class="boxl" x="700" y="230" text-anchor="middle">Client</text>
+  <rect class="server" x="920" y="185" width="120" height="80" rx="10"/><text class="boxl" x="980" y="230" text-anchor="middle">Server</text>
+  <line class="reqLine" x1="760" y1="205" x2="920" y2="205"/>
+  <text class="reqL" x="840" y="196" text-anchor="middle">1 request</text>
+  <line class="respLine" x1="920" y1="222" x2="760" y2="222"/>
+  <line class="respLine" x1="920" y1="238" x2="760" y2="238"/>
+  <line class="respLine" x1="920" y1="254" x2="760" y2="254"/>
+  <text class="respL" x="840" y="273" text-anchor="middle">stream of responses</text>
+  <text class="ex" x="800" y="340" text-anchor="middle">subscribe to stock prices — one ask, many updates</text>
+
+  <!-- Panel C: Client streaming -->
+  <rect class="panel" x="40" y="380" width="480" height="260" rx="14"/>
+  <text class="pt" x="280" y="410" text-anchor="middle">Client streaming</text>
+  <text class="ps" x="280" y="430" text-anchor="middle">stream of requests → 1 response</text>
+  <rect class="client" x="120" y="465" width="120" height="80" rx="10"/><text class="boxl" x="180" y="510" text-anchor="middle">Client</text>
+  <rect class="server" x="400" y="465" width="120" height="80" rx="10"/><text class="boxl" x="460" y="510" text-anchor="middle">Server</text>
+  <text class="reqL" x="320" y="476" text-anchor="middle">stream of requests</text>
+  <line class="reqLine" x1="240" y1="485" x2="400" y2="485"/>
+  <line class="reqLine" x1="240" y1="501" x2="400" y2="501"/>
+  <line class="reqLine" x1="240" y1="517" x2="400" y2="517"/>
+  <line class="respLine" x1="400" y1="533" x2="240" y2="533"/>
+  <text class="respL" x="320" y="552" text-anchor="middle">1 response: ack</text>
+  <text class="ex" x="280" y="620" text-anchor="middle">upload 10,000 sensor readings → one ack</text>
+
+  <!-- Panel D: Bidirectional -->
+  <rect class="panel" x="560" y="380" width="480" height="260" rx="14"/>
+  <text class="pt" x="800" y="410" text-anchor="middle">Bidirectional</text>
+  <text class="ps" x="800" y="430" text-anchor="middle">both stream at once</text>
+  <rect class="client" x="640" y="465" width="120" height="80" rx="10"/><text class="boxl" x="700" y="510" text-anchor="middle">Client</text>
+  <rect class="server" x="920" y="465" width="120" height="80" rx="10"/><text class="boxl" x="980" y="510" text-anchor="middle">Server</text>
+  <line class="reqLine" x1="760" y1="483" x2="920" y2="483"/>
+  <line class="respLine" x1="920" y1="499" x2="760" y2="499"/>
+  <line class="reqLine" x1="760" y1="515" x2="920" y2="515"/>
+  <line class="respLine" x1="920" y1="531" x2="760" y2="531"/>
+  <text class="ps" x="840" y="552" text-anchor="middle">both directions, simultaneously</text>
+  <text class="ex" x="800" y="620" text-anchor="middle">live chat, real-time translation</text>
+</svg>

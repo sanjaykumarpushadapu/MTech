@@ -104,7 +104,13 @@ Secrets use placeholders only, such as `OPENAI_API_KEY`.
 
 The user uploads per session and ideally names subject, session number, and file type. If session number is missing, infer from the master index and state the inference.
 
-Never trust a deck filename alone. Verify identity from title slide, agenda, footers, section dividers, and topic sequence against the handout Learning Plan row.
+### Subject Is Never Inferred From `_library/` Naming
+
+If the user uploads a file (paper, deck, transcript) without stating which subject it belongs to, **ask** before doing any work. Do not guess the subject by matching the upload against an existing `_library/` filename prefix, such as treating an uploaded paper as belonging to 536 because a file named `536-P1-...` already exists there. That naming can be stale, wrong, or a leftover assumption from an earlier session, and reusing it silently propagates the error into session notes across the wrong subject.
+
+This applies even when the paper's content plausibly fits the guessed subject. Plausibility is not confirmation. One question up front costs less than reverting edits in the wrong subject's notes later.
+
+Never trust a deck filename alone, either. Verify identity from title slide, agenda, footers, section dividers, and topic sequence against the handout Learning Plan row.
 
 If one deck contains multiple sessions, split it by handout scope and log the split in `source/MATERIAL-LOG.md`. If the boundary is ambiguous, stop and ask; do not blend two sessions.
 

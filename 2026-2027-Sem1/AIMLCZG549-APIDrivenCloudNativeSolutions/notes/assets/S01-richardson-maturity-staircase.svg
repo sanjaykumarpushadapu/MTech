@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="500" viewBox="0 0 1080 500" role="img" aria-labelledby="title desc">
+  <title id="title">Richardson Maturity Model, four levels</title>
+  <desc id="desc">Four ascending levels of REST adoption: level 0 single URI, level 1 resources, level 2 verbs (where most real APIs stop), and level 3 hypermedia controls, which is rare in practice.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker>
+    <style>
+      .bg{fill:#f8f4ea}
+      .step{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+      .sweet{fill:#e4f4ef;stroke:#2f7d68;stroke-width:2.5}
+      .rare{fill:#f0eee6;stroke:#8a8672;stroke-width:2;stroke-dasharray:6 5}
+      .t{font:700 25px Georgia,serif;fill:#17313d}
+      .s{font:italic 15px Georgia,serif;fill:#3f5861}
+      .name{font:700 16px Georgia,serif;fill:#17313d}
+      .desc{font:13px Georgia,serif;fill:#3f5861}
+      .code{font:13px Georgia,serif;fill:#3f5861;font-style:italic}
+      .cap{font:italic 13px Georgia,serif;fill:#8a5a2b}
+      .star{font:700 13px Georgia,serif;fill:#2f7d68}
+      .climb{stroke:#28536b;stroke-width:2.5;stroke-dasharray:5 5;fill:none;marker-end:url(#a)}
+    </style>
+  </defs>
+  <rect class="bg" width="1080" height="500"/>
+  <text class="t" x="540" y="45" text-anchor="middle">The Richardson Maturity Model</text>
+  <text class="s" x="510" y="68" text-anchor="middle">teams adopt REST rung by rung — most real APIs stop at level 2</text>
+
+  <!-- climb connectors -->
+  <path class="climb" d="M262 368 L298 302"/>
+  <path class="climb" d="M482 298 L518 242"/>
+  <path class="climb" d="M702 238 L738 182"/>
+
+  <!-- level 0 -->
+  <rect class="step" x="80" y="370" width="180" height="60" rx="10"/>
+  <text class="name" x="170" y="400" text-anchor="middle">Level 0</text>
+  <text class="desc" x="170" y="418" text-anchor="middle">one /attendees endpoint</text>
+  <text class="cap" x="170" y="350" text-anchor="middle">single URI, no verbs (RPC-over-REST)</text>
+
+  <!-- level 1 -->
+  <rect class="step" x="300" y="300" width="180" height="130" rx="10"/>
+  <text class="name" x="390" y="330" text-anchor="middle">Level 1 — Resources</text>
+  <text class="code" x="390" y="350" text-anchor="middle">GET /attendees/1</text>
+  <text class="desc" x="390" y="372" text-anchor="middle">adds identity</text>
+  <text class="cap" x="390" y="280" text-anchor="middle">URIs now name resources</text>
+
+  <!-- level 2 -->
+  <rect class="sweet" x="520" y="240" width="180" height="190" rx="10"/>
+  <text class="name" x="610" y="270" text-anchor="middle">Level 2 — Verbs</text>
+  <text class="code" x="610" y="289" text-anchor="middle">PUT / DELETE</text>
+  <text class="code" x="610" y="305" text-anchor="middle">/attendees/1</text>
+  <text class="desc" x="610" y="326" text-anchor="middle">GET never mutates</text>
+  <text class="star" x="610" y="350" text-anchor="middle">most real APIs stop here</text>
+  <text class="cap" x="610" y="220" text-anchor="middle">HTTP methods carry intent</text>
+
+  <!-- level 3 -->
+  <rect class="rare" x="740" y="180" width="180" height="250" rx="10"/>
+  <text class="name" x="830" y="210" text-anchor="middle">Level 3 — Hypermedia</text>
+  <text class="code" x="830" y="230" text-anchor="middle">HATEOAS</text>
+  <text class="desc" x="830" y="252" text-anchor="middle">response carries the</text>
+  <text class="desc" x="830" y="269" text-anchor="middle">update / delete links</text>
+  <text class="cap" x="830" y="160" text-anchor="middle">rare — chatty, short-circuited</text>
+
+  <text class="s" x="540" y="460" text-anchor="middle">Level 3 suits flexible UI-style systems, not interservice calls —</text>
+  <text class="s" x="540" y="480" text-anchor="middle">the spec is usually agreed up front instead.</text>
+</svg>

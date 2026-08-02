@@ -107,7 +107,16 @@ Three consequences follow directly, and each drives a later session:
 
 **Two consequences:**
 
-- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. *Where the randomness comes from: **random weight initialisation**, the **random order of mini-batches** in stochastic gradient descent, randomised techniques like **dropout**, and even **floating-point addition being non-associative on a GPU** — parallel threads sum partial results in whatever order they finish, giving bit-level-different totals. Same data, same code, slightly different model. A compiler has none of these, which is why its output is reproducible and a trained model's isn't.*
+- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. Four separate sources of randomness, in plain terms:
+
+  | Source | What it means, plainly |
+  |---|---|
+  | Random weight initialisation | The model's numbers start at random values before training begins |
+  | Mini-batch order (stochastic gradient descent) | Training data is fed in small random-order chunks ("mini-batches"), not all at once — a different order nudges the model slightly differently |
+  | Dropout | During training, random neurons are temporarily switched off each pass, on purpose, to stop the model over-relying on any one of them — which random ones get switched off is not repeatable run to run |
+  | Floating-point addition on a GPU | Many parallel threads add up partial results in whatever order they each finish, and addition order can shift the last few decimal digits — same data, same code, still a tiny bit-level difference |
+
+  A compiler has none of these, which is why its output is reproducible and a trained model's isn't.
 - **Models are stored serialized, not as binaries** — an intermediate format of learned parameters, loaded by a runtime. Directly analogous to Java bytecode plus the JVM. Some infrastructure compiles models to native code for speed.
 
 **Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. The precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
@@ -207,6 +216,8 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 **Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, known as **ADLC** (AI-Driven Development Life Cycle) and named as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
 
 **Mechanism — each rung shortens a feedback loop.** Waterfall delays feedback until the end; iterative development brings feedback into repeated cycles; Agile tightens team/customer feedback; Scaled Agile coordinates many teams; ADLC tries to automate artifacts across the lifecycle so requirements, design, code, tests and deployment move together.
+
+![Climbing the ladder to ADLC](assets/S01-process-model-staircase.svg)
 
 | Stage | Features | Challenges | Impact |
 |---|---|---|---|

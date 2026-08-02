@@ -446,6 +446,14 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 
 **Worked example** — In *"I need to replace my card. It was stolen yesterday,"* the model must connect **it** to **card**, not to yesterday or the user. That link is exactly the kind of cross-token relationship self-attention supplies.
 
+> ***Going deeper*** *— this isn't just a plausible story; the original transformer paper showed it happening. Vaswani et al., "Attention Is All You Need" (2017) — outside this course's reading list, included here because it's the direct evidence for the claim above — visualised individual attention heads on real sentences after training and found several performing exactly this reference-resolution job.*
+>
+> ![Self-attention resolving "its" back to "Law"](assets/S01-attention-anaphora-example.svg)
+>
+> *Given the sentence "The Law will never be perfect, but its application should be just," one head — in layer 5 of the model's 6 layers, not the first — attended from the word "its" almost entirely back to **"Law"**, correctly skipping every word in between, including the much closer (and wrong) candidate "perfect." A second, separate head in the same layer was found tracking a completely different long-range link: completing the phrase "making … more difficult" across a dozen intervening words in another sentence. Neither behaviour was hand-built or labelled during training — both emerged purely from being trained to predict the next word, the same claim this section makes about LLMs generally: capability shows up as a side effect of the training objective, not a feature someone coded in.*
+>
+> *Two things worth carrying from this: first, reference resolution isn't a metaphor for what self-attention does — it's a literal, observable weight pattern inside a trained model. Second, different heads specialise (this is why multi-head attention exists at all, even though the Q/K/V mechanics behind it are a modelling-course topic): one head's job here was reference resolution, another's was long-range verb-phrase completion, in the same layer, on the same forward pass.*
+
 **Technical capability → conversational consequence** — pair them; the pairing is the point:
 
 | Technical capability | Impact on conversations |
@@ -517,6 +525,8 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
                                               ▼
                                    6 Safety ─→ 7 Response
 ```
+
+![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
 
 What actually passes between stages:
 
@@ -627,7 +637,7 @@ Conversation flows · tool invocations · **token usage per conversation** · re
 Tools: **LangSmith, Arize Phoenix, OpenTelemetry**.
 
 **💰 Cost management**
-**Prompt caching (50–90% cost reduction)** · model routing (smaller models when appropriate) · token budgets per user/session · efficient retrieval (reduce context size).
+**Prompt caching (50–90% cost reduction)** — the model provider stores the computed internal state for a prompt's shared, repeated prefix (e.g. the system prompt and tool definitions), so the next call that reuses that exact prefix skips recomputing it; this is why static content should come first and the varying part (the user's new message) last · model routing (smaller models when appropriate) · token budgets per user/session · efficient retrieval (reduce context size).
 Benchmark: customer support ≈ **$0.02–0.10 per conversation**.
 
 **⚡ Latency budgets**

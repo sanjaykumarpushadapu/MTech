@@ -303,6 +303,8 @@ Each head runs the exact same computation from section 4, just in 64 dimensions 
 
 **Intuition** — Attention alone only *mixes* information between tokens. The block adds the parts that *process* it: a feed-forward network to do computation, layer normalisation to keep training stable, and residual connections so gradients survive depth.
 
+> **What "gradients survive depth" means** — training a network works by measuring how much each weight contributed to the error, then nudging it slightly (this signal is the *gradient*). That signal has to flow backward through every layer it passed through. Each extra layer it crosses shrinks it a bit more (repeated multiplication by small numbers), so in a very deep stack the earliest layers can end up receiving a gradient close to zero — they effectively stop learning. This is the **vanishing gradient problem**, and it's the actual failure residual connections are fixing, not just a vague "training gets harder."
+
 *Two everyday analogies for the two supporting parts:*
 - **Residual connection** = a **highway with exits**. The `X +` keeps a straight through-lane running past each sublayer; a token can *take the exit* to be processed by attention or the FFN, but the through-lane always continues. So even in a 100-layer stack the original signal (and, during training, the gradient) never has to squeeze through every single exit — it always has a clear road home. That's why very deep transformers train at all.
 - **Layer normalisation** = **grading on a curve, per token**. Before each sublayer, it rescales one token's vector so its numbers sit in a consistent range (mean 0, unit spread), stopping values from drifting to extremes as they pass through many layers. `γ` and `β` then let the model stretch and shift that curve if it wants.
@@ -764,6 +766,8 @@ Corpus: `("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)`
 *All six pairs, not just the top three — if you work this by hand you will find `("p","u") = 17`, and a table that omits it looks like you made an arithmetic error.*
 
 So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vocabulary.
+
+![BPE merges the most frequent pair, every round](assets/S01-bpe-merge-steps.svg)
 
 **The iterations:**
 

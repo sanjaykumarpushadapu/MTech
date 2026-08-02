@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+  <title id="title">The loop inside the lifecycle: Reasoning, Tool, Memory</title>
+  <desc id="desc">Stages 3 Reasoning, 4 Tool, and 5 Memory cycle repeatedly, with observations feeding back into reasoning, until reasoning has enough evidence to exit to stage 6 Safety.</desc>
+  <defs>
+    <marker id="fwd" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker>
+    <marker id="back" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c85a3d"/></marker>
+    <style>
+      .bg{fill:#fffdf7}
+      .frame{fill:none;stroke:#c7b56f;stroke-width:2}
+      .t{font:700 24px Georgia,serif;fill:#17213a}
+      .s{font:italic 14px Georgia,serif;fill:#5a5540}
+      .stage{fill:#fff2bd;stroke:#8a6400;stroke-width:2}
+      .exit{fill:#f7e4e7;stroke:#914252;stroke-width:2}
+      .lbl{font:700 17px Georgia,serif;fill:#17213a}
+      .sub{font:13px Georgia,serif;fill:#5a5540}
+      .cap{font:700 13px Georgia,serif;fill:#3a4256}
+      .loopLbl{font:700 14px Georgia,serif;fill:#c85a3d}
+      .exitLbl{font:700 13px Georgia,serif;fill:#914252}
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="480"/>
+  <rect class="frame" x="14" y="14" width="932" height="452" rx="18"/>
+
+  <text class="t" x="45" y="45">The loop inside the lifecycle: Reasoning, Tool, Memory</text>
+  <text class="s" x="45" y="65">stages 3→4→5 cycle until reasoning has enough evidence (section 9)</text>
+
+  <!-- loop-back arc: Memory -> Reasoning -->
+  <path d="M770 140 C 700 88 260 88 190 140" fill="none" stroke="#c85a3d" stroke-width="3" stroke-dasharray="2 0" marker-end="url(#back)"/>
+  <text class="loopLbl" x="480" y="93" text-anchor="middle">5→3: observations + retrieved context appended to scratchpad — not done yet</text>
+
+  <!-- boxes -->
+  <rect class="stage" x="90" y="140" width="200" height="70" rx="12"/>
+  <text class="lbl" x="190" y="171" text-anchor="middle">3 Reasoning</text>
+  <text class="sub" x="190" y="192" text-anchor="middle">plan next step</text>
+
+  <rect class="stage" x="380" y="140" width="200" height="70" rx="12"/>
+  <text class="lbl" x="480" y="171" text-anchor="middle">4 Tool</text>
+  <text class="sub" x="480" y="192" text-anchor="middle">execute call</text>
+
+  <rect class="stage" x="670" y="140" width="200" height="70" rx="12"/>
+  <text class="lbl" x="770" y="171" text-anchor="middle">5 Memory</text>
+  <text class="sub" x="770" y="192" text-anchor="middle">store / retrieve</text>
+
+  <!-- forward arrows -->
+  <line x1="290" y1="175" x2="378" y2="175" stroke="#24304a" stroke-width="3" marker-end="url(#fwd)"/>
+  <text class="cap" x="335" y="235" text-anchor="middle">3→4: structured</text>
+  <text class="cap" x="335" y="250" text-anchor="middle">tool call (name + args)</text>
+
+  <line x1="580" y1="175" x2="668" y2="175" stroke="#24304a" stroke-width="3" marker-end="url(#fwd)"/>
+  <text class="cap" x="625" y="235" text-anchor="middle">4→5: raw return value</text>
+  <text class="cap" x="625" y="250" text-anchor="middle">becomes an observation</text>
+
+  <!-- exit branch -->
+  <line x1="190" y1="210" x2="190" y2="298" stroke="#914252" stroke-width="3" marker-end="url(#fwd)"/>
+  <text class="exitLbl" x="215" y="260" text-anchor="start">3→6: done —</text>
+  <text class="exitLbl" x="215" y="277" text-anchor="start">draft answer</text>
+
+  <rect class="exit" x="90" y="300" width="200" height="70" rx="12"/>
+  <text class="lbl" x="190" y="331" text-anchor="middle">6 Safety</text>
+  <text class="sub" x="190" y="352" text-anchor="middle">guardrails (once)</text>
+
+  <text class="s" x="45" y="410">The seven-box diagram above draws this left to right, which hides the loop. Only 3→4→5 repeats;</text>
+  <text class="s" x="45" y="429">1, 2, 6, 7 each run exactly once — that asymmetry is what makes agent cost unpredictable.</text>
+</svg>

@@ -229,7 +229,7 @@ GitOps is especially natural with Kubernetes because Kubernetes resources are al
 | Coupling | whether one overloaded service blocks unrelated flows |
 | State risk | cart loss, duplicate payment, inconsistent order status |
 | Scaling boundary | whether the hot capability can scale independently |
-| Resilience | queues, retries, timeouts, circuit breakers, graceful degradation |
+| Resilience | queues, retries, timeouts, **circuit breakers** (stop calling a dependency that's already failing, instead of retrying into a failure and making it worse — the caller "trips the breaker" and fails fast until the dependency recovers), graceful degradation |
 | Observability | metrics and traces that reveal where latency or errors begin |
 
 **Worked example** — If users report that selected products vanish from carts and money is deducted without orders, the likely architecture risks are state inconsistency between cart/order/payment, missing idempotency, overloaded synchronous calls, and weak failure compensation. A cloud-native redesign would isolate cart, order, inventory, and payment; add idempotency keys; queue bursty order creation; and monitor each step.

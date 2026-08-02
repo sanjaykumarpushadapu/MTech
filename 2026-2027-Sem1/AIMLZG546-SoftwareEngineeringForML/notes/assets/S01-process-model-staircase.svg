@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="520" viewBox="0 0 1050 520" role="img" aria-labelledby="title desc">
+  <title id="title">Process models climbing a ladder toward ADLC</title>
+  <desc id="desc">Five ascending steps: Waterfall, Iterative, Agile, Scaled Agile, and ADLC, each rung shortening the feedback loop from end-of-project down to continuous, AI-assisted feedback.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker>
+    <style>
+      .bg{fill:#f8f4ea}
+      .step{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+      .final{fill:#eaf5ef;stroke:#3b856d;stroke-width:2.5}
+      .t{font:700 23px Georgia,serif;fill:#17313d}
+      .s{font:italic 15px Georgia,serif;fill:#3f5861}
+      .name{font:700 16px Georgia,serif;fill:#17313d}
+      .desc{font:13px Georgia,serif;fill:#3f5861}
+      .fb{font:italic 13px Georgia,serif;fill:#8a5a2b}
+      .climb{stroke:#28536b;stroke-width:2.5;stroke-dasharray:5 5;fill:none;marker-end:url(#a)}
+    </style>
+  </defs>
+  <rect class="bg" width="1050" height="520"/>
+  <text class="t" x="525" y="45" text-anchor="middle">Climbing the ladder to ADLC</text>
+  <text class="s" x="525" y="68" text-anchor="middle">each rung fixes the last rung's worst pain — by shortening the feedback loop</text>
+
+  <!-- climb connectors -->
+  <path class="climb" d="M240 358 L272 312"/>
+  <path class="climb" d="M420 308 L452 262"/>
+  <path class="climb" d="M600 258 L632 212"/>
+  <path class="climb" d="M780 208 L812 162"/>
+
+  <!-- step 1: Waterfall -->
+  <rect class="step" x="90" y="360" width="150" height="70" rx="10"/>
+  <text class="name" x="165" y="385" text-anchor="middle">Waterfall</text>
+  <text class="desc" x="165" y="405" text-anchor="middle">predictable, rigid</text>
+  <text class="fb" x="165" y="340" text-anchor="middle">feedback: end of project</text>
+
+  <!-- step 2: Iterative -->
+  <rect class="step" x="270" y="310" width="150" height="120" rx="10"/>
+  <text class="name" x="345" y="335" text-anchor="middle">Iterative</text>
+  <text class="desc" x="345" y="355" text-anchor="middle">evolving docs,</text>
+  <text class="desc" x="345" y="372" text-anchor="middle">repeated cycles</text>
+  <text class="fb" x="345" y="290" text-anchor="middle">feedback: each iteration</text>
+
+  <!-- step 3: Agile -->
+  <rect class="step" x="450" y="260" width="150" height="170" rx="10"/>
+  <text class="name" x="525" y="285" text-anchor="middle">Agile</text>
+  <text class="desc" x="525" y="305" text-anchor="middle">just-enough docs,</text>
+  <text class="desc" x="525" y="322" text-anchor="middle">CI/CD, team</text>
+  <text class="desc" x="525" y="339" text-anchor="middle">+ customer loop</text>
+  <text class="fb" x="525" y="240" text-anchor="middle">feedback: each sprint</text>
+
+  <!-- step 4: Scaled Agile -->
+  <rect class="step" x="630" y="210" width="150" height="220" rx="10"/>
+  <text class="name" x="705" y="235" text-anchor="middle">Scaled Agile</text>
+  <text class="desc" x="705" y="255" text-anchor="middle">consistent</text>
+  <text class="desc" x="705" y="272" text-anchor="middle">artifacts across</text>
+  <text class="desc" x="705" y="289" text-anchor="middle">many teams</text>
+  <text class="fb" x="705" y="190" text-anchor="middle">feedback: per release train</text>
+
+  <!-- step 5: ADLC -->
+  <rect class="final" x="810" y="160" width="150" height="270" rx="10"/>
+  <text class="name" x="885" y="185" text-anchor="middle">ADLC</text>
+  <text class="desc" x="885" y="205" text-anchor="middle">(desired state)</text>
+  <text class="desc" x="885" y="225" text-anchor="middle">AI automates</text>
+  <text class="desc" x="885" y="242" text-anchor="middle">artifacts across</text>
+  <text class="desc" x="885" y="259" text-anchor="middle">the whole lifecycle</text>
+  <text class="fb" x="885" y="122" text-anchor="middle">feedback: continuous,</text>
+  <text class="fb" x="885" y="140" text-anchor="middle">AI-assisted</text>
+
+  <text class="s" x="525" y="475" text-anchor="middle">Adopting a tool at one rung (e.g. AI pair programming) speeds that one step — it only</text>
+  <text class="s" x="525" y="497" text-anchor="middle">shortens the overall cycle if the rungs around it advance too (section 4, "What ADLC is actually about").</text>
+</svg>

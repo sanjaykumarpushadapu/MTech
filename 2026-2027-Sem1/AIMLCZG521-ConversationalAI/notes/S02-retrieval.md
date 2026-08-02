@@ -6,6 +6,11 @@
 
 Retrieval is the part of conversational AI that lets an agent answer from current, private, or domain-specific knowledge instead of relying only on model memory. This session teaches the full path: turn text into embeddings, compare vectors, index them fast enough for production, and combine semantic retrieval with keyword search when each alone is brittle. If you can explain this session, you can design the knowledge-access layer of a RAG chatbot, choose a vector database, tune latency vs recall, and defend why "just use embeddings" is not enough.
 
+> **Prerequisites recap** *— this session assumes self-attention, feedforward layers, and basic matrix operations (full depth in AIMLZG536-LLMForGenerativeAI/notes/S01-foundations.md, sections 4–6). The five-second version:*
+> - **Matrix ops**: a *dot product* (multiply matching numbers, add them up) is the similarity score behind attention; *softmax* turns a row of scores into weights that sum to 1; a *weighted sum* (matrix multiply) blends vectors using those weights.
+> - **Self-attention**: every token makes a Query ("what am I looking for"), Key ("what do I contain"), and Value ("what do I contribute"). Dot-product every Query against every Key → scale → softmax → weighted sum of Values. The output is each token's *context-aware* vector — this is exactly what section 2 below relies on for contextual embeddings.
+> - **Feedforward layer**: after attention mixes information *between* tokens, each token's vector is individually expanded then shrunk by a small 2-layer network — no cross-token mixing here.
+
 ---
 
 ## Part 1 · Embeddings for understanding
@@ -86,6 +91,14 @@ Plain language first: `QK^T` asks "which other tokens matter to this token?", so
 **Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can see both `"slow"` and `"excellent"` before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the English sentence and a decoder writes the Hindi sentence while attending to the encoded source.
 
 **Tradeoff / when NOT to use** — Do not force one architecture onto every problem. Using a decoder-only chat model as an embedding model can work if it is trained for embeddings, but a purpose-built encoder embedding model is usually cheaper, faster, and easier to index.
+
+> ***Going deeper*** *— is "decoder-only is weaker at understanding tasks" still true once you fine-tune it? A 2025 study puts a number on it. Borodach et al., "Decoders Laugh as Loud as Encoders" (2025) — outside this course's reading list, included as direct evidence for the tradeoff above — fine-tuned a decoder (GPT-4o) and several encoders on the same task: classifying text into six categories (five humor types plus "not a joke").*
+>
+> ![Zero/few-shot decoders lag far behind — fine-tuning closes the gap](assets/S02-decoder-vs-encoder-classification.svg)
+>
+> *The chart is the whole finding: every decoder tested **without** fine-tuning — zero-shot or with a few examples in the prompt — scored far below the best encoder, topping out around 0.60 F1-macro even for GPT-4. The same architecture, fine-tuned, jumped to **0.852** — statistically indistinguishable (Welch's t-test) from the best fine-tuned encoder, RoBERTa, at **0.857**. Worth noticing too: the encoder-**decoder** models tested (BART, Flan-T5, zero/few-shot only) did *worse* than the decoder-only models at the same shot count — a third data point, not just two, and the weakest of the three families here.*
+>
+> *This sharpens rather than overturns the tradeoff above: a decoder-only model's weakness at understanding-style tasks reads as a **cost** — it needs fine-tuning, and fine-tuning a large decoder is heavier than fine-tuning a purpose-built encoder — not a **final-accuracy ceiling**. "Purpose-built encoder is cheaper, faster, easier to index" still holds; "decoder-only can't match it" does not, once fine-tuning is on the table. ⚠️ One caveat the paper is upfront about: this is a small dataset (1,392 examples), so treat the specific numbers as directional, not definitive.*
 
 ---
 

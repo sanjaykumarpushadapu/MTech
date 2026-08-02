@@ -407,6 +407,8 @@ Same resource, two representations:
 | **2** | **Verbs (Methods)** | Multiple resource URIs accessed by **different request methods**, chosen by their effect on the server. Guarantees `GET` doesn't change state | adding `PUT /attendees/1`, `DELETE /attendees/1` |
 | **3** | **Hypermedia Controls** | **HATEOAS** — Hypertext As The Engine Of Application State. The response carries the actions now possible on the returned object | `GET /attendees/1` returns the update/delete links |
 
+![The Richardson Maturity Model, four levels](assets/S01-richardson-maturity-staircase.svg)
+
 **Tradeoff / why level 3 is rare** — in practical terms, **level 3 is rarely used in modern RESTful HTTP services**. HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
 
 **A whole system built this way** — the food-delivery architecture, and the best single diagram here — a preview of microservices (S3):
@@ -581,6 +583,8 @@ RPC exchanges can accumulate state, which buys **high performance at the potenti
 > | **Server streaming** | 1 request → *stream* of responses | "subscribe to stock prices" — one ask, many updates |
 > | **Client streaming** | *stream* of requests → 1 response | "upload 10,000 sensor readings" → one ack |
 > | **Bidirectional** | both stream at once | live chat, real-time translation |
+>
+> ![gRPC's four call shapes](assets/S01-grpc-call-types.svg)
 >
 > In the `.proto` you mark it with the `stream` keyword — `rpc Prices(Req) returns (stream Price)`. Streaming is the concrete payoff of HTTP/2 multiplexing, and it's something REST cannot do cleanly — a real reason to reach for gRPC beyond raw speed.
 
