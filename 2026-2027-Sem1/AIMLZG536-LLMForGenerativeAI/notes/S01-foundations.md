@@ -14,7 +14,7 @@ This is the session that makes you fluent in how modern AI actually works under 
 
 ![Decoder-only LLM forward pass loop](assets/S01-forward-pass-loop.svg)
 
-One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture and every section below is "what happens at this one box." The **context length** (section 10) is just how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives entirely in the attention inside the block.
+One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture in mind: every section below is "what happens at this one box." The **context length** (section 10) is just how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives entirely in the attention inside the block.
 
 ---
 
@@ -65,7 +65,7 @@ Same words, different order. A language model that has learned English assigns f
 
 LLMs are **deep neural networks** trained on that data.
 
-**Mechanism — the three axes compound.** Parameters define how much the model can store and compute, training data supplies the statistical signal, and compute is the budget that turns data into learned parameters. Context is the runtime extension of the same idea: the model can condition on more tokens, but every extra token makes attention and KV-cache storage more expensive.
+**Mechanism — the three axes compound.** Parameters define how much the model can store and compute, training data supplies the statistical signal, and compute is the budget that turns data into learned parameters. Context is the runtime extension of the same idea: the model can condition on more tokens, but every extra token makes attention more expensive and grows the memory needed to store past tokens' key/value vectors — the **KV-cache**, covered properly in section 4.
 
 *The three axes, and what each actually charges you:*
 
@@ -134,7 +134,7 @@ Say we sample **`cat`**. Context is now `"The cat"`.
 | mat | 0.086 |
 | `<eos>` | 0.070 |
 
-The distribution **sharpened** — 0.204 → 0.702 for the winner. More context means less uncertainty. That is the entire mechanism behind "prompting works": you are not instructing the model, you are conditioning the distribution.
+The distribution **sharpened**: `cat` was sampled off a fairly flat first distribution (its own probability was only 0.204, well behind `the`'s 0.554), but once `"The cat"` is the context, the new top prediction `sat` is a clear front-runner at 0.702. More context means less uncertainty. That is the entire mechanism behind "prompting works": you are not instructing the model, you are conditioning the distribution.
 
 ⚠️ **The reframe that matters:** nothing in these two steps knows what a sentence *is*. There is no grammar module and no plan — fluency is simply what you get when the next-token probabilities are accurate.
 
@@ -188,7 +188,7 @@ If you remember only one sentence before the arithmetic starts, remember this on
 **The computation, in three steps:**
 
 1. **Q · Kᵀ** — dot product: how similar is the query to each key? Higher = more relevant.
-2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Plain-language first:* longer vectors naturally produce larger dot products, simply because you are summing more little products. If you feed those oversized scores straight into softmax, it becomes too peaky too early: one token gets almost all the probability, the rest get almost none, and learning becomes unstable. Dividing by `√d_k` shrinks the scores back to a sensible size so softmax stays responsive. The reason the divisor is `√d_k` rather than `d_k` is that a dot product's **variance** grows roughly like `d_k`, so its typical size grows like `√d_k`; dividing by `√d_k` cancels exactly that inflation.*
+2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. *Plain-language first:* longer vectors naturally produce larger dot products, simply because you are summing more little products. If you feed those oversized scores straight into softmax, it becomes too peaky too early: one token gets almost all the probability, the rest get almost none, and learning becomes unstable. Dividing by `√d_k` shrinks the scores back to a sensible size so softmax stays responsive. The reason the divisor is `√d_k` rather than `d_k` is that a dot product's **variance** grows roughly like `d_k`, so its typical size grows like `√d_k`; dividing by `√d_k` cancels exactly that inflation.
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
 The same computation as a pipeline — the form to reproduce in an exam:
@@ -299,6 +299,8 @@ Weight-matrix notation: W_Qi ∈ ℝ^(d×d_k), W_Ki ∈ ℝ^(d×d_k), W_Vi ∈ �
 
 Each head runs the exact same computation from section 4, just in 64 dimensions instead of 512 — that's why h heads cost about the same as one full-width head.
 
+**Use case — why one head isn't enough.** Take "The trophy didn't fit in the suitcase because it was too big." Resolving "it" needs a head that attends back to "trophy" (coreference); scoring how plausible the sentence is needs a head that attends to "because" and tracks clause structure (syntax). A single attention head has to average both signals into one weighted sum, blurring each. Llama-3-8B gives every layer 32 heads precisely so different heads can specialise — one tracking coreference, another local syntax — instead of one head doing a mediocre job of both.
+
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does *not* fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
 
 ---
@@ -391,6 +393,8 @@ T¹ = (X − μ)/σ = [−1.414, 0, 0, +1.414]
 
 **Intuition** — **Attention has no inherent sense of order.** Shuffle the tokens and the attention maths gives the same answer, because a dot product doesn't know which token came first. Position has to be *added* to the embeddings so the model can infer sequence structure.
 
+**Use case — what breaks without it.** "Alice called Bob" and "Bob called Alice" are the same three tokens in a different order. Section 4's attention scores relevance with dot products between token vectors, and a dot product between the same set of vectors doesn't change just because you feed them in a different order — so without positional information, both sentences would produce identical attention outputs, and the model could not tell who called whom. Adding a position-dependent vector to each token embedding is what breaks that symmetry.
+
 **Three approaches:**
 
 | Approach | How it works | Property |
@@ -459,8 +463,8 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 1. Tokenizer maps it to token IDs.
 2. Embeddings turn each ID into a length-`d` vector.
 3. Positional encoding marks which vector is first and which is second.
-4. Attention lets `"cat"` look back at `"The"` when forming its hidden state.
-5. The FFN reshapes that hidden state into a more useful feature vector.
+4. Attention lets `"cat"` look back at `"The"` when forming its hidden vector.
+5. The FFN reshapes that hidden vector into a more useful feature vector.
 6. After many repeated blocks, the LM head produces scores like `{sat, sleeps, is, ...}` over the vocabulary.
 
 That is the whole machine in miniature: **text → IDs → vectors → repeated contextual transformation → vocabulary scores**.
@@ -637,7 +641,7 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 
 ### 10. Context length
 
-**Intuition** — The maximum number of tokens the model can process. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
+**Intuition** — The maximum number of tokens the model can process — the same thing serving docs and APIs call the **context window**; this file uses the two terms interchangeably from here on. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
 **Mechanism — the limit applies to prompt plus output.** At each decoding step, the model reads all tokens currently in the context, predicts one next-token distribution, appends one token, and repeats. That means the context window is a shared budget for system prompt, user prompt, retrieved text, tool output, conversation history and the answer itself.
 
@@ -809,7 +813,7 @@ The first wins if its learned piece probabilities score higher.
 
 #### 12.6 SentencePiece vs tiktoken
 
-The distinction, stated precisely: they differ in **what unit they merge over (characters vs bytes)** and **whether they pre-split the text (no vs regex-yes)**.
+The distinction, stated precisely: they differ in **what unit they merge over** (characters vs bytes) and **whether they pre-split the text with a regex before merging** (SentencePiece doesn't; tiktoken does).
 
 ```
 SentencePiece BPE (Llama-2):
