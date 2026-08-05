@@ -20,7 +20,7 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 ## Part 1 · What a language model is
 
-*Start here. What "language model" and "large" actually mean — and the one idea everything else rests on: **predicting text and generating text are the same machine**, run in two directions.*
+*Start here: what "language model" and "large" mean, and the one idea everything below builds on — a model trained to predict the next word can generate a whole passage just by repeating that prediction, feeding each new word back in as input.*
 
 ### 1. Language AI and language models
 
@@ -81,7 +81,7 @@ LLMs are **deep neural networks** trained on that data.
 
 ### 3. Generation as prediction
 
-**Intuition** — This is the session's key idea, and it's *the fundamental intuition of language models*: **a model that can predict text can also generate text, by sampling from the distribution it predicts.** Prediction and generation are the same machine used in two directions.
+**Intuition** — This is the session's key idea: **a model that can predict text can also generate text, by sampling from the distribution it predicts.** Predicting the next word and generating a whole passage are the same computation, repeated — each output is fed back in as the input for the next prediction.
 
 A model used this way is an **autoregressive language model** — each generated token is fed back in to predict the next.
 
@@ -136,7 +136,7 @@ Say we sample **`cat`**. Context is now `"The cat"`.
 
 The distribution **sharpened** — 0.204 → 0.702 for the winner. More context means less uncertainty. That is the entire mechanism behind "prompting works": you are not instructing the model, you are conditioning the distribution.
 
-⚠️ **The reframe that matters:** nothing in these two steps knows what a sentence *is*. There is no grammar module and no plan. Fluency is what a good conditional distribution looks like from the outside.
+⚠️ **The reframe that matters:** nothing in these two steps knows what a sentence *is*. There is no grammar module and no plan — fluency is simply what you get when the next-token probabilities are accurate.
 
 **The consequence that makes LLMs general** — *almost any NLP task can be modelled as word prediction.* Two examples:
 
@@ -155,7 +155,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 **Generative AI** is the broader area: using computational models to generate text, code, speech, images, video and audio. LLMs are the text branch. And LLMs are **(mostly) natural language generation (NLG) systems** — the process of generating text with them is called **decoding** (the whole of S5).
 
-**Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration. It's the expensive general answer versus the cheap specific one.
+**Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration.
 
 ---
 
@@ -631,7 +631,7 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 
 **Where the head fits** — the LM head is the `|V| × d` matrix at the very top, ~0.5 B at 8B scale (about **6.6% extra** when untied; embedding + head together are about **13.1%**). Larger models can pay it; on a 1B model the *same* matrix is a far bigger slice, so small models often **tie** it to the embedding and pay nothing extra. Embedding + head together are the **vocabulary tax**: fixed by |V|, felt most at small scale.
 
-**The one picture to carry** — *where the parameters are is where the cost is and where every optimisation aims.* And keep two things separate that are easy to confuse: **parameters = the model's fixed size in memory** (set by d, N, |V|); **context length = work done per token at run time** (the O(n²) of section 4, which adds *no* parameters at all). Making a model "bigger" and giving it a "longer context" are different levers.
+**The one picture to carry** — *parameters, cost, and optimisation effort all concentrate in the same few matrices.* And keep two things separate that are easy to confuse: **parameters = the model's fixed size in memory** (set by d, N, |V|); **context length = work done per token at run time** (the O(n²) of section 4, which adds *no* parameters at all). Making a model "bigger" and giving it a "longer context" are different levers.
 
 ---
 
@@ -924,7 +924,7 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 #### 12.7 Extra depth — WordPiece & byte-level BPE
 
-Deeper tokenization knowledge and the reference for **Lab 1** — out of exam scope, so it won't be on the closed-book mid-sem — but it's genuinely useful for the lab and the field, which is why it's kept.
+Deeper tokenization knowledge, kept as reference for **Lab 1** — out of exam scope (won't be on the closed-book mid-sem) but useful for the lab and the field.
 
 **Byte tokens vs BPE:**
 

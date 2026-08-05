@@ -4,11 +4,11 @@
 
 ## Why this matters
 
-Conversational AI — agents — is one of the most employable specialisations in the field right now, and this session is the **map of the whole territory**. It's **not just chatbots**: it is a reasoning system that happens to speak your language. Here you get the sixty-year arc that explains why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that is the spine of the course, and the **protocol landscape** (MCP, A2A) being standardised as you read this. Get this and you can architect an agent, reason about its cost and failure modes, and talk fluently about where the field is heading — plus it covers tokenization and context windows deeply enough to build on.
+Conversational AI — agentic AI — is one of the most employable specialisations in the field right now, and this session covers it end to end. It's **not just chatbots**: it is a reasoning system that happens to speak your language. You'll get the sixty-year history behind why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that structures the rest of the course, and the emerging **protocol landscape** (MCP, A2A). It also covers tokenization and context windows in enough depth to build on. After this session you should be able to architect an agent, reason about its cost and failure modes, and explain where the field is heading.
 
 ## Part 1 · What the field is
 
-*Ground the vocabulary first: what conversational AI actually is, and the sixty-year arc from rule-based ELIZA to today's agents — the history is what explains why systems look the way they do now.*
+*What conversational AI actually is, and the sixty-year history from rule-based ELIZA to today's agents — the history explains why systems look the way they do now.*
 
 ### 1. What conversational AI is
 
@@ -62,7 +62,7 @@ Every step rightward buys coverage of a wider query space and pays for it in pre
 
 > Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
-The 2023–2025 row's detail is the fastest-moving one to hold onto: in one line, *AI moves from assistant to autonomous collaborator.*
+The 2023–2025 row matters most to remember: in one line, *AI moves from assistant to autonomous collaborator.*
 
 **Worked example — why one era forces the next.** ELIZA could answer *"I feel anxious"* with a scripted prompt, but it could not remember that anxiety across turns. Statistical dialogue systems could classify the intent, but needed hand-written features. LLMs made the response fluent, but still could not book the appointment. Agentic systems add tools and memory because fluency alone does not complete the task.
 
@@ -105,7 +105,7 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 
 ### 3b. Workflows vs agents — and when not to build one
 
-**Intuition** — "Agentic AI" gets used as though it were one thing. There's a sharper line to draw inside it, and this distinction is one of the most useful single ideas here:
+**Intuition** — "Agentic AI" gets used as though it were one thing, but there's a sharper, more useful distinction inside it:
 
 | | Definition |
 |---|---|
@@ -128,7 +128,7 @@ An LLM enhanced with **retrieval, tools and memory**, where the model actively u
 - *Workflow*: code says `classify intent → if refund: check eligibility → if eligible: issue refund → confirm`. The LLM classifies and writes text; **the path is fixed**.
 - *Agent*: the model is given the tools `check_eligibility`, `issue_refund`, `lookup_order` and the goal "resolve this customer's refund request", and decides for itself which to call, in what order, and when it's done.
 
-**Tradeoff / when NOT to build an agent** — this is the central caution and it runs directly against the hype, which makes it valuable:
+**Tradeoff / when NOT to build an agent** — the central caution here, and it runs directly against the hype:
 
 > Find the **simplest solution possible**, and only increase complexity when needed. This might mean **not building agentic systems at all.** Agentic systems often trade **latency and cost** for better task performance.
 
@@ -493,7 +493,7 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 
 ## Part 4 · How an agent actually runs
 
-*The heart of the course: the seven-stage loop that turns a language model into an agent that plans, calls tools and acts — and why that same loop is what makes agents both powerful and hard to make reliable.*
+*The core of the course: the seven-stage loop that turns a language model into an agent — and why that same loop makes agents both powerful and hard to make reliable.*
 
 ### 9. The seven-stage agent lifecycle
 
@@ -589,7 +589,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 | **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery** across heterogeneous networks | Decentralised agent ecosystems |
 | **Custom REST / GraphQL** | — | Traditional service integration | Enterprise systems, legacy integrations |
 
-**Mechanism — what each protocol standardises:** they solve different edges of the same picture, which is why they are not competitors:
+**Mechanism — what each protocol standardises:** each solves a different problem, which is why they are not competitors:
 
 ![Protocol landscape for agents](assets/S01-protocol-landscape.svg)
 

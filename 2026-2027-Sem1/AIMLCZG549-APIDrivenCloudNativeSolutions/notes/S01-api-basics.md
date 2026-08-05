@@ -6,7 +6,7 @@
 
 An API is a **promise between a service and its clients**: send a request shaped like *this*, get a response shaped like *that* — and neither side needs to know how the other is built. Get the promise right and other teams build on you for years without ever reading your code; get it wrong and every change breaks someone.
 
-This is career-load-bearing, not just coursework. **Every backend, every cloud service, every ML model you deploy is reached through an API** — Hugging Face, OpenAI, LangChain, Prefect and Amazon Bedrock are all REST. The design calls in this note — REST vs gRPC, how to version without breaking clients, sync vs async — are ones you will actually make on the job. The note builds the vocabulary (contract, sync/async, HTTP), then the three shapes the promise can take, then how you evolve it over time.
+This matters beyond the course — it's a skill you'll use on the job. **Every backend, every cloud service, every ML model you deploy is reached through an API** — Hugging Face, OpenAI, LangChain, Prefect and Amazon Bedrock are all REST. The design calls in this note — REST vs gRPC, how to version without breaking clients, sync vs async — are ones you will actually make on the job. The note builds the vocabulary (contract, sync/async, HTTP), then covers the three API styles, then how an API evolves once it's published.
 
 ## Part 1 · What an API is
 
@@ -279,7 +279,7 @@ The front-end now builds real screens. When the back-end ships, the URL changes 
 
 **Tradeoff / where mocking misleads** — a mock is **schema-shaped, not behaviour-shaped**. It returns the right *fields*; it does not reproduce latency, pagination limits, rate limiting, partial failures, or the awkward real data (empty strings, nulls, 40-character titles). Teams that build entirely against mocks discover all of that on integration day. Use mocks to unblock, then test against something real as early as you can.
 
-**This is what "API-first" actually means in practice.** Design-first isn't a philosophical preference — it's the thing that lets three teams work in parallel off one document instead of serially off each other.
+**This is what "API-first" actually means in practice.** Design-first isn't a philosophical preference — it lets three teams work in parallel off one document instead of serially off each other.
 
 #### 4.2 OpenAPI generators — turning the contract into code
 

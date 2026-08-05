@@ -67,8 +67,6 @@ Microservices work best when service boundaries follow business capabilities and
 
 ### 3. Service mesh
 
-*filled-in reasoning for this syllabus item*
-
 **Intuition** — A service mesh is infrastructure for service-to-service communication. It handles cross-cutting traffic concerns such as retries, timeouts, mutual TLS, routing policy, and telemetry without forcing every service team to write the same networking code.
 
 ![Service mesh sidecar pattern](assets/S03-service-mesh.svg)
@@ -120,7 +118,7 @@ Cold start is the key mechanism cost: if no warm function instance exists, the p
 
 **Intuition** — A container is a standardized package containing the application code, runtime, system tools, libraries, and settings needed to run consistently across environments.
 
-The singer analogy is useful: if the venue's microphone or speaker may fail, the singer carries their own. A container carries the software's runtime environment so the deployment venue matters less.
+The singer analogy is useful: a singer who can't rely on the venue's microphone or speakers just brings their own. A container carries its own runtime environment the same way, so the deployment venue matters less.
 
 ![Virtual machines versus containers](assets/S03-containers-vms.svg)
 

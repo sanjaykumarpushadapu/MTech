@@ -6,13 +6,13 @@
 
 This is the session that separates people who can *train* a model from people who can *ship* one — the difference that defines an ML **engineer**. Its central claim, which you'll spend a career proving true: **the model is rarely the problem; everything around it is.** Data quality, latency, cost, monitoring, fairness, the handoff between data scientists and engineers — that's where ML products actually live or die. This note gives you the vocabulary (algorithm vs model, parameters vs hyperparameters), the process (SDLC, ML pipeline, MLOps), and the judgment (the risk spectrum, when the general answer is the wrong one) to reason about real systems.
 
-Three angles, one argument: the process history, the failure evidence (**87% of ML projects fail**), and the local-optimisation trap. Read them as one.
+Three threads support this argument: process history, failure evidence (**87% of ML projects fail**), and the local-optimisation trap.
 
-**Running example throughout:** **fraud detection**, used in every section — and it's the standard credit-card-fraud teaching example, so everything lines up from the start.
+**Running example throughout:** **fraud detection** (the standard credit-card-fraud teaching example), used in every section.
 
 ## Part 1 · The argument
 
-*The two ideas the whole course is built on: that shipping a model is an **engineering** problem rather than a modelling one, and the precise sense in which **"the model is never the problem."** Read these first — everything later is a consequence of them.*
+*This course rests on two ideas: shipping a model is an **engineering** problem, not a modelling one; and the precise sense in which **"the model is never the problem."** Everything later follows from these.*
 
 ### 1. Why this course exists
 
@@ -150,7 +150,7 @@ The engineering consequence is the dashed note: **supervised learning makes labe
 
 #### 2.4 Terminology traps
 
-This gets its own section, which signals it can be asked.
+These three terms are commonly tested — know the precise version of each.
 
 | Ambiguous word | Say instead |
 |---|---|
@@ -162,7 +162,7 @@ This gets its own section, which signals it can be asked.
 
 ## Part 2 · Process
 
-*What software engineering already knows, and where ML bends it: the development lifecycle, the ML pipeline, and the exact points where the familiar process breaks once a **learned** component enters the system.*
+*This part covers the development lifecycle, the ML pipeline, and exactly where the familiar process breaks once a **learned** component enters the system.*
 
 ### 3. Two lifecycles: the SDLC and the ML pipeline
 
@@ -231,7 +231,7 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 
 #### What ADLC is actually about
 
-*The evolution table is only the surface — the real subject is different, and more useful for this course.*
+*The table above is background. The more useful point for this course follows.*
 
 Its opening claim: **"the adoption levels are still far below expectations. Many organizations struggle to realize value by adopting AI in SDLC."** Not because the tools are bad — *"Does this mean these tools lack value? Absolutely not."* — but because **tool adoption is only one step**, and organizations ignore the rest of the ecosystem.
 
@@ -281,7 +281,7 @@ That last row is worth pausing on. It's an *organisational* failure mode, not a 
 
 Two specifics worth carrying: **KPIs and a baseline must be established at the pilot stage** — you cannot demonstrate ROI without a before-measurement — and the sustain target is **at least 80% active utilisation**, monitored, with roadblocks actively removed.
 
-**Tradeoff / when NOT to use** — Read the Impact column downward: every stage reduces *human* dependence and increases *tooling* dependence. ADLC's stated benefit — "reduced dependence on human expertise" — is also its risk. Generated code, tests and specs need a human who can tell correct from plausible, and that judgment is exactly what atrophies when generation is automated. No ADLC challenges are catalogued alongside it; read that as *unproven*, not *solved* — the surrounding analysis is, in effect, a long list of the very challenges the table omits.
+**Tradeoff / when NOT to use** — Read the Impact column downward: every stage reduces *human* dependence and increases *tooling* dependence. ADLC's stated benefit — "reduced dependence on human expertise" — is also its risk. Generated code, tests and specs need a human who can tell correct from plausible, and that judgment is exactly what atrophies when generation is automated. No ADLC challenges are catalogued alongside it; read that as *unproven*, not *solved* — the adoption-failure analysis below is effectively that missing list.
 
 **The deeper tradeoff, and the one an exam would reward:** the evidence is that **AI in one SDLC phase yields nothing unless the whole cycle is replanned**. So ADLC isn't a tool decision, it's a process-redesign decision. Adopting the tool is cheap; replanning the cycle, retraining staff, restructuring incentives and controlling LLM spend is where the cost and the failure risk actually sit.
 
@@ -384,7 +384,7 @@ That third row is a favourite exam question because it's counter-intuitive: ML s
 
 ## Part 4 · People and judgment
 
-*The half of engineering that isn't code: interdisciplinary teams, the risk spectrum, and the judgment calls — above all, **when the expensive general answer is the wrong one** — that separate an ML engineer from someone who only trains models.*
+*The non-code half of engineering: interdisciplinary teams, the risk spectrum, and judgment calls — above all, **knowing when the expensive general answer is the wrong one**.*
 
 ### 7. Who builds these systems
 
@@ -533,13 +533,13 @@ Data that doesn't fit one machine; distributed training and serving; **the ML fl
 
 ![ML risk spectrum](assets/S01-risk-spectrum.svg)
 
-**The thesis in one line:** ML doesn't make projects riskier — *we attempt riskier things with ML*. The judgment being taught is **locating your system on this line first**, then matching practice to position.
+**The judgment being taught:** locate your system on this spectrum first, then match practice to position.
 
 **Mechanism — practice follows consequence.** Estimate the harm of a wrong prediction, the detectability of that harm, and the reversibility of the decision. Higher harm, harder detection, or irreversible action moves the system rightward and demands stronger requirements, testing, monitoring and human oversight.
 
 **Worked example** — Fraud detection is not a restaurant website. False negatives cost money; false positives block legitimate customers and can be discriminatory; the system runs on live payment traffic at scale. Mid-to-high on the spectrum, and the practices should match — which is what modules 2–7 supply.
 
-**Tradeoff / the symmetric error** — be careful here: "It is not that machine learning automatically makes projects riskier — and there certainly are also many low-risk systems with machine-learning components." Applying nuclear-grade rigour to a low-stakes recommender is its own failure. The judgment is *locating your system on the spectrum first*, then matching practice to position. That judgment is what 546 teaches.
+**Tradeoff / the symmetric error** — be careful here: "It is not that machine learning automatically makes projects riskier — and there certainly are also many low-risk systems with machine-learning components." Applying nuclear-grade rigour to a low-stakes recommender is its own failure — that's the judgment 546 teaches.
 
 **The enduring principles** that survive every technology shift — a ready-made exam answer:
 
@@ -645,7 +645,7 @@ Both touch **every** phase — there is no single point in the timeline where ei
 
 No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blueprint, fraud detection.
 
-**Locked in:** fraud detection is the running example for all sixteen sessions — the same credit-card fraud decision tree recurs as the standard worked example throughout, so the theme is consistent from the very first session.
+**Locked in:** fraud detection is the running example for all sixteen sessions — the same credit-card fraud decision tree recurs as the standard worked example throughout.
 
 ---
 

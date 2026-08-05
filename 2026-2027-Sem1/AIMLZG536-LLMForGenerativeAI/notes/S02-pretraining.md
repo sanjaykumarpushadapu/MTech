@@ -4,7 +4,7 @@
 
 ## Why this matters
 
-Pre-training is where an LLM's raw capability actually comes from — everything downstream (finetuning, alignment, prompting) works with whatever pre-training already put into the weights. Understanding the training objective, the data pipeline, and the scaling laws that govern this stage is what lets you estimate cost before a training run is launched, reason about why a model behaves the way it does, and read a frontier lab's technical report (why Llama 3 trains an 8B model on 15T tokens, why Chinchilla changed the industry's mind about model size vs data) instead of treating it as marketing copy.
+Pre-training is where an LLM's raw capability comes from — everything downstream (finetuning, alignment, prompting) works with whatever pre-training already put into the weights. This session covers the training objective, the data pipeline, and the scaling laws behind it, so you can estimate training cost, reason about model behavior, and read a frontier lab's technical report — why Llama 3 trains an 8B model on 15T tokens, why Chinchilla changed the industry's mind about model size vs. data — as engineering decisions, not marketing copy.
 
 **Running example:** three architecturally distinct paths a model can take through pretraining — regular pretraining from scratch, continued pretraining (CPT) on top of an existing checkpoint, and domain-specific pretraining from scratch — reused throughout Part 3 via the FinLLaMA / BloombergGPT case studies.
 
@@ -40,7 +40,7 @@ flowchart LR
 
 ### 2. Pre-training objectives: causal vs masked language modeling
 
-**Intuition** — There are two different "fill in the blank" games a model can be trained to play, and which one it plays decides whether it becomes a generator (GPT-style) or an understander (BERT-style).
+**Intuition** — A model can be trained on one of two prediction tasks, and the choice determines whether it becomes a generator (GPT-style) or an understander (BERT-style).
 
 **Mechanism** —
 
@@ -97,7 +97,7 @@ The model assigns these probabilities to the *correct* target token at each of t
 
 Average log-probability = −10.8765. **Cross-entropy loss = −(−10.8765) = 10.8765.**
 
-Notice how small every probability is (all around 10⁻⁵, i.e. roughly 1-in-100,000): before training, the model is close to guessing uniformly across its ~50,000-word vocabulary, so assigning any noticeably-above-chance probability to the exact right token hasn't happened yet — that's what a loss around 10–11 nats actually means in plain terms. As training proceeds, this number falls; a well-trained small model on a narrow corpus can reach a loss under 1.0 (concept 8 has a full training-run log showing this fall in practice, alongside what happens when it falls *too* far).
+Every probability here is tiny (~10⁻⁵, roughly 1-in-100,000) because the untrained model is guessing almost uniformly across its ~50,000-word vocabulary — it hasn't yet learned to favor the correct token. That's what a loss around 10–11 nats means in plain terms. As training proceeds, this number falls; a well-trained small model on a narrow corpus can reach a loss under 1.0 (concept 8 has a full training-run log showing this fall in practice, alongside what happens when it falls *too* far).
 
 **Tradeoff / when NOT to use** — cross-entropy on held-out text is the standard way to compare two models trained on the *same* tokenizer and roughly the same domain; it stops being meaningful the moment tokenizers differ, or the moment the eval text overlaps with training data (a live problem for public benchmarks — see concept 4's MMLU aside). It also does not directly measure whether generated text is *correct*, only whether it was *likely* under the model's training distribution — a fluent, confident, wrong answer can still carry a good loss.
 
