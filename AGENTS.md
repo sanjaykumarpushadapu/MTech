@@ -181,6 +181,27 @@ Rules:
 - Dense math must be signposted as skimmable on first pass, with the key takeaway stated plainly.
 - More explanation belongs at hard spots, not everywhere.
 
+### Use Case Grounding
+
+Every concept needs one grounding example that states a real problem and how the concept resolves it, not mechanism in the abstract alone. Check for this in the same pass as the Tradeoff.
+
+- Prefer a real-world/production scenario tied to the subject's domain (fraud detection, a bank's compliance corpus, a support-ticket pipeline, a Kubernetes flash-sale autoscale, a misrouted chatbot intent) over an invented toy sentence.
+- A short toy example (e.g. "Alice called Bob" vs "Bob called Alice" to isolate word order) is acceptable only when it is the clearest way to isolate the mechanism, not as a default.
+- Format: `**Use case — <short label>.**`, 3-5 lines, in the note's existing voice. Fold into the Worked example or Tradeoff subsection if that reads more naturally than a standalone block.
+- Skip sections that are purely definitional, notational, or a taxonomy/comparison table. Do not force a scenario onto a shape table or a vocabulary list.
+- If a Worked example, `***In practice***` box, or Tradeoff paragraph already answers "what breaks without this and how is it fixed," that already satisfies the gate. Do not add a second example on top of it.
+
+### Wording Pass
+
+Before marking a note reviewed, read it end to end for:
+
+- Ambiguous sentences that need a re-read to parse
+- Jargon used before it is defined
+- The same concept named two different ways in different sections of the same note
+- Decorative or vague metaphors that do not actually clarify anything (the canonical bad example: "predicting text and generating text are the same machine, run in two directions") — cut them or replace with a direct statement of what is actually happening
+
+A wording pass never changes technical correctness, formulas, tables, numbers, or the Intuition → Mechanism → Worked example → Tradeoff → Diagram order.
+
 Optional depth blocks are allowed when useful:
 
 | Block | Use |

@@ -34,7 +34,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 ![Bot ladder from chatbot to agent](assets/S01-bot-ladder.svg)
 
-Every step rightward buys coverage of a wider query space and pays for it in predictability. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
+Every step rightward buys coverage of a wider query space, and spends predictability to do it. Nothing on the ladder says further right is *better* — it says further right is *more general*. 
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
@@ -60,9 +60,9 @@ Every step rightward buys coverage of a wider query space and pays for it in pre
 
 **Mechanism — the key driver:**
 
-> Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
+> Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017 — what it actually is, in section 8), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
-The 2023–2025 row matters most to remember: in one line, *AI moves from assistant to autonomous collaborator.*
+The 2023–2025 row is the one to remember most: in one line, *AI moves from assistant to autonomous collaborator.*
 
 **Worked example — why one era forces the next.** ELIZA could answer *"I feel anxious"* with a scripted prompt, but it could not remember that anxiety across turns. Statistical dialogue systems could classify the intent, but needed hand-written features. LLMs made the response fluent, but still could not book the appointment. Agentic systems add tools and memory because fluency alone does not complete the task.
 
@@ -166,7 +166,7 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 
 ### 4. The six components of modern conversational AI
 
-**Intuition** — Any conversational system, from a 2005 IVR to a 2026 agent, still has to do the same six jobs: understand, track the conversation, look things up, act, respond, and remember. What changed is where the difficulty lives: the LLM absorbs much of **understanding, dialogue, and generation**, while **knowledge, action, and memory** remain the expensive engineering pieces.
+**Intuition** — Any conversational system, from a 2005 IVR (interactive voice response phone menu) to a 2026 agent, still has to do the same six jobs: understand, track the conversation, look things up, act, respond, and remember. What changed is where the difficulty lives: the LLM absorbs much of **understanding, dialogue, and generation**, while **knowledge, action, and memory** remain the expensive engineering pieces.
 
 *The six, arranged by what the LLM absorbed and what it didn't — the split is the insight:*
 
@@ -256,7 +256,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 ### 6. Tokenization
 
-**Intuition** — Breaking text into subword units that LLMs process. BPE sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
+**Intuition** — Breaking text into subword units that LLMs process. BPE (Byte Pair Encoding) sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
 ![Tokenization and BPE](assets/S01-tokenization-bpe.svg)
 
@@ -386,7 +386,7 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 **⚠️ The challenge — the exam-worthy bit, not the numbers:**
 
-> **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG + memory systems** (Module 2).
+> **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG (Retrieval-Augmented Generation) + memory systems** (Module 2).
 
 *Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. It's the same way you skim a long email: you reliably catch the opening line and the ask at the very bottom, but a detail buried three paragraphs deep you gloss right over — even though your eyes passed over all of it. So a fact placed mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
 
@@ -746,7 +746,7 @@ The durable lesson is not a ranking of vendors; it is the decision rule. In conv
 
 *(The notebook also opens with its own "How this maps to the course" cell — this table is the reverse direction, note → cell.)*
 
-⚠️ **The notebook differs from the plan.** The stated approach is "native OpenAI API"; the notebook she actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
+⚠️ **The notebook differs from the plan.** The stated approach is "native OpenAI API"; the notebook the instructor actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
 
 Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, three sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
 

@@ -38,7 +38,7 @@ An everyday analogy: a popular restaurant cannot say "kitchen closed for two hou
 
 ### 2. Cloud-native evolution
 
-**Intuition** — Cloud-native is not just "move the application to cloud." It is the shift from large, slow-changing deployments to systems designed around small services, automation, containers, DevOps, and cloud elasticity.
+**Intuition** — Cloud-native is not just "move the application to the cloud." It is the shift from large, slow-changing deployments to systems designed around small services, automation, containers, DevOps, and cloud elasticity.
 
 ![Cloud-native evolution](assets/S02-cloud-native-evolution.svg)
 
@@ -72,7 +72,7 @@ This is not a mathematical equation; it is a design recipe. Leave out one ingred
 
 ### 3. Cloud-enabled vs cloud-based vs cloud-native
 
-**Intuition** — The difference is whether cloud is an add-on, a place to run, or the way the application is designed. Cloud-enabled uses cloud services around a mostly old application; cloud-based runs on cloud infrastructure; cloud-native is built to exploit cloud delivery.
+**Intuition** — The difference is whether cloud is an add-on, a place to run, or the way the application is designed. Cloud-enabled uses cloud services around a mostly old application; cloud-based runs on cloud infrastructure; cloud-native is designed from the ground up to take advantage of how the cloud actually delivers compute and services.
 
 ![Cloud-enabled versus cloud-based versus cloud-native](assets/S02-enabled-based-native.svg)
 
@@ -113,7 +113,7 @@ Cloud-native design also has a failure mindset. Instead of assuming machines, ne
 
 **Worked example** — A food-delivery platform might package the order service as a Docker image, deploy three replicas on Kubernetes, expose it through an API gateway, monitor latency and error rate, and use a CI/CD pipeline to roll out a fix to only that service. If payment is slow, the order service should degrade or queue safely instead of crashing the whole platform.
 
-**Tradeoff / when NOT to use** — Do not treat the technology pyramid as a shopping list. Adding Kubernetes, service mesh, GitOps, and multiple databases before the application has scale, team boundaries, or release-pressure creates platform work without business value.
+**Tradeoff / when NOT to use** — Do not treat the technology pyramid as a shopping list. Adding Kubernetes, service mesh, GitOps, and multiple databases before the application has the scale, team boundaries, or release cadence to justify them creates platform work without business value.
 
 ---
 

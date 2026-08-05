@@ -162,6 +162,8 @@ max pooling  = [max(1,3,5), max(4,2,0)] = [5, 4]
 
 **Tradeoff / when NOT to use** — CLS pooling is convenient but not automatically best for retrieval. For sentence search and RAG, mean pooling often performs better because it uses all token outputs instead of trusting one summary token.
 
+**Use case — a ranking bug traced to pooling.** A team dropped a general-purpose BERT checkpoint into a FAQ search box and got near-random results: obviously related questions didn't rank near each other. The checkpoint's default output was the `[CLS]` vector, trained for next-sentence prediction, not similarity — so the embedding model wasn't bad, the pooling choice was wrong. Switching the same checkpoint to mean pooling over all token vectors fixed the ranking with no retraining.
+
 ---
 
 ### 6. Embedding model selection
@@ -279,7 +281,7 @@ At 1 billion operations per second, that is about 7.68 seconds per query. At 100
 7.68 seconds/query * 100 queries/second = 768 cores
 ```
 
-That is before network overhead, filters, reranking, and the LLM call.
+That is before network overhead, filters, reranking (reordering the top candidates with a slower, more precise model), and the LLM call.
 
 **Tradeoff / when NOT to use** — Linear scan is fine for tiny collections, offline evaluation, and verifying ANN recall. It is not the serving strategy for millions of vectors unless the hardware is specialized and the workload justifies brute force.
 
@@ -301,7 +303,7 @@ That is before network overhead, filters, reranking, and the LLM call.
 
 **Worked example** — For a RAG FAQ with 10M chunks, exact scan might take seconds. HNSW can return a high-quality approximate top-10 in milliseconds because it walks through graph links instead of scoring all 10M vectors.
 
-**Tradeoff / when NOT to use** — ANN is a latency-recall tradeoff. If the collection is small or the top-1 result must be mathematically exact, brute force may be safer. In RAG, approximate recall of 95-99% is usually acceptable because the LLM answer is already probabilistic and a reranker can clean up the candidate set.
+**Tradeoff / when NOT to use** — ANN is a latency-recall tradeoff (recall here means the fraction of the true nearest neighbors the approximate search actually returns). If the collection is small or the top-1 result must be mathematically exact, brute force may be safer. In RAG, approximate recall of 95-99% is usually acceptable because the LLM answer is already probabilistic and a reranker can clean up the candidate set.
 
 ---
 

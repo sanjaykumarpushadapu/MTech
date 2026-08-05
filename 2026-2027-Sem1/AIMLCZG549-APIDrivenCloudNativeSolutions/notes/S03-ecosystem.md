@@ -57,7 +57,7 @@ An everyday analogy: a monolith is one large department where every approval goe
 | Failure boundary | one bug can affect the whole app | failures can be isolated if contracts and timeouts are designed well |
 | Operational cost | simpler to run at small scale | more networking, monitoring, CI/CD, and ownership discipline |
 
-Microservices work best when service boundaries follow business capabilities and reasons to change. If payment rules change for different reasons than delivery assignment, those are candidates for different services.
+Microservices work best when service boundaries follow business capabilities — grouped by *why* each part changes, not just what it does. If payment rules change for different reasons than delivery assignment, those are candidates for different services.
 
 **Worked example** — In a food-delivery system, restaurant search, cart, order, payment, delivery assignment, notification, and support are different capabilities. During dinner peak, search and cart may need more replicas than support. Independent services let those parts scale and release separately.
 
@@ -155,6 +155,8 @@ Important ideas:
 
 **Worked example** — If the desired state says "run three replicas of order-service" and one pod crashes, Kubernetes detects that actual state is two healthy replicas and starts another pod to return to three.
 
+**Use case — autoscaling under load.** A flash sale sends checkout traffic to 4x its normal level within minutes. A Horizontal Pod Autoscaler watches CPU or request-rate metrics and raises `checkout-service` from 3 replicas to 12 automatically; when the sale ends, it scales back down. Without this, someone has to manually add and remove pods around every predicted spike, or keep enough capacity running idle at all times to survive one.
+
 **Tradeoff / when NOT to use** — Kubernetes has a steep operational cost. If one container on one VM is enough, Kubernetes may add more moving parts than value. It becomes worthwhile when you need repeated deployments, scaling, healing, and many services across environments.
 
 ---
@@ -230,7 +232,7 @@ GitOps is especially natural with Kubernetes because Kubernetes resources are al
 | Resilience | queues, retries, timeouts, **circuit breakers** (stop calling a dependency that's already failing, instead of retrying into a failure and making it worse — the caller "trips the breaker" and fails fast until the dependency recovers), graceful degradation |
 | Observability | metrics and traces that reveal where latency or errors begin |
 
-**Worked example** — If users report that selected products vanish from carts and money is deducted without orders, the likely architecture risks are state inconsistency between cart/order/payment, missing idempotency, overloaded synchronous calls, and weak failure compensation. A cloud-native redesign would isolate cart, order, inventory, and payment; add idempotency keys; queue bursty order creation; and monitor each step.
+**Worked example** — If users report that selected products vanish from carts and money is deducted without orders, the likely architecture risks are state inconsistency between cart/order/payment, missing idempotency, overloaded synchronous calls, and no compensating step for partial failures (e.g., payment succeeds but order creation fails, and nothing undoes the charge). A cloud-native redesign would isolate cart, order, inventory, and payment; add idempotency keys; queue bursty order creation; and monitor each step.
 
 **Tradeoff / when NOT to use** — Do not answer every case study with "use microservices." Sometimes the best fix is caching, database indexing, queueing, rate limiting, or a rollback strategy. Microservices help only when the failure follows service boundaries that can be separated and operated independently.
 

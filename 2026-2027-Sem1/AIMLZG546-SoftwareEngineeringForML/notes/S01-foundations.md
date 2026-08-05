@@ -4,7 +4,7 @@
 
 ## Why this matters
 
-This is the session that separates people who can *train* a model from people who can *ship* one — the difference that defines an ML **engineer**. Its central claim, which you'll spend a career proving true: **the model is rarely the problem; everything around it is.** Data quality, latency, cost, monitoring, fairness, the handoff between data scientists and engineers — that's where ML products actually live or die. This note gives you the vocabulary (algorithm vs model, parameters vs hyperparameters), the process (SDLC, ML pipeline, MLOps), and the judgment (the risk spectrum, when the general answer is the wrong one) to reason about real systems.
+This is the session that separates people who can *train* a model from people who can *ship* one — the difference that defines an ML **engineer**. Its central claim, which you'll spend a career proving true: **the model is rarely the problem; everything around it is.** Data quality, latency, cost, monitoring, fairness, the handoff between data scientists and software engineers — that's where ML products actually live or die. This note gives you the vocabulary (algorithm vs model, parameters vs hyperparameters), the process (SDLC, ML pipeline, MLOps), and the judgment (the risk spectrum, when the general answer is the wrong one) to reason about real systems.
 
 Three threads support this argument: process history, failure evidence (**87% of ML projects fail**), and the local-optimisation trap.
 
@@ -20,7 +20,7 @@ Three threads support this argument: process history, failure evidence (**87% of
 
 **The numbers** — consultants report **87% of ML projects fail**, and **53% never make it from prototype to production**.
 
-**Worked example — the transcription start-up.** Sidney, a data scientist, publishes state-of-the-art domain-specific speech recognition and starts a company selling transcription to researchers and conference organisers. The models are genuinely excellent. The business struggles anyway:
+**Worked example — the transcription start-up.** Sidney, a data scientist, publishes a state-of-the-art domain-specific speech-recognition model and starts a company selling transcription to researchers and conference organisers. The models are genuinely excellent. The business struggles anyway:
 
 | What went wrong | Which module fixes it |
 |---|---|
@@ -29,7 +29,7 @@ Three threads support this argument: process history, failure evidence (**87% of
 | Training and inference costs eat the margin; pricing took a lot of experimentation | Quality attributes, cost (M2–M3) |
 | LLM features hit excessive API costs; self-hosting open models was brittle and consumed their few GPUs | Architecture (M3), deployment (M6) |
 | Team had to build a website and payments they had no experience with or interest in; UX was an afterthought | From models to systems (M1) |
-| Founders and hired front-end engineers **could not communicate effectively** | Interdisciplinary teams (M1) |
+| Founders and hired front-end engineers **could not communicate effectively** | Interdisciplinary Teams (M1) |
 | Manual training scripts; nobody updated TensorFlow for a year out of fear; a model update caused a major outage and a long night reverting | Automation, versioning (M6) |
 | Medical diagnoses mistranscribed **with high confidence**; African American vernacular barely intelligible | Fairness, responsible ML (M7) |
 | No visibility into model performance unless a customer complained | Monitoring (M6), QA (M5) |
@@ -52,11 +52,11 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 #### 2.1 Algorithm vs model, training vs inference
 
-**Intuition** — Two different things both get called "the ML", and keeping them apart is most of the clarity in this course. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs once, at training. The model runs a billion times, in production.
+**Intuition** — Two different things both get called "the ML", and keeping them apart accounts for much of this course's clarity. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs once, at training. The model runs a billion times, in production.
 
 ![Training versus inference](assets/S01-training-vs-inference.svg)
 
-The nesting: **AI ⊃ machine learning ⊃ deep learning**, with **foundation models** a kind of large model typically produced by deep learning. Supervised ML learns from *(data, label)* pairs, where the label is the expected output.
+The nesting: **AI ⊃ machine learning ⊃ deep learning**, with **foundation models** being a kind of large model typically produced by deep learning. Supervised ML learns from *(data, label)* pairs, where the label is the expected output.
 
 **Mechanism — what "training" actually does.** The algorithm searches for the function that best fits the examples, then freezes it:
 
@@ -75,12 +75,12 @@ Three consequences follow directly, and each drives a later session:
 
 **Worked example** — `sklearn.tree.DecisionTreeClassifier` is the *algorithm*. `.fit(transactions, is_fraud)` is *training*. The fitted tree — a specific set of if-then-else conditions — is the *model*. `.predict(new_transaction)` is *inference*. Only the model ships to production; sklearn's training code needn't be there at all.
 
-**Tradeoff / when the distinction bites** — Software engineers routinely conflate the two and then reason wrongly about deployment: shipping the whole training environment to production "because we need sklearn", inflating the container and the attack surface. This distinction is what makes model serving a separate architectural concern (S12).
+**Tradeoff / when the distinction bites** — Software engineers routinely conflate the two and then reason wrongly about deployment: shipping the whole training environment to production "because we need sklearn", inflating the container and the attack surface. This distinction is what makes model serving a separate architectural concern (session 12).
 
 > ***In practice*** *— how "the model ships, not the algorithm" actually works:*
-> - The model is **serialized** to a file and loaded by a runtime. Formats you'll meet: **pickle/joblib** (sklearn — convenient but unsafe to load from untrusted sources, and version-brittle), **ONNX** (framework-neutral, for cross-runtime serving), **safetensors** (the safe standard for deep-learning weights). "Which format" is a real deployment decision.
+> - The model is **serialised** to a file and loaded by a runtime. Formats you'll meet: **pickle/joblib** (sklearn — convenient but unsafe to load from untrusted sources, and version-brittle), **ONNX** (framework-neutral, for cross-runtime serving), **safetensors** (the safe standard for deep-learning weights). "Which format" is a real deployment decision.
 > - Trained models live in a **model registry** (MLflow Model Registry, SageMaker) — versioned, staged (staging → production), and rolled back like any other artifact. The registry is to models what git is to code.
-> - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what S14's provenance section is about.
+> - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what session 14's provenance section is about.
 
 #### 2.2 Parameters, hyperparameters, and the compiler analogy
 
@@ -92,7 +92,7 @@ Three consequences follow directly, and each drives a later session:
 | **Hyperparameters** | You | Max depth = 2; learning rate; stopping criterion | Before training |
 | **Parameters** | The algorithm, from data | Threshold `amount > 500`; matrix weights | During training |
 
-**The analogy to remember**: *where a compiler takes source code to generate an executable function, an ML algorithm takes data to create a function (model). Just like the compiler, the ML algorithm is no longer used at runtime. Hyperparameters correspond to compiler options.*
+**The analogy to remember**: *just as a compiler takes source code and produces an executable function, an ML algorithm takes data and produces a function (the model). Like the compiler, the ML algorithm is no longer used at runtime. Hyperparameters correspond to compiler options.*
 
 | Traditional software | Machine learning |
 |---|---|
@@ -101,13 +101,13 @@ Three consequences follow directly, and each drives a later session:
 | Compiler options (`-O2`) | **Hyperparameters** |
 | Executable | Model |
 | Running the executable | Inference |
-| Bytecode + JVM | Serialized ("pickled") model + runtime |
+| Bytecode + JVM | Serialised ("pickled") model + runtime |
 
 **Worked example — fraud detection.** A decision tree for credit-card fraud, trained with a hyperparameter capping nesting at two levels. The learned function is two nested if-then-else statements (the *internal structure*), with specific decision boundaries on `terminalRisk` and `amount` (the *parameters*). You chose "depth ≤ 2"; the data chose the thresholds.
 
 **Two consequences:**
 
-- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why S14 devotes a section to provenance and reproducibility. Four separate sources of randomness, in plain terms:
+- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why session 14 devotes a section to provenance and reproducibility. Four separate sources of randomness, in plain terms:
 
   | Source | What it means, plainly |
   |---|---|
@@ -117,7 +117,7 @@ Three consequences follow directly, and each drives a later session:
   | Floating-point addition on a GPU | Many parallel threads add up partial results in whatever order they each finish, and addition order can shift the last few decimal digits — same data, same code, still a tiny bit-level difference |
 
   A compiler has none of these, which is why its output is reproducible and a trained model's isn't.
-- **Models are stored serialized, not as binaries** — an intermediate format of learned parameters, loaded by a runtime. Directly analogous to Java bytecode plus the JVM. Some infrastructure compiles models to native code for speed.
+- **Models are stored serialised, not as binaries** — an intermediate format of learned parameters, loaded by a runtime. Directly analogous to Java bytecode plus the JVM. Some infrastructure compiles models to native code for speed.
 
 **Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. The precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
 
@@ -131,7 +131,7 @@ Three consequences follow directly, and each drives a later session:
 
 ![Types of ML domains](assets/S01-ml-domain-taxonomy.svg)
 
-The engineering consequence is the dashed note: **supervised learning makes labelling a first-class cost**, which is why the ML pipeline (section 3) has a *Data labeling* stage that no traditional SDLC has.
+The engineering consequence is the dashed note: **supervised learning makes labelling a first-class cost**, which is why the ML pipeline (section 3) has a *Data labelling* stage that no traditional SDLC has.
 
 **Cut 2 — by what kind of data it acts on.** This decides your *tooling and failure modes*:
 
@@ -191,7 +191,7 @@ Two engineering-relevant properties:
 1. **It is highly iterative.** A bad evaluation sends you back to a different algorithm, different hyperparameters, more data, or different preparation. The dashed arrows are the normal path, not the exception.
 2. **Most steps have surprisingly little code.** Preparation is programmed transformations (drop outlier rows, normalise a column). Training is "very few lines calling the library." **Deployment and monitoring are where the substantial infrastructure lives** — which is exactly why this is a software-engineering course.
 
-**Worked example** — Fraud detection. *Requirements* — catch fraud above ₹5,000 within 200ms. *Collection* — 18 months of transactions. *Labeling* — confirmed chargebacks, which arrive 30–90 days late (a real problem, not a footnote). *Cleaning/features* — merchant risk score, velocity in last hour. *Training* — six lines. *Evaluation* — recall at a fixed false-positive rate. *Deployment* — behind the payment API. *Monitoring* — recall against chargebacks as they arrive.
+**Worked example** — Fraud detection. *Requirements* — catch fraud above ₹5,000 within 200ms. *Collection* — 18 months of transactions. *Labelling* — confirmed chargebacks, which arrive 30–90 days late (a real problem, not a footnote). *Cleaning/features* — merchant risk score, velocity in last hour. *Training* — six lines. *Evaluation* — recall at a fixed false-positive rate. *Deployment* — behind the payment API. *Monitoring* — recall against chargebacks as they arrive.
 
 #### 3.3 How the two relate
 
@@ -207,13 +207,13 @@ Worth being able to state, because the exam can ask it either way round:
 
 The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Development–Testing phases, and adds a monitoring loop the SDLC's Maintenance phase never had to run continuously.
 
-**Tradeoff / when NOT to automate the pipeline** — Full pipeline automation is the goal (S13), but automating *early*, before you know which steps you'll keep changing, builds infrastructure around a design you're about to throw away. Data scientists work notebook-cell-by-cell during exploration for good reason. The engineering judgment is knowing when exploration has stabilised enough to be worth automating.
+**Tradeoff / when NOT to automate the pipeline** — Full pipeline automation is the goal (session 13), but automating *early*, before you know which steps you'll keep changing, builds infrastructure around a design you're about to throw away. Data scientists work notebook-cell-by-cell during exploration for good reason. The engineering judgment is knowing when exploration has stabilised enough to be worth automating.
 
 ---
 
 ### 4. From Waterfall to ADLC
 
-**Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, known as **ADLC** (AI-Driven Development Life Cycle) and named as the desired state. Each rung fixed the previous rung's worst pain and introduced a new one.
+**Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, known as **ADLC** (AI-Driven Development Life Cycle), presented as the desired end state. Each rung fixed the previous rung's worst pain and introduced a new one.
 
 **Mechanism — each rung shortens a feedback loop.** Waterfall delays feedback until the end; iterative development brings feedback into repeated cycles; Agile tightens team/customer feedback; Scaled Agile coordinates many teams; ADLC tries to automate artifacts across the lifecycle so requirements, design, code, tests and deployment move together.
 
@@ -501,6 +501,8 @@ Models trained on observations of the world, then acting on that world:
 
 Data that doesn't fit one machine; distributed training and serving; **the ML flywheel** — more users → more data → better models → more users. Large foundation models need expensive hardware even for inference, forcing dedicated machines accessed remotely.
 
+**Use case — why "just add more data" isn't free.** The fraud team's training set outgrows a single machine's memory once transaction history spans a few years, so training moves to a distributed job (Spark/Ray) across a cluster, and the online scorer needs its own GPU-backed serving tier to stay inside the 200ms budget. The flywheel cuts both ways: a competitor processing 10x the transaction volume gets a better-calibrated model for the same engineering effort — scale becomes a competitive edge, not just an infrastructure line item.
+
 *But not new:* cloud operation and large-scale data management (warehouses, batch, streaming) predate ML by a decade. The demands are simply higher.
 
 #### 8.4 Where the "not new" argument breaks down
@@ -577,13 +579,13 @@ Text: [sentence to analyze]
 A:
 ```
 
-Providing *internal data* in the prompt is the case that flags forward to **retrieval-augmented generation** — which is S6. The course's own tool list (LangChain, ChromaDB, OpenAI embeddings and LLM) confirms S6 is hands-on, not conceptual.
+Providing *internal data* in the prompt is the case that flags forward to **retrieval-augmented generation** — which is session 6. The course's own tool list (LangChain, ChromaDB, OpenAI embeddings and LLM) confirms session 6 is hands-on, not conceptual.
 
 *The full customisation ladder, cheapest first:*
 
 ![Foundation model adaptation ladder](assets/S01-foundation-model-adaptation.svg)
 
-Cost, effort and *how much of the model you change* all rise left → right, and the engineering rule is: **reach for the leftmost rung that works.** Prompt and few-shot change nothing but the text; RAG adds a retrieval system but no training; fine-tuning produces a model you own, host and version; pre-training is for the few orgs building foundation models. The classic mistake is fine-tuning something a better prompt or RAG would have fixed — the expensive rung reached for too early. (RAG's mechanics → S6.)
+Cost, effort and *how much of the model you change* all rise left → right, and the engineering rule is: **reach for the leftmost rung that works.** Prompt and few-shot change nothing but the text; RAG adds a retrieval system but no training; fine-tuning produces a model you own, host and version; pre-training is for the few orgs building foundation models. The classic mistake is fine-tuning something a better prompt or RAG would have fixed — the expensive rung reached for too early. (RAG's mechanics → session 6.)
 
 **Worked example** — Fraud detection with a foundation model: `"Given this transaction and the customer's last 10 transactions, is this likely fraudulent? Answer yes/no with one reason."` No training data needed, works immediately — and costs an API call per transaction, with latency you don't control, for a task a decision tree does in microseconds.
 
@@ -609,7 +611,7 @@ The *fundamentals* run across the whole course, with the closest dedicated treat
 
 That tool list matches your 546 lab stack almost exactly: MLflow, Evidently AI, SageMaker, plus DVC, Prefect, Docker/K8s, FastAPI, PyTest.
 
-**Responsible ML** — bluntly: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Attempted without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
+**Responsible ML** — bluntly: *there are no magic tools that can make a model secure or ensure fairness.* Responsible engineering requires a holistic view of the system, how the model interacts with other components, and how the system interacts with its environment. Without that grounding, "attempts to tackle safety, security, or fairness are often narrow, naive, and ineffective."
 
 **Mechanism — both concerns attach to every phase.** MLOps asks how the model moves safely from experiment to operation and back again. Responsible ML asks who can be harmed, how harm is detected, and what control exists when the model is wrong. Both questions must be asked at requirements, design, build, test, deploy and operate time.
 

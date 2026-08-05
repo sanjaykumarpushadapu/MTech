@@ -26,7 +26,7 @@ This matters beyond the course — it's a skill you'll use on the job. **Every b
 
 1. "Application Programming Interface" — the acronym, tells you nothing.
 2. **A contract between a service and its clients** — the one to remember.
-3. A set of rules and protocols for building and interacting with software, enabling systems to exchange data and integrate function **without the end user understanding the underlying code**.
+3. A set of rules and protocols for building and interacting with software, enabling systems to exchange data and integrate functionality **without the end user understanding the underlying code**.
 
 **API-first approach** — the application is *designed as* a set of APIs from the start, rather than having an API bolted on afterwards. It's an explicitly-named term, and the premise of the whole course.
 
@@ -564,7 +564,7 @@ Run `protoc` on this and you get, in your language of choice: the message classe
 
 > *"A key difference between REST and RPC is state. **REST is by definition stateless** — with RPC **state depends on the implementation**."*
 
-RPC exchanges can accumulate state, which buys **high performance at the potential cost of reliability and routing complexity**. RPC also conveys **exact functionality at a method level**, so producer and consumer end up **more coupled**. And coupling is not always a bad thing — **especially in east–west services where performance is a key consideration**.
+RPC exchanges can accumulate state, which buys **high performance at the potential cost of reliability and routing complexity**. RPC also exposes the **exact method signature** to the caller rather than a generic resource verb, so client and server end up **more coupled**. And coupling is not always a bad thing — **especially in east–west services where performance is a key consideration**.
 
 **Why HTTP/2 actually helps** — it's often listed as a feature; here's why. HTTP/2 adds **binary compression and framing**: a transparent binary framing layer splits and compresses messages into chunks, enabling **full request/response multiplexing over a single connection**. Fetching 20 attendees over HTTP/1 needs **20 new TCP connections**; over HTTP/2 it's **20 requests on one connection**. gRPC uses HTTP/2 by default and shrinks payloads with a binary protocol.
 
@@ -617,7 +617,7 @@ Disadvantages: **may not suit external-facing services** · **browser and mobile
 
 **Large payloads** — JSON over REST is verbose compared with a fixed or binary representation. And the usual defence is worth attacking directly:
 
-> A common misconception is that **"human readability" is quoted as a primary reason to use JSON**. The number of times a developer will need to read a message, versus the performance consideration, is not a strong case with modern tracing tools… Better logging and error handling can mitigate the human-readable argument.
+> A common defense of JSON is that it's **human-readable** — but weigh how often a developer actually reads a raw message by eye against the performance cost of parsing text on every call, and with modern tracing tools that argument gets weak fast. Better logging and error handling weaken the human-readable case even further.
 
 Also weigh **parsing cost** — turning payloads into language-level objects varies vastly by language, and many traditional server-side languages struggle with JSON versus a binary format.
 
