@@ -512,6 +512,8 @@ So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; sec
 | `<|unk|>` | 783 | New/unknown words not in the training data, so absent from the vocabulary |
 | `<|endoftext|>` | 784 | Separates two **unrelated** text sources |
 
+**Use case — what breaks without a separator token.** Say you're fine-tuning on a folder of old support tickets, and two unrelated tickets get concatenated into one training example with no marker between them: `...issue resolved by replacing the battery. Customer B's laptop won't turn on...`. Without a boundary, the model can learn spurious continuations — it starts finishing ticket B's problem with ticket A's unrelated resolution, because nothing told it these are two separate documents. Inserting `<|endoftext|>` between them fixes it: a hard signal that nothing before this token is relevant to what comes after.
+
 **Worked example — the embedding lookup, with numbers.** Input `fox jumps over dog` → token IDs `[2, 3, 5, 1]`. The embedding matrix is `|V| × d`; each ID selects a **row**:
 
 ```
