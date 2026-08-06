@@ -126,6 +126,8 @@ Cited for **536 S1 (ch1–2), S2 (ch2, 5), S5 (ch5), S7 (ch7)**.
 
 **S1 visual consolidation (1 Aug).** Rechecked cited S1 textbook figures from T1 ch2/7/8, T2 ch1/2/3 and R1 ch1/2, plus public paper anchors for the original Transformer and BPE. Useful figure value was folded into authored SVGs under `notes/assets/S01-*.svg`; no original textbook, slide or paper images were copied into the repo. The original Transformer encoder-decoder blueprint was recreated as `S01-original-transformer-blueprint.svg`; BPE paper figures did not add a better visual than the tokenizer explanations already in §12.
 
+**S1 clarity repair (6 Aug).** Reorganized `notes/S01-foundations.md` around a cleaner student path: language-model basics → transformer mechanics → building blocks/token flow → architectures/tokenization/landscape. Added missing explanatory bridges for NLP/NLU/NLG, foundation models, tokenizer-vs-embedding distinction, architecture selection, and tokenization cost/fairness. Re-authored `S01-language-ai.svg` to match that stronger explanation. Current machine check did **not** find `CS-1 Intro to LLM.pptx` or an S1 deck PDF in readable local paths, so exact deck-image matching remains blocked until that deck/PDF is uploaded or copied again.
+
 ## Scope rule
 
 **Only the chapters named in the handout's Reference column are in the syllabus.** For 536 these are: T1 (Jurafsky & Martin) ch2, 7, 8, 10, 11 · T2 (Alammar) ch1, 2, 3, 6, 7, 8, 12 · R1 (Raschka) ch1, 2, 5, 7 · R2 ch7 · R3 ch6. **Every other chapter in those books is out of scope** — not background, not optional extra reading.

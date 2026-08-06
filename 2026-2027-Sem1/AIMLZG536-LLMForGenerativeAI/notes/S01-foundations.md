@@ -6,15 +6,27 @@
 
 This is the session that makes you fluent in how modern AI actually works under the hood. **Every LLM you'll use, fine-tune, or deploy in your career is a transformer doing next-token prediction** — and this is where *attention*, *embeddings*, *context window*, *tokenization* and *decoder-only* stop being buzzwords and become things you can compute and reason about. Get this and you can read any model card, debug a tokenizer surprise, size a context window against its cost, or answer the interview question about how attention scales. It's the vocabulary and machinery the whole field is written in.
 
+By the end of this note you should be able to explain the six session-1 syllabus jobs without looking elsewhere: what LLMs and generative AI are, how attention and the transformer block work, what the building blocks of an LLM are, how the main LLM architecture families differ, how tokenization works, and how the current LLM landscape is organized.
+
 **Running example throughout:** **Llama-3 8B** (d = 4096, 32 heads, d_k = 128). Anchor every new number to it.
 
-## The whole thing in one picture
+## Session map — one forward pass
 
-*My own synthesis — how the numbered sections below snap together into a single forward pass. Every decoder-only LLM is this loop:*
+Use this picture as the spine of the whole session. Every decoder-only LLM runs this loop:
 
 ![Decoder-only LLM forward pass loop](assets/S01-forward-pass-loop.svg)
 
-One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture in mind: every section below is "what happens at this one box." The **context length** (section 10) is just how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives entirely in the attention inside the block.
+One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture in mind: every section below explains one box in the loop. The **context length** (section 11) is how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives in attention inside the transformer block.
+
+The clean storyline is:
+
+| Stage | Plain-English job | Main failure if weak |
+|---|---|---|
+| Text → tokens | Decide what pieces of text the model can see | Bad tokenization wastes context, money, and multilingual quality |
+| Tokens → vectors | Give each token a learned numeric representation plus position | The model cannot compute over raw text or word order |
+| Transformer blocks | Repeatedly mix contextual information and transform each token vector | The model sees words but cannot use surrounding context well |
+| LM head → probabilities | Score every vocabulary item as the next token | The model has hidden states but no way to choose output text |
+| Decode → append | Pick one token, add it to the context, and repeat | No long answer can be generated from a single prediction |
 
 ---
 
@@ -30,7 +42,17 @@ One pass turns the whole prompt into **one** probability distribution over the n
 
 ![Language AI input and output tasks](assets/S01-language-ai.svg)
 
-Language AI therefore does not always mean "chatbot". The input is text; the output may be **new text** (`write the answer`), an **embedding vector** (`represent this paragraph for retrieval`), or a **class label** (`is this review positive or negative?`). All three can run on a similar transformer backbone — the task-specific head on top decides what comes out. That's why section 9's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
+Language AI therefore does not always mean "chatbot". The input is text; the output may be **new text** (`write the answer`), an **embedding vector** (`represent this paragraph for retrieval`), or a **class label** (`is this review positive or negative?`). All three can run on a similar transformer backbone — the task-specific head on top decides what comes out. That's why section 10's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
+
+Three vocabulary words keep the taxonomy clean:
+
+| Term | Meaning in this session |
+|---|---|
+| **NLP** | The broad field: computational systems that process human language |
+| **NLU** | Understanding-oriented tasks: classification, extraction, retrieval, entailment |
+| **NLG** | Generation-oriented tasks: writing text, code, summaries, answers, dialogue |
+
+An LLM is usually a **foundation model**: a broadly pre-trained model that can be adapted to many downstream tasks through prompting, retrieval, fine-tuning, or tool use. "Foundation" does not mean "always correct"; it means many task-specific systems can be built on the same base model.
 
 **Mechanism** — formally, a model that computes either:
 
@@ -51,6 +73,8 @@ P(on guys all I of notice sidewalk three a sudden standing the)
 
 Same words, different order. A language model that has learned English assigns far more probability to the first. That's the entire signal — no grammar rules were written down; word order emerged from counting.
 
+**Use case — one backbone, three products.** A bank could use the same text backbone three ways: generate a reply to a complaint, embed policy paragraphs for search, and classify whether a message is a fraud report. The body of the model learns language patterns; the output head and surrounding product design decide which task it performs.
+
 **Tradeoff / what this framing costs** — Defining a model purely by next-word probability means there is **no notion of truth in the objective**. A fluent falsehood scores well; that's not a bug in the training, it's what the objective asked for. Hallucination is downstream of this definition, which is why S14 needs separate faithfulness metrics.
 
 ---
@@ -65,7 +89,7 @@ Same words, different order. A language model that has learned English assigns f
 
 LLMs are **deep neural networks** trained on that data.
 
-**Mechanism — the three axes compound.** Parameters define how much the model can store and compute, training data supplies the statistical signal, and compute is the budget that turns data into learned parameters. Context is the runtime extension of the same idea: the model can condition on more tokens, but every extra token makes attention more expensive and grows the memory needed to store past tokens' key/value vectors — the **KV-cache**, covered properly in section 4.
+**Mechanism — the three axes compound.** Parameters define how much the model can store and compute, training data supplies the statistical signal, and compute is the budget that turns data into learned parameters. Context is the runtime extension of the same idea: the model can condition on more tokens, but every extra token makes attention more expensive and grows the memory needed to store past tokens' key/value vectors — the **KV-cache**, previewed in section 4 and treated as a serving constraint in later sessions.
 
 *The three axes, and what each actually charges you:*
 
@@ -74,6 +98,8 @@ LLMs are **deep neural networks** trained on that data.
 **Read the right-hand column, not the left.** Only the parameter axis charges you forever; data and compute are sunk costs. That asymmetry is the reason S6 compression attacks parameters and nothing else.
 
 **Worked example** — A 7B model and a 70B model may be trained once, but the 70B model costs roughly ten times as many parameter values to load for every request. If both serve 1M prompts per day, the larger model keeps charging memory and latency on every prompt. A larger training set does not charge per request in the same way; it was paid for during training.
+
+**Use case — choosing a model for a support assistant.** A bank may prefer a 7B open-weight model for routine support tickets because it fits on cheaper GPUs and responds faster under peak load. A 70B model may answer harder questions better, but if most requests are password-reset or card-status queries, the larger model spends money on capacity the product does not need. "Large" is therefore a deployment decision, not just a leaderboard number.
 
 **Tradeoff** — all three scale cost. Parameters cost memory and inference compute; data costs collection, cleaning and training time; context costs attention compute that grows **quadratically** with sequence length (section 4). Each of the three has its own optimisation topic later: quantization for parameters (S6), scaling laws for data (S2), and efficient attention for context (S4).
 
@@ -157,11 +183,22 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 **Tradeoff / when NOT to reframe a task as generation** — You *can* express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration.
 
+**Checkpoint — what Part 1 established.** An LLM is not magic conversation software. It is a large neural language model that turns context into a next-token probability distribution. Generative AI appears because the model repeats that one operation: predict, choose, append, predict again.
+
 ---
 
 ## Part 2 · How the machinery works
 
 *Open the box. Attention, multi-head attention, the transformer block, positional encoding — worked by hand with real numbers, because you don't actually understand attention until you've pushed a vector through it.*
+
+The problem Part 2 solves: after tokenization, the model has a row of vectors, one per token. Those vectors still need three things:
+
+| Need | Mechanism |
+|---|---|
+| Each token must use surrounding tokens | self-attention |
+| The model must learn several relationship types at once | multi-head attention |
+| The network must become deep without becoming untrainable | transformer blocks with residuals and normalisation |
+| Word order must be represented | positional encoding |
 
 ### 4. Self-attention
 
@@ -197,7 +234,7 @@ The same computation as a pipeline — the form to reproduce in an exam:
 MatMul(Q, Kᵀ) → Scale (÷√d_k) → Mask (optional) → SoftMax → MatMul(·, V)
 ```
 
-The **Mask** step is optional in the general figure and **mandatory in a decoder** — it's what enforces causality (section 11).
+The **Mask** step is optional in the general figure and **mandatory in a decoder** — it's what enforces causality (section 12).
 
 Then an **output projection** maps the result from (n × d_v) back to (n × d), the model dimension, so layers can stack.
 
@@ -258,7 +295,7 @@ That last line **is** attention: each token's output is a **weighted average of 
 
 **Tools to try — watch this section run instead of just reading it:**
 - [Transformer Explainer](https://poloclub.github.io/transformer-explainer/) (Georgia Tech Polo Club) — type any sentence and watch a real GPT-2 run on it live: tokenization → embeddings → each attention head lighting up → softmax into next-token probabilities.
-- [Transformer & Attention Visualizer](https://ai.williamtheisen.com/transformer.html) — toggle BERT / GPT-2 / the original encoder-decoder, expand a layer, and see the actual Q, K, V projections and the attention heatmap for the worked example above. Also makes the encoder-vs-decoder masking difference (section 11) visible side by side.
+- [Transformer & Attention Visualizer](https://ai.williamtheisen.com/transformer.html) — toggle BERT / GPT-2 / the original encoder-decoder, expand a layer, and see the actual Q, K, V projections and the attention heatmap for the worked example above. Also makes the encoder-vs-decoder masking difference (section 12) visible side by side.
 
 ---
 
@@ -375,6 +412,8 @@ T¹ = (X − μ)/σ = [−1.414, 0, 0, +1.414]
 1. **The residual adds `X`, not `T¹`.** If it added the normalised version, the block would have no clean gradient path back to the original input — that's the whole point of pre-norm.
 2. **Only step T² looks at other tokens.** LayerNorm is per-token, the FFN is per-token. A transformer block is *one* mixing operation wrapped in a lot of per-token processing — which is why the FFN can be sharded across devices trivially and attention cannot.
 
+**Use case — training a deep decoder.** A 32-layer Llama-style model cannot simply stack attention layers and hope for the best. Without residual paths and normalisation, early layers receive weak or unstable gradients and training wastes compute. The block design is the engineering pattern that lets "many layers" become trainable instead of just expensive.
+
 **Parameter count for this toy block:** attention `4 × (4×4) = 64` (W_Q, W_K, W_V, W_O) · FFN `4×16 + 16×4 = 128` · LayerNorm `2 × 2 × 4 = 16`. **The FFN is 2× the attention** — at real scale it stays roughly 2:1, which is the arithmetic behind the tradeoff below.
 
 **The components:**
@@ -383,7 +422,7 @@ T¹ = (X − μ)/σ = [−1.414, 0, 0, +1.414]
 
 **Feed-forward network (FFN)** — uses the contextual information created by the attention layer to capture complex relationships. A fully-connected **2-layer** network: one hidden layer, one output layer, **two weight matrices**. The hidden dimension **d_ff is larger than the model dimension d** — in the original transformer, **d = 512 and d_ff = 2048** (4×).
 
-**The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to section 11.
+**The critical architectural line** — *we use transformers to create generative models by using only decoders.* That's the bridge to section 12.
 
 **Tradeoff** — the FFN's 4× expansion is where most of a transformer's parameters live, not in attention. That's why quantization and pruning (S6) target it, and why Mixture-of-Experts (S3) replaces the dense FFN with sparsely-activated ones: it's the biggest block of weights to attack.
 
@@ -439,9 +478,17 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 
 **Tradeoff** — the three approaches trade off cleanly. **Learned embeddings** are simplest and fail hardest outside the trained length. **Sinusoidal** costs nothing and generalises modestly, but it preserves only *relative* distance and the model has to infer even that from a sum — nothing enforces it — while packing position into the same dimensions as meaning makes the two compete for space. **RoPE** is the current default precisely because long context is the pressure point, and it's the only one of the three that **rotates** Q and K rather than **adding** to the embedding: position then acts on the *angle* between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it. RoPE keeps sinusoidal's multi-frequency idea but applies it by rotation; it gets full treatment in S3 — this is the preview.
 
-### 7b. Building blocks of an LLM — the checklist view
+**Checkpoint — what Part 2 established.** A transformer block does not "understand" text directly. It repeatedly updates token vectors: attention mixes information across positions, the FFN transforms each position, residuals keep the stack trainable, and positional encoding prevents the model from treating word order as irrelevant.
 
-**Intuition** — The handout names **"building blocks of LLM"** as its own item because by this point in the session you have seen all the pieces, just spread across several sections. This is the compact revision view. If asked *"what are the building blocks of a decoder-only LLM?"* this is the fast, exam-safe answer.
+## Part 3 · Building blocks and token flow
+
+*Now reassemble the machine. The previous part opened the transformer block; this part shows how raw text reaches that block, how the block stack returns vocabulary scores, and why tokenization/context decisions change both quality and cost.*
+
+This part is the bridge between the abstract transformer and the concrete LLM you call from an API. Section 9 explains where tokenization sits in the **input pipeline**; section 13 later explains how tokenizer algorithms are designed and why their choices affect cost.
+
+### 8. Building blocks of an LLM — the checklist view
+
+**Intuition** — By this point you have seen the pieces, but they were spread across attention, embeddings, position, and generation. This is the compact revision view. If asked *"what are the building blocks of a decoder-only LLM?"* this is the fast, exam-safe answer.
 
 ![Transformer LLM components](assets/S01-transformer-llm.svg)
 
@@ -473,17 +520,22 @@ That is the whole machine in miniature: **text → IDs → vectors → repeated 
 
 ---
 
-## Part 3 · Text in, text out
-
-*The pipeline wrapped around the model: how raw text becomes tokens and embeddings going in, how the final hidden vector becomes a word coming out, and what "context length" actually costs you.*
-
-### 8. From text to tokens to embeddings
+### 9. From text to tokens to embeddings
 
 **Intuition** — A model can only do arithmetic, so text has to become numbers. Five stages, each with its own name, and the exam can ask for the order:
 
 ![Token IDs to token embeddings](assets/S01-token-embeddings.svg)
 
 **Special context tokens** are added at this stage — end-of-text, unknown, padding and similar markers the model needs but the raw text doesn't contain.
+
+Keep two things separate:
+
+| Thing | Created when? | Changes during model training? | Example |
+|---|---|---|---|
+| **Tokenizer vocabulary** | Before model training | No, normally fixed | token string `"cat"` gets ID `9246` |
+| **Embedding table** | During model training | Yes, learned weights update | ID `9246` selects one learned vector row |
+
+That distinction prevents a common confusion: the tokenizer chooses **which ID** a piece of text becomes; the model learns **what vector meaning** that ID should have.
 
 **Mechanism — the five stages, in order.** The exam can ask for this sequence:
 
@@ -503,7 +555,7 @@ Stage 4 is a *lookup, not a matrix multiply* — mathematically it's one-hot × 
 - Those values are **optimised during LLM training as part of the LLM optimisation itself** — embeddings are *learned*, not looked up from somewhere else.
 - Shape: **rows = vocabulary size, columns = embedding dimension**.
 
-So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; section 9 reuses it.
+So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; section 10 reuses it.
 
 **Special context tokens — the concrete case.** A worked example extends a vocabulary of `brown→0, dog→1, fox→2, …` with two extras at the end:
 
@@ -542,11 +594,11 @@ position 3:  + [3.1, 3.2, 3.3]  →  [4.1, 4.2, 4.3]
 
 Note it is **addition, not concatenation** — the vector doesn't grow. That's why positional information has to share capacity with semantic information, and it's the reason RoPE's rotation approach (section 7) is considered cleaner.
 
-**Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what section 12's tokenizer choices are negotiating.
+**Tradeoff** — vocabulary size is a direct dial on the embedding matrix's size. A bigger vocabulary means shorter sequences (good — attention is O(n²)) but a much larger embedding matrix (bad — parameters and memory). That tension is exactly what the tokenizer choices in this part are negotiating.
 
 ---
 
-### 9. The language modelling head, and weight tying
+### 10. The language modelling head, and weight tying
 
 **Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector into a score for every vocabulary token, then softmax converts those scores into next-token probabilities. It is the mirror image of the embedding layer: embeddings read **token ID → vector**; the LM head scores **vector → likely token IDs**.
 
@@ -568,6 +620,8 @@ Carry the three shapes — `[1 × d] → [d × |V|] → [1 × |V|]`. The whole h
 Softmax probabilities y can then be used to **assign a probability to a given text**, or to **generate text by sampling a word from them** — the two directions of section 3, now concrete.
 
 Training vs inference differ in *which position* is used: during training **every position predicts its next token** (that's the parallelism paying off); during inference **only the last position** is used to generate. At training the logits go to cross-entropy against the next token; at inference they're sampled with **temperature, top-k or top-p** — all of S5.
+
+**Use case — why weight tying shows up in small models.** Suppose you want a local code-assistant model that fits on a single consumer GPU. If the vocabulary table is a large fraction of the total model, tying the LM head to the embedding table can save hundreds of millions of parameters without changing the transformer stack. On a frontier-scale model, the same saving is smaller relative to total size, so untying may be worth the quality gain.
 
 **Weight tying** — the same learned matrix **E [|V| × d]** is used on both sides. Input uses it as a lookup table; output reuses its transpose as the classifier over vocabulary. Tying only works when the hidden size `d` matches the embedding width, which is true for standard decoder-only LLMs.
 
@@ -600,7 +654,7 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 We just counted the head's parameters. Step back and count the *whole model* — this is the picture behind the "7B / 70B / 400B" numbers from section 2, and it's worth having concretely.
 
-**What a parameter is** — a **parameter** (or **weight**) is simply **one number the model learned during training**. "8B parameters" means 8 billion such numbers, **frozen after training and loaded into memory every time the model runs**. Training *sets* them; inference only *reads* them. Every one of these numbers lives inside one of the matrices you already met in sections 4–9 — there is nowhere else for them to hide.
+**What a parameter is** — a **parameter** (or **weight**) is simply **one number the model learned during training**. "8B parameters" means 8 billion such numbers, **frozen after training and loaded into memory every time the model runs**. Training *sets* them; inference only *reads* them. Every one of these numbers lives inside one of the matrices you already met in sections 4-10 — there is nowhere else for them to hide.
 
 **Where they live** — a decoder-only LLM is just: **one embedding matrix** at the bottom → **a stack of N identical transformer blocks** → **one final norm** → **the LM head** at the top. Only a few components actually hold weights. Writing **d** = hidden size, **|V|** = vocabulary size, **N** = number of layers, classic FFN width = 4·d:
 
@@ -641,7 +695,7 @@ Read effects straight off the formula: **double the depth** N and you add anothe
 
 ---
 
-### 10. Context length
+### 11. Context length
 
 **Intuition** — The maximum number of tokens the model can process — the same thing serving docs and APIs call the **context window**; this file uses the two terms interchangeably from here on. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
 
@@ -661,13 +715,15 @@ So the answer can use at most about **896 tokens** before the request runs out o
 
 **Tradeoff** — context length is capped not by ambition but by the O(n²) attention cost from section 4 and by KV-cache memory, which grows linearly with context and is the actual constraint in production serving (S5–S6). "Why not just use a million tokens?" is answered by memory and money, not by capability.
 
+**Checkpoint — what Part 3 established.** The end-to-end LLM is now concrete: fixed tokenizer vocabulary, learned embedding table, repeated transformer blocks, LM head, softmax, decode loop, and context-window budget. Parameters determine model size; context determines runtime work.
+
 ---
 
-## Part 4 · The landscape
+## Part 4 · Architectures, tokenizers, and the LLM landscape
 
-*Zoom out to the map: the main architecture families, the tokenizer choices you meet in practice, and the models you'll actually work with. Aim to **recognise and place** these, not memorise every cell.*
+*Zoom out to the map: the main architecture families, the tokenizer choices you meet in practice, and the model ecosystem you'll actually work with. Aim to **recognise and place** these, not memorise every cell.*
 
-### 11. LLM architectures
+### 12. LLM architectures
 
 **Intuition** — Three shapes, distinguished by **what each token is allowed to see**. That one question determines the training objective, the strengths and the weaknesses — so learn the table by the *context* column and derive the rest.
 
@@ -695,15 +751,31 @@ Three details the figure encodes that the prose doesn't:
 
 And the zoom-ins, which are section 4 and section 5 in picture form: **scaled dot-product attention** = `MatMul(Q,K) → Scale → Mask (opt.) → SoftMax → MatMul(·,V)`; **multi-head attention** = `Linear ×3 (V,K,Q) → h parallel scaled-dot-product heads → Concat → Linear`.
 
+The easiest way to remember the families:
+
+| If the product needs... | Start from... | Why |
+|---|---|---|
+| A label or embedding from text | **Encoder-only** | It can read left and right context at once |
+| Open-ended text/code generation | **Decoder-only** | It naturally predicts the next token |
+| A transformed output sequence from a separate input sequence | **Encoder-decoder** | Encoder understands the input; decoder writes the output |
+
 **Worked example** — sentiment classification. BERT: one forward pass, a classification head, done — efficient because it never needed to generate. GPT: prompt it and sample a token, hoping for "positive" — general, but you burned a generation step to get a label.
 
 **Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the line from section 6 — *we use transformers to create generative models by using only decoders*. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
 
 ---
 
-### 12. Tokenization
+### 13. Tokenization
 
-#### 12.1 Why subwords
+Read tokenization as three linked questions:
+
+| Question | Answer |
+|---|---|
+| **What units can the model see?** | tokens, not raw words or characters by default |
+| **How is the vocabulary learned?** | a tokenizer algorithm builds a fixed token inventory before model training |
+| **Why does it matter?** | it controls sequence length, context cost, multilingual fairness, and embedding-table size |
+
+#### 13.1 Why subwords
 
 **Intuition** — the framing: **common words end up in the subword vocabulary; rarer words are split into components** (sometimes intuitive, sometimes not). Worst case, a word is split into as many subwords as it has characters.
 
@@ -714,7 +786,7 @@ la##ern##           →  misspellings
 Transformer##ify    →  novel items
 ```
 
-#### 12.2 Three types of token
+#### 13.2 Three types of token
 
 | Type | How | Problem it solves / creates |
 |---|---|---|
@@ -726,9 +798,11 @@ Transformer##ify    →  novel items
 
 ![Tokenization granularities](assets/S01-tokenization-granularity.svg)
 
-Going down the figure, **vocabulary shrinks and sequence length grows**. Since attention is O(n²) in sequence length (section 10), the bottom two buy robustness with compute. Subword sits where it does because that trade is least bad there.
+Going down the figure, **vocabulary shrinks and sequence length grows**. Since attention is O(n²) in sequence length (section 11), the bottom two buy robustness with compute. Subword sits where it does because that trade is least bad there.
 
-#### 12.3 Subword algorithms
+**Use case — multilingual customer support.** An English support query may fit in 40 tokens, while the same meaning in Hindi or Arabic may take far more tokens if the tokenizer learned fewer useful merges for that language. The model is not "thinking harder"; the tokenizer simply represents the text less compactly. That raises latency and cost, and it can force truncation sooner for exactly the users the product should support equally.
+
+#### 13.3 Subword algorithms
 
 Three, all sharing the same two-part structure:
 
@@ -745,7 +819,7 @@ Every one has **two parts** — this is the definitional split, and it's examina
 
 The vocabulary is built **dynamically**: frequent words get their own tokens, rare words get split.
 
-#### 12.4 BPE — the algorithm and a worked example
+#### 13.4 BPE — the algorithm and a worked example
 
 **Mechanism — the token learner, in four steps:**
 
@@ -794,7 +868,7 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 
 **Limitations** — can produce **fragmented tokens for languages with complex morphology**; **may not capture semantic meaning** as effectively as other methods.
 
-#### 12.5 SentencePiece
+#### 13.5 SentencePiece
 
 **Language-independent** subword tokenizer that learns **directly from raw Unicode text** with a fixed vocabulary size — **no whitespace pre-tokenizer required**, which is what makes it language-independent.
 
@@ -813,7 +887,7 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 
 The first wins if its learned piece probabilities score higher.
 
-#### 12.6 SentencePiece vs tiktoken
+#### 13.6 SentencePiece vs tiktoken
 
 The distinction, stated precisely: they differ in **what unit they merge over** (characters vs bytes) and **whether they pre-split the text with a regex before merging** (SentencePiece doesn't; tiktoken does).
 
@@ -848,9 +922,54 @@ tiktoken BPE (Llama-3):
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
+#### 13.7 Extra depth — WordPiece & byte-level BPE
+
+Deeper tokenization knowledge, kept as reference for **Lab 1** — out of exam scope (won't be on the closed-book mid-sem) but useful for the lab and the field.
+
+**Byte tokens vs BPE:**
+
+| | Byte tokens | BPE |
+|---|---|---|
+| Efficiency | Extremely inefficient — never merges anything, so sequences are long | Efficient for what it has seen |
+| OOV handling | Can read **any** file or character — nothing is ever unknown | **"Blind" to what it doesn't know** — falls back to `[UNK]` |
+| `"Café 🚀"` result | 10 tokens: `[67][97][102][195][169][32][240][159][154][128]` (`é` takes two bytes, the rocket takes four) | 3 tokens, **one of which is `[UNK]` — the failure** |
+
+**Byte-level BPE (GPT-2)** — UTF-8 encodes each Unicode character into 1-4 bytes, so a sentence is modelled as a **sequence of bytes rather than characters**. Starts with 256 bytes and learns to "glue" them into useful words. **Zero unknown words**, because it can always fall back to individual bytes. GPT-2's vocabulary is **50,257 = 256 byte tokens + 50,000 merges + 1 special end-of-text token** — worth knowing where that odd number comes from. `"Café 🚀"` → 2 tokens.
+
+Example, `The sun is ☀️`:
+
+| Word | Raw bytes | Token ID | Why |
+|---|---|---|---|
+| `The` | 54 68 65 | 464 | Very common English word, merged into one token |
+| ` sun` | 20 73 75 6e | 6035 | **The space is "glued" to the word** |
+| ` is` | 20 69 73 | 374 | Another space+word merge |
+| ` ` | 20 | 220 | A single space before the emoji |
+| `☀️` | E2 98 80 ... | 99321 | **One token** — common emoji, all bytes merged into one entry |
+
+**WordPiece** — Google's tokenizer, developed to pretrain **BERT**. Very similar to BPE in training; **the actual tokenization is done differently**.
+
+*Token learner:* start from a small vocabulary (special tokens + initial alphabet), split words with a **`##` prefix** for non-initial pieces — `word` → `w ##o ##r ##d`. Instead of merging the most frequent pair, WordPiece **computes a score** and merges by score, **prioritising pairs whose individual parts are less frequent**:
+
+```
+score(a,b) = freq(a,b) / (freq(a) × freq(b))
+```
+
+Same corpus as BPE — `hug 10, pug 5, pun 12, bun 4, hugs 5`, split as `("h","##u","##g",10)` etc. Initial vocabulary `[b, h, p, ##g, ##n, ##s, ##u]`:
+
+| Pair | Score | Value |
+|---|---|---|
+| `("##u","##g")` | 20 / (36 × 20) | **1/36** |
+| `("##g","##s")` | 5 / (20 × 5) | **1/20** ✅ higher |
+
+So the **first merge is `##gs`**, not `##ug` — the opposite of BPE's answer on the same corpus, which is exactly the point of the example.
+
+*Token segmenter:* pre-tokenize, split, then for each word **find the biggest subword starting at the beginning**, split it off, and repeat on the remainder. With final vocabulary `[b, h, p, ##g, ##n, ##s, ##u, ##gs, hu, hug]`, the test word `hugs` tokenizes as **`["hug", "##s"]`**.
+
+*Advantages* — efficient handling of rare words, reduced vocabulary size, better generalisation. *Limitations* — the scoring mechanism **adds complexity** over BPE; still fragments morphologically complex languages. WordPiece's **likelihood-based scoring** distinguishes it from BPE's **frequency-based** approach, often producing a vocabulary that better captures linguistic structure.
+
 ---
 
-### 13. The LLM landscape
+### 14. The LLM landscape
 
 **Intuition** — Worth learning as a *causal chain*, not a list of names: each item made the next possible.
 
@@ -914,7 +1033,7 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
 
-**Current frontier families** — the names change quickly; the durable thing to learn is *what kind of capability each family is pushing*:
+**Durable frontier family categories** — the names change quickly; the durable thing to learn is *what kind of capability each family is pushing*:
 
 | Family | What it's optimizing for |
 |---|---|
@@ -926,58 +1045,22 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 **Tradeoff / how to study this section** — this is *landscape*, not *mechanism*. Per the subject's study rule: build the comparison table, learn the causal chain and the three openness levels, and do **not** try to memorise every model and parameter count. Specific frontier model names date within months; the openness taxonomy and the Kaplan → Chinchilla correction don't.
 
----
+## Self-study / Lab / build
 
-#### 12.7 Extra depth — WordPiece & byte-level BPE
+Before running the lab, eliminate these common confusions:
 
-Deeper tokenization knowledge, kept as reference for **Lab 1** — out of exam scope (won't be on the closed-book mid-sem) but useful for the lab and the field.
+| Confusion | Correct version |
+|---|---|
+| **LLM = ChatGPT** | ChatGPT is a product; an LLM is the underlying model type |
+| **Generative AI = LLM** | LLMs generate text/code; generative AI also includes image, audio, video and other generators |
+| **Token = word** | A token may be a word, subword, byte, punctuation mark, or special marker |
+| **Token ID = embedding** | Token ID is an integer chosen by the tokenizer; embedding is the learned vector row selected by that ID |
+| **Embedding table = tokenizer vocabulary** | The tokenizer vocabulary is a fixed text-to-ID mapping; the embedding table is learned model weights |
+| **Attention = whole transformer** | Attention is the token-mixing sublayer; a transformer block also has FFN, residuals and normalisation |
+| **Parameters = context length** | Parameters are fixed learned weights; context length is runtime input/output budget |
+| **Open-weight = open-source** | Open-weight lets you run weights; open-source should also make training recipe/data substantially reproducible |
 
-**Byte tokens vs BPE:**
-
-| | Byte tokens | BPE |
-|---|---|---|
-| Efficiency | Extremely inefficient — never merges anything, so sequences are long | Efficient for what it has seen |
-| OOV handling | Can read **any** file or character — nothing is ever unknown | **"Blind" to what it doesn't know** — falls back to `[UNK]` |
-| `"Café 🚀"` result | 10 tokens: `[67][97][102][195][169][32][240][159][154][128]` (`é` takes two bytes, the rocket takes four) | 3 tokens, **one of which is `[UNK]` — the failure** |
-
-**Byte-level BPE (GPT-2)** — UTF-8 encodes each Unicode character into 1–4 bytes, so a sentence is modelled as a **sequence of bytes rather than characters**. Starts with 256 bytes and learns to "glue" them into useful words. **Zero unknown words**, because it can always fall back to individual bytes. GPT-2's vocabulary is **50,257 = 256 byte tokens + 50,000 merges + 1 special end-of-text token** — worth knowing where that odd number comes from. `"Café 🚀"` → 2 tokens.
-
-Example, `The sun is ☀️`:
-
-| Word | Raw bytes | Token ID | Why |
-|---|---|---|---|
-| `The` | 54 68 65 | 464 | Very common English word, merged into one token |
-| ` sun` | 20 73 75 6e | 6035 | **The space is "glued" to the word** |
-| ` is` | 20 69 73 | 374 | Another space+word merge |
-| ` ` | 20 | 220 | A single space before the emoji |
-| `☀️` | E2 98 80 … | 99321 | **One token** — common emoji, all bytes merged into one entry |
-
-**WordPiece** — Google's tokenizer, developed to pretrain **BERT**. Very similar to BPE in training; **the actual tokenization is done differently**.
-
-*Token learner:* start from a small vocabulary (special tokens + initial alphabet), split words with a **`##` prefix** for non-initial pieces — `word` → `w ##o ##r ##d`. Instead of merging the most frequent pair, WordPiece **computes a score** and merges by score, **prioritising pairs whose individual parts are less frequent**:
-
-```
-score(a,b) = freq(a,b) / (freq(a) × freq(b))
-```
-
-Same corpus as BPE — `hug 10, pug 5, pun 12, bun 4, hugs 5`, split as `("h","##u","##g",10)` etc. Initial vocabulary `[b, h, p, ##g, ##n, ##s, ##u]`:
-
-| Pair | Score | Value |
-|---|---|---|
-| `("##u","##g")` | 20 / (36 × 20) | **1/36** |
-| `("##g","##s")` | 5 / (20 × 5) | **1/20** ✅ higher |
-
-So the **first merge is `##gs`**, not `##ug` — the opposite of BPE's answer on the same corpus, which is exactly the point of the example.
-
-*Token segmenter:* pre-tokenize, split, then for each word **find the biggest subword starting at the beginning**, split it off, and repeat on the remainder. With final vocabulary `[b, h, p, ##g, ##n, ##s, ##u, ##gs, hu, hug]`, the test word `hugs` tokenizes as **`["hug", "##s"]`**.
-
-*Advantages* — efficient handling of rare words, reduced vocabulary size, better generalisation. *Limitations* — the scoring mechanism **adds complexity** over BPE; still fragments morphologically complex languages. WordPiece's **likelihood-based scoring** distinguishes it from BPE's **frequency-based** approach, often producing a vocabulary that better captures linguistic structure.
-
----
-
-## Lab / build
-
-**536 Lab 1 is at session 1 (module M1): construct and analyse tokenization techniques.** Everything you need is in section 12 plus the extra material.
+**536 Lab 1 is at session 1 (module M1): construct and analyse tokenization techniques.** Everything you need is in section 13 plus the extra material.
 
 Minimum useful version, ~15 lines:
 
@@ -991,7 +1074,7 @@ for name in ["gpt2", "meta-llama/Llama-2-7b-hf", "meta-llama/Meta-Llama-3-8B"]:
         print(f"{name:35} {text:20} {len(ids):3} tokens  {tok.convert_ids_to_tokens(ids)}")
 ```
 
-That single script makes concrete: SentencePiece vs tiktoken (section 12.6), why Llama-3 switched, byte fallback on the emoji, and subword splitting on the novel word. **Run it before session 2** — the compression-ratio argument only lands once you've seen the token counts differ.
+That single script makes concrete: SentencePiece vs tiktoken (section 13.6), why Llama-3 switched, byte fallback on the emoji, and subword splitting on the novel word. **Run it before session 2** — the compression-ratio argument only lands once you've seen the token counts differ.
 
 ---
 
