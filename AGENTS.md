@@ -15,12 +15,12 @@ Read `2026-2027-Sem1/STUDY-PLAN.md` before planning session-note work.
 
 Aug-Dec 2026. Folder names must match the handouts.
 
-| Folder | Code | Course title |
-|---|---|---|
-| `AIMLZG536-LLMForGenerativeAI` | AIML ZG536 | Large Language Models for Generative AI |
-| `AIMLZG546-SoftwareEngineeringForML` | AIML ZG546 | Software Engineering for Machine Learning |
-| `AIMLCZG549-APIDrivenCloudNativeSolutions` | AIMLC ZG549 | API-driven Cloud Native Solutions |
-| `AIMLCZG521-ConversationalAI` | AIMLC ZG521 | Conversational AI |
+| Folder                                     | Code        | Course title                              |
+| ------------------------------------------ | ----------- | ----------------------------------------- |
+| `AIMLZG536-LLMForGenerativeAI`             | AIML ZG536  | Large Language Models for Generative AI   |
+| `AIMLZG546-SoftwareEngineeringForML`       | AIML ZG546  | Software Engineering for Machine Learning |
+| `AIMLCZG549-APIDrivenCloudNativeSolutions` | AIMLC ZG549 | API-driven Cloud Native Solutions         |
+| `AIMLCZG521-ConversationalAI`              | AIMLC ZG521 | Conversational AI                         |
 
 Important: 536/546 are `AIML`; 549/521 are `AIMLC`.
 
@@ -32,12 +32,16 @@ Every session note is created from the handout Learning Plan row, not from uploa
 
 The handout row decides:
 
-| Handout column | Controls |
-|---|---|
-| Contact Session | Session number and whether rows combine sessions |
-| List of Topic Title | Session note title |
-| Sub-Topics | Required note sections and examinable scope |
-| Reference | Sources to read for mechanism, examples, and edge cases |
+### Handout-title alignment rule
+
+When updating a session note, master index, or progress tracker, keep the session title and sub-topic wording aligned with the handout Learning Plan row. Do not invent alternate labels such as “Serving I/II”, “Reasoning I/II”, or shortened variants when the handout already provides the official wording. If the note title or master-row wording differs from the handout, correct it before considering the task complete.
+
+| Handout column      | Controls                                                |
+| ------------------- | ------------------------------------------------------- |
+| Contact Session     | Session number and whether rows combine sessions        |
+| List of Topic Title | Session note title                                      |
+| Sub-Topics          | Required note sections and examinable scope             |
+| Reference           | Sources to read for mechanism, examples, and edge cases |
 
 Hard completion gate: a session note is not complete until every topic and sub-topic in that session's handout Learning Plan row is explicitly taught in that same note. Missing one bullet means incomplete.
 
@@ -49,10 +53,10 @@ Uploaded PPT/PDF/papers/transcripts are teaching inputs. They do not create new 
 
 Before calling a note complete, read the exact handout row and then read/extract the sources cited in that row.
 
-| Reference says | Required action |
-|---|---|
-| Textbook chapter | Check `/_library/` first; extract only the cited chapter |
-| Paper or public spec | Fetch it yourself; do not ask the user to upload public material |
+| Reference says                        | Required action                                                                                           |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Textbook chapter                      | Check `/_library/` first; extract only the cited chapter                                                  |
+| Paper or public spec                  | Fetch it yourself; do not ask the user to upload public material                                          |
 | Web Resources / Lecture Notes / blank | Treat the deck, and recording if available, as the teaching source; do not invent a hidden textbook layer |
 
 Do this even when the deck looks sufficient. The deck sets instructor emphasis; references supply mechanism, examples, edge cases, and clearer figures.
@@ -85,12 +89,12 @@ Exceptions: the user directly asks, or a prescribed lab requires it. State clear
 
 ### Per-Subject Source Profile
 
-| Subject | Source profile |
-|---|---|
-| 549 | Only S1-S3 have books. S4-S16 are Web Resources / Lecture Notes, so decks are highest value |
-| 521 | No textbook; references are public papers/specs, so fetch them |
-| 536 | T1/T2/R1 chapters + papers cover most sessions; S6, S15, S16 are papers/web only |
-| 546 | T1/T2 chapters cover S1-S14; S15-S16 are lecture notes only |
+| Subject | Source profile                                                                              |
+| ------- | ------------------------------------------------------------------------------------------- |
+| 549     | Only S1-S3 have books. S4-S16 are Web Resources / Lecture Notes, so decks are highest value |
+| 521     | No textbook; references are public papers/specs, so fetch them                              |
+| 536     | T1/T2/R1 chapters + papers cover most sessions; S6, S15, S16 are papers/web only            |
+| 546     | T1/T2 chapters cover S1-S14; S15-S16 are lecture notes only                                 |
 
 ### Never Commit Raw Course Material
 
@@ -114,14 +118,14 @@ Never trust a deck filename alone, either. Verify identity from title slide, age
 
 If one deck contains multiple sessions, split it by handout scope and log the split in `source/MATERIAL-LOG.md`. If the boundary is ambiguous, stop and ask; do not blend two sessions.
 
-| Format | Extract with | Required care |
-|---|---|---|
-| `.pptx` | `python-pptx` | Read slide text, speaker notes, and embedded images |
-| `.pdf` text | `pdfplumber` | Extract text and inspect figures where relevant |
-| `.pdf` scanned | OCR first | Say OCR is happening |
-| `.docx` | `python-docx` | Use for handouts and transcripts |
-| `.txt/.srt/.vtt` transcript | direct | Reconcile noisy terms against slides |
-| `.mp4` / video | impossible here | Never claim to have watched or transcribed it |
+| Format                      | Extract with    | Required care                                       |
+| --------------------------- | --------------- | --------------------------------------------------- |
+| `.pptx`                     | `python-pptx`   | Read slide text, speaker notes, and embedded images |
+| `.pdf` text                 | `pdfplumber`    | Extract text and inspect figures where relevant     |
+| `.pdf` scanned              | OCR first       | Say OCR is happening                                |
+| `.docx`                     | `python-docx`   | Use for handouts and transcripts                    |
+| `.txt/.srt/.vtt` transcript | direct          | Reconcile noisy terms against slides                |
+| `.mp4` / video              | impossible here | Never claim to have watched or transcribed it       |
 
 Always extract and look at deck images. Slide text often omits equations, shapes, or labels that are only in images.
 
@@ -141,12 +145,12 @@ Use the `S` prefix in every subject, including 521. The handout may say `L1`, bu
 
 Creating a note must update:
 
-| Artifact | Required update |
-|---|---|
-| `<code>-master.md` | Note row / status |
-| `PROGRESS.md` | Deck/note/open/lab status |
+| Artifact                 | Required update                              |
+| ------------------------ | -------------------------------------------- |
+| `<code>-master.md`       | Note row / status                            |
+| `PROGRESS.md`            | Deck/note/open/lab status                    |
 | `source/MATERIAL-LOG.md` | What arrived, what was read, what is missing |
-| `MATERIALS-WATCHLIST.md` | New or resolved blocking material gaps |
+| `MATERIALS-WATCHLIST.md` | New or resolved blocking material gaps       |
 
 Lab code lives in `<subject>/labs/S<NN>-<slug>/`, never in `notes/`.
 
@@ -204,10 +208,10 @@ A wording pass never changes technical correctness, formulas, tables, numbers, o
 
 Optional depth blocks are allowed when useful:
 
-| Block | Use |
-|---|---|
-| `***In practice***` | Production tools, auth, rate limits, retries, cost, conventions |
-| `***Going deeper***` | Deeper mechanism or adjacent concept outside course depth |
+| Block                | Use                                                             |
+| -------------------- | --------------------------------------------------------------- |
+| `***In practice***`  | Production tools, auth, rate limits, retries, cost, conventions |
+| `***Going deeper***` | Deeper mechanism or adjacent concept outside course depth       |
 
 Mark beyond-course depth clearly and keep it out of exam-scoped claims.
 
@@ -320,14 +324,14 @@ Render and inspect SVGs when tooling allows. If rendering is unavailable, keep t
 
 `LR` is not the default.
 
-| Use | When |
-|---|---|
-| `flowchart TD` | 6+ boxes, branching/converging flows, long labels |
-| `flowchart LR` | <=5 boxes, short labels, strictly linear |
-| `flowchart BT` | Built-up-from-parts diagrams |
-| `timeline` | Eras or dated evolution |
-| `sequenceDiagram` | Protocol handshakes with named participants |
-| Markdown table | Comparisons and Venn-style intersections |
+| Use               | When                                              |
+| ----------------- | ------------------------------------------------- |
+| `flowchart TD`    | 6+ boxes, branching/converging flows, long labels |
+| `flowchart LR`    | <=5 boxes, short labels, strictly linear          |
+| `flowchart BT`    | Built-up-from-parts diagrams                      |
+| `timeline`        | Eras or dated evolution                           |
+| `sequenceDiagram` | Protocol handshakes with named participants       |
+| Markdown table    | Comparisons and Venn-style intersections          |
 
 For X-vs-Y, prefer one diagram with two subgraphs. Inside a subgraph, `direction TB` may override the parent.
 
@@ -337,9 +341,9 @@ Quote Mermaid labels containing punctuation such as `(`, `)`, `:`, `,`, `#`. Avo
 
 Each session has two artifacts:
 
-| Artifact | Purpose | Rule |
-|---|---|---|
-| `notes/S<NN>-...md` | Full knowledge, never printed | Write first |
+| Artifact               | Purpose                                        | Rule         |
+| ---------------------- | ---------------------------------------------- | ------------ |
+| `notes/S<NN>-...md`    | Full knowledge, never printed                  | Write first  |
 | `openbook/S<NN>-...md` | Two-page lookup sheet for bound open-book exam | Derive later |
 
 Never write the condensed page before the full note. If behind, drop the condensed page, not the note.
@@ -442,18 +446,18 @@ MTech/
 
 ## 13. Key Dates
 
-| Date | Event |
-|---|---|
-| 10-20 Aug 2026 | Quiz window; 549 and possibly 521 only per current resolved plan |
-| 27 Aug-7 Sep 2026 | 549 project/assignments, 536 assignment, 546 situated learning window |
-| 19 Sep 2026 EN | 546 mid-sem, closed book |
-| 20 Sep 2026 FN | 549 mid-sem, closed book |
-| 20 Sep 2026 EN | 536 mid-sem, closed book |
-| 29 Oct-11 Nov 2026 | 546 Assignments I & II |
-| 22 Nov 2026 | Print and bind open-book file |
-| 5 Dec 2026 EN | 546 comprehensive, open book |
-| 6 Dec 2026 FN | 549 comprehensive, open book |
-| 6 Dec 2026 EN | 536 comprehensive, open book |
+| Date               | Event                                                                 |
+| ------------------ | --------------------------------------------------------------------- |
+| 10-20 Aug 2026     | Quiz window; 549 and possibly 521 only per current resolved plan      |
+| 27 Aug-7 Sep 2026  | 549 project/assignments, 536 assignment, 546 situated learning window |
+| 19 Sep 2026 EN     | 546 mid-sem, closed book                                              |
+| 20 Sep 2026 FN     | 549 mid-sem, closed book                                              |
+| 20 Sep 2026 EN     | 536 mid-sem, closed book                                              |
+| 29 Oct-11 Nov 2026 | 546 Assignments I & II                                                |
+| 22 Nov 2026        | Print and bind open-book file                                         |
+| 5 Dec 2026 EN      | 546 comprehensive, open book                                          |
+| 6 Dec 2026 FN      | 549 comprehensive, open book                                          |
+| 6 Dec 2026 EN      | 536 comprehensive, open book                                          |
 
 521 dates are announced in class or Canvas and have no makeups. Treat any 521 date as unconfirmed until verified.
 
