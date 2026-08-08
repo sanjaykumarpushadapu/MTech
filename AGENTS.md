@@ -83,6 +83,8 @@ Every session note must stand alone on any machine. It must remain complete if `
 
 Use local resources as inputs, not crutches. If a textbook, transcript, paper, lab, or `_shared/` note has a better explanation, fold that value into the session note. Never leave core understanding only in auxiliary material.
 
+A session note may mention conceptual overlap with another subject, but it must never tell the reader to go to another subject's note to understand the current one. If background is needed, restate the minimum explanation inside the current note.
+
 Every session-note touch includes a self-containment review.
 
 ## 3. Material Scope
@@ -173,6 +175,8 @@ Do not add a hand-written `## Topics` index. The headings already form the navig
 
 Course logistics, admin, deck-errata, source notes, and build logs do not belong in session notes unless they materially change scope or interpretation.
 
+The `## Why this matters` section must answer three things clearly: what this session teaches, why it matters in practice, and what the reader should be able to explain after reading it.
+
 ### Teaching Flow First
 
 Write session notes as one coherent learning path, not as a stitched summary of separate sources. The reader should be able to move through the note without needing to reconstruct the logic from deck order, textbook order, or paper order.
@@ -216,8 +220,11 @@ Before marking a note reviewed, read it end to end for:
 - Jargon used before it is defined
 - The same concept named two different ways in different sections of the same note
 - Decorative or vague metaphors that do not actually clarify anything (the canonical bad example: "predicting text and generating text are the same machine, run in two directions") — cut them or replace with a direct statement of what is actually happening
+- Compressed, mechanical phrasing that sounds like a lecture dump rather than a human teacher
 
 A wording pass never changes technical correctness, formulas, tables, numbers, or the Intuition → Mechanism → Worked example → Tradeoff → Diagram order.
+
+Write session notes in a human-first teaching voice. Prefer short direct sentences, natural transitions, and plain-language setup before dense terminology. The reader should feel guided through the concept, not exposed to a compressed summary of it.
 
 Optional depth blocks are allowed when useful:
 
@@ -227,6 +234,8 @@ Optional depth blocks are allowed when useful:
 | `***Going deeper***` | Deeper mechanism or adjacent concept outside course depth       |
 
 Use `Going deeper` as the only optional-depth label. Do not introduce `Extra depth` as a second phrasing for the same idea.
+
+Optional material must stay inside `***In practice***` or `***Going deeper***` blocks. Do not promote beyond-scope material into a top-level `###` concept unless the handout itself makes it part of the session scope.
 
 Mark beyond-course depth clearly and keep it out of exam-scoped claims.
 
