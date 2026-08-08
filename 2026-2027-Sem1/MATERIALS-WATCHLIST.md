@@ -2,7 +2,7 @@
 
 **Everything still needed, with the date it starts blocking work.** Checked at the start of every session that touches a listed item, and raised **unprompted** as its date approaches — the user asked to be told forcefully rather than politely.
 
-*Last checked: 2 Aug 2026 — 11 of 12 books held; only Kimothi (536 R3) outstanding. 521 S2 deck received; 549 S2/S3 mixed deck received; 536 S2 deck received and note written; L2 notebooks still missing.*
+*Last checked: 8 Aug 2026 — 11 of 12 books held; only Kimothi (536 R3) outstanding. 536 S1/S2 deck visual audit completed; 536 handout file still not present locally for direct row verification; 521 L2 notebooks still missing.*
 
 ---
 
@@ -13,6 +13,7 @@
 | **L2 notebooks** | **521** | Canvas | S2 note is written from the deck; Lab 2 still cannot be checked or completed without the notebooks |
 | **S2 deck** | 546 | Taxila | Reading (Kästner ch1–2) already held |
 | **S1–S2 transcripts** | all four | Teams export | Not blocking, but S1's resolved all four EC-1 conflicts |
+| **536 handout file (.docx/.pdf)** | **536** | Teams / course materials | S1 and S2 notes are written and deck-verified, but AGENTS' direct handout-row completion gate cannot be proven locally until the actual handout file is present |
 
 **Every weekend, all semester: collect four decks.** This row never leaves the table.
 
@@ -63,6 +64,7 @@ Raise these **unprompted**, in the response nearest the date, whether or not the
 | Date | Raise |
 |---|---|
 | **Every weekend** | The four session decks. Non-negotiable |
+| **Next 536 note touch** | 🔴 If the 536 handout file is still absent locally, say so explicitly and keep the handout-row verification gap recorded |
 | **20 Sep 2026** | 🔴 **Ask for 536 R3 (Kimothi)** — right after the mid-sems, ~3 weeks before S12 needs it. The last outstanding book |
 | **Before 546 S2** | Fetch 546 R2–R5 myself; don't ask |
 | **Before 546 S3** | Fetch GR4ML myself |

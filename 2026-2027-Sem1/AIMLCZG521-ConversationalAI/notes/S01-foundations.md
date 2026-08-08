@@ -4,7 +4,9 @@
 
 ## Why this matters
 
-Conversational AI — agentic AI — is one of the most employable specialisations in the field right now, and this session covers it end to end. It's **not just chatbots**: it is a reasoning system that happens to speak your language. You'll get the sixty-year history behind why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that structures the rest of the course, and the emerging **protocol landscape** (MCP, A2A). It also covers tokenization and context windows in enough depth to build on. After this session you should be able to architect an agent, reason about its cost and failure modes, and explain where the field is heading.
+This session gives the vocabulary and mental model for the whole subject. "Conversational AI" sounds broad until you break it into concrete pieces: understanding intent, keeping context, retrieving knowledge, calling tools, and managing memory. Once those pieces are clear, later topics like RAG, function calling, memory systems, MCP, and multi-agent orchestration stop feeling like separate buzzwords and start feeling like parts of one system.
+
+By the end of this note, you should be able to explain five things comfortably in your own words: how conversational AI evolved from chatbots to agents, how agentic architecture differs from the older pipeline, what the main system components are, why tokenization and context windows matter in production, and how a modern agent moves through its lifecycle from user request to action.
 
 ## Part 1 · Chatbots to Agentic Systems
 
@@ -213,7 +215,7 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 
 ### 5. Frameworks
 
-**Intuition** — A framework is glue, not capability. Nothing in the tables below does anything you couldn't do with the model's HTTP API and a few hundred lines of Python — the Tavily lab proves it. What you're buying is **the conventions**: a standard way to describe a tool, a retry policy, a place to put memory, a trace you can read. That's worth real money on a team and close to nothing when you're learning, which is why the labs deliberately make you see the loop before the framework hides it.
+**Intuition** — A framework is glue, not magic. Nothing in the tables below gives a model a brand-new capability. What it gives you is a standard way to wire pieces together: how tools are declared, where memory is stored, how retries work, and how traces are captured. That is genuinely useful on a team. It is much less useful when you are still learning the loop itself, which is why it helps to understand the raw API pattern before handing the work to a framework.
 
 **Mechanism — the generational split matters more than any individual row:** the 2015 tools assume **you enumerate the intents in advance**; the 2023 tools assume **the model works out the intent at runtime**. Everything else follows from that one assumption change.
 
@@ -246,7 +248,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 **The key shift:** *from intent-based dialogue systems to LLM-powered agentic systems with tool use and planning capabilities.*
 
-**Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, don't learn any framework's API. Frameworks in this space have a half-life of about eighteen months; the distinction that survives is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
+**Tradeoff / how to study this** — this is *landscape*, not mechanism. Learn the table, not a framework's API surface. Frameworks in this space change quickly; the durable distinction is **orchestration-first (LangChain) vs data-first (LlamaIndex) vs multi-agent-first (AutoGen)**.
 
 ---
 
@@ -259,6 +261,8 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 **Intuition** — Breaking text into subword units that LLMs process. BPE (Byte Pair Encoding) sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
 ![Tokenization and BPE](assets/S01-tokenization-bpe.svg)
+
+Before the algorithm details, keep the main point simple: the model cannot read raw text directly. It needs a repeatable way to break text into units it already knows how to process. Tokenization is that front door.
 
 **Why tokenization exists at all** — two reasons matter:
 
@@ -367,7 +371,7 @@ Vocabulary: `[b, g, h, n, p, s, u, ug, un, hug]`
 
 This is why modern chat systems handle emoji, mixed scripts, code, and product IDs much better than older character-based BPE examples would suggest.
 
-**Tradeoff / where BPE fails** — the `mug` case is the whole limitation in one line: **character-level BPE has no fallback**. Any character absent from the base vocabulary becomes `[UNK]` and its meaning is lost entirely. That's what byte-level tokenizers fix. For conversational AI specifically, `[UNK]` on a customer's name, location, or product code is a silent failure that degrades the whole turn.
+**Tradeoff / where BPE fails** — the `mug` case is the whole limitation in one line: **character-level BPE has no fallback**. Any character absent from the base vocabulary becomes `[UNK]` and its meaning is lost entirely. That's what byte-level tokenizers fix. For conversational AI specifically, `[UNK]` on a customer's name, location, or product code is a quiet failure that can degrade the whole turn without looking dramatic on the surface.
 
 ---
 

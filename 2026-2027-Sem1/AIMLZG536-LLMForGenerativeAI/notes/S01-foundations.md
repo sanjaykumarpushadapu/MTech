@@ -189,7 +189,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 ## Part 2 · Attention Mechanism & Transformer (Review)
 
-_Open the box. Attention, multi-head attention, the transformer block, positional encoding — worked by hand with real numbers, because you don't actually understand attention until you've pushed a vector through it._
+_This part opens the black box. Up to now the note has treated the LLM as "something that predicts the next token." Here we look inside that something: attention, multi-head attention, the transformer block, and positional encoding. The goal is not to memorize equations first. The goal is to understand what problem each piece is solving, then use the equations to make that picture precise._
 
 The problem Part 2 solves: after tokenization, the model has a row of vectors, one per token. Those vectors still need three things:
 
@@ -202,9 +202,9 @@ The problem Part 2 solves: after tokenization, the model has a row of vectors, o
 
 ### 4. Self-attention
 
-**Intuition** — Self-attention lets every token look at every earlier token and decide how much each one matters to it. One framing: it gives **an uncompressed view of the entire sequence with fast training**. "Uncompressed" is the key word — unlike an RNN, nothing is squeezed through a fixed-size hidden state; every position stays individually addressable.
+**Intuition** — Self-attention lets each token look back at the other tokens and decide which ones matter right now. That is the real shift from older sequence models: the model does not have to squeeze the whole past into one hidden state and hope nothing important is lost. Every earlier position stays available, and the current token can decide whom to listen to.
 
-It builds a matrix comparing each token with every token before it, weighted by **how relevant the token pairs are to one another**. During training the whole matrix is computed **in one go**, which is what enables **parallelisation** — and that, not accuracy alone, is why transformers won.
+In practice, self-attention builds a table of relevance scores between tokens. During training, that whole table is computed in one shot, which is why transformers train in parallel much more easily than RNN-style models.
 
 ![Self-attention matrix](assets/S01-self-attention-matrix.svg)
 
@@ -228,7 +228,7 @@ _An everyday analogy for Q, K, V — hold this and the maths below is just the a
 2. **÷ √d_k** — scaling: keeps scores from blowing up and destabilising the softmax. _Plain-language first:_ longer vectors naturally produce larger dot products, simply because you are summing more little products. If you feed those oversized scores straight into softmax, it becomes too peaky too early: one token gets almost all the probability, the rest get almost none, and learning becomes unstable. Dividing by `√d_k` shrinks the scores back to a sensible size so softmax stays responsive. The reason the divisor is `√d_k` rather than `d_k` is that a dot product's **variance** grows roughly like `d_k`, so its typical size grows like `√d_k`; dividing by `√d_k` cancels exactly that inflation.
 3. **softmax → × V** — blend the values by how much attention each token deserves.
 
-The same computation as a pipeline — the form to reproduce in an exam:
+The same computation, written as a pipeline:
 
 ```
 MatMul(Q, Kᵀ) → Scale (÷√d_k) → Mask (optional) → SoftMax → MatMul(·, V)
@@ -256,7 +256,7 @@ Then an **output projection** maps the result from (n × d_v) back to (n × d), 
 | Original transformer | 512  | 8   | 64        |
 | Llama-3-8B           | 4096 | 32  | 128       |
 
-> **First pass? You can skim the numbers.** The one sentence to walk away with is at the very end: _each token's new vector is a weighted average of the other tokens' values, and the model learned the weights._ Everything below is just that sentence, proven on the smallest example that still shows every moving part. Read it once for the shape, then come back and push the numbers through by hand when you want it to stick.
+> **First pass? Skim the arithmetic and keep one sentence.** Each token's new vector is a weighted average of other tokens' value vectors, and the model learned the weights. The rest of the worked example just makes that sentence concrete.
 
 **Worked example — attention by hand, with actual numbers** _(you don't_ have _attention until you've pushed real numbers through it)._ Two tokens, `d = d_k = d_v = 2`, and take `W_Q = W_K = W_V = I` so `Q = K = V = X` (keeps the arithmetic visible). Tokens: `x₁ = [1, 0]`, `x₂ = [1, 1]`.
 
@@ -285,7 +285,7 @@ _(x₂'s row: `e^0.71 / (e^0.71 + e^1.41) = 2.03 / 6.14 = 0.33`; the rest is 0.6
 - `z₁ = 1.00·[1,0] = ` **`[1, 0]`** — with the mask, token 1's new vector is just itself.
 - `z₂ = 0.33·[1,0] + 0.67·[1,1] = ` **`[1, 0.67]`** — a blend, leaning 67% on itself and 33% on token 1.
 
-That last line **is** attention: each token's output is a **weighted average of value vectors**, and the weights are _learned relevance_. Notice the weight table is `2 × 2` (n × n) — that's the whole cost story, and it grows with every token added. This is the O(n²) the tradeoff below is about.
+That last line is the heart of attention: each token's output becomes a weighted average of other tokens' value vectors, and the weights come from learned relevance. Notice that the weight table is `2 × 2` here. In a real sequence it becomes `n × n`, which is exactly where the cost problem comes from.
 
 **Tradeoff / the cost that defines the field** — the attention matrix is **n × n**. Double the context and you quadruple the attention compute and memory. Every efficiency topic in S4 — FlashAttention, Ring Attention, sliding-window, sparse and linear attention — exists to attack that single quadratic term. Self-attention buys an uncompressed view and parallel training; it charges O(n²).
 
@@ -304,7 +304,7 @@ That last line **is** attention: each token's output is a **weighted average of 
 
 ### 5. Multi-head attention
 
-**Intuition** — One attention head learns one notion of relevance. Run several in parallel with **their own K, Q, V weight matrices** and each can specialise — syntax, coreference, topic. Concatenate, project back down, and the output is the same size as the input, **so layers can be stacked**.
+**Intuition** — One attention head gives one view of the sequence. Multi-head attention says: do not trust one view to capture everything. Let several heads look at the same tokens in parallel, each with its own learned projections, so different heads can specialize in different patterns such as syntax, reference, or local phrase structure.
 
 **Mechanism — four steps.** For h heads on an input `X [N × d]`:
 
@@ -315,9 +315,9 @@ That last line **is** attention: each token's output is a **weighted average of 
 | 3 · **Concatenate** | Stack the h head outputs side by side along the feature axis                                          | `[N × h·d_k] = [N × d]`  |
 | 4 · **Project out** | One final multiply by `W_O ∈ ℝ^{h·d_v × d}` to mix what the heads found                               | `[N × d]`                |
 
-Step 4 is the one people skip. Without `W_O` the heads never talk to each other — the concatenation would just be h separate results parked next to one another. **`W_O` is what makes it multi-_head_ attention rather than h independent attentions.**
+Step 4 is the part people often skip mentally. Without `W_O`, the heads would simply sit side by side without being combined. `W_O` is what mixes their findings back into one shared representation.
 
-**The key economy** — because each head works in a _reduced_ dimension d_k = d_v = d/h, **the total computational cost is similar to single-head attention at full dimensionality.** You get multiple views for roughly the price of one. That sentence is a likely exam question.
+**The key economy** — each head works in a reduced dimension, usually `d_k = d_v = d/h`, so the total cost stays in the same ballpark as one full-width head. In plain terms: you get multiple perspectives without paying for multiple full-sized attention layers.
 
 ![Multi-head attention layer](assets/S01-multihead-attention.svg)
 
@@ -347,7 +347,7 @@ Each head runs the exact same computation from section 4, just in 64 dimensions 
 
 ### 6. The transformer block
 
-**Intuition** — Attention alone only _mixes_ information between tokens. The block adds the parts that _process_ it: a feed-forward network to do computation, layer normalisation to keep training stable, and residual connections so gradients survive depth.
+**Intuition** — Attention is only one part of the job. It tells each token where to look, but it does not by itself give the model enough depth or stability to learn rich transformations. The transformer block adds the supporting machinery: a feed-forward network to process each token, layer normalization to keep values well-behaved, and residual connections to keep deep stacks trainable.
 
 > **What "gradients survive depth" means** — training a network works by measuring how much each weight contributed to the error, then nudging it slightly (this signal is the _gradient_). That signal has to flow backward through every layer it passed through. Each extra layer it crosses shrinks it a bit more (repeated multiplication by small numbers), so in a very deep stack the earliest layers can end up receiving a gradient close to zero — they effectively stop learning. This is the **vanishing gradient problem**, and it's the actual failure residual connections are fixing, not just a vague "training gets harder."
 
@@ -356,7 +356,7 @@ _Two everyday analogies for the two supporting parts:_
 - **Residual connection** = a **highway with exits**. The `X +` keeps a straight through-lane running past each sublayer; a token can _take the exit_ to be processed by attention or the FFN, but the through-lane always continues. So even in a 100-layer stack the original signal (and, during training, the gradient) never has to squeeze through every single exit — it always has a clear road home. That's why very deep transformers train at all.
 - **Layer normalisation** = **grading on a curve, per token**. Before each sublayer, it rescales one token's vector so its numbers sit in a consistent range (mean 0, unit spread), stopping values from drifting to extremes as they pass through many layers. `γ` and `β` then let the model stretch and shift that curve if it wants.
 
-**Mechanism — the block, as equations.** These are easy to miss — often shown as images, not text. **Learn the two-line form; be able to expand it to the six-line form.**
+**Mechanism — the block, as equations.** These are the lines worth learning because they show the whole block compactly:
 
 ![Transformer decoder block](assets/S01-transformer-block.svg)
 
@@ -378,13 +378,13 @@ T⁵ = FFN(T⁴)
 H  = T⁵ + T³           ← residual 2
 ```
 
-Three things to read off the figure and equations, all examinable:
+Three practical things to notice from the equations and the diagram:
 
 1. **Two residual connections**, one around attention and one around the FFN. `X` and `T³` both reappear as addends — that's what lets gradients reach the bottom of a deep stack.
 2. **LayerNorm comes _before_ each sublayer, not after** — `LayerNorm(X)` feeds attention, and the residual adds the _un_-normalised `X`. This is **pre-norm**, and it's why deep transformers train stably.
 3. **H has the same shape as X**, which is what makes blocks stackable.
 
-**Worked example — one token through the block.** Take `d = 4`, `d_ff = 16`, and follow a single token's vector. Every step below is `[1 × 4]` unless stated.
+**Worked example — one token through the block.** Take `d = 4`, `d_ff = 16`, and follow a single token's vector. The point is not the numbers themselves. The point is to see how the same vector is repeatedly normalized, transformed, and reconnected to its original path.
 
 Suppose the token's incoming vector is `X = [2, 4, 4, 6]`.
 
@@ -416,7 +416,7 @@ _The rest of the block, by shape:_
 1. **The residual adds `X`, not `T¹`.** If it added the normalised version, the block would have no clean gradient path back to the original input — that's the whole point of pre-norm.
 2. **Only step T² looks at other tokens.** LayerNorm is per-token, the FFN is per-token. A transformer block is _one_ mixing operation wrapped in a lot of per-token processing — which is why the FFN can be sharded across devices trivially and attention cannot.
 
-**Use case — training a deep decoder.** A 32-layer Llama-style model cannot simply stack attention layers and hope for the best. Without residual paths and normalisation, early layers receive weak or unstable gradients and training wastes compute. The block design is the engineering pattern that lets "many layers" become trainable instead of just expensive.
+**Use case — training a deep decoder.** A 32-layer Llama-style model cannot just stack attention operations and hope depth will work automatically. Without residual paths and normalization, early layers become hard to train and the extra depth mostly buys instability. The transformer block is the pattern that turns "many layers" into something trainable and useful.
 
 **Parameter count for this toy block:** attention `4 × (4×4) = 64` (W_Q, W_K, W_V, W_O) · FFN `4×16 + 16×4 = 128` · LayerNorm `2 × 2 × 4 = 16`. **The FFN is 2× the attention** — at real scale it stays roughly 2:1, which is the arithmetic behind the tradeoff below.
 
@@ -434,7 +434,7 @@ _The rest of the block, by shape:_
 
 ### 7. Positional encoding
 
-**Intuition** — **Attention has no inherent sense of order.** Shuffle the tokens and the attention maths gives the same answer, because a dot product doesn't know which token came first. Position has to be _added_ to the embeddings so the model can infer sequence structure.
+**Intuition** — Attention, by itself, has no built-in notion of before and after. If we gave it token vectors without position information, it could compare tokens but not know their order. Positional encoding fixes that by injecting sequence order into the vectors before attention starts working on them.
 
 **Use case — what breaks without it.** "Alice called Bob" and "Bob called Alice" are the same three tokens in a different order. Section 4's attention scores relevance with dot products between token vectors, and a dot product between the same set of vectors doesn't change just because you feed them in a different order — so without positional information, both sentences would produce identical attention outputs, and the model could not tell who called whom. Adding a position-dependent vector to each token embedding is what breaks that symmetry.
 
@@ -492,7 +492,7 @@ This part is the bridge between the abstract transformer and the concrete LLM yo
 
 ### 8. Building blocks of an LLM
 
-**Intuition** — By this point you have seen the pieces, but they were spread across attention, embeddings, position, and generation. This is the compact revision view. If asked _"what are the building blocks of a decoder-only LLM?"_ this is the fast, exam-safe answer.
+**Intuition** — Up to now, the pieces have been introduced one at a time. This section puts them back together so the whole machine is visible again. If someone asks, "What are the building blocks of a decoder-only LLM?", this is the compact answer you should be able to give.
 
 ![Transformer LLM components](assets/S01-transformer-llm.svg)
 
@@ -518,7 +518,7 @@ This part is the bridge between the abstract transformer and the concrete LLM yo
 5. The FFN reshapes that hidden vector into a more useful feature vector.
 6. After many repeated blocks, the LM head produces scores like `{sat, sleeps, is, ...}` over the vocabulary.
 
-That is the whole machine in miniature: **text → IDs → vectors → repeated contextual transformation → vocabulary scores**.
+That is the whole machine in miniature: text becomes token IDs, IDs become vectors, vectors are repeatedly updated by the transformer stack, and the final vector is turned into vocabulary scores.
 
 **Tradeoff / what this checklist hides** — The list makes the model look like eight equal boxes, which is useful for revision and slightly misleading in implementation. The expensive parts are not equal: parameters concentrate in embeddings, FFNs and the LM head, while run-time cost under long contexts concentrates in attention. Later sessions are mostly optimisations of one of those hotspots, not new building blocks.
 
@@ -526,7 +526,7 @@ That is the whole machine in miniature: **text → IDs → vectors → repeated 
 
 ### 9. From text to tokens to embeddings
 
-**Intuition** — A model can only do arithmetic, so text has to become numbers. Five stages, each with its own name, and the exam can ask for the order:
+**Intuition** — A model cannot read text directly. It can only operate on numbers. So the input pipeline has to turn text into numerical representations in a fixed sequence of steps.
 
 ![Token IDs to token embeddings](assets/S01-token-embeddings.svg)
 
@@ -539,7 +539,7 @@ Keep two things separate:
 | **Tokenizer vocabulary** | Before model training | No, normally fixed             | token string `"cat"` gets ID `9246`      |
 | **Embedding table**      | During model training | Yes, learned weights update    | ID `9246` selects one learned vector row |
 
-That distinction prevents a common confusion: the tokenizer chooses **which ID** a piece of text becomes; the model learns **what vector meaning** that ID should have.
+That distinction matters because students often blend the two together. The tokenizer decides **which integer** a piece of text becomes. The model learns **what that integer means as a vector**.
 
 **Mechanism — the five stages, in order.** The exam can ask for this sequence:
 
@@ -550,6 +550,8 @@ That distinction prevents a common confusion: the tokenizer chooses **which ID**
 | 3   | **ID lookup**           | token strings → integers, via the vocabulary dictionary                |
 | 4   | **Embedding lookup**    | integers → dense vectors, by selecting **rows** of `E ∈ ℝ^{\|V\| × d}` |
 | 5   | **Positional addition** | token embedding **+** positional embedding, elementwise, same `d`      |
+
+![From raw text to input embeddings](assets/S01-text-to-embedding-pipeline.svg)
 
 Stage 4 is a _lookup, not a matrix multiply_ — mathematically it's one-hot × E, but no implementation does that; it's an indexing operation, which is why it costs nothing at inference.
 
@@ -604,7 +606,7 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 ### 10. The language modelling head and weight tying
 
-**Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector into a score for every vocabulary token, then softmax converts those scores into next-token probabilities. It is the mirror image of the embedding layer: embeddings read **token ID → vector**; the LM head scores **vector → likely token IDs**.
+**Intuition** — After the last transformer block, the model still does not have words. It has a hidden vector. The job of the LM head is to turn that hidden vector back into scores over the vocabulary, so the model can decide which token should come next. In that sense, it mirrors the embedding layer: embeddings map token IDs into vectors, while the LM head maps vectors back into likely token IDs.
 
 Think of the embedding table as a dictionary shelf. On the way in, token ID `5` pulls one book from the shelf. On the way out, the final hidden vector is compared against every book on the shelf and asks: _which token vector am I closest to?_
 
@@ -625,7 +627,7 @@ Softmax probabilities y can then be used to **assign a probability to a given te
 
 Training vs inference differ in _which position_ is used: during training **every position predicts its next token** (that's the parallelism paying off); during inference **only the last position** is used to generate. At training the logits go to cross-entropy against the next token; at inference they're sampled with **temperature, top-k or top-p** — all of S5.
 
-**Use case — why weight tying shows up in small models.** Suppose you want a local code-assistant model that fits on a single consumer GPU. If the vocabulary table is a large fraction of the total model, tying the LM head to the embedding table can save hundreds of millions of parameters without changing the transformer stack. On a frontier-scale model, the same saving is smaller relative to total size, so untying may be worth the quality gain.
+**Use case — why weight tying shows up in small models.** Suppose you want a local code assistant that fits on a single consumer GPU. If the vocabulary matrices take up a big fraction of the model, tying the LM head to the embedding table can save hundreds of millions of parameters without touching the transformer stack. On a much larger model, that saving is a smaller fraction of the total, so paying for a separate output matrix may be worth it.
 
 **Weight tying** — the same learned matrix **E [|V| × d]** is used on both sides. Input uses it as a lookup table; output reuses its transpose as the classifier over vocabulary. Tying only works when the hidden size `d` matches the embedding width, which is true for standard decoder-only LLMs.
 
@@ -656,9 +658,9 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 
 #### Zoom out — where an LLM's parameters actually live
 
-We just counted the head's parameters. Step back and count the _whole model_ — this is the picture behind the "7B / 70B / 400B" numbers from section 2, and it's worth having concretely.
+We just counted the LM head. Now step back and count the whole model. This is the picture behind names like 7B, 70B, or 400B, and it is much easier to reason about once you know where those parameters actually live.
 
-**What a parameter is** — a **parameter** (or **weight**) is simply **one number the model learned during training**. "8B parameters" means 8 billion such numbers, **frozen after training and loaded into memory every time the model runs**. Training _sets_ them; inference only _reads_ them. Every one of these numbers lives inside one of the matrices you already met in sections 4-10 — there is nowhere else for them to hide.
+**What a parameter is** — a **parameter** (or **weight**) is just **one number learned during training**. So "8B parameters" literally means 8 billion learned numbers. After training, those numbers are frozen and loaded into memory whenever the model runs. Training changes them; inference only reads them.
 
 **Where they live** — a decoder-only LLM is just: **one embedding matrix** at the bottom → **a stack of N identical transformer blocks** → **one final norm** → **the LM head** at the top. Only a few components actually hold weights. Writing **d** = hidden size, **|V|** = vocabulary size, **N** = number of layers, classic FFN width = 4·d:
 
@@ -701,7 +703,7 @@ _Why depth is linear but width is squared — a building analogy:_ adding a **la
 
 ### 11. Context length
 
-**Intuition** — The maximum number of tokens the model can process — the same thing serving docs and APIs call the **context window**; this file uses the two terms interchangeably from here on. And because generation is autoregressive, **the current context length grows as new tokens are generated** — your prompt plus everything produced so far both count against the limit.
+**Intuition** — Context length, or context window, is the maximum number of tokens the model can handle at once. The important practical point is that this budget is shared. Your prompt uses part of it, and every generated token uses more of it.
 
 **Mechanism — the limit applies to prompt plus output.** At each decoding step, the model reads all tokens currently in the context, predicts one next-token distribution, appends one token, and repeats. That means the context window is a shared budget for system prompt, user prompt, retrieved text, tool output, conversation history and the answer itself.
 
@@ -729,7 +731,7 @@ _Zoom out to the map: the main architecture families, the tokenizer choices you 
 
 ### 12. LLM architectures
 
-**Intuition** — Three shapes, distinguished by **what each token is allowed to see**. That one question determines the training objective, the strengths and the weaknesses — so learn the table by the _context_ column and derive the rest.
+**Intuition** — There are three main transformer family shapes, and the cleanest way to distinguish them is by what each token is allowed to see. Once that is clear, the training objective, strengths, and weaknesses mostly follow from it.
 
 |                  | **Encoder-only** (BERT, RoBERTa)                                                           | **Decoder-only** (GPT, Llama)                                         | **Encoder-decoder** (T5, BART)                                                             |
 | ---------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -876,6 +878,8 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 
 **Language-independent** subword tokenizer that learns **directly from raw Unicode text** with a fixed vocabulary size — **no whitespace pre-tokenizer required**, which is what makes it language-independent.
 
+![SentencePiece versus tiktoken](assets/S01-tokenizer-pipeline-comparison.svg)
+
 - **Supports multiple algorithms** — BPE and unigram LM are the two used in practice
 - **Preserves whitespace with `▁`** — detokenization is **lossless**: join the pieces, replace `▁` with a space
 - **Byte fallback** — anything outside the vocabulary is emitted as raw UTF-8 bytes, so **no true OOV**; arbitrary Unicode works (emoji, rare scripts)
@@ -976,7 +980,7 @@ _Advantages_ — efficient handling of rare words, reduced vocabulary size, bett
 
 ### 14. The LLM landscape
 
-**Intuition** — Worth learning as a _causal chain_, not a list of names: each item made the next possible.
+**Intuition** — This landscape is easier to learn as a chain of causes than as a list of model names. Each stage created the conditions for the next one.
 
 _The chain, each link forcing the next:_
 

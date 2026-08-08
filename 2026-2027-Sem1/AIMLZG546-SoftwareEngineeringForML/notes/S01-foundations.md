@@ -4,9 +4,9 @@
 
 ## Why this matters
 
-This is the session that separates people who can *train* a model from people who can *ship* one — the difference that defines an ML **engineer**. Its central claim, which you'll spend a career proving true: **the model is rarely the problem; everything around it is.** Data quality, latency, cost, monitoring, fairness, the handoff between data scientists and software engineers — that's where ML products actually live or die. This note gives you the vocabulary (algorithm vs model, parameters vs hyperparameters), the process (SDLC, ML pipeline, MLOps), and the judgment (the risk spectrum, when the general answer is the wrong one) to reason about real systems.
+This session explains why software engineering for ML is its own subject instead of "ordinary software plus a model." A model can look excellent in a notebook and still fail in the real world because the surrounding system is weak: the data is noisy, the latency budget is impossible, the labels arrive late, deployment is brittle, or nobody can tell when the model has drifted. That is the frame for the whole course.
 
-Three threads support this argument: process history, failure evidence (**87% of ML projects fail**), and the local-optimisation trap.
+By the end of this note, you should be able to explain four things clearly: the difference between algorithm, model, parameters, and hyperparameters; how the ML pipeline fits inside the broader software lifecycle; why process models like SDLC and ADLC matter for ML teams; and what kinds of organisational and technical risks make ML systems harder to ship than ordinary software.
 
 **Running example throughout:** **fraud detection** (the standard credit-card-fraud teaching example), used in every section.
 
@@ -42,7 +42,7 @@ Three threads support this argument: process history, failure evidence (**87% of
 
 The famous finding: the ML code is a **tiny fraction** of a production ML system. The box you trained sits inside data pipelines, serving, monitoring and infrastructure — and *that* surrounding system is where the effort goes and where the failures happen. Every module of this course is one of the boxes around `ML model`.
 
-*A car makes the proportion vivid:* the trained model is the **engine** — but a car is mostly everything else: chassis, brakes, steering, fuel system, dashboard, airbags. A brilliant engine bolted to no brakes isn't a car; a brilliant model with no data pipeline, no serving layer and no monitoring isn't a product. This course is about building the rest of the car.
+*A car makes the proportion vivid:* the trained model is the **engine** — but a car is mostly everything else: chassis, brakes, steering, fuel system, dashboard, airbags. A brilliant engine bolted to no brakes isn't a car; a brilliant model with no data pipeline, no serving layer and no monitoring isn't a product. This course is about the rest of the car.
 
 **Tradeoff / when NOT to worry about this** — Not every model needs a product around it. A one-off analysis answering a board question is finished when the answer is delivered; building requirements, monitoring and deployment infrastructure for it is waste. The engineering investment is justified by *continued operation*, not by the model's existence.
 
@@ -52,7 +52,7 @@ The famous finding: the ML code is a **tiny fraction** of a production ML system
 
 #### 2.1 Algorithm vs model, training vs inference
 
-**Intuition** — Two different things both get called "the ML", and keeping them apart accounts for much of this course's clarity. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs once, at training. The model runs a billion times, in production.
+**Intuition** — Two different things are often collapsed into one vague phrase, "the ML," and separating them clears up a lot of confusion. The **algorithm** is the procedure that *creates* the function. The **model** is the function that gets *used*. The algorithm runs during training. The model runs later, in production, every time a real input arrives.
 
 ![Training versus inference](assets/S01-training-vs-inference.svg)
 
@@ -67,7 +67,7 @@ The nesting: **AI ⊃ machine learning ⊃ deep learning**, with **foundation mo
 | 3 | **Search** that space for low loss, by whatever procedure the algorithm defines | greedy split selection · gradient descent |
 | 4 | **Freeze** the winner. Its numbers are now **parameters** | the chosen thresholds and branches |
 
-Three consequences follow directly, and each drives a later session:
+Three consequences follow directly, and each matters later in the course:
 
 - **Step 1 bounds what is achievable.** A depth-2 tree cannot express a rule needing three conditions, no matter how much data you supply. Under-fitting is a hypothesis-space problem, not a data problem.
 - **Step 2 is where your values enter.** "Best" means whatever the loss says. If the loss counts every error equally, the model will happily trade one missed fraud for one false alarm — a business decision made accidentally, in a line of library code. That is session 4's subject.
@@ -182,14 +182,14 @@ These three terms are commonly tested — know the precise version of each.
 
 #### 3.2 The machine-learning pipeline
 
-**Intuition** — Training is one step of many. Everything before it is making data fit to learn from; everything after is deciding whether it's good enough and keeping it alive.
+**Intuition** — Training is only one step in a much longer chain. Everything before it is making the data usable. Everything after it is deciding whether the result is good enough and then keeping it alive safely in the real world.
 
 ![Machine learning pipeline](assets/S01-ml-pipeline.svg)
 
 Two engineering-relevant properties:
 
 1. **It is highly iterative.** A bad evaluation sends you back to a different algorithm, different hyperparameters, more data, or different preparation. The dashed arrows are the normal path, not the exception.
-2. **Most steps have surprisingly little code.** Preparation is programmed transformations (drop outlier rows, normalise a column). Training is "very few lines calling the library." **Deployment and monitoring are where the substantial infrastructure lives** — which is exactly why this is a software-engineering course.
+2. **Most steps have surprisingly little model code.** Preparation is programmed transformations (drop outlier rows, normalise a column). Training is often only a few lines calling a library. **Deployment and monitoring are where the substantial infrastructure lives** — which is exactly why this is a software-engineering course.
 
 **Worked example** — Fraud detection. *Requirements* — catch fraud above ₹5,000 within 200ms. *Collection* — 18 months of transactions. *Labelling* — confirmed chargebacks, which arrive 30–90 days late (a real problem, not a footnote). *Cleaning/features* — merchant risk score, velocity in last hour. *Training* — six lines. *Evaluation* — recall at a fixed false-positive rate. *Deployment* — behind the payment API. *Monitoring* — recall against chargebacks as they arrive.
 
@@ -213,7 +213,7 @@ The ML pipeline sits **inside** the SDLC, roughly spanning its Design–Developm
 
 ### 4. From Waterfall to ADLC
 
-**Intuition** — Process models climbing a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, known as **ADLC** (AI-Driven Development Life Cycle), presented as the desired end state. Each rung fixed the previous rung's worst pain and introduced a new one.
+**Intuition** — Read the process models here as a ladder: Waterfall → Iterative → Agile → Scaled Agile → *Scaled Agile with AI infusion*, called **ADLC** (AI-Driven Development Life Cycle). Each step tries to shorten feedback loops and reduce one kind of delay, but each step also creates a new coordination problem.
 
 **Mechanism — each rung shortens a feedback loop.** Waterfall delays feedback until the end; iterative development brings feedback into repeated cycles; Agile tightens team/customer feedback; Scaled Agile coordinates many teams; ADLC tries to automate artifacts across the lifecycle so requirements, design, code, tests and deployment move together.
 

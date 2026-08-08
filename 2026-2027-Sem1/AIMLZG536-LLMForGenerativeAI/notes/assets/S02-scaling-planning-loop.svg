@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">Scaling-law planning loop</title>
+  <desc id="desc">A flow showing model size, dataset size, and compute budget being tested on small proxy runs to choose a large pretraining recipe.</desc>
+  <defs>
+    <style>
+      .bg { fill: #fcfbf7; }
+      .panel { fill: #fffdf8; stroke: #d6c7a7; stroke-width: 2; rx: 18; }
+      .nodeA { fill: #f7efe0; stroke: #b17b2d; stroke-width: 2; rx: 16; }
+      .nodeB { fill: #eaf3fb; stroke: #4e78a7; stroke-width: 2; rx: 16; }
+      .nodeC { fill: #eef6ea; stroke: #5f8a48; stroke-width: 2; rx: 16; }
+      .nodeD { fill: #f7eaf0; stroke: #9a5572; stroke-width: 2; rx: 16; }
+      .text { font-family: Arial, sans-serif; fill: #2a2418; font-size: 18px; }
+      .small { font-size: 15px; }
+      .label { font-size: 21px; font-weight: 700; }
+      .arrow { stroke: #6e5527; stroke-width: 3; fill: none; marker-end: url(#m); }
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6e5527"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="360"/>
+  <rect class="panel" x="24" y="24" width="912" height="312"/>
+
+  <rect class="nodeA" x="72" y="92" width="180" height="118"/>
+  <text class="text label" x="162" y="126" text-anchor="middle">Three Budget Dials</text>
+  <text class="text small" x="162" y="156" text-anchor="middle">model size N</text>
+  <text class="text small" x="162" y="180" text-anchor="middle">dataset size D</text>
+  <text class="text small" x="162" y="204" text-anchor="middle">compute budget C</text>
+
+  <rect class="nodeB" x="306" y="92" width="190" height="118"/>
+  <text class="text label" x="401" y="126" text-anchor="middle">Proxy Experiments</text>
+  <text class="text small" x="401" y="156" text-anchor="middle">run smaller models first</text>
+  <text class="text small" x="401" y="180" text-anchor="middle">measure loss under controlled settings</text>
+
+  <rect class="nodeC" x="550" y="92" width="174" height="118"/>
+  <text class="text label" x="637" y="126" text-anchor="middle">Fit the Curve</text>
+  <text class="text small" x="637" y="156" text-anchor="middle">loss follows a power law</text>
+  <text class="text small" x="637" y="180" text-anchor="middle">estimate where the sweet spot lies</text>
+
+  <rect class="nodeD" x="778" y="92" width="120" height="118"/>
+  <text class="text label" x="838" y="126" text-anchor="middle">Big Run</text>
+  <text class="text small" x="838" y="156" text-anchor="middle">choose one recipe</text>
+  <text class="text small" x="838" y="180" text-anchor="middle">before spending</text>
+
+  <path class="arrow" d="M252 151 H306"/>
+  <path class="arrow" d="M496 151 H550"/>
+  <path class="arrow" d="M724 151 H778"/>
+
+  <text class="text" x="72" y="66">The point of scaling laws is not theory for its own sake. It is budget planning when a wrong guess costs too much to retry at full scale.</text>
+</svg>

@@ -226,6 +226,10 @@ A wording pass never changes technical correctness, formulas, tables, numbers, o
 
 Write session notes in a human-first teaching voice. Prefer short direct sentences, natural transitions, and plain-language setup before dense terminology. The reader should feel guided through the concept, not exposed to a compressed summary of it.
 
+When a deck teaches a topic through a staged visual build-up, preserve that teaching path in the note. Do not collapse six visual steps from the deck into one dense paragraph if those steps are carrying the explanation. The note does not need a slide-by-slide clone, but it must preserve the same learning progression in prose, diagrams, or both.
+
+`## Why this matters` is required in every session note, but it must stay tight. Default length: **3-5 lines**. It should do only three things: state what the session teaches, why it matters in this subject, and what the reader should be able to explain after reading it. Do not turn it into career marketing, a generic motivational paragraph, or a second introduction to the whole note.
+
 Optional depth blocks are allowed when useful:
 
 | Block                | Use                                                             |
@@ -324,6 +328,18 @@ Do not commit original slide screenshots, extracted deck images, textbook images
 4. Draw your own, marked `(my own)` when needed.
 
 Carry important labels across using course terminology. Do not invent structure the source does not support; if an arrow is ambiguous, explain it in prose.
+
+### Deck Visual Parity
+
+Deck images are not optional decoration. When auditing or updating a session note, check whether the deck is teaching any concept mainly through diagrams, staged screenshots, token flow examples, tables, or side-by-side visual comparisons. If yes, mirror that explanatory value in the note with authored diagrams, clearer tables, or a stepwise worked example.
+
+A note fails this gate if the prose mentions a concept that the deck explains visually, but the note does not preserve the visual reasoning the learner needs to follow it.
+
+Minimum review questions for every touched session note:
+
+- Which deck visuals are doing real teaching work rather than just illustrating a sentence?
+- Does the note preserve those visuals' learning sequence in a self-contained way?
+- Are there any sections where the deck is easier to understand than the note because the note flattened a visual explanation into compressed prose?
 
 ### Visual QA Is Mandatory
 
@@ -431,6 +447,7 @@ Do not eyeball the checklist:
 - [ ] Deck/session identity verified from slide contents, not filename alone
 - [ ] Mixed decks split by handout scope and logged
 - [ ] Deck agenda items covered or genuine gaps recorded
+- [ ] Deck visuals that carry explanation were preserved with equivalent note visuals, tables, or stepwise teaching flow
 - [ ] Every concept has Intuition, Mechanism, Worked example, Tradeoff, and Diagram
 - [ ] Arithmetic in worked examples was executed
 - [ ] Note is self-contained; no core knowledge lives only in `_shared/`, labs, transcripts, or local sources

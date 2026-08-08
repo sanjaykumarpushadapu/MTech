@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">From raw text to input embeddings</title>
+  <desc id="desc">A five-step pipeline showing raw text becoming tokens, token IDs, embedding rows, and final position-aware input vectors.</desc>
+  <defs>
+    <style>
+      .bg { fill: #fcfbf7; }
+      .panel { fill: #fffdf8; stroke: #d7c7a6; stroke-width: 2; rx: 18; }
+      .step { fill: #fff7e7; stroke: #c28a2e; stroke-width: 2; rx: 16; }
+      .accent { fill: #f4e0b7; stroke: #9d6d1f; stroke-width: 2; rx: 16; }
+      .text { font-family: Arial, sans-serif; fill: #2b2418; font-size: 18px; }
+      .small { font-size: 15px; }
+      .label { font-size: 20px; font-weight: 700; }
+      .mono { font-family: 'Courier New', monospace; font-size: 16px; fill: #2b2418; }
+      .arrow { stroke: #7a5a26; stroke-width: 3; fill: none; marker-end: url(#m); }
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a5a26"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="420"/>
+  <rect class="panel" x="24" y="24" width="912" height="372"/>
+
+  <rect class="step" x="48" y="78" width="150" height="112"/>
+  <text class="text label" x="123" y="112" text-anchor="middle">1. Text</text>
+  <text class="mono" x="123" y="148" text-anchor="middle">"The cat sat"</text>
+  <text class="text small" x="123" y="176" text-anchor="middle">raw characters</text>
+
+  <rect class="step" x="222" y="78" width="150" height="112"/>
+  <text class="text label" x="297" y="112" text-anchor="middle">2. Tokens</text>
+  <text class="mono" x="297" y="145" text-anchor="middle">["The",</text>
+  <text class="mono" x="297" y="167" text-anchor="middle">"cat", "sat"]</text>
+  <text class="text small" x="297" y="188" text-anchor="middle">special tokens added here</text>
+
+  <rect class="step" x="396" y="78" width="150" height="112"/>
+  <text class="text label" x="471" y="112" text-anchor="middle">3. Token IDs</text>
+  <text class="mono" x="471" y="148" text-anchor="middle">[101, 9246, 3171]</text>
+  <text class="text small" x="471" y="176" text-anchor="middle">fixed vocabulary lookup</text>
+
+  <rect class="step" x="570" y="78" width="150" height="112"/>
+  <text class="text label" x="645" y="112" text-anchor="middle">4. Embeddings</text>
+  <text class="mono" x="645" y="145" text-anchor="middle">E[101]  -&gt; [0.2, ...]</text>
+  <text class="mono" x="645" y="167" text-anchor="middle">E[9246] -&gt; [1.1, ...]</text>
+  <text class="text small" x="645" y="188" text-anchor="middle">rows of the learned table E</text>
+
+  <rect class="accent" x="744" y="78" width="168" height="112"/>
+  <text class="text label" x="828" y="112" text-anchor="middle">5. Input Vectors</text>
+  <text class="mono" x="828" y="145" text-anchor="middle">token + position</text>
+  <text class="mono" x="828" y="167" text-anchor="middle">[2.1, 2.2, 2.3]</text>
+  <text class="text small" x="828" y="188" text-anchor="middle">same width d, ready for attention</text>
+
+  <path class="arrow" d="M198 134 H222"/>
+  <path class="arrow" d="M372 134 H396"/>
+  <path class="arrow" d="M546 134 H570"/>
+  <path class="arrow" d="M720 134 H744"/>
+
+  <rect class="panel" x="64" y="234" width="832" height="120"/>
+  <text class="text label" x="86" y="270">What changes, and what stays fixed?</text>
+  <text class="text" x="86" y="304">Tokenizer vocabulary: fixed before training. It decides which integer a text piece becomes.</text>
+  <text class="text" x="86" y="332">Embedding table E: learned during training. It decides what that integer means as a vector.</text>
+  <text class="text" x="86" y="360">Position signal is added last, so the transformer receives meaning and word order together.</text>
+</svg>
