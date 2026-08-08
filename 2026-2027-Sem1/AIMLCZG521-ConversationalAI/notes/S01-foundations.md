@@ -1,4 +1,4 @@
-# Conversational AI · Session 01 · Foundations of Conversational AI
+# Conversational AI · Session 01 · Foundations of Conversational AI: Chatbots to Agentic Systems
 
 *Learned 26 Jul 2026*
 
@@ -6,7 +6,7 @@
 
 Conversational AI — agentic AI — is one of the most employable specialisations in the field right now, and this session covers it end to end. It's **not just chatbots**: it is a reasoning system that happens to speak your language. You'll get the sixty-year history behind why agents look the way they do, the **six components** every real system has, the **seven-stage agent lifecycle** that structures the rest of the course, and the emerging **protocol landscape** (MCP, A2A). It also covers tokenization and context windows in enough depth to build on. After this session you should be able to architect an agent, reason about its cost and failure modes, and explain where the field is heading.
 
-## Part 1 · What the field is
+## Part 1 · Chatbots to Agentic Systems
 
 *What conversational AI actually is, and the sixty-year history from rule-based ELIZA to today's agents — the history explains why systems look the way they do now.*
 

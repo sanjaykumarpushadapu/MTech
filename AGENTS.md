@@ -36,6 +36,10 @@ The handout row decides:
 
 When updating a session note, master index, or progress tracker, keep the session title and sub-topic wording aligned with the handout Learning Plan row. Do not invent alternate labels such as “Serving I/II”, “Reasoning I/II”, or shortened variants when the handout already provides the official wording. If the note title or master-row wording differs from the handout, correct it before considering the task complete.
 
+Section and subsection headings inside the note must also stay aligned with the handout vocabulary. A heading may be slightly more explanatory, but it should still read like the same topic. Do not rename a handout topic into a different label just because the deck or a source file uses that phrasing.
+
+Use the handout for the top-level session and part structure, and use the deck/PDF/paper for lower-level explanatory headings only when they make the same handout topic clearer. Lower-level headings may be reorganized for teaching flow, but they must stay within handout scope and still map back to the handout sub-topics.
+
 | Handout column      | Controls                                                |
 | ------------------- | ------------------------------------------------------- |
 | Contact Session     | Session number and whether rows combine sessions        |
@@ -167,6 +171,12 @@ Do not add a hand-written `## Topics` index. The headings already form the navig
 
 Course logistics, admin, deck-errata, source notes, and build logs do not belong in session notes unless they materially change scope or interpretation.
 
+### Teaching Flow First
+
+Write session notes as one coherent learning path, not as a stitched summary of separate sources. The reader should be able to move through the note without needing to reconstruct the logic from deck order, textbook order, or paper order.
+
+You may reorder material within the handout scope when that makes the concept easier to learn, but do not rename, drop, or silently merge handout topics. Add short bridge sentences and checkpoints where needed so each part feels connected to the next.
+
 ### Every Concept Must Teach
 
 Each concept must include, in this order:
@@ -184,6 +194,7 @@ Rules:
 - Hard concepts need a plain-language on-ramp and a short everyday analogy.
 - Dense math must be signposted as skimmable on first pass, with the key takeaway stated plainly.
 - More explanation belongs at hard spots, not everywhere.
+- Lead with the answer or concept name first; do not bury the key definition in the second half of a subsection.
 
 ### Use Case Grounding
 
@@ -315,6 +326,8 @@ Check every touched diagram for:
 - No cut-off edges
 - No decorative clutter
 - No misleading simplification
+
+If a diagram only works when crowded into one canvas, split it into smaller stages or separate figures instead of forcing all flows into one image. Prefer a simpler diagram that teaches clearly over a dense one that technically fits.
 
 If the user flags one example of a recurring issue, audit the whole touched note for that issue. Do not fix only the named diagram.
 

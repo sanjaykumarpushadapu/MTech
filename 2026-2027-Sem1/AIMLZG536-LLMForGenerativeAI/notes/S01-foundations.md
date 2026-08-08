@@ -31,11 +31,11 @@ The clean storyline is:
 
 ---
 
-## Part 1 · What a language model is
+## Part 1 · Introduction to LLMs and Generative AI
 
 _Start here: what "language model" and "large" mean, and the one idea everything below builds on — a model trained to predict the next word can generate a whole passage just by repeating that prediction, feeding each new word back in as input._
 
-### 1. Language AI and language models
+### 1. Introduction to LLMs and Generative AI
 
 **Intuition** — **Language AI** is the umbrella: systems that take unstructured text and turn it into something useful. A **language model** is the generative branch of that umbrella, and it answers one question: _given what came before, what comes next?_ Everything else in this course is built on that.
 
@@ -188,7 +188,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 ---
 
-## Part 2 · How the machinery works
+## Part 2 · Attention Mechanism & Transformer (Review)
 
 _Open the box. Attention, multi-head attention, the transformer block, positional encoding — worked by hand with real numbers, because you don't actually understand attention until you've pushed a vector through it._
 
@@ -485,13 +485,13 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 
 **Checkpoint — what Part 2 established.** A transformer block does not "understand" text directly. It repeatedly updates token vectors: attention mixes information across positions, the FFN transforms each position, residuals keep the stack trainable, and positional encoding prevents the model from treating word order as irrelevant.
 
-## Part 3 · Building blocks and token flow
+## Part 3 · Building blocks of LLM
 
 _Now reassemble the machine. The previous part opened the transformer block; this part shows how raw text reaches that block, how the block stack returns vocabulary scores, and why tokenization/context decisions change both quality and cost._
 
 This part is the bridge between the abstract transformer and the concrete LLM you call from an API. Section 9 explains where tokenization sits in the **input pipeline**; section 13 later explains how tokenizer algorithms are designed and why their choices affect cost.
 
-### 8. Building blocks of an LLM — the checklist view
+### 8. Building blocks of an LLM
 
 **Intuition** — By this point you have seen the pieces, but they were spread across attention, embeddings, position, and generation. This is the compact revision view. If asked _"what are the building blocks of a decoder-only LLM?"_ this is the fast, exam-safe answer.
 
@@ -603,7 +603,7 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 ---
 
-### 10. The language modelling head, and weight tying
+### 10. The language modelling head and weight tying
 
 **Intuition** — After the last transformer block you have a hidden vector per position. The **LM head** turns that vector into a score for every vocabulary token, then softmax converts those scores into next-token probabilities. It is the mirror image of the embedding layer: embeddings read **token ID → vector**; the LM head scores **vector → likely token IDs**.
 
@@ -724,7 +724,7 @@ So the answer can use at most about **896 tokens** before the request runs out o
 
 ---
 
-## Part 4 · Architectures, tokenizers, and the LLM landscape
+## Part 4 · LLM Architectures, Tokenization, and LLM Landscape
 
 _Zoom out to the map: the main architecture families, the tokenizer choices you meet in practice, and the model ecosystem you'll actually work with. Aim to **recognise and place** these, not memorise every cell._
 
