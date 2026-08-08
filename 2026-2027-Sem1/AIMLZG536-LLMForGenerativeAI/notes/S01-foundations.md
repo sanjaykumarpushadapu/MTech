@@ -1,6 +1,5 @@
 # Large Language Models for Generative AI · Session 01 · Foundations of Large Language Models (LLMs)
 
-_Handout topic title: Foundations of Large Language Models (LLMs)._
 _Learned 26 Jul 2026_
 
 ## Why this matters

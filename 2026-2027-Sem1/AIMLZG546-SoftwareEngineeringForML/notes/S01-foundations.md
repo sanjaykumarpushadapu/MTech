@@ -643,7 +643,7 @@ Both touch **every** phase — there is no single point in the timeline where ei
 
 ---
 
-## Lab / build
+## Self-study / Lab / build
 
 No lab this session. **546 Lab 1 is at session 3** — end-to-end ML system blueprint, fraud detection.
 

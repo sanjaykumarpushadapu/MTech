@@ -758,9 +758,9 @@ Each version reachable at its own endpoint:
 
 ---
 
-## Self-study — four APIs to explore
+## Self-study / Lab / build
 
-*Self-study picks for making the API styles concrete.*
+**Self-study — four APIs to explore.** These picks make the API styles concrete.
 
 | # | What | Where | Why |
 |---|---|---|---|
@@ -771,11 +771,7 @@ Each version reachable at its own endpoint:
 
 AsyncAPI is the one to actually look at: it closes the loop on section 2 by showing that asynchronous APIs have their own description standard, exactly parallel to OpenAPI for synchronous ones.
 
----
-
-## Lab / build
-
-No lab this session — **549 Lab 1 is at session 5**. But two things are worth doing tonight, both under ten minutes:
+**Build.** No lab this session — **549 Lab 1 is at session 5**. But two things are worth doing tonight, both under ten minutes:
 
 1. `curl -X GET "https://jsonplaceholder.typicode.com/posts"` — confirms you can read an API response.
 2. Install **Postman**, repeat the same call. You'll need it from lab 3 onward.

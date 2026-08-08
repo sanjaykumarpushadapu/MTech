@@ -726,7 +726,7 @@ The durable lesson is not a ranking of vendors; it is the decision rule. In conv
 
 ---
 
-## Lab / build
+## Self-study / Lab / build
 
 **521 Lab 1 (session 1): tokenization and an AI bot with tool calling.** Two hands-on demos:
 

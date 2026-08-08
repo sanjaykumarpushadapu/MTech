@@ -1,6 +1,5 @@
 # Large Language Models for Generative AI · Session 02 · LLM Pre-Training
 
-_Handout topic title: LLM Pre-Training._
 _Learned 2 Aug 2026_
 
 ## Why this matters
@@ -56,7 +55,7 @@ CLM is the objective every decoder-only LLM in this subject uses (session 1's ar
 
 **Worked example** — the numeric loss calculation in concept 3 is the CLM case, since that is what this subject's LLMs actually train on.
 
-**Tradeoff / when NOT to use** — a CLM model cannot see future context during training or inference, which is precisely why it must generate one token at a time instead of filling gaps in parallel; an MLM model can't generate free-form text in its native form at all — there is no "predict the next token" once every position was trained bidirectionally. That is why encoder embeddings need a decoder (or a task-specific head) attached to produce output text — see 521's retrieval note for the encoder side of this tradeoff.
+**Tradeoff / when NOT to use** — a CLM model cannot see future context during training or inference, which is precisely why it must generate one token at a time instead of filling gaps in parallel; an MLM model can't generate free-form text in its native form at all — there is no "predict the next token" once every position was trained bidirectionally. That is why encoder embeddings need a decoder (or a task-specific head) attached to produce output text: the encoder supplies a context-rich representation of the input, but a separate output mechanism is still needed to turn that representation into generated tokens.
 
 ```mermaid
 flowchart TD
@@ -382,44 +381,48 @@ The counter-argument (Schaeffer et al., 2023): many "emergent" abilities evapora
 
 **Tradeoff / when NOT to use** — knowledge distillation (Gemma 2's approach for smaller variants) requires already having a larger, capable teacher model to distill from — it isn't available as a strategy for training the _first_, largest model in a family, only for producing smaller siblings afterward. Self-generated training data (Qwen 2's approach) risks a feedback loop where a model's own blind spots get reinforced in the data it generates for its successor, unless carefully filtered — a risk plain human/web-sourced text doesn't carry in the same way.
 
+```mermaid
+flowchart TD
+    A["Choose a frontier recipe"] --> B["Qwen 2:\nself-generated data\n+ two-stage training"]
+    A --> C["Qwen 3:\nlong-context-weighted corpus\n(75/25 split)"]
+    A --> D["Gemma 2:\nknowledge distillation\nfrom a larger teacher"]
+    A --> E["Gemma 4:\nmultimodal base models\n+ separate instruction tuning"]
+```
+
 ---
 
-### 15. Going deeper: GPT-1 and T5 — two architecture case studies (not for exam)
+***Going deeper*** — GPT-1 and T5 are useful historical case studies, but the deck marks them as extra and not examinable, so keep them as intuition builders rather than core syllabus.
 
-> **_Going deeper_** _— the deck marks this material "extra slides, not for exam." Kept here because the numbers are genuinely useful for building intuition about early LLM pretraining, but treat it as background, not examinable scope._
->
-> **GPT-1** — the original decoder-only pretraining recipe. Introduced the two-stage idea that later became standard: unsupervised **generative pretraining** (learning general language representations from a large text corpus) followed by supervised **finetuning** on a specific task. Architecturally: 12 transformer blocks, 768-dimensional hidden states, 12 attention heads (giving 768÷12 = 64 dimensions per head — the same per-head-dimension arithmetic as session 1's multi-head attention section), a 3,072-dimensional feedforward layer (hidden size × 4, again matching session 1's transformer-block ratio), ~117 million total parameters, a 40,000-token BPE vocabulary, and GELU activations. It trained on BooksCorpus (~7,000 books, ~800 million words) with causal language modeling and cross-entropy loss, a 512-token maximum sequence length, Adam optimizer, linear warmup over the first 2,000 updates followed by cosine decay, and 100 epochs — this is the same shape as concept 3's loss mechanism and concept 1's three-stage pipeline, just at the historical starting point of the lineage.
->
-> For downstream classification, GPT-1 formats input with special tokens — `<start>`, a delimiter, and `<extract>` — feeds that through the _same_ pretrained transformer, and takes only the output vector at the `<extract>` token position as the feature fed into a simple linear classifier layer. Worked example: input `<start> This movie was surprisingly emotional, beautifully acted, and worth watching again. <extract>` → output label "Positive," with the `<extract>`-position vector learning to summarize whatever the classification task needs during finetuning.
->
-> ```mermaid
-> flowchart TD
->     A["12 transformer blocks\nd=768, 12 heads"] --> B["Causal LM pretraining\non BooksCorpus"]
->     B --> C["Finetune: format with\nstart/delim/extract tokens"]
->     C --> D["Take <extract> token's\noutput vector -> linear classifier"]
-> ```
->
-> **T5** (Text-to-Text Transfer Transformer) — an encoder-decoder alternative that reframes _every_ NLP problem, including classification, as text-to-text: same model, same objective, same training procedure and decoding process regardless of the downstream task. A task-specific text _prefix_ tells the model what to do — e.g. `"translate English to German: That is good. target:"` produces `"Das ist gut."` autoregressively; for classification, `"mnli premise: I hate pigeons. hypothesis: My feelings towards pigeons are filled with animosity. target:"` produces the class label `"entailment"` directly as text, rather than through a separate classifier head the way GPT-1's `<extract>`-token approach works. T5 uses a **prefix-LM attention pattern**: fully-visible (bidirectional) attention over the input prefix, but causal masking while generating the target — a genuine third attention pattern alongside concept 2's pure-CLM and pure-MLM. Pretrained on the **Colossal Clean Crawled Corpus (C4)**, English-only, 750 GB, using **learned relative position embeddings** based on the offset between the query and key being compared (rather than GPT-1's absolute learned positions), with a 32,000-wordpiece SentencePiece vocabulary shared across input and output.
->
-> ```mermaid
-> flowchart TD
->     A["Every task reframed as text-to-text"] --> B["Input: task prefix + content\ne.g. 'translate English to German: ...'"]
->     B --> C["Encoder: fully-visible attention over input"]
->     C --> D["Decoder: causal attention,\ngenerates output text autoregressively"]
-> ```
->
-> **Side by side:**
->
-> |                          | GPT-1                                             | T5                                                      |
-> | ------------------------ | ------------------------------------------------- | ------------------------------------------------------- |
-> | Architecture             | Decoder-only                                      | Encoder-decoder                                         |
-> | Parameters               | ~117 million                                      | Baseline size: two stacks of BERT-base                  |
-> | Objective                | Causal language modeling                          | Text-to-text (every task, same objective)               |
-> | Pretraining data         | BooksCorpus (~7,000 books, ~800M words)           | C4 — 750 GB, English-only                               |
-> | Attention pattern        | Pure causal                                       | Prefix-LM: fully-visible over input, causal over output |
-> | Position encoding        | Learned absolute                                  | Learned relative (query–key offset)                     |
-> | Vocabulary               | 40,000 tokens (BPE)                               | 32,000 wordpieces (SentencePiece, shared input/output)  |
-> | Downstream task handling | `<extract>`-token vector → linear classifier head | Task prefix in the input text itself, output is text    |
+**GPT-1** — the original decoder-only pretraining recipe. It introduced the two-stage idea that later became standard: unsupervised generative pretraining on a large text corpus followed by supervised finetuning on a specific task. Architecturally: 12 transformer blocks, 768-dimensional hidden states, 12 attention heads (768/12 = 64 dimensions per head), a 3,072-dimensional feedforward layer, about 117 million parameters, a 40,000-token BPE vocabulary, and GELU activations. It trained on BooksCorpus with causal language modeling, cross-entropy loss, a 512-token context window, Adam, linear warmup, cosine decay, and 100 epochs.
+
+Worked example: for classification, GPT-1 formats input as `<start> ... <extract>`, runs the same pretrained decoder-only transformer, and feeds only the output vector at `<extract>` into a small classifier. Input `<start> This movie was surprisingly emotional, beautifully acted, and worth watching again. <extract>` can then map to the label `Positive`.
+
+```mermaid
+flowchart TD
+    A["12 transformer blocks\nd=768, 12 heads"] --> B["Causal LM pretraining\non BooksCorpus"]
+    B --> C["Finetune: format with\nstart/delim/extract tokens"]
+    C --> D["Take <extract> token's\noutput vector -> linear classifier"]
+```
+
+**T5** (Text-to-Text Transfer Transformer) — an encoder-decoder alternative that reframes every NLP problem, including classification, as text-to-text. A task prefix tells the model what to do, so `"translate English to German: That is good. target:"` yields `"Das ist gut."`, while `"mnli premise: I hate pigeons. hypothesis: My feelings towards pigeons are filled with animosity. target:"` yields `entailment` directly as output text. T5 uses a prefix-LM attention pattern: fully visible attention over the input prefix, then causal masking while generating the output. It pretrained on C4 with learned relative position embeddings and a shared 32,000-wordpiece SentencePiece vocabulary.
+
+```mermaid
+flowchart TD
+    A["Every task reframed as text-to-text"] --> B["Input: task prefix + content\ne.g. 'translate English to German: ...'"]
+    B --> C["Encoder: fully-visible attention over input"]
+    C --> D["Decoder: causal attention,\ngenerates output text autoregressively"]
+```
+
+|                          | GPT-1                                             | T5                                                      |
+| ------------------------ | ------------------------------------------------- | ------------------------------------------------------- |
+| Architecture             | Decoder-only                                      | Encoder-decoder                                         |
+| Parameters               | ~117 million                                      | Baseline size: two stacks of BERT-base                  |
+| Objective                | Causal language modeling                          | Text-to-text (every task, same objective)               |
+| Pretraining data         | BooksCorpus (~7,000 books, ~800M words)           | C4 — 750 GB, English-only                               |
+| Attention pattern        | Pure causal                                       | Prefix-LM: fully-visible over input, causal over output |
+| Position encoding        | Learned absolute                                  | Learned relative (query-key offset)                     |
+| Vocabulary               | 40,000 tokens (BPE)                               | 32,000 wordpieces (SentencePiece, shared input/output)  |
+| Downstream task handling | `<extract>`-token vector -> linear classifier     | Task prefix in the input text itself, output is text    |
 
 ---
 
