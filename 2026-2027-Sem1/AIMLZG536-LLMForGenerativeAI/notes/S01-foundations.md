@@ -4,19 +4,19 @@ _Learned 26 Jul 2026_
 
 ## Why this matters
 
-This is the session that makes you fluent in how modern AI actually works under the hood. **Every LLM you'll use, fine-tune, or deploy in your career is a transformer doing next-token prediction** — and this is where _attention_, _embeddings_, _context window_, _tokenization_ and _decoder-only_ stop being buzzwords and become things you can compute and reason about. Get this and you can read any model card, debug a tokenizer surprise, size a context window against its cost, or answer the interview question about how attention scales. It's the vocabulary and machinery the whole field is written in.
+This session is the foundation for everything that follows in 536. Modern LLMs can look mysterious from the outside, but under the hood they are doing a small number of very specific things: turning text into tokens, turning tokens into vectors, mixing those vectors with attention, and predicting one next token at a time. Once that picture is clear, terms like _attention_, _embeddings_, _context window_, _tokenization_, and _decoder-only_ stop sounding like jargon and start feeling like engineering choices you can reason about.
 
-By the end of this note you should be able to explain the six session-1 syllabus jobs without looking elsewhere: what LLMs and generative AI are, how attention and the transformer block work, what the building blocks of an LLM are, how the main LLM architecture families differ, how tokenization works, and how the current LLM landscape is organized.
+By the end of this note, you should be able to explain six things comfortably in your own words: what LLMs and generative AI are, how attention and the transformer block work, what the building blocks of an LLM are, how the main architecture families differ, how tokenization works, and how today's LLM landscape is organized.
 
 **Running example throughout:** **Llama-3 8B** (d = 4096, 32 heads, d_k = 128). Anchor every new number to it.
 
 ## Session map — one forward pass
 
-Use this picture as the spine of the whole session. Every decoder-only LLM runs this loop:
+Use this picture as the backbone of the whole session. Every decoder-only LLM runs some version of this loop:
 
 ![Decoder-only LLM forward pass loop](assets/S01-forward-pass-loop.svg)
 
-One pass turns the whole prompt into **one** probability distribution over the next token; the dashed arrow — append the sampled token and run it again — is what makes generation **autoregressive** (section 3). Hold this picture in mind: every section below explains one box in the loop. The **context length** (section 11) is how long the `token IDs` list is allowed to get, and the **O(n²)** cost lives in attention inside the transformer block.
+One pass over the prompt produces **one** probability distribution over the next token. Then the chosen token is appended, the model runs again, and the cycle repeats. That repeated loop is what "autoregressive generation" means. Keep this picture in mind while reading: every section below explains one part of this loop. The **context length** (section 11) is the size limit on the `token IDs` list, and the **O(n²)** cost comes from attention inside the transformer block.
 
 The clean storyline is:
 
@@ -32,17 +32,17 @@ The clean storyline is:
 
 ## Part 1 · Introduction to LLMs and Generative AI
 
-_Start here: what "language model" and "large" mean, and the one idea everything below builds on — a model trained to predict the next word can generate a whole passage just by repeating that prediction, feeding each new word back in as input._
+_Start here: what "language model" and "large" mean, and the one idea the rest of the note builds on. A model trained to predict the next word can generate a whole passage simply by repeating that prediction and feeding each new word back in as input._
 
 ### 1. Introduction to LLMs and Generative AI
 
-**Intuition** — **Language AI** is the umbrella: systems that take unstructured text and turn it into something useful. A **language model** is the generative branch of that umbrella, and it answers one question: _given what came before, what comes next?_ Everything else in this course is built on that.
+**Intuition** — **Language AI** is the broad umbrella: systems that take unstructured text and do something useful with it. A **language model** is the generative branch of that umbrella. At its core, it answers one question: _given what came before, what should come next?_ Almost everything else in this course is built on that one idea.
 
 _One input type, three different output types — this course mostly follows the generative branch, but the same text backbone can support the other two:_
 
 ![Language AI input and output tasks](assets/S01-language-ai.svg)
 
-Language AI therefore does not always mean "chatbot". The input is text; the output may be **new text** (`write the answer`), an **embedding vector** (`represent this paragraph for retrieval`), or a **class label** (`is this review positive or negative?`). All three can run on a similar transformer backbone — the task-specific head on top decides what comes out. That's why section 10's language-modelling head matters: swap the head and the same body yields embeddings or classifications instead of generated text.
+So language AI does not automatically mean "chatbot". The input is text, but the output may be **new text** (`write the answer`), an **embedding vector** (`represent this paragraph for retrieval`), or a **class label** (`is this review positive or negative?`). The same transformer backbone can support all three. What changes is the task-specific head on top. That is why section 10 matters: change the head, and the same model body can behave like a generator, an embedder, or a classifier.
 
 Three vocabulary words keep the taxonomy clean:
 
@@ -54,14 +54,14 @@ Three vocabulary words keep the taxonomy clean:
 
 An LLM is usually a **foundation model**: a broadly pre-trained model that can be adapted to many downstream tasks through prompting, retrieval, fine-tuning, or tool use. "Foundation" does not mean "always correct"; it means many task-specific systems can be built on the same base model.
 
-**Mechanism** — formally, a model that computes either:
+**Mechanism** — formally, a language model computes either:
 
 - the probability of a sentence, **P(W)**, or
 - the probability of an upcoming word, **P(wₙ | w₁, w₂, …, wₙ₋₁)**
 
 Equivalently: it assigns a probability to each possible next word — **a probability distribution over the vocabulary**.
 
-That is the whole exam-safe definition in three moves: **score sequences, score next tokens, turn the scores into a vocabulary-wide distribution.**
+That is the core definition in three moves: **score whole sequences, score next tokens, and turn those scores into a probability distribution over the vocabulary.**
 
 **Worked example — word order is the whole signal:**
 
@@ -81,21 +81,21 @@ Same words, different order. A language model that has learned English assigns f
 
 ### 2. What makes a language model "large"
 
-**Intuition** — "Large" is not one thing. There are three, and the exam can ask for all three:
+**Intuition** — "Large" does not mean just one thing. In practice it usually points to three different kinds of scale:
 
 1. **Model size** — number of parameters
 2. **Dataset size** — trained on massive text, "large portions of the entire publicly available text on the internet"
 3. **Context** — a larger context of words
 
-LLMs are **deep neural networks** trained on that data.
+An LLM is therefore "large" not just because it has many weights, but because it was trained on a lot of data and is often used with a long context.
 
-**Mechanism — the three axes compound.** Parameters define how much the model can store and compute, training data supplies the statistical signal, and compute is the budget that turns data into learned parameters. Context is the runtime extension of the same idea: the model can condition on more tokens, but every extra token makes attention more expensive and grows the memory needed to store past tokens' key/value vectors — the **KV-cache**, previewed in section 4 and treated as a serving constraint in later sessions.
+**Mechanism — the three axes work together.** Parameters decide how much the model can store and how much computation happens inside each layer. Training data provides the statistical signal the model learns from. Compute is the budget that turns that data into learned parameters. Context length is the runtime side of the same story: the model can condition on more tokens, but every extra token makes attention more expensive and increases the memory needed to store past tokens' key/value vectors, called the **KV-cache**. Later sessions treat that as a real serving constraint rather than a theory detail.
 
 _The three axes, and what each actually charges you:_
 
 ![Three axes that make a language model large](assets/S01-large-model-axes.svg)
 
-**Read the right-hand column, not the left.** Only the parameter axis charges you forever; data and compute are sunk costs. That asymmetry is the reason S6 compression attacks parameters and nothing else.
+**The useful way to read this table is from the cost side.** Training data and training compute are mostly one-time costs. Parameters keep costing you every time the model runs. That asymmetry is why later serving and compression work focuses so heavily on parameter count.
 
 **Worked example** — A 7B model and a 70B model may be trained once, but the 70B model costs roughly ten times as many parameter values to load for every request. If both serve 1M prompts per day, the larger model keeps charging memory and latency on every prompt. A larger training set does not charge per request in the same way; it was paid for during training.
 
@@ -107,20 +107,20 @@ _The three axes, and what each actually charges you:_
 
 ### 3. Generation as prediction
 
-**Intuition** — This is the session's key idea: **a model that can predict text can also generate text, by sampling from the distribution it predicts.** Predicting the next word and generating a whole passage are the same computation, repeated — each output is fed back in as the input for the next prediction.
+**Intuition** — This is the key idea of the whole session: **a model that can predict text can also generate text, simply by sampling from the distribution it predicts.** Predicting the next word and generating a whole paragraph are the same computation repeated many times. Each new output token is fed back in as part of the next input.
 
 A model used this way is an **autoregressive language model** — each generated token is fed back in to predict the next.
 
 ![Autoregressive generation loop](assets/S01-autoregressive-generation.svg)
 
-**Mechanism — the chain rule, then a loop.** A language model scores a whole sequence by factorising it into next-token predictions:
+**Mechanism — first the probability rule, then the generation loop.** A language model scores a whole sequence by breaking it into next-token predictions:
 
 ```
 P(w₁ … w_n) = ∏  P(w_i | w₁ … w_{i−1})
               i=1..n
 ```
 
-Generation runs that factorisation _forward_. Four steps, repeated until a stop condition:
+Generation simply runs that same idea forward. Four steps repeat until the model reaches a stop condition:
 
 | Step | What happens                                                                            | Shape              |
 | ---- | --------------------------------------------------------------------------------------- | ------------------ |
@@ -129,9 +129,9 @@ Generation runs that factorisation _forward_. Four steps, repeated until a stop 
 | 3    | **Select** a token — `argmax` (greedy) or sample from `p`                               | one ID             |
 | 4    | **Append** it to the context and return to step 1                                       | context grows by 1 |
 
-_What softmax actually does, in one sentence (it shows up in every section from here on, so it's worth pinning down now):_ it takes a list of raw scores — some big, some small, some negative — and turns them into positive numbers that add up to 1, i.e. a set of probabilities. The `e^{z}` part makes every score positive and exaggerates the gaps (a slightly bigger score becomes a much bigger probability); dividing by the sum `Σ e^{z}` makes the whole thing add to 1. So "apply softmax" just means "convert these scores into a probability distribution, letting the biggest scores dominate."
+_What softmax actually does, in plain language:_ it takes raw scores, which can be positive or negative and do not yet mean anything probabilistic, and turns them into positive numbers that add up to 1. In other words, it converts "preferences" into probabilities. Higher scores become much more likely, lower scores shrink, and the whole vector becomes something you can sample from.
 
-The loop stops at an end-of-sequence token or a length cap. Step 3 is the only place randomness enters — which is why the _same_ model gives different answers on different runs, and why `temperature=0` makes it deterministic.
+The loop stops when the model emits an end-of-sequence token or hits a length cap. Step 3 is the only place randomness enters. That is why the _same_ model can give different answers on different runs, and why `temperature=0` makes decoding deterministic.
 
 **Worked example — generate two tokens by hand.** Vocabulary of five: `the, cat, sat, mat, <eos>`. Prompt: `"The"`.
 
@@ -162,7 +162,7 @@ _Step 2 — feed the longer context back in:_
 
 The distribution **sharpened**: `cat` was sampled off a fairly flat first distribution (its own probability was only 0.204, well behind `the`'s 0.554), but once `"The cat"` is the context, the new top prediction `sat` is a clear front-runner at 0.702. More context means less uncertainty. That is the entire mechanism behind "prompting works": you are not instructing the model, you are conditioning the distribution.
 
-⚠️ **The reframe that matters:** nothing in these two steps knows what a sentence _is_. There is no grammar module and no plan — fluency is simply what you get when the next-token probabilities are accurate.
+⚠️ **The important reframe:** nothing in these two steps explicitly knows what a sentence _is_. There is no hidden grammar module and no separate planning engine here. Fluency appears because the next-token probabilities become good enough that locally sensible choices add up to globally fluent text.
 
 **The consequence that makes LLMs general** — _almost any NLP task can be modelled as word prediction._ Two examples:
 

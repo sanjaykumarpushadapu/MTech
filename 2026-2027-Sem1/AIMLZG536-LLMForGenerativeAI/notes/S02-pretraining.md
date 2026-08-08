@@ -4,9 +4,9 @@ _Learned 2 Aug 2026_
 
 ## Why this matters
 
-Pre-training is where an LLM's raw capability comes from — everything downstream (finetuning, alignment, prompting) builds on whatever pre-training already put into the weights. This session covers the training objective, the data pipeline, and the scaling laws behind it, so you can estimate training cost, reason about model behavior, and read a frontier lab's technical report as engineering decisions, not marketing copy — for example, understanding why Llama 3 trains an 8B model on 15T tokens, or why Chinchilla changed the industry's mind about model size vs. data.
+Pre-training is where an LLM gets its raw capability. Finetuning, alignment, and prompting only work because pre-training has already put useful structure into the weights. This session explains how that happens: what objective the model is trained on, what kind of data pipeline feeds it, and how scaling laws guide decisions about model size and token count. Once this picture is clear, frontier model reports stop reading like marketing and start reading like engineering tradeoffs.
 
-**Running example:** three architecturally distinct paths a model can take through pretraining — regular pretraining from scratch, continued pretraining (CPT) on top of an existing checkpoint, and domain-specific pretraining from scratch — reused throughout Part 3 via the FinLLaMA / BloombergGPT case studies.
+**Running example:** three distinct paths a model can take through pretraining — training from scratch, continued pretraining (CPT) on top of an existing checkpoint, and domain-specific pretraining from scratch — reused throughout Part 3 via the FinLLaMA / BloombergGPT case studies.
 
 ---
 
@@ -14,7 +14,7 @@ Pre-training is where an LLM's raw capability comes from — everything downstre
 
 ### 1. Self-supervised learning and the three-stage training pipeline
 
-**Intuition** — An LLM's raw capability doesn't come from human-labeled examples; it comes from reading enormous amounts of text and being forced to predict a missing piece of it, over and over. The text itself supplies the "correct answer" — nobody labels a single example by hand. This is why it's called **self-supervised**: the dataset's own structure creates the training signal. These self-supervised prediction problems are also called **pretext tasks**.
+**Intuition** — An LLM's raw capability does not come from people hand-labeling millions of examples. It comes from the model reading enormous amounts of text and repeatedly being asked to predict a missing or upcoming piece of it. The text itself provides the answer key. That is why the process is called **self-supervised**: the supervision is already hidden inside the data. These training problems are also called **pretext tasks**.
 
 **Mechanism** — Modern LLM development runs through three distinct stages, each with different data and (often) a different loss:
 
@@ -24,7 +24,7 @@ Pre-training is where an LLM's raw capability comes from — everything downstre
 | 2. Instruction tuning / SFT | Same cross-entropy objective, now on instruction→response pairs    | Curated instruction datasets                | Cross-entropy (same form, narrower data) |
 | 3. Alignment                | Learn from a human preference signal, not just next-token accuracy | Preference/comparison data                  | RL or preference-based loss              |
 
-Stage 1 is this session's subject; stages 2–3 belong to session 9 (RLHF/DPO). Framing pretraining this way matters: it is **the same self-supervised idea used by simpler models like word2vec**, just scaled up enormously — there is no separate "understanding" mechanism bolted on, only next-token (or masked-token) prediction repeated at web scale.
+Stage 1 is this session's focus; stages 2 and 3 belong later in the course. The useful mental model is that pretraining is not a different kind of magic. It is the same basic self-supervised idea used in simpler representation-learning systems, just pushed to much larger scale. There is no separate "understanding module" bolted on later. The model gets better because next-token or masked-token prediction is repeated over huge amounts of data.
 
 **Worked example** — the concrete numeric instance of stage 1's loss is worked by hand in concept 3.
 

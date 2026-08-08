@@ -4,9 +4,9 @@
 
 ## Why this matters
 
-Retrieval is the part of conversational AI that lets an agent answer from current, private, or domain-specific knowledge instead of relying only on model memory. This session teaches the full path: turn text into embeddings, compare vectors, index them fast enough for production, and combine semantic retrieval with keyword search when each alone is brittle. If you can explain this session, you can design the knowledge-access layer of a RAG chatbot, choose a vector database, tune latency vs recall, and defend why "just use embeddings" is not enough.
+Retrieval is what lets a conversational system answer from current, private, or domain-specific knowledge instead of relying only on whatever the model happened to memorize during training. This session walks through the full chain: represent text as embeddings, compare those vectors, search them fast enough for production, and combine semantic retrieval with keyword search when either one alone is unreliable. If this note is clear, you should be able to explain the knowledge-access layer of a RAG chatbot and justify why "just use embeddings" is usually not a complete answer.
 
-> **Prerequisites recap** *— this session assumes self-attention, feedforward layers, and basic matrix operations (full depth in AIMLZG536-LLMForGenerativeAI/notes/S01-foundations.md, sections 4–6). The five-second version:*
+> **Prerequisites recap** *— this session assumes self-attention, feedforward layers, and basic matrix operations. The five-second version:*
 > - **Matrix ops**: a *dot product* (multiply matching numbers, add them up) is the similarity score behind attention; *softmax* turns a row of scores into weights that sum to 1; a *weighted sum* (matrix multiply) blends vectors using those weights.
 > - **Self-attention**: every token makes a Query ("what am I looking for"), Key ("what do I contain"), and Value ("what do I contribute"). Dot-product every Query against every Key → scale → softmax → weighted sum of Values. The output is each token's *context-aware* vector — this is exactly what section 2 below relies on for contextual embeddings.
 > - **Feedforward layer**: after attention mixes information *between* tokens, each token's vector is individually expanded then shrunk by a small 2-layer network — no cross-token mixing here.
@@ -19,11 +19,11 @@ Retrieval is the part of conversational AI that lets an agent answer from curren
 
 ### 1. What an embedding is
 
-**Intuition** — An embedding is a list of numbers that places a word, sentence, document, image, or user query in a meaning space. Nearby vectors should mean similar things, even when the surface words differ.
+**Intuition** — An embedding is a numeric representation of meaning. The goal is simple: things that mean similar things should end up near each other in vector space, even when they do not use the same words.
 
 An everyday analogy: imagine a library map where books are not arranged alphabetically, but by meaning. Books on "credit cards", "bank accounts", and "loans" sit near each other; "river bank erosion" sits far away even though it shares the word "bank".
 
-**Mechanism** — An embedding model receives text and returns a fixed-length vector:
+**Mechanism** — An embedding model takes text as input and returns a fixed-length vector:
 
 ```text
 "refund my cancelled flight" -> [0.12, -0.44, 0.87, ..., 0.09]
