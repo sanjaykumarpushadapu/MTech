@@ -6,6 +6,8 @@
 
 This session gives the vocabulary and mental model for the whole subject. "Conversational AI" sounds broad until you break it into concrete pieces: understanding intent, keeping context, retrieving knowledge, calling tools, and managing memory. Once those pieces are clear, later topics like RAG, function calling, memory systems, MCP, and multi-agent orchestration stop feeling like separate buzzwords and start feeling like parts of one system.
 
+It also sets up the lab work: tokenization/BPE, an AI bot with tool calling, context windows, and the protocols that let the bot reach external tools and data.
+
 By the end of this note, you should be able to explain five things comfortably in your own words: how conversational AI evolved from chatbots to agents, how agentic architecture differs from the older pipeline, what the main system components are, why tokenization and context windows matter in production, and how a modern agent moves through its lifecycle from user request to action.
 
 ## Part 1 · Chatbots to Agentic Systems
@@ -26,7 +28,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 
 | | | |
 |---|---|---|
-| 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU — intent is the **verb**, the action; entity is the **nouns** |
+| 💬 **Understand** | Interpret natural language intent, entities, sentiment | NLU — intent is the **verb**, the action; entities are the **nouns** |
 | 🧠 **Reason** | Plan, chain thoughts, decompose multi-step problems | Planning |
 | ⚡ **Act** | Call APIs, write code, retrieve docs, orchestrate agents | Tools |
 
@@ -62,9 +64,9 @@ Every step rightward buys coverage of a wider query space, and spends predictabi
 
 **Mechanism — the key driver:**
 
-> Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (2017 — what it actually is, in section 8), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
+> Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (section 8 explains what it is), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
-The 2023–2025 row is the one to remember most: in one line, *AI moves from assistant to autonomous collaborator.*
+The 2023–2025 row matters most: it marks the move from assistant to autonomous collaborator.
 
 **Worked example — why one era forces the next.** ELIZA could answer *"I feel anxious"* with a scripted prompt, but it could not remember that anxiety across turns. Statistical dialogue systems could classify the intent, but needed hand-written features. LLMs made the response fluent, but still could not book the appointment. Agentic systems add tools and memory because fluency alone does not complete the task.
 
@@ -268,7 +270,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 ---
 
-## Part 3 · The model layer
+## Part 3 · Tokenization, context windows, and the model layer
 
 *Down one level, into the model itself: tokenization, context windows and the mechanics that decide what an agent can and can't do with language.*
 

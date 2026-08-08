@@ -54,6 +54,8 @@ Three vocabulary words keep the taxonomy clean:
 
 An LLM is usually a **foundation model**: a broadly pre-trained model that can be adapted to many downstream tasks through prompting, retrieval, fine-tuning, or tool use. "Foundation" does not mean "always correct"; it means many task-specific systems can be built on the same base model.
 
+#### Probabilistic Language Models
+
 **Mechanism** — formally, a language model computes either:
 
 - the probability of a sentence, **P(W)**, or
@@ -179,7 +181,11 @@ P("negative" | "The sentiment of the sentence 'I like Jackie Chan' is:")
 P(w | Q: Who wrote the book "The Origin of Species"? A:)
 ```
 
+#### Conditional generation of text
+
 **Generative AI** is the broader area: using computational models to generate text, code, speech, images, video and audio. LLMs are the text branch. And LLMs are **(mostly) natural language generation (NLG) systems** — the process of generating text with them is called **decoding** (the whole of S5).
+
+#### Natural language generation with LLMs
 
 **Tradeoff / when NOT to reframe a task as generation** — You _can_ express classification as generation, and it's often worse: a fine-tuned classifier is smaller, faster, cheaper and gives calibrated probabilities, where an LLM gives you a token that happens to read "positive". Reframing buys generality and zero-shot capability; it costs efficiency and calibration.
 

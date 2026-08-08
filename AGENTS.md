@@ -42,6 +42,12 @@ Use the handout for the top-level session and part structure, and use the deck/P
 
 Hard rule: the session title and all main Part/Section headings come from the handout. Subtitles, subheadings, and worked-example labels can come from the deck/PDF if they improve clarity, but they must never change the handout scope or replace the handout topic names at the top level.
 
+If a slide title names a concept already covered inside an existing subsection, surface that title as a short topic label in the existing flow instead of creating a new explanatory sentence. Keep it to the title itself when the user only wants the topic name. If the label needs cleaner visual shape, make it a short subheading with no extra meaning and place it near the relevant `Mechanism` or `Intuition` block so the deck wording stays visible.
+
+If the slide title introduces a genuinely new concept, decide whether it belongs inside the current handout row or in a different session. If it fits the current row, add it as the next appropriate subsection or concept block without creating a new session. If it belongs to a different handout row, do not import it here; log the mismatch and leave the note scoped to the current handout.
+
+When the deck uses a short label as a teaching anchor, keep that wording visible in the note as a heading or short label instead of burying it only in prose, even if the underlying concept is already covered elsewhere. This is especially important for early definitional slides and section-divider titles that help the reader follow the sequence.
+
 | Handout column      | Controls                                                |
 | ------------------- | ------------------------------------------------------- |
 | Contact Session     | Session number and whether rows combine sessions        |
