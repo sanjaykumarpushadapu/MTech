@@ -607,9 +607,9 @@ Disadvantages: **may not suit external-facing services** · **browser and mobile
 
 ![North-south and east-west API traffic](assets/S01-north-south-east-west.svg)
 
-**The axis decides the style.** North–south crosses a trust and control boundary: you don't own the caller, so you need ubiquity, caching and stable versions → REST or GraphQL. East–west stays inside: you own both ends, deploy them together, and care only about speed → gRPC.
+**The axis decides the style.** North–south faces callers you do not control, so you need ubiquity, caching and stable versions → REST or GraphQL. East–west stays inside your stack, so speed and code generation matter more → gRPC.
 
-**The multiplier that makes this matter:** *"In a microservices-based architecture it is likely that **one north–south request will involve multiple east–west exchanges**."* So east–west inefficiency doesn't stay local — it cascades back to the user.
+**Why this matters:** one public request often fans out into several internal calls. If the internal calls are slow, the user feels it even when the public edge looks simple.
 
 **Mechanism — three factors to weigh:**
 
@@ -631,7 +631,7 @@ Also weigh **parsing cost** — turning payloads into language-level objects var
 
 ### 8. Choosing between REST, GraphQL and gRPC
 
-**Intuition** — There is no best API style, only a best fit. The choice falls out of three questions asked in order: **who calls it** (a browser you don't control, or a service you do), **what shape is the data** (a flat resource, or a graph you'd otherwise fetch in five round-trips), and **what does a mistake cost** (a slow page, or a blown latency budget). Answer those and the style picks itself.
+**Intuition** — There is no best API style, only a best fit. Ask three questions in order: **who calls it**, **what shape is the data**, and **what does a mistake cost**?
 
 The comparison table, close to guaranteed exam material:
 
@@ -652,7 +652,7 @@ The comparison table, close to guaranteed exam material:
 
 Notice **REST is the destination of two leaves**. That's not an accident — it's the default, and the other two need a *measured* reason to win.
 
-**The one-line summary worth carrying:** REST wins on ubiquity and caching, GraphQL wins on fetching connected data in one call, gRPC wins on speed and code generation between services. All three are **synchronous**; if you need asynchrony you're reaching for a broker (section 2), not a different API style.
+**One-line summary:** REST wins on ubiquity and caching, GraphQL wins on connected data in one call, and gRPC wins on speed between services. All three are **synchronous**; if you need asynchrony, you want a broker, not a different API style.
 
 **Worked example — the same product catalogue, three ways.** A retailer needs product data reaching (a) a public website, (b) a mobile app on poor connections, (c) an internal pricing service called on every page render.
 
@@ -664,9 +664,7 @@ Notice **REST is the destination of two leaves**. That's not an accident — it'
 
 The lesson: **one system, three correct answers.** Anyone who says "we're a GraphQL shop" has stopped asking the question.
 
-**Tradeoff / when NOT to choose** — the real cost is rarely the style; it's **running more than one**. Each adds a schema to keep in sync, a toolchain, an auth integration, a monitoring story, and a thing your team must know. A single slightly-wrong style is usually cheaper than two right ones. Default to **REST until a specific pain justifies moving** — measured over-fetching for GraphQL, a measured latency budget for gRPC. Choosing on novelty is how teams acquire three API styles and expertise in none.
-
-**The trap in the table above:** it compares styles on *features*, which invites picking the one with the most ticks. Features don't decide this — consumers do. gRPC's superior speed is worth nothing if the caller is a browser.
+**Tradeoff / when NOT to choose** — the real cost is rarely the style; it's **running more than one**. Each adds a schema, toolchain, auth layer, and monitoring story. Default to **REST until a specific pain justifies moving** — measured over-fetching for GraphQL, a measured latency budget for gRPC. gRPC's speed is worth nothing if the caller is a browser.
 
 ---
 

@@ -64,6 +64,13 @@ An everyday analogy: a monolith is one large department where every approval goe
 
 Microservices work best when service boundaries follow business capabilities — grouped by *why* each part changes, not just what it does. If payment rules change for different reasons than delivery assignment, those are candidates for different services.
 
+**Monolithic limitations** — the slide sequence makes the pain concrete:
+
+- **Technology barrier** — introducing a new stack usually means rewriting the application
+- **Scalability** — the only easy scale unit is the whole app
+- **Size** — as the application grows, the single codebase becomes harder to manage
+- **Understandability** — new team members must learn the whole system, not just one module
+
 **Worked example** — In a food-delivery system, restaurant search, cart, order, payment, delivery assignment, notification, and support are different capabilities. During dinner peak, search and cart may need more replicas than support. Independent services let those parts scale and release separately.
 
 **Tradeoff / when NOT to use** — A monolith is often better for a small team or early product because local function calls, one deployment, and one database are easier to reason about. Premature microservices create distributed-system failures before the product has enough scale to justify them.
@@ -223,6 +230,12 @@ GitOps is especially natural with Kubernetes because Kubernetes resources are al
 
 **Intuition** — A sale-day or streaming-scale case study is not mainly about the brand name. It is about diagnosing bottlenecks, coupling, state consistency, scaling boundaries, and observability.
 
+Named examples from the lecture point in the same direction:
+
+- **Flipkart Big Billion Day** shows what happens when traffic spikes faster than the system can isolate failure.
+- **Hotstar** shows the same scaling problem at much larger concurrency.
+- **Monolith** is the counterexample: one big deployable unit makes the whole system move together.
+
 ![Cloud-native architecture case-study checklist](assets/S03-architecture-case-study.svg)
 
 **Mechanism** — Use this checklist:
@@ -237,7 +250,7 @@ GitOps is especially natural with Kubernetes because Kubernetes resources are al
 | Resilience | queues, retries, timeouts, **circuit breakers** (stop calling a dependency that's already failing, instead of retrying into a failure and making it worse — the caller "trips the breaker" and fails fast until the dependency recovers), graceful degradation |
 | Observability | metrics and traces that reveal where latency or errors begin |
 
-**Worked example** — If users report that selected products vanish from carts and money is deducted without orders, the likely architecture risks are state inconsistency between cart/order/payment, missing idempotency, overloaded synchronous calls, and no compensating step for partial failures (e.g., payment succeeds but order creation fails, and nothing undoes the charge). A cloud-native redesign would isolate cart, order, inventory, and payment; add idempotency keys; queue bursty order creation; and monitor each step.
+**Worked example** — On a sale day, users report that selected products vanish from carts and money is deducted without orders. That points to state inconsistency between cart/order/payment, missing idempotency, overloaded synchronous calls, and no compensating step for partial failures. A cloud-native redesign would isolate cart, order, inventory, and payment; add idempotency keys; queue bursty order creation; and monitor each step.
 
 **Tradeoff / when NOT to use** — Do not answer every case study with "use microservices." Sometimes the best fix is caching, database indexing, queueing, rate limiting, or a rollback strategy. Microservices help only when the failure follows service boundaries that can be separated and operated independently.
 
