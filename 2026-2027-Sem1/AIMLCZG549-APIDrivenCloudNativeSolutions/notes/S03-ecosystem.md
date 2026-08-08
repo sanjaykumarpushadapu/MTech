@@ -4,9 +4,7 @@
 
 ## Why this matters
 
-Cloud-native work is mostly ecosystem work: choosing the right layer and knowing which tool category solves which operational problem. This session gives the map: CNCF, microservices, service mesh, serverless, DevOps, GitOps, containers, Kubernetes, and architecture case studies. The practical payoff is avoiding tool confusion: you can explain whether a problem is about packaging, orchestration, service-to-service traffic, release automation, or runtime scaling.
-
----
+Cloud-native work is mostly ecosystem work: choosing the right layer and knowing which tool category solves which operational problem. This session gives the map: CNCF, microservices, service mesh, serverless, DevOps, GitOps, containers, Kubernetes, and architecture case studies. By the end, you should be able to explain whether a problem is mainly about packaging, orchestration, service-to-service traffic, release automation, or runtime scaling.
 
 ## Part 1 · Ecosystem map
 

@@ -4,9 +4,7 @@
 
 ## Why this matters
 
-Cloud-native is the design style behind the systems people expect to be always available: streaming apps, ecommerce sales, social platforms, ride sharing, online banking, and AI services. The career payoff is architectural judgement: you can tell whether an application is merely hosted on cloud infrastructure or actually built to scale, fail safely, deploy frequently, and recover quickly. This session builds that judgement from user requirements to the cloud-native stack and concrete application examples.
-
----
+Cloud-native is the design style behind systems that must stay available, scale under changing load, deploy frequently, and recover cleanly from failure. This session explains where those pressures come from, how cloud-native architecture responds to them, and how to distinguish cloud-enabled, cloud-based, and cloud-native systems. By the end, you should be able to explain the cloud-native stack and judge when its extra complexity is worth taking on.
 
 ## Part 1 · Why modern applications changed
 

@@ -6,7 +6,7 @@
 
 An API is a **promise between a service and its clients**: send a request shaped like *this*, get a response shaped like *that* — and neither side needs to know how the other is built. Get the promise right and other teams build on you for years without ever reading your code; get it wrong and every change breaks someone.
 
-This matters beyond the course — it's a skill you'll use on the job. **Every backend, every cloud service, every ML model you deploy is reached through an API** — Hugging Face, OpenAI, LangChain, Prefect and Amazon Bedrock are all REST. The design calls in this note — REST vs gRPC, how to version without breaking clients, sync vs async — are ones you will actually make on the job. The note builds the vocabulary (contract, sync/async, HTTP), then covers the three API styles, then how an API evolves once it's published.
+This session builds the core picture first: contract, synchronous vs asynchronous calls, HTTP, the three API styles, and versioning after an API is published. By the end, you should be able to explain how APIs expose functionality safely and how to choose between REST, GraphQL, and gRPC at a high level.
 
 ## Part 1 · What an API is
 

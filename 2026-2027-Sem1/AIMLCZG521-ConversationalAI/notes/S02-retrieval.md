@@ -4,14 +4,13 @@
 
 ## Why this matters
 
-Retrieval is what lets a conversational system answer from current, private, or domain-specific knowledge instead of relying only on whatever the model happened to memorize during training. This session walks through the full chain: represent text as embeddings, compare those vectors, search them fast enough for production, and combine semantic retrieval with keyword search when either one alone is unreliable. If this note is clear, you should be able to explain the knowledge-access layer of a RAG chatbot and justify why "just use embeddings" is usually not a complete answer.
+Retrieval is what lets a conversational system answer from current, private, or domain-specific knowledge instead of relying only on what the model memorized during training. This session explains the full chain: embeddings, similarity, efficient search, and hybrid retrieval. By the end, you should be able to explain the knowledge-access layer of a RAG system and justify why "just use embeddings" is usually not a complete answer.
 
-> **Prerequisites recap** *— this session assumes self-attention, feedforward layers, and basic matrix operations. The five-second version:*
+**Prerequisites recap** *— this session assumes self-attention, feedforward layers, and basic matrix operations. The five-second version:*
+
 > - **Matrix ops**: a *dot product* (multiply matching numbers, add them up) is the similarity score behind attention; *softmax* turns a row of scores into weights that sum to 1; a *weighted sum* (matrix multiply) blends vectors using those weights.
 > - **Self-attention**: every token makes a Query ("what am I looking for"), Key ("what do I contain"), and Value ("what do I contribute"). Dot-product every Query against every Key → scale → softmax → weighted sum of Values. The output is each token's *context-aware* vector — this is exactly what section 2 below relies on for contextual embeddings.
 > - **Feedforward layer**: after attention mixes information *between* tokens, each token's vector is individually expanded then shrunk by a small 2-layer network — no cross-token mixing here.
-
----
 
 ## Part 1 · Embeddings for understanding
 
