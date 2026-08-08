@@ -48,6 +48,8 @@ If the slide title introduces a genuinely new concept, decide whether it belongs
 
 When the deck uses a short label as a teaching anchor, keep that wording visible in the note as a heading or short label instead of burying it only in prose, even if the underlying concept is already covered elsewhere. This is especially important for early definitional slides and section-divider titles that help the reader follow the sequence.
 
+When polishing an existing note, prefer the deck's short teaching label for the visible heading when it clearly names the same concept, and reserve paraphrase for the explanatory paragraph beneath it. In other words: keep the heading deck-shaped, keep the explanation human-shaped, and avoid inventing a new label just because the deck title feels terse.
+
 | Handout column      | Controls                                                |
 | ------------------- | ------------------------------------------------------- |
 | Contact Session     | Session number and whether rows combine sessions        |

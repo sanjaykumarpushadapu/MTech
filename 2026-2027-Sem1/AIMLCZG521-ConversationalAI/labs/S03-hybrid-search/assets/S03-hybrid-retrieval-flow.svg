@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Hybrid retrieval flow</title>
+  <desc id="desc">A query flows to dense retrieval and sparse retrieval, then RRF fusion, optional reranking, and finally the answer.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#2a3441"/>
+    </marker>
+    <style>
+      .bg { fill: #f7f5ef; }
+      .box { fill: #ffffff; stroke: #2a3441; stroke-width: 2; rx: 16; ry: 16; }
+      .accent { fill: #eaf2ff; stroke: #2a3441; stroke-width: 2; rx: 16; ry: 16; }
+      .fusion { fill: #f5e8d7; stroke: #2a3441; stroke-width: 2; rx: 16; ry: 16; }
+      .rerank { fill: #e7f3e8; stroke: #2a3441; stroke-width: 2; rx: 16; ry: 16; }
+      .label { font-family: Inter, Arial, sans-serif; font-size: 22px; fill: #18212b; font-weight: 700; }
+      .small { font-family: Inter, Arial, sans-serif; font-size: 17px; fill: #2f3a46; }
+      .tiny { font-family: Inter, Arial, sans-serif; font-size: 15px; fill: #45515e; }
+      .arrow { stroke: #2a3441; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke-dasharray: 7 7; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="360" rx="0" ry="0"/>
+
+  <rect class="box" x="40" y="135" width="150" height="90"/>
+  <text class="label" x="115" y="170" text-anchor="middle">Query</text>
+  <text class="tiny" x="115" y="194" text-anchor="middle">user text</text>
+
+  <line class="arrow" x1="190" y1="160" x2="255" y2="110"/>
+  <line class="arrow" x1="190" y1="190" x2="255" y2="250"/>
+
+  <rect class="accent" x="255" y="65" width="225" height="90"/>
+  <text class="label" x="367.5" y="98" text-anchor="middle">Dense path</text>
+  <text class="small" x="367.5" y="123" text-anchor="middle">embedding + ANN index</text>
+
+  <rect class="accent" x="255" y="205" width="225" height="90"/>
+  <text class="label" x="367.5" y="238" text-anchor="middle">Sparse path</text>
+  <text class="small" x="367.5" y="263" text-anchor="middle">TF-IDF / BM25 index</text>
+
+  <line class="arrow" x1="480" y1="110" x2="560" y2="110"/>
+  <line class="arrow" x1="480" y1="250" x2="560" y2="250"/>
+
+  <rect class="fusion" x="560" y="125" width="220" height="90"/>
+  <text class="label" x="670" y="158" text-anchor="middle">RRF fusion</text>
+  <text class="small" x="670" y="183" text-anchor="middle">combine rankings</text>
+
+  <line class="arrow" x1="780" y1="170" x2="860" y2="170"/>
+
+  <rect class="rerank" x="860" y="125" width="150" height="90"/>
+  <text class="label" x="935" y="158" text-anchor="middle">Rerank</text>
+  <text class="small" x="935" y="183" text-anchor="middle">top candidates</text>
+
+  <line class="arrow" x1="1010" y1="170" x2="1090" y2="170"/>
+
+  <rect class="box" x="1090" y="125" width="70" height="90"/>
+  <text class="label" x="1125" y="160" text-anchor="middle">Answer</text>
+  <text class="tiny" x="1125" y="184" text-anchor="middle">best context</text>
+
+  <text class="tiny" x="370" y="40" text-anchor="middle">semantic recall</text>
+  <text class="tiny" x="370" y="325" text-anchor="middle">exact lexical evidence</text>
+  <text class="tiny" x="665" y="90" text-anchor="middle">rank fusion avoids score-scale mismatch</text>
+</svg>

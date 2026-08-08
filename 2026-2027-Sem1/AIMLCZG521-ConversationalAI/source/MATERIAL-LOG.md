@@ -11,7 +11,7 @@ Legend: ✓ have · ✗ missing · — n/a
 |---|---|---|---|---|---|
 | 1 | ✓ `Session-1-Foundations-of-ConvAI.pdf` (56 sl) | ✓ T1 *Building Effective Agents* · *Landscape of AI Agents* | ✓ Teams | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` |
 | 2 | ✓ `Session_02_Embeddings_Vector_Search.pdf` (48 sl) | ✓ Dense Passage Retrieval paper |  |  | ✅ `notes/S02-retrieval.md` |
-| 3 |  |  |  |  | ☐ |
+| 3 | ✓ `Session3-ANN-HybridSearch-Ranking.pdf` (62 sl) — extra hybrid-search / ANN / lab material; does **not** replace the handout L3 note scope | ✓ Dense Passage Retrieval paper; Hybrid search implementation notebook |  |  | ✅ `labs/S03-hybrid-search/README.md` |
 | 4 |  |  |  |  | ☐ |
 | 5 |  |  |  |  | ☐ |
 | 6 |  |  |  |  | ☐ |
@@ -96,6 +96,10 @@ The handout held is `(S2-25_AIMLCZG521) - April 2026.pdf`, Version 2.0, dated 25
 **Lesson: the deck is not automatically more current than the handout.** Verify rather than assume; slides get rebuilt each offering and can carry errors the handout doesn't.
 
 Still open: assignment duration (handout ~15 days vs slide ~3 weeks). **Plan for 15 days.**
+
+## 📎 Material mismatch note
+
+`Session3-ANN-HybridSearch-Ranking.pdf` is useful extension material for hybrid retrieval, ANN, BM25, and fusion, but it is not the official L3 model-landscape deck implied by the handout. Keep it attached to the L2/Lab 3 story, not to the L3 session note.
 
 ## Scope rule
 

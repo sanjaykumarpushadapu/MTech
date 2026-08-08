@@ -26,6 +26,11 @@ Legend: ✓ have · ✗ missing · — n/a
 | 15 |  |  |  |  | ☐ |
 | 16 |  |  |  |  | ☐ |
 
+## New deck copies received
+
+- `Lecture 1 (1).ppt` is another copy of the same **Session 1 / API Basics** material already tracked above. The session note remains `notes/S01-api-basics.md`.
+- `Lecture 2 and 3.pptx` is the mixed deck already split into **Session 2** and **Session 3**. The session notes remain `notes/S02-cloud-native.md` and `notes/S03-ecosystem.md`.
+
 ## Textbooks held
 
 ### R1 · Severance, *Python for Everybody* (241 pp) — **Module 0 self-study**

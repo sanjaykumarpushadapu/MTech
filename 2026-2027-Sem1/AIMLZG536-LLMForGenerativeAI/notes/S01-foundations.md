@@ -107,7 +107,7 @@ _The three axes, and what each actually charges you:_
 
 ---
 
-### 3. Generation as prediction
+### 3. Conditional generation of text
 
 **Intuition** — This is the key idea of the whole session: **a model that can predict text can also generate text, simply by sampling from the distribution it predicts.** Predicting the next word and generating a whole paragraph are the same computation repeated many times. Each new output token is fed back in as part of the next input.
 
@@ -193,7 +193,7 @@ P(w | Q: Who wrote the book "The Origin of Species"? A:)
 
 ---
 
-## Part 2 · Attention Mechanism & Transformer (Review)
+## Part 2 · Attention and Transformers Review
 
 _This part opens the black box. Up to now the note has treated the LLM as "something that predicts the next token." Here we look inside that something: attention, multi-head attention, the transformer block, and positional encoding. The goal is not to memorize equations first. The goal is to understand what problem each piece is solving, then use the equations to make that picture precise._
 
@@ -206,7 +206,7 @@ The problem Part 2 solves: after tokenization, the model has a row of vectors, o
 | The network must become deep without becoming untrainable | transformer blocks with residuals and normalisation |
 | Word order must be represented                            | positional encoding                                 |
 
-### 4. Self-attention
+### 4. Self attention
 
 **Intuition** — Self-attention lets each token look back at the other tokens and decide which ones matter right now. That is the real shift from older sequence models: the model does not have to squeeze the whole past into one hidden state and hope nothing important is lost. Every earlier position stays available, and the current token can decide whom to listen to.
 
@@ -308,7 +308,7 @@ That last line is the heart of attention: each token's output becomes a weighted
 
 ---
 
-### 5. Multi-head attention
+### 5. Multihead-Attention
 
 **Intuition** — One attention head gives one view of the sequence. Multi-head attention says: do not trust one view to capture everything. Let several heads look at the same tokens in parallel, each with its own learned projections, so different heads can specialize in different patterns such as syntax, reference, or local phrase structure.
 
@@ -351,7 +351,7 @@ Each head runs the exact same computation from section 4, just in 64 dimensions 
 
 ---
 
-### 6. The transformer block
+### 6. Transformer block
 
 **Intuition** — Attention is only one part of the job. It tells each token where to look, but it does not by itself give the model enough depth or stability to learn rich transformations. The transformer block adds the supporting machinery: a feed-forward network to process each token, layer normalization to keep values well-behaved, and residual connections to keep deep stacks trainable.
 
@@ -438,7 +438,7 @@ _The rest of the block, by shape:_
 
 ---
 
-### 7. Positional encoding
+### 7. Positional Encoding
 
 **Intuition** — Attention, by itself, has no built-in notion of before and after. If we gave it token vectors without position information, it could compare tokens but not know their order. Positional encoding fixes that by injecting sequence order into the vectors before attention starts working on them.
 
@@ -496,7 +496,7 @@ _Now reassemble the machine. The previous part opened the transformer block; thi
 
 This part is the bridge between the abstract transformer and the concrete LLM you call from an API. Section 9 explains where tokenization sits in the **input pipeline**; section 13 later explains how tokenizer algorithms are designed and why their choices affect cost.
 
-### 8. Building blocks of an LLM
+### 8. Building blocks of LLM
 
 **Intuition** — Up to now, the pieces have been introduced one at a time. This section puts them back together so the whole machine is visible again. If someone asks, "What are the building blocks of a decoder-only LLM?", this is the compact answer you should be able to give.
 
@@ -530,7 +530,7 @@ That is the whole machine in miniature: text becomes token IDs, IDs become vecto
 
 ---
 
-### 9. From text to tokens to embeddings
+### 9. Vocabulary Building
 
 **Intuition** — A model cannot read text directly. It can only operate on numbers. So the input pipeline has to turn text into numerical representations in a fixed sequence of steps.
 
@@ -610,7 +610,7 @@ Note it is **addition, not concatenation** — the vector doesn't grow. That's w
 
 ---
 
-### 10. The language modelling head and weight tying
+### 10. Unembedding (LM head): shapes and weight tying
 
 **Intuition** — After the last transformer block, the model still does not have words. It has a hidden vector. The job of the LM head is to turn that hidden vector back into scores over the vocabulary, so the model can decide which token should come next. In that sense, it mirrors the embedding layer: embeddings map token IDs into vectors, while the LM head maps vectors back into likely token IDs.
 
@@ -707,7 +707,7 @@ _Why depth is linear but width is squared — a building analogy:_ adding a **la
 
 ---
 
-### 11. Context length
+### 11. Context Length
 
 **Intuition** — Context length, or context window, is the maximum number of tokens the model can handle at once. The important practical point is that this budget is shared. Your prompt uses part of it, and every generated token uses more of it.
 
@@ -735,7 +735,7 @@ So the answer can use at most about **896 tokens** before the request runs out o
 
 _Zoom out to the map: the main architecture families, the tokenizer choices you meet in practice, and the model ecosystem you'll actually work with. Aim to **recognise and place** these, not memorise every cell._
 
-### 12. LLM architectures
+### 12. LLM Architectures
 
 **Intuition** — There are three main transformer family shapes, and the cleanest way to distinguish them is by what each token is allowed to see. Once that is clear, the training objective, strengths, and weaknesses mostly follow from it.
 
@@ -999,7 +999,7 @@ _Advantages_ — efficient handling of rare words, reduced vocabulary size, bett
 
 ---
 
-### 14. The LLM landscape
+### 14. Language models landscape
 
 **Intuition** — This landscape is easier to learn as a chain of causes than as a list of model names. Each stage created the conditions for the next one.
 

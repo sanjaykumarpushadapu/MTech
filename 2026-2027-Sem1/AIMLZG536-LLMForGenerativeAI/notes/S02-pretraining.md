@@ -10,11 +10,11 @@ Pre-training is where an LLM gets its raw capability. Finetuning, alignment, and
 
 ---
 
-## Part 1 · How pretraining actually works
+## Part 1 · Building a large language model
 
 _This session is easiest to follow if you keep one picture in mind: pretraining is the stage where a model reads huge amounts of text and gradually turns "random next-token guesses" into useful language knowledge. The rest of the note explains where that learning signal comes from, what data feeds it, and how labs decide how big a model and corpus to use._
 
-### 1. Self-supervised learning and the three-stage training pipeline
+### 1. Self-Supervised Learning
 
 **Intuition** — An LLM's raw capability does not come from people hand-labeling millions of examples. It comes from the model reading enormous amounts of text and repeatedly being asked to predict a missing or upcoming piece of it. The text itself provides the answer key. That is why the process is called **self-supervised**: the supervision is already hidden inside the data. These training problems are also called **pretext tasks**.
 
@@ -40,7 +40,7 @@ flowchart LR
 
 ---
 
-### 2. Pre-training objectives: causal vs masked language modeling
+### 2. Pre-training Objectives
 
 **Intuition** — The training objective matters because it shapes what the model becomes good at. If you train a model to predict the next token, it naturally becomes a generator. If you train it to fill in missing tokens using both left and right context, it becomes better at understanding and representation.
 
@@ -67,7 +67,7 @@ flowchart TD
 
 ---
 
-### 3. The pretraining loss and perplexity, worked by hand
+### 3. LLM Training
 
 **Intuition** — Training only works if the model gets a score telling it how wrong it was. In language modeling, that score comes from a simple idea: after the model predicts a probability distribution over the vocabulary, check how much probability it gave to the token that really came next. If that probability was low, the model should be penalized. If it was high, the penalty should be small. Cross-entropy is that penalty. Perplexity is the same story rewritten in a more human-readable scale.
 
@@ -118,11 +118,11 @@ flowchart TD
 
 ---
 
-## Part 2 · Pre-training data
+## Part 2 · Pre-training Data
 
 _If Part 1 explained how the model learns, Part 2 explains what it learns from. This is where the note shifts from objective functions to data engineering: which corpora are used, how they are mixed, and how raw scraped text gets cleaned before it ever reaches the model._
 
-### 4. Pretraining corpora and data mixture
+### 4. Data Mixture
 
 **Intuition** — What a model reads during pretraining shapes almost everything it can do later. So "just scrape the web" is not a real recipe. The hard part is deciding what kinds of text deserve more weight, what should be filtered out, and whether the model should see all categories in the same proportion from start to finish.
 
@@ -148,7 +148,7 @@ _If Part 1 explained how the model learns, Part 2 explains what it learns from. 
 
 ---
 
-### 5. Data preprocessing: filtering, deduplication, and packing
+### 5. Data Preprocessing Pipeline
 
 **Intuition** — Raw web text is messy. It contains duplicates, boilerplate, bad OCR, spam, private information, broken formatting, and many short fragments that would waste training compute if used as-is. So before the text reaches the model, it has to go through a preprocessing pipeline.
 
@@ -167,11 +167,11 @@ _If Part 1 explained how the model learns, Part 2 explains what it learns from. 
 
 ---
 
-## Part 3 · Continued pre-training and domain adaptation
+## Part 3 · Continued Pre-training (CPT) and Domain Adaptation
 
 _Part 3 asks a practical question that comes up in real organizations: once you already have a good pretrained model, how should you adapt it to your own domain? The answer is not always "train from scratch again."_
 
-### 6. Continued pre-training vs retraining vs domain-specific pre-training
+### 6. Continued Pre-training (CPT)
 
 **Intuition** — Once you already have a pretrained model, there are several ways to adapt it to a new domain. They are not small variations of the same choice. They trade off cost, speed, and how much of the original broad capability survives.
 
@@ -194,7 +194,7 @@ CPT is the practical middle path in many real systems: much cheaper than full re
 
 ---
 
-### 7. Catastrophic forgetting and how to mitigate it
+### 7. Catastrophic Forgetting
 
 **Intuition** — When you keep training an already-capable model on new data, you want it to learn the new domain without destroying what it already knew. That balance is hard. The same updates that help it specialize can also overwrite older knowledge. That failure mode is called **catastrophic forgetting**.
 
@@ -218,7 +218,7 @@ CPT is the practical middle path in many real systems: much cheaper than full re
 
 ---
 
-### 8. Domain adaptation case studies: FinLLaMA and BloombergGPT
+### 8. Domain Adaptation
 
 **Intuition** — Two real finance-domain LLMs took different paths through the pretraining choices above, and comparing them makes the tradeoffs concrete.
 
@@ -239,11 +239,11 @@ CPT is the practical middle path in many real systems: much cheaper than full re
 
 ---
 
-## Part 4 · Scaling laws
+## Part 4 · Scaling Laws
 
 _This part answers the planning question. If pretraining is expensive, how do labs decide how large the model should be and how many tokens it should see? Scaling laws are the attempt to answer that before spending the full compute budget._
 
-### 9. Why scaling laws matter
+### 9. Why Scaling Laws?
 
 **Intuition** — Pretraining at frontier scale is too expensive for guesswork. You cannot casually try five different 400B-scale runs and keep the best one. Scaling laws exist because labs need a way to use smaller experiments to predict what larger runs are likely to do.
 
@@ -257,7 +257,7 @@ _This part answers the planning question. If pretraining is expensive, how do la
 
 ---
 
-### 10. Kaplan scaling laws (2020) — worked by hand
+### 10. Kaplan Scaling Laws (2020)
 
 **Intuition** — Kaplan et al. (2020) were influential because they made scaling look smooth and predictable. Their practical takeaway at the time was simple: if you get more compute, put most of it into a bigger model rather than a larger dataset.
 
@@ -291,7 +291,7 @@ N ≈ 12 × 96 × 12,288²
 
 ---
 
-### 11. Chinchilla scaling laws (2022) and the three eras of scaling wisdom
+### 11. Chinchilla Scaling Laws (2022) and the Three Eras of Scaling Wisdom
 
 **Intuition** — Chinchilla changed the story. Two years after Kaplan, Hoffmann et al. showed that many large models were not simply small-data-limited or architecture-limited. They were **undertrained** relative to their size. In other words, the industry had often built models that were too big for the amount of data they saw.
 
@@ -317,7 +317,7 @@ A newer axis on top of all three: **test-time compute**. Models like o1 and Deep
 
 ---
 
-### 12. Emergent abilities of LLMs
+### 12. Emergent Abilities of LLMs
 
 **Intuition** — Some capabilities don't improve gradually as models get bigger — they appear to snap into existence, seemingly out of nowhere, once a model crosses a certain scale. Whether this is a genuine property of scale or a measurement artifact is itself a live debate (Schaeffer et al., 2023).
 
@@ -333,9 +333,9 @@ The counter-argument (Schaeffer et al., 2023): many "emergent" abilities evapora
 
 ---
 
-## Part 5 · Frontier model pretraining
+## Part 5 · Frontier Model Pretraining
 
-### 13. Llama 3: three-stage pretraining
+### 13. Llama 3: Three-Stage Pretraining
 
 **Intuition** — Llama 3's own published pretraining recipe is a concrete, fully worked example of nearly every concept in this session applied together: data mixture, curriculum/annealing, and scaling-law-informed sizing, executed across three distinct stages.
 
@@ -355,7 +355,7 @@ The counter-argument (Schaeffer et al., 2023): many "emergent" abilities evapora
 
 ---
 
-### 14. Qwen and Gemma pretraining strategies
+### 14. Qwen and Gemma Pretraining Strategies
 
 **Intuition — a landscape of alternative frontier recipes**, each making a different tradeoff than Llama 3's.
 
