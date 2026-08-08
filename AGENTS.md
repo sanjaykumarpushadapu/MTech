@@ -226,6 +226,16 @@ A wording pass never changes technical correctness, formulas, tables, numbers, o
 
 Write session notes in a human-first teaching voice. Prefer short direct sentences, natural transitions, and plain-language setup before dense terminology. The reader should feel guided through the concept, not exposed to a compressed summary of it.
 
+Readability is a completion gate, not a nice-to-have. If one subsection stacks too many new ideas, quotes, cautions, and examples without a pause, split it with a short bridge sentence, a small table, or a clearer sequence. A note should never require the reader to mentally unpack a dense lecture dump before the teaching point becomes clear.
+
+Every touched note also gets a plain-language pass. Ask: could an intelligent non-specialist follow this section without already knowing the jargon? If not, add one short plain-English bridge before the dense block. In practice this means:
+
+- define acronyms and specialist terms at first use in ordinary words
+- put one plain-language sentence before any dense table or formula-heavy block
+- explain what a comparison is really comparing before presenting the table
+- do not stack three or four unfamiliar terms in one sentence without unpacking them
+- if a lay reader would likely ask "what is that?" or "why does that matter?" answer it immediately, not three paragraphs later
+
 When a deck teaches a topic through a staged visual build-up, preserve that teaching path in the note. Do not collapse six visual steps from the deck into one dense paragraph if those steps are carrying the explanation. The note does not need a slide-by-slide clone, but it must preserve the same learning progression in prose, diagrams, or both.
 
 `## Why this matters` is required in every session note, but it must stay tight. Default length: **3-5 lines**. It should do only three things: state what the session teaches, why it matters in this subject, and what the reader should be able to explain after reading it. Do not turn it into career marketing, a generic motivational paragraph, or a second introduction to the whole note.

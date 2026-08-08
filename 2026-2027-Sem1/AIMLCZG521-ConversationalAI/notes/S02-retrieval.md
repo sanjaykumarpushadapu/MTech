@@ -225,6 +225,8 @@ Plain language: reward the positive pair for scoring high, and punish it if nega
 
 ![Vector similarity metrics](assets/S02-vector-similarity-metrics.svg)
 
+In plain language: once text has become vectors, retrieval needs a scoring rule. The question is simply, "which stored vector looks most like the query vector?" These three metrics are three ways of answering that question.
+
 **Mechanism** —
 
 | Metric | Formula | High value means |
@@ -260,6 +262,8 @@ So `B` is very close to `A`; `C` is much farther and orthogonal by cosine.
 
 ![Linear scan computational wall](assets/S02-linear-scan-wall.svg)
 
+The plain-English point is cost. A search that feels simple on paper becomes too slow once the collection is large enough, because the system is doing a small calculation against every stored item.
+
 **Mechanism** — Linear scan cost is:
 
 ```text
@@ -291,6 +295,8 @@ That is before network overhead, filters, reranking (reordering the top candidat
 **Intuition** — Approximate Nearest Neighbor search avoids checking every vector. It accepts "close enough" top-k results in exchange for large speedups.
 
 ![Approximate nearest neighbor indexing](assets/S02-ann-index.svg)
+
+The useful mental model is: exact search asks every candidate; ANN uses structure so it can skip most of them.
 
 **Mechanism** — ANN indexes structure the vector space so the query can skip most candidates. Three common strategies:
 

@@ -119,6 +119,13 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 
 The dividing question: **who decides the sequence of steps — you, in code, or the model, at runtime?**
 
+Before the diagram, keep the contrast simple:
+
+- In a **workflow**, you decide the path and the model fills in a few steps inside it.
+- In an **agent**, you give the model a goal and tools, and the model decides the path itself.
+
+That single difference explains most of the tradeoffs below.
+
 **Mechanism — the building block both are made of: the augmented LLM.**
 
 ![Workflows versus agents](assets/S01-workflows-vs-agents.svg)
@@ -129,6 +136,8 @@ An LLM enhanced with **retrieval, tools and memory**, where the model actively u
 
 - *Workflow*: code says `classify intent → if refund: check eligibility → if eligible: issue refund → confirm`. The LLM classifies and writes text; **the path is fixed**.
 - *Agent*: the model is given the tools `check_eligibility`, `issue_refund`, `lookup_order` and the goal "resolve this customer's refund request", and decides for itself which to call, in what order, and when it's done.
+
+That is why workflows are easier to test and cheaper to operate: fewer decisions are left to the model.
 
 **Tradeoff / when NOT to build an agent** — the central caution here, and it runs directly against the hype:
 
@@ -142,7 +151,7 @@ The decision rule:
 | Flexibility and model-driven decisions needed at scale | **Agent** |
 | **Many applications** | **Neither** — a single LLM call with retrieval and in-context examples is usually enough |
 
-And on agents specifically: their autonomy means **higher costs and the potential for compounding errors** — which is exactly the "reliable long-horizon execution" open problem in section 12. Test in sandboxed environments with guardrails.
+If you remember only one caution from this section, remember this one: **agentic freedom is expensive**. More autonomy means more latency, more cost, and more room for one wrong step to trigger the next wrong step. That is exactly the "reliable long-horizon execution" problem raised again in section 12. Test in sandboxed environments with guardrails.
 
 **On frameworks** — worth knowing, because section 5 lists eight of them approvingly:
 
@@ -150,7 +159,7 @@ And on agents specifically: their autonomy means **higher costs and the potentia
 >
 > Start by using LLM APIs directly — many patterns are a few lines of code. If you use a framework, **understand the underlying code**; incorrect assumptions about what's under the hood are a common source of error.
 
-That is a direct argument for a hands-on study style: code every lecture, run the demo code, and change one thing. It is also why Lab 1 is stronger with the **native OpenAI API** than with LangChain: the abstraction is thinner, so the moving parts stay visible.
+For study, the practical implication is simple: learn the raw loop before the framework hides it. That is why Lab 1 is stronger with the **native OpenAI API** than with LangChain: the abstraction is thinner, so the moving parts stay visible.
 
 **The three core principles** — a ready-made exam answer to "what makes an agent effective?":
 
@@ -158,7 +167,7 @@ That is a direct argument for a hands-on study style: code every lecture, run th
 2. Prioritise **transparency** — explicitly show the agent's planning steps.
 3. Carefully craft the **agent-computer interface (ACI)** through thorough tool documentation and testing.
 
-On that third: a good rule of thumb is to invest as much effort in the **ACI** as teams normally invest in HCI. In one well-known SWE-bench agent build, the team *"spent more time optimising our tools than the overall prompt."*
+The third principle is easy to underestimate. A good rule of thumb is to invest as much effort in the **ACI** as teams normally invest in HCI. In one well-known SWE-bench agent build, the team *"spent more time optimising our tools than the overall prompt."* The point is not the quote itself. The point is that tool design often matters more than prompt cleverness.
 
 ---
 
@@ -178,6 +187,8 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 
 **Use this list as a checklist.** When a system misbehaves, the useful question is *which of the six failed?* "The bot gave a wrong answer" is not diagnosable; "knowledge access retrieved the wrong document" is.
 
+Before the table, one plain-English translation helps: the first two rows are about understanding the user and keeping the conversation on track, the middle two are about looking things up and doing something useful, and the last two are about writing the reply and remembering what matters later.
+
 | # | Component | Role | Contains | Modern approach |
 |---|---|---|---|---|
 | 1 | **Natural Language Understanding** | Understand what the user wants | Intent classification, entity extraction, sentiment analysis, context understanding | **LLM-based, single pass** |
@@ -186,6 +197,11 @@ On that third: a good rule of thumb is to invest as much effort in the **ACI** a
 | 4 | **Action Execution** | Take actions for the user | Tool/function calling, API integrations, database operations, external service invocation | **Agentic tool use** |
 | 5 | **Response Generation** | Generate natural responses | Contextual generation, personality/tone, multi-modal output, structured responses | **LLM generation with control** |
 | 6 | **Memory Systems** | Remember user context | Short-term (conversation), long-term (user profile), **episodic**, **semantic** | **Vector + SQL hybrid** |
+
+Two quick definitions for the table:
+
+- A **vector store** is a database built for similarity search over embeddings, rather than exact key lookup.
+- **RAG** (Retrieval-Augmented Generation) means the model first fetches relevant documents, then writes the answer using that retrieved material.
 
 *The four kinds of memory in row 6 — the human-memory analogy is the fastest way in:*
 

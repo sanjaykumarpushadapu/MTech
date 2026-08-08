@@ -18,6 +18,8 @@ Cloud-native work is mostly ecosystem work: choosing the right layer and knowing
 
 **Mechanism** — The ecosystem groups around recurring operational jobs:
 
+Read the table as "which kind of problem am I trying to solve?" rather than "which tool name should I memorize?" Each row is one job a production platform must do.
+
 | Layer | Problem it solves | Typical tools or concepts |
 |---|---|---|
 | Runtime | package and run application processes consistently | containers, images, registries |
@@ -26,6 +28,11 @@ Cloud-native work is mostly ecosystem work: choosing the right layer and knowing
 | Observability | understand health and diagnose failures | Prometheus, OpenTelemetry-style metrics/traces |
 | Delivery | release changes safely and repeatedly | CI/CD, GitOps |
 | Operations | manage config, policy, secrets, and governance | Helm-like packaging, policy tools |
+
+Two quick translations:
+
+- **Orchestration** means deciding where containers run, restarting them when they fail, and scaling them up or down.
+- **GitOps** means storing deployment state in Git and using automated tools to make the live system match what the repository says.
 
 **Worked example** — A chatbot backend deployed as a cloud-native service needs a runtime image, an orchestrator to run replicas, an ingress path for user requests, monitoring for latency and errors, a delivery pipeline for new versions, and configuration management for environment-specific settings.
 

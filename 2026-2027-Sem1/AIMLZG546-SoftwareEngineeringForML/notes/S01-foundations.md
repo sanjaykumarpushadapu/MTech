@@ -20,6 +20,8 @@ By the end of this note, you should be able to explain four things clearly: the 
 
 **The numbers** — consultants report **87% of ML projects fail**, and **53% never make it from prototype to production**.
 
+Those numbers are easier to believe once you look at a concrete case.
+
 **Worked example — the transcription start-up.** Sidney, a data scientist, publishes a state-of-the-art domain-specific speech-recognition model and starts a company selling transcription to researchers and conference organisers. The models are genuinely excellent. The business struggles anyway:
 
 | What went wrong | Which module fixes it |
@@ -34,7 +36,9 @@ By the end of this note, you should be able to explain four things clearly: the 
 | Medical diagnoses mistranscribed **with high confidence**; African American vernacular barely intelligible | Fairness, responsible ML (M7) |
 | No visibility into model performance unless a customer complained | Monitoring (M6), QA (M5) |
 
-**Mechanism — the line to remember** — the framing after that list: *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
+Read that table slowly and one pattern becomes obvious: almost none of the failures are "the model was mathematically bad." They are failures of requirements, integration, deployment, cost control, monitoring, and communication.
+
+**Mechanism — the line to remember** — *most of these challenges are not surprising and most are not unique to ML.* The model was never the problem. Every failure was an engineering failure **around** a good model.
 
 *The whole course in one picture — the classic "hidden technical debt" point:*
 
@@ -107,7 +111,9 @@ Three consequences follow directly, and each matters later in the course:
 
 **Two consequences:**
 
-- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why session 14 devotes a section to provenance and reproducibility. Four separate sources of randomness, in plain terms:
+- **Training is often non-deterministic** — retraining on identical data can produce a slightly different model. This breaks the reproducibility assumption engineers carry over from compilers, and is why session 14 devotes a section to provenance and reproducibility.
+
+  Four separate sources of randomness matter in practice:
 
   | Source | What it means, plainly |
   |---|---|
@@ -117,15 +123,25 @@ Three consequences follow directly, and each matters later in the course:
   | Floating-point addition on a GPU | Many parallel threads add up partial results in whatever order they each finish, and addition order can shift the last few decimal digits — same data, same code, still a tiny bit-level difference |
 
   A compiler has none of these, which is why its output is reproducible and a trained model's isn't.
+
 - **Models are stored serialised, not as binaries** — an intermediate format of learned parameters, loaded by a runtime. Directly analogous to Java bytecode plus the JVM. Some infrastructure compiles models to native code for speed.
 
-**Tradeoff / where the analogy breaks** — and this is exam-worthy precisely because it's so nearly right: a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. The precise position: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
+So the compiler analogy is useful, but only up to a point.
+
+**Tradeoff / where the analogy breaks** — a compiler is deterministic and its output is *specified*. An ML algorithm is neither. Push the analogy too far and you start expecting a "correct" model the way you expect a correct binary. The precise position is narrower: the **model** is a pure, deterministic, side-effect-free function; the **training** that produced it is not.
 
 #### 2.3 Types of ML domains
 
 ⚠️ *Types of ML domains is an examinable foundation topic. The practical value is knowing which data, validation, and failure modes the system inherits before you design the pipeline.*
 
 **Intuition** — "ML domain" gets used in two different senses, and each answers a different engineering question: **what kind of supervision does the model learn from, and what kind of data does it operate on?**
+
+In plain language, this section is doing two kinds of classification:
+
+- what kind of teaching signal the model gets
+- what kind of raw material the model works on
+
+Those two choices strongly shape what can go wrong later.
 
 **Cut 1 — by what the model learns from.** This decides what *data* you need:
 
@@ -174,6 +190,8 @@ These three terms are commonly tested — know the precise version of each.
 
 ![Software development life cycle](assets/S01-sdlc-cycle.svg)
 
+If the acronym is unfamiliar: **SDLC** just means the standard lifecycle a software team follows from idea to maintenance.
+
 **Shift-left testing** — move testing earlier ("left" on the timeline) rather than treating it as a final gate. Defects found in design cost a fraction of defects found in production. Frequently flagged as exam-worthy.
 
 **Worked example** — Fraud detection. *Planning* — is fraud loss worth a project? *Analysis* — what counts as fraud, what data exists. *Design* — where the scorer sits in the payment flow. *Development* — build it. *Testing* — catches known fraud without blocking good customers. *Deployment* — shadow mode, then live. *Maintenance* — fraud patterns shift, retrain.
@@ -185,6 +203,8 @@ These three terms are commonly tested — know the precise version of each.
 **Intuition** — Training is only one step in a much longer chain. Everything before it is making the data usable. Everything after it is deciding whether the result is good enough and then keeping it alive safely in the real world.
 
 ![Machine learning pipeline](assets/S01-ml-pipeline.svg)
+
+The easiest way to relate it to ordinary software is this: the SDLC is the lifecycle of the whole product, while the ML pipeline is the lifecycle of the learned part inside that product.
 
 Two engineering-relevant properties:
 

@@ -733,6 +733,12 @@ _Zoom out to the map: the main architecture families, the tokenizer choices you 
 
 **Intuition** — There are three main transformer family shapes, and the cleanest way to distinguish them is by what each token is allowed to see. Once that is clear, the training objective, strengths, and weaknesses mostly follow from it.
 
+For a first pass, translate the three names like this:
+
+- **Encoder-only** = read the whole input and understand it
+- **Decoder-only** = generate the next token one step at a time
+- **Encoder-decoder** = read one sequence, then write another sequence from it
+
 |                  | **Encoder-only** (BERT, RoBERTa)                                                           | **Decoder-only** (GPT, Llama)                                         | **Encoder-decoder** (T5, BART)                                                             |
 | ---------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | **Architecture** | Transformer encoder stacks, **bidirectional self-attention**                               | Transformer decoder stacks, **causal masking** blocking future tokens | Encoder → contextual representations; decoder generates via **cross-attention**            |
@@ -740,6 +746,13 @@ _Zoom out to the map: the main architecture families, the tokenizer choices you 
 | **Context**      | **Bidirectional**                                                                          | **Unidirectional (left-to-right)**, preserving causal structure       | Both                                                                                       |
 | **Strengths**    | Comprehension — classification, **NER**, sentiment — builds dense semantic representations | Open-ended generation, dialogue, code completion, story synthesis     | Translation, summarisation, **multimodal pipelines where input and output domains differ** |
 | **Weaknesses**   | **Not naturally generative** — needs adapter heads or fine-tuning for sequence output      | Less efficient for classification or bidirectional reasoning          | **Dual stacks increase training complexity and inference latency**                         |
+
+Quick glossary for the table:
+
+- **MLM** = masked language modeling, where the model fills in missing words using both sides of the sentence.
+- **CLM** = causal language modeling, where the model predicts the next token from left to right.
+- **Seq2seq** = sequence-to-sequence, meaning one input sequence is transformed into one output sequence.
+- **NER** = named entity recognition, such as marking a word as a person, company, or location.
 
 **Mechanism — the three architecture families all descend from the Transformer idea:**
 
@@ -793,6 +806,8 @@ Transformer##ify    →  novel items
 ```
 
 #### 13.2 Three types of token
+
+In plain language, the whole section is balancing one tradeoff: smaller units handle new words better, but they make sequences longer and therefore slower and more expensive to process.
 
 | Type                            | How                                                               | Problem it solves / creates                                                                                                                                    |
 | ------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
