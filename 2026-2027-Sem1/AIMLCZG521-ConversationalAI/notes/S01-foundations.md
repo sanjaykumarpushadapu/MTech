@@ -1,4 +1,4 @@
-# Conversational AI · Session 01 · Foundations of Conversational AI: Chatbots to Agentic Systems
+# Conversational AI · Session 01 · Foundations of Conversational AI
 
 *Learned 26 Jul 2026*
 

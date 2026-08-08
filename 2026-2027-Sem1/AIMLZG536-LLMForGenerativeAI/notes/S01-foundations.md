@@ -928,7 +928,7 @@ tiktoken BPE (Llama-3):
 > - **Non-English text costs more.** The same sentence in Hindi, Arabic or code can take 2–3× the tokens of English, because the tokenizer's merges were learned mostly on English. A multilingual product's cost and latency are silently worse for exactly the users who aren't in the training-data majority — a real fairness-and-cost issue you'll meet on the job.
 > - **Prompt engineering is partly token engineering:** the "model selection + prompt optimisation cuts cost 10–20×" figure is mostly about tokens — fewer, cheaper tokens per call at the same quality.
 
-#### 13.7 Extra depth — WordPiece & byte-level BPE
+#### 13.7 Going deeper — WordPiece & byte-level BPE
 
 Deeper tokenization knowledge, kept as reference for **Lab 1** — out of exam scope (won't be on the closed-book mid-sem) but useful for the lab and the field.
 

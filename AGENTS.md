@@ -40,6 +40,8 @@ Section and subsection headings inside the note must also stay aligned with the 
 
 Use the handout for the top-level session and part structure, and use the deck/PDF/paper for lower-level explanatory headings only when they make the same handout topic clearer. Lower-level headings may be reorganized for teaching flow, but they must stay within handout scope and still map back to the handout sub-topics.
 
+Hard rule: the session title and all main Part/Section headings come from the handout. Subtitles, subheadings, and worked-example labels can come from the deck/PDF if they improve clarity, but they must never change the handout scope or replace the handout topic names at the top level.
+
 | Handout column      | Controls                                                |
 | ------------------- | ------------------------------------------------------- |
 | Contact Session     | Session number and whether rows combine sessions        |
@@ -223,6 +225,8 @@ Optional depth blocks are allowed when useful:
 | -------------------- | --------------------------------------------------------------- |
 | `***In practice***`  | Production tools, auth, rate limits, retries, cost, conventions |
 | `***Going deeper***` | Deeper mechanism or adjacent concept outside course depth       |
+
+Use `Going deeper` as the only optional-depth label. Do not introduce `Extra depth` as a second phrasing for the same idea.
 
 Mark beyond-course depth clearly and keep it out of exam-scoped claims.
 
