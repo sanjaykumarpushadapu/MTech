@@ -12,7 +12,9 @@ Cloud-native work is mostly ecosystem work: choosing the right layer and knowing
 
 ### 1. CNCF landscape and cloud-native ecosystem
 
-**Intuition** — The Cloud Native Computing Foundation is a vendor-neutral home for many open-source cloud-native projects. For study, do not memorize every logo; learn the job each layer performs.
+**Intuition** — The Cloud Native Computing Foundation is a vendor-neutral home for many open-source cloud-native projects, hosted under the Linux Foundation. For study, do not memorize every logo; learn the job each layer performs.
+
+CNCF sorts its projects by maturity stage, which is the useful signal, not the exact count (it moves over time): **graduated** projects (currently 24) are considered stable enough to bet production on — Kubernetes, Helm, Envoy, and ArgoCD are graduated. **Incubating** projects (currently 37) are still maturing — gRPC, Thanos, and OpenTelemetry are examples. Graduated vs incubating is a quick way to judge how much risk a tool choice carries.
 
 ![CNCF ecosystem map](assets/S03-cncf-ecosystem-map.svg)
 
@@ -71,9 +73,13 @@ Microservices work best when service boundaries follow business capabilities —
 - **Size** — as the application grows, the single codebase becomes harder to manage
 - **Understandability** — new team members must learn the whole system, not just one module
 
+**Why the deployment-frequency gap is the real evidence** — reported deploy rates make the microservices case concretely: Amazon ~23,000 deploys/day, Google ~5,500/day, Netflix ~500/day, Twitter ~3/week. A monolith can't approach numbers like that, because every team funnels changes through one shared repository and one deployment pipeline — the textbook "monolithic hell" case is three separate teams (order, restaurant, delivery) all committing to one repo, queued behind one Jenkins pipeline with manual testing, so any team's change waits on everyone else's. Splitting into **one pipeline per service** — each team owns its own repo and its own automated pipeline — removes that queue and is what makes the high deploy rates possible.
+
 **Worked example** — In a food-delivery system, restaurant search, cart, order, payment, delivery assignment, notification, and support are different capabilities. During dinner peak, search and cart may need more replicas than support. Independent services let those parts scale and release separately.
 
 **Tradeoff / when NOT to use** — A monolith is often better for a small team or early product because local function calls, one deployment, and one database are easier to reason about. Premature microservices create distributed-system failures before the product has enough scale to justify them.
+
+This isn't only a small-team caution — it holds at large-company scale too. Amazon Prime Video's monitoring team moved a microservices/serverless pipeline back into a single monolithic process on EC2/ECS and cut that workload's operating cost by about 90%. The coordination and per-service infrastructure overhead of microservices can outweigh the benefit even for a big-name product, if the workload doesn't actually need independent scaling.
 
 ---
 
@@ -149,7 +155,7 @@ The singer analogy is useful: a singer who can't rely on the venue's microphone 
 
 ### 6. Kubernetes
 
-**Intuition** — Kubernetes is a container orchestration system: it manages the deployment, scaling, and operation of containerized applications. Its core idea is desired state: declare what should be running, and Kubernetes keeps trying to make reality match.
+**Intuition** — Kubernetes is a container orchestration system: it manages the deployment, scaling, and operation of containerized applications. Its core idea is desired state: declare what should be running, and Kubernetes keeps trying to make reality match. It was originally built inside Google, later donated to the CNCF, and is open source and written in Go — which is why it's the graduated CNCF project every other orchestration tool gets compared to.
 
 ![Kubernetes desired-state control loop](assets/S03-kubernetes-control-loop.svg)
 
@@ -180,6 +186,8 @@ Important ideas:
 ### 7. DevOps and CI/CD
 
 **Intuition** — DevOps aligns development and operations so software can move from idea to production in small, safe, frequent changes. CI/CD is the automation spine of that movement.
+
+**The organizational change behind it** — a traditional org splits Development, QA, and Operations into separate teams under one IT umbrella, so a change passes through three handoffs before it ships. DevOps replaces that with small, cross-functional teams that each own development, testing, and operations for their own service end to end. The automation (CI/CD) only works this well because the handoffs it's removing were mostly organizational, not technical.
 
 ![DevOps and CI/CD loop](assets/S03-devops-cicd.svg)
 
@@ -216,6 +224,17 @@ The difference between delivery and deployment is the production gate. Delivery 
 
 GitOps is especially natural with Kubernetes because Kubernetes resources are already declarative.
 
+A GitOps toolchain is usually assembled from one tool per category, not one product:
+
+| Category | Example tools |
+|---|---|
+| Git hosting | GitHub, GitLab, Bitbucket |
+| CI (build/test) | Jenkins, CircleCI, GitHub Actions |
+| CD / reconciliation | ArgoCD, FluxCD, Spinnaker |
+| Container registry | Docker Hub, AWS ECR, GHCR |
+| Infrastructure-as-code | Terraform, AWS CloudFormation, Pulumi |
+| Config management | Ansible, Chef, Helm charts |
+
 **Worked example** — To change `order-service` from version `1.4` to `1.5`, a developer changes the image tag in Git. After review and merge, the GitOps controller detects the change and applies it to the cluster. If someone manually changes the cluster later, the controller notices drift and restores the Git-declared state or alerts.
 
 **Tradeoff / when NOT to use** — GitOps is less useful when infrastructure is small, mostly manual, or not declarative. It also requires discipline: emergency manual fixes must be reconciled back to Git or they will be overwritten or become invisible.
@@ -232,8 +251,8 @@ GitOps is especially natural with Kubernetes because Kubernetes resources are al
 
 Named examples from the lecture point in the same direction:
 
-- **Flipkart Big Billion Day** shows what happens when traffic spikes faster than the system can isolate failure.
-- **Hotstar** shows the same scaling problem at much larger concurrency.
+- **Flipkart Big Billion Day** (launched 6 Oct 2014, 70+ discounted categories) shows what happens when traffic spikes faster than the system can isolate failure — the sale drew roughly 3 lakh (300,000) orders in six hours, and the site crashed under the load.
+- **Hotstar** shows the same scaling problem at much larger concurrency — its architects had to design for **25.3 million concurrent users** during peak live-sports traffic.
 - **Monolith** is the counterexample: one big deployable unit makes the whole system move together.
 
 ![Cloud-native architecture case-study checklist](assets/S03-architecture-case-study.svg)

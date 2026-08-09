@@ -84,6 +84,14 @@ This is not a mathematical equation; it is a design recipe. Leave out one ingred
 
 One sentence to remember: **cloud is where the application runs; cloud-native is how the application is built and operated.**
 
+Cloud-native and cloud-based also diverge on three practical fronts:
+
+| Focus area | Cloud-based | Cloud-native |
+|---|---|---|
+| Design | designed mainly for availability | designed assuming failure will happen; microservices contain it |
+| Implementation | slower — hardware or software still needs provisioning/setup | faster — deploys as container images, nothing to provision |
+| Pricing | more expensive — you own the whole stack (compute, storage, monitoring) | consumption-based — pay only for what runs |
+
 **Worked example** — A payroll system that stores nightly backups in cloud storage is cloud-enabled. The same payroll system moved to an EC2 VM with a managed database is cloud-based. A payroll platform split into employee, tax, approval, notification, and audit services with independent deployments, API contracts, monitoring, and automated rollback is cloud-native.
 
 **Tradeoff / when NOT to use** — Cloud-native redesign is not automatically worth it for stable workloads. If the application changes rarely, has predictable load, and does not need independent team ownership, cloud-based hosting may give enough availability with much lower design cost.
@@ -122,6 +130,8 @@ Cloud-native design also has a failure mindset. Instead of assuming machines, ne
 ### 5. Cloud-native application examples
 
 **Intuition** — Netflix, Uber, Airbnb, ecommerce sale events, and large streaming events all point to the same architectural lesson: high-scale products need independent change, independent scaling, and clear failure boundaries.
+
+**The named cases, with numbers** — Netflix went cloud-native in 2016, rebuilding its streaming platform around microservices. Uber runs over 4,000 independent microservices, monitored through Prometheus, so one team can update or scale a single slice of the app (say, pricing) without touching unrelated ones. Airbnb, live in roughly 65,000 cities, ships about 3,500 microservices a week — a release rate that's only possible because each service deploys on its own, not as part of one shared build.
 
 ![Cloud-native examples and architecture risk](assets/S02-examples-architecture-risk.svg)
 
