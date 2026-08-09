@@ -75,6 +75,12 @@ Microservices work best when service boundaries follow business capabilities —
 
 **Why the deployment-frequency gap is the real evidence** — reported deploy rates make the microservices case concretely: Amazon ~23,000 deploys/day, Google ~5,500/day, Netflix ~500/day, Twitter ~3/week. A monolith can't approach numbers like that, because every team funnels changes through one shared repository and one deployment pipeline — the textbook "monolithic hell" case is three separate teams (order, restaurant, delivery) all committing to one repo, queued behind one Jenkins pipeline with manual testing, so any team's change waits on everyone else's. Splitting into **one pipeline per service** — each team owns its own repo and its own automated pipeline — removes that queue and is what makes the high deploy rates possible.
 
+Two more pieces of the standard microservices picture: each service usually owns its own database (**database-per-service**), reached only by calling that service — not by another service reading its tables directly — which is what actually lets services deploy and scale independently. A shared database looks simpler at first — one schema, no network hop for a read — but it quietly re-couples services that are supposed to be independent: any team can change a column and break another team's queries with nothing to catch it at build time, schema migrations need cross-team coordination, and a slow query from one service can lock rows another service needs right now. Routing every cross-service read through an API instead of a shared table turns a schema change into a normal, versioned API change rather than a silent breakage.
+
+*Everyday picture: a shared database is like several departments in an office sharing one filing cabinet with no rules about who can rearrange the folders — one department reorganizing "their" folder can leave another department unable to find what it needs, with no warning given. Database-per-service is each department keeping its own locked cabinet and only sharing information by handing over a filled-out request slip (the API) — nobody reaches into someone else's cabinet and moves things around directly.*
+
+And this isn't a niche pattern: the cloud microservices market was estimated at $1.33B in 2023, projected to reach $3.72B by 2028 (~23% CAGR), which is a rough proxy for how fast companies are adopting it.
+
 **Worked example** — In a food-delivery system, restaurant search, cart, order, payment, delivery assignment, notification, and support are different capabilities. During dinner peak, search and cart may need more replicas than support. Independent services let those parts scale and release separately.
 
 **Tradeoff / when NOT to use** — A monolith is often better for a small team or early product because local function calls, one deployment, and one database are easier to reason about. Premature microservices create distributed-system failures before the product has enough scale to justify them.
@@ -125,6 +131,8 @@ This isn't only a small-team caution — it holds at large-company scale too. Am
 | Monitoring | track executions, failures, and latency | logs and metrics |
 
 Cold start is the key mechanism cost: if no warm function instance exists, the platform creates one before executing the request, adding latency.
+
+Serverless is broader than just function compute — the same pay-per-use model covers data stores (Amazon Aurora Serverless, not just DynamoDB) and integration services (EventBridge, SQS, SNS, Step Functions) that connect functions together without you running any of the connecting infrastructure yourself.
 
 **Worked example** — A document-upload API can use an HTTP gateway for `POST /documents`, a function to validate metadata, object storage for the file, a database row for status, and another event-triggered function for asynchronous processing.
 
@@ -189,6 +197,10 @@ Important ideas:
 
 **The organizational change behind it** — a traditional org splits Development, QA, and Operations into separate teams under one IT umbrella, so a change passes through three handoffs before it ships. DevOps replaces that with small, cross-functional teams that each own development, testing, and operations for their own service end to end. The automation (CI/CD) only works this well because the handoffs it's removing were mostly organizational, not technical.
 
+**Why it's needed — the "wall of conflict"** — Development wants to ship change quickly (agility); Operations wants the running system to stay stable; each pulls in the opposite direction, and the friction between them is sometimes literally called the wall of conflict. Agile addresses the business-to-development side of that friction (faster requirements-to-build cycles); DevOps addresses the development-to-operations side (faster, safer build-to-release cycles).
+
+**The DevOps loop** — People commonly draw DevOps as an infinity loop: **plan → code → build → test** (development side) feeding into **release → deploy → operate → monitor** (operations side), which feeds back into planning the next change. CI/CD (section above) is the automation that makes this loop fast; source control, infrastructure-as-code, and configuration management are what make each stage repeatable instead of manual.
+
 ![DevOps and CI/CD loop](assets/S03-devops-cicd.svg)
 
 **Mechanism** —
@@ -223,6 +235,10 @@ The difference between delivery and deployment is the production gate. Delivery 
 | Correct drift | if reality differs, automation applies or alerts |
 
 GitOps is especially natural with Kubernetes because Kubernetes resources are already declarative.
+
+**Why not just run `kubectl apply` by hand when something needs to change** — a manual deploy leaves no reliable record of who changed what, when, or why, so once the cluster drifts from what anyone intended, there is no trustworthy baseline to compare against — you end up debugging from memory instead of from history. Rollback becomes a manual, error-prone reconstruction instead of a single revert. GitOps fixes this by making Git the durable source of truth: every change is a reviewed, timestamped commit, and a reconciliation loop continuously checks the live cluster against that record instead of trusting that whoever ran the last command typed it correctly.
+
+*Everyday picture: manual deployment is like several people editing a shared paper document by hand with no version history — if something looks wrong, nobody can say for sure who changed what or how to get back to the last good version. GitOps is like a document with full version history plus an assistant who automatically retypes the document to match whatever the latest saved version says — every change is recorded, reviewable, and easy to undo.*
 
 A GitOps toolchain is usually assembled from one tool per category, not one product:
 

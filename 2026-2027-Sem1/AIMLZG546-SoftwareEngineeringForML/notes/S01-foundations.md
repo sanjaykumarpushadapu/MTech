@@ -647,7 +647,8 @@ Both touch **every** phase — there is no single point in the timeline where ei
 
 > ***In practice*** *— what MLOps actually looks like as a job:*
 > MLOps is **CI/CD extended to data and models**. On top of the usual code pipeline (git, tests, containers), an ML pipeline adds three things software CI/CD never had:
-> - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. You can reproduce "the model from March" only if both are versioned alongside the code.
+> - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. Plain git is the naive fallback and it breaks here: git diffs and stores text well, but a multi-gigabyte dataset or model checkpoint checked straight into git bloats every clone and makes "diffs" meaningless — so these tools leave the actual bytes in cheap object storage and commit only a small pointer to git, giving you versioning without the storage blowup. You can reproduce "the model from March" only if both are versioned alongside the code.
+>   *Everyday version:* imagine mailing a friend updates to a recipe card versus a shipping container of ingredients. The recipe card is small, so you can mail the whole updated card each time and easily spot what changed — that's git. The container is too big and slow to re-mail every time one ingredient changes, so instead you mail a claim ticket and leave the container sitting in a warehouse — that's what DVC does with the dataset or model.
 > - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
 > - **Monitoring for drift** — compare live predictions against ground truth as it arrives, alert when recall slides, and trigger retraining. This is the part that has no equivalent in traditional software, and it is where ML engineers and MLOps engineers spend much of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
 
@@ -658,6 +659,10 @@ Both touch **every** phase — there is no single point in the timeline where ei
 > | **Batch / offline** | Score a whole dataset on a schedule, write results to a table | Predictions can be precomputed — churn scores overnight, recommendations refreshed hourly |
 > | **Online / real-time** | A service (FastAPI behind a load balancer) scores one request at a time, low latency | The answer is needed *now* — fraud check at checkout, search ranking |
 > | **Streaming** | Score events as they flow through a queue (Kafka) | Continuous event data — clickstreams, IoT, live anomaly detection |
+>
+> It's tempting to default to online serving for everything — one code path, always fresh — but that means paying for a process that's up and answering 24/7, with on-call and autoscaling for traffic spikes, even for predictions nobody needed within milliseconds. Batch rides on ordinary scheduled-job infrastructure and costs a fraction as much whenever the answer can wait.
+>
+> *Everyday version:* always-on serving is like keeping a restaurant's kitchen fully staffed and the grill burning at 3 a.m. just in case someone walks in, when really only the lunch and dinner rushes matter — you're paying for idle cooks and gas all night. Batch serving is like a bakery that bakes its bread once overnight for the next day's orders, instead of lighting the oven fresh for every single customer.
 >
 > The running example makes the choice concrete: **fraud detection is online** (the score gates a live payment, ~200 ms budget); a monthly churn report is **batch**. Building a heavy real-time service for something a nightly batch job would do — or vice-versa — is the same "match the machinery to the need" judgment as the risk spectrum in section 9.
 

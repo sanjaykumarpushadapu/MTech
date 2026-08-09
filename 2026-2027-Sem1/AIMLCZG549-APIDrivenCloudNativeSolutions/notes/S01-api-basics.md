@@ -258,6 +258,10 @@ Method `GET` · endpoint `https://jsonplaceholder.typicode.com/posts` · respons
 3. **Create tests**
 4. **Apply design standards**
 
+**Why a formal spec instead of just a well-written README** — prose documentation is read by humans but enforced by nothing: a developer can change what an endpoint actually returns and forget to update the paragraph describing it, and nothing catches the drift until a client breaks in production. OpenAPI is structured and machine-parseable, so tooling can validate real requests and responses against it, generate code straight from it, and flag when the implementation and the description disagree. That turns "the docs say X" from something that quietly rots into something a build step can check.
+
+*Everyday picture: imagine a restaurant where the menu only exists in the head chef's memory, occasionally shouted out to waiters. Dishes change, waiters misremember or fall behind, and nothing stops a waiter from confidently telling you something that's no longer true. A formal spec is a printed menu everyone — including a machine checking the kitchen's work — can hold up and compare against; if the chef changes a dish, the printed menu is the thing that proves whether anyone actually updated it.*
+
 #### 4.1 Mocking — building against a contract that has no implementation yet
 
 ⚠️ ***Mocking*** *is an examinable OpenAPI toolchain topic. The practical idea is simple: a contract can be served before the real implementation exists.*

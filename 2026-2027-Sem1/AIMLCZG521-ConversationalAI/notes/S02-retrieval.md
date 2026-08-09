@@ -52,6 +52,10 @@ Keyword search may miss `"change forgotten password"` if it expects the exact wo
 
 The key word is **contextual**: the vector for `"bank"` should change depending on whether the sentence mentions a river or an account.
 
+Older embedding methods (word2vec, GloVe) assign each word exactly one fixed vector, learned once from overall co-occurrence statistics across the whole training corpus. That breaks on polysemous words: `"bank"` gets a single point in vector space that has to serve both river-bank and account-bank contexts at once, so it settles somewhere between the two senses and drags unrelated documents into the same neighborhood. A contextual encoder fixes this by computing the vector at inference time, conditioned on the surrounding words, so the same word can land in different places depending on what it actually means in that sentence.
+
+An everyday analogy: a static vector for `"bank"` is like printing one business card that has to work for both a bank teller and a river tour guide — it ends up a vague mix of both, so neither their customers nor the hikers quite know what to make of it. A contextual embedding is like printing a fresh card for each situation instead: `"riverbank"` gets a nature-themed card, `"savings bank"` gets a finance-themed card, and each one is instantly recognizable for what it actually means there.
+
 **Mechanism** — An encoder transformer uses self-attention so every token can look at every other token in the input. The final token vectors are not just word meanings; they are word-in-sentence meanings.
 
 ![Contextual embedding disambiguation](assets/S02-contextual-bank.svg)
@@ -410,6 +414,10 @@ score(question, passage) = q dot p
 
 The passage vectors can be precomputed and indexed. At query time, only the question is embedded; the index retrieves high-scoring passage vectors.
 
+Why two separate encoders rather than one model that reads the question and passage together? A joint model — feeding question and passage into a single encoder so every question token can attend to every passage token before scoring — is usually more accurate. But it means re-running the full model for every candidate passage at query time, which is the same linear-scan wall as section 9: fine for judging a handful of candidates, unusable for scoring millions of passages per query. The dual-encoder trades away that cross-attention accuracy for the ability to embed passages once, offline, and turn retrieval into a fast vector lookup.
+
+An everyday analogy: a joint/cross-attention model is like phoning a friend and reading them your exact question plus the entire contents of a book, every time, for every book in the library, before they can tell you if it's relevant — thorough, but you can't do that a million times. A dual-encoder is like having someone write a short summary card for every book in the library ahead of time, so at question time you only compare your question to those pre-written cards — much faster, though a summary card occasionally misses a subtlety the full book would have caught.
+
 **Worked example** — Question: `"Who wrote Pride and Prejudice?"`.
 
 Positive passage: `"Pride and Prejudice is a novel by Jane Austen..."`.
@@ -448,6 +456,10 @@ Document B wins because it is strong in both systems.
 
 **Tradeoff / when NOT to use** — RRF is robust and simple, but it ignores score margins. If a dense retriever is overwhelmingly confident and BM25 is only weakly matching, rank-only fusion can over-promote the keyword result. Production systems often follow hybrid retrieval with reranking.
 
+That final reranking step earns its place because BM25 and dense retrieval both score each document independently and cheaply — a bag-of-words match or a single vector dot product — without ever directly comparing the query against a candidate's full text in detail. That is fast enough to run over millions of documents, but it leaves genuinely irrelevant, merely-superficially-similar passages sitting near the top. A reranker re-scores only that short candidate list, reading the query and each candidate together, which is far more accurate at the cost of being too slow to run over the whole collection. Reranking is a separate step because "search everything cheaply" and "judge a few candidates carefully" need different cost profiles.
+
+An everyday analogy: picture scanning a library shelf and pulling every book whose spine mentions your topic — fast, but some of those books turn out to be irrelevant once you actually open them. A librarian then skims just those ten or twenty pulled books before handing you the best one — slower per book, but affordable only because you're no longer skimming the whole shelf, just the shortlist.
+
 ---
 
 ### 16. Vector database architecture
@@ -467,6 +479,10 @@ Document B wins because it is strong in both systems.
 | sparse index | BM25/keyword retrieval |
 | fusion/reranker | combines and improves candidate ordering |
 | monitoring | tracks recall, latency, cost, freshness, and failed searches |
+
+Chunking earns its place as a separate step for more than fitting the embedding model's context window (section 4). Even when a whole document fits, embedding it as a single vector forces pooling (section 5) to average signal across every paragraph — a document covering ten unrelated topics ends up with one vector representing a vague blend of all ten, and a query about one specific part has to compete with that dilution instead of matching a focused passage. Splitting into smaller, topically coherent chunks keeps each vector specific enough for a targeted query to actually find its match, at the cost of managing many more vectors and needing sensible chunk boundaries.
+
+An everyday analogy: asking "what does chapter 7 say about refunds" but only having one blurry photo that blends every page of a 400-page book into a single averaged image is not going to help — chapter 7's details get washed out by all the other pages. Chunking is like taking one sharp photo per chapter instead, so a chapter-7 question can actually match a chapter-7 photo rather than the whole-book blur.
 
 **Worked example** — In an HR assistant, a query `"Can I claim a monitor for work from home?"` should search only documents the employee is allowed to see, retrieve semantically related policy chunks, preserve exact policy-code matches, and pass the top few chunks to the LLM with citations or source IDs.
 

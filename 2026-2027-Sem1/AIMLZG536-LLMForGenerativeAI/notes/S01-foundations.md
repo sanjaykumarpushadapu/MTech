@@ -133,6 +133,10 @@ Generation simply runs that same idea forward. Four steps repeat until the model
 
 _What softmax actually does, in plain language:_ it takes raw scores, which can be positive or negative and do not yet mean anything probabilistic, and turns them into positive numbers that add up to 1. In other words, it converts "preferences" into probabilities. Higher scores become much more likely, lower scores shrink, and the whole vector becomes something you can sample from.
 
+Why exponentiate at all, instead of just rescaling the raw logits to sum to 1? Logits can be negative, so a plain linear normalization would first need an arbitrary shift just to produce valid probabilities. More importantly, linear normalization only stretches gaps between scores in proportion to their raw size — a token that's slightly ahead stays only slightly ahead. Exponentiating turns additive differences in logits into multiplicative differences in probability, so a clearly-better token gets pushed toward dominating the distribution while near-ties stay close. That's also what gives softmax paired with cross-entropy its clean gradient (predicted probability minus target), which is why this normalization scheme won out over simpler ones.
+
+_Everyday version:_ picture three judges scoring a talent contest 9, 8, and 5 out of 10, and you need to turn those scores into "how much of the trophy" each act gets. Just rescaling the raw numbers to add up to 100% would give the top act only a slightly bigger share than the second — barely a favorite at all. Exponentiating first exaggerates the gap before splitting the pie, so a 9 doesn't just edge out an 8, it dominates it — the small lead in raw score becomes a much bigger lead in the final share, which matches how "clearly ahead" actually feels.
+
 The loop stops when the model emits an end-of-sequence token or hits a length cap. Step 3 is the only place randomness enters. That is why the _same_ model can give different answers on different runs, and why `temperature=0` makes decoding deterministic.
 
 **Worked example — generate two tokens by hand.** Vocabulary of five: `the, cat, sat, mat, <eos>`. Prompt: `"The"`.
@@ -429,6 +433,10 @@ _The rest of the block, by shape:_
 **The components:**
 
 **Layer normalisation** — applied **independently to each token's hidden vector**, normalising **across the feature dimension** (not across the batch or the sequence — that's the distinction that gets examined). Has **two learnable parameters, γ and β**.
+
+Why per-token rather than per-batch, which is what BatchNorm (the default in vision networks) does? BatchNorm computes its mean and variance across the batch dimension, which assumes a large, stable batch where the same statistics make sense for every example. That assumption breaks in language: sequences have variable length, padding tokens would contaminate the batch statistics, and at inference the model frequently runs one token at a time — batch-of-1 statistics are meaningless. LayerNorm normalises each token's own feature vector independently of every other example in the batch and of sequence length, so training and single-token autoregressive inference behave identically. That's why transformers standardised on LayerNorm instead.
+
+_Everyday version:_ BatchNorm is like grading a class of students on a curve — you need the whole class's papers in the room together to know what "average" and "spread" even mean, and it falls apart if only one student shows up. LayerNorm is like grading one student's own answer sheet against itself — comparing that student's answers to each other to see which ones stand out — which works perfectly fine with a class of one. Since an LLM often generates just one token (one "student") at a time, it needs the grading method that never depended on a full classroom being present.
 
 **Feed-forward network (FFN)** — uses the contextual information created by the attention layer to capture complex relationships. A fully-connected **2-layer** network: one hidden layer, one output layer, **two weight matrices**. The hidden dimension **d_ff is larger than the model dimension d** — in the original transformer, **d = 512 and d_ff = 2048** (4×).
 

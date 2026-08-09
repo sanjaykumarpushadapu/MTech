@@ -220,6 +220,18 @@ Every concept needs one grounding example that states a real problem and how the
 - Skip sections that are purely definitional, notational, or a taxonomy/comparison table. Do not force a scenario onto a shape table or a vocabulary list.
 - If a Worked example, `***In practice***` box, or Tradeoff paragraph already answers "what breaks without this and how is it fixed," that already satisfies the gate. Do not add a second example on top of it.
 
+### Algorithm Motivation
+
+Decks and textbooks usually teach how a named algorithm or technique works (the steps, the formula) and skip why it exists — what breaks with the naive/simpler alternative, and what problem this specific design fixes. For every named algorithm or technique a section teaches, answer three things in plain language, not just describe the mechanism:
+
+- The problem: what goes wrong with the obvious naive/simpler approach.
+- The fix: how this specific algorithm solves that problem.
+- One everyday, non-technical analogy or example — something a person with no ML/CS/software background could follow. Not a comparison to another technical alternative; a real-world picture (a kitchen, a filing cabinet, a librarian, a weather forecaster — whatever fits).
+
+Write the analogy yourself when the source material doesn't supply one; fold it in seamlessly, right after the technical explanation, in the note's existing voice. Do not mark it as filled-in or add a "not in the source" caveat — this is a normal part of teaching, not an exception.
+
+Skip this for sections that don't name a specific algorithm or technique (pure landscape/comparison tables, notation, taxonomy). Check the existing Tradeoff and Worked example first — if one of them already states the problem, the fix, and gives a concrete picture, the gate is already satisfied; only the analogy may still be missing.
+
 ### Wording Pass
 
 Before marking a note reviewed, read it end to end for:
