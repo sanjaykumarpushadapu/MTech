@@ -154,6 +154,8 @@ _Step 1 — the model emits logits, softmax converts them:_
 
 Greedy decoding would pick `the` (0.554) and loop forever. **Sampling** picks `cat` often enough that the sentence goes somewhere — the first concrete reason decoding strategy matters, which is the whole of S5.
 
+_Everyday version:_ picture always ordering the same "safe" dish at your favorite restaurant because it's your proven favorite — reliable, but you eat the exact same meal forever and nothing new happens. Occasionally picking something else off the menu, weighted by how much you'd probably enjoy it, is what keeps the meal interesting without ordering something you'd hate. Sampling does the same thing to a sentence: it lets a slightly-less-obvious word take its turn sometimes, so generation can actually go somewhere instead of looping on the single "safest" choice forever.
+
 Say we sample **`cat`**. Context is now `"The cat"`.
 
 _Step 2 — feed the longer context back in:_
@@ -351,6 +353,8 @@ Each head runs the exact same computation from section 4, just in 64 dimensions 
 
 **Use case — why one head isn't enough.** Take "The trophy didn't fit in the suitcase because it was too big." Resolving "it" needs a head that attends back to "trophy" (coreference); scoring how plausible the sentence is needs a head that attends to "because" and tracks clause structure (syntax). A single attention head has to average both signals into one weighted sum, blurring each. Llama-3-8B gives every layer 32 heads precisely so different heads can specialise — one tracking coreference, another local syntax — instead of one head doing a mediocre job of both.
 
+_Everyday version:_ imagine proofreading a document alone versus handing it to a small team of editors, where one only checks grammar, another only checks facts, and another only checks tone. One person trying to do all three at once blurs all three jobs into a mediocre pass. A team, each looking for one specific thing and then pooling their notes, catches far more than any single generalist reader would. Multi-head attention is that editing team: each head specialises, and the final output projection is where their notes get combined.
+
 **Tradeoff** — More heads means more specialised views but a smaller dimension each, so beyond some point each head is too narrow to represent anything useful. And note what multi-head does _not_ fix: the n × n matrix exists **per head**, so KV-cache memory scales with head count — which is precisely the problem MQA, GQA and MLA solve in S5.
 
 ---
@@ -496,6 +500,8 @@ Both tokens carry the **identical** token embedding `[1,1,1]` — the same word 
 
 **Tradeoff** — the three approaches trade off cleanly. **Learned embeddings** are simplest and fail hardest outside the trained length. **Sinusoidal** costs nothing and generalises modestly, but it preserves only _relative_ distance and the model has to infer even that from a sum — nothing enforces it — while packing position into the same dimensions as meaning makes the two compete for space. **RoPE** is the current default precisely because long context is the pressure point, and it's the only one of the three that **rotates** Q and K rather than **adding** to the embedding: position then acts on the _angle_ between vectors, which is exactly what the dot product measures, so relative distance falls out of the maths instead of being learned from it. RoPE keeps sinusoidal's multi-frequency idea but applies it by rotation; it gets full treatment in S3 — this is the preview.
 
+_Everyday version:_ picture two boats, each carrying a compass needle that's been turned by an amount matching how far along the voyage they are — boat 5 has its needle turned five clicks, boat 9 has it turned nine clicks. You don't need to know either boat's absolute position to tell they're four clicks apart: just compare the angle between their needles. RoPE encodes position the same way, by rotating each token's vector instead of adding a position tag to it, so the angle between two tokens' vectors — exactly what the attention dot product measures — directly reveals how far apart they are, without either one needing an absolute position stamped on it.
+
 **Checkpoint — what Part 2 established.** A transformer block does not "understand" text directly. It repeatedly updates token vectors: attention mixes information across positions, the FFN transforms each position, residuals keep the stack trainable, and positional encoding prevents the model from treating word order as irrelevant.
 
 ## Part 3 · Building blocks of LLM
@@ -585,6 +591,8 @@ So the embedding matrix is **E ∈ ℝ^(|V| × d)** — remember this shape; sec
 | `<    | endoftext | >`      | 784 | Separates two **unrelated** text sources                                  |
 
 **Use case — what breaks without a separator token.** Say you're fine-tuning on a folder of old support tickets, and two unrelated tickets get concatenated into one training example with no marker between them: `...issue resolved by replacing the battery. Customer B's laptop won't turn on...`. Without a boundary, the model can learn spurious continuations — it starts finishing ticket B's problem with ticket A's unrelated resolution, because nothing told it these are two separate documents. Inserting `<|endoftext|>` between them fixes it: a hard signal that nothing before this token is relevant to what comes after.
+
+_Everyday version:_ it's the same job a divider tab does in a filing cabinet — a physical marker that says "everything after this tab is a new, unrelated folder, don't read it as a continuation of the last one." `<|endoftext|>` is that divider tab for text.
 
 **Worked example — the embedding lookup, with numbers.** Input `fox jumps over dog` → token IDs `[2, 3, 5, 1]`. The embedding matrix is `|V| × d`; each ID selects a **row**:
 
@@ -796,6 +804,8 @@ The easiest way to remember the families:
 
 **Tradeoff / why decoder-only won anyway** — encoder-only is strictly better at classification, and encoder-decoder is cleaner for translation. Decoder-only won because **section 3 holds**: if every task can be cast as next-word prediction, one architecture covers all of them, and generality beat per-task efficiency once models got large enough. Note the line from section 6 — _we use transformers to create generative models by using only decoders_. Multimodal systems (speech-text, vision-language) still extend the encoder-decoder blueprint.
 
+_Everyday version:_ it's the difference between carrying a Swiss Army knife and carrying a dedicated toolbox with a separate specialist tool for every job. The specialist tools each do their one job slightly better, but the Swiss Army knife is the one thing you can actually carry everywhere and reach for no matter what comes up. Decoder-only models won the same way: slightly worse than a specialist encoder at classification or a specialist encoder-decoder at translation, but general enough to be the one tool worth building an entire industry around.
+
 ---
 
 ### 13. Tokenization
@@ -836,6 +846,8 @@ _One sentence through all four granularities. Read it top to bottom as a trade o
 Going down the figure, **vocabulary shrinks and sequence length grows**. Since attention is O(n²) in sequence length (section 11), the bottom two buy robustness with compute. Subword sits where it does because that trade is least bad there.
 
 **Use case — multilingual customer support.** An English support query may fit in 40 tokens, while the same meaning in Hindi or Arabic may take far more tokens if the tokenizer learned fewer useful merges for that language. The model is not "thinking harder"; the tokenizer simply represents the text less compactly. That raises latency and cost, and it can force truncation sooner for exactly the users the product should support equally.
+
+_Everyday version:_ think of how you'd read an unfamiliar surname you've never seen before — you don't give up, you sound it out from familiar syllables and letter combinations you already know. Subword tokenization does the same thing to a model's vocabulary: instead of needing a brand-new dedicated word for absolutely everything (impossible, the list never ends) or reading letter by letter (technically works but painfully slow), it keeps common whole words as single pieces and breaks rarer ones into familiar chunks it has already seen many times before.
 
 #### 13.3 Subword algorithms
 
@@ -902,6 +914,8 @@ So `"u"` and `"g"` merge into the new token **`"ug"`**, which is added to the vo
 **Advantages** — efficient handling of rare words and subword units; reduces vocabulary size, making the model more efficient; better generalisation by breaking words into subword units.
 
 **Limitations** — can produce **fragmented tokens for languages with complex morphology**; **may not capture semantic meaning** as effectively as other methods.
+
+_Everyday version:_ picture a shorthand note-taker who starts out writing every single letter, but quickly notices that certain letter pairs — like "th" or "ing" — show up together constantly. Over time they invent one quick squiggle for each pair they see combining most often, then start combining those squiggles into even bigger shortcuts for whole common words. BPE builds its vocabulary the same way: start from raw characters, and keep gluing together whichever adjacent pair shows up most often across the whole corpus, so the pieces that matter most earn their own single token.
 
 #### 13.5 SentencePiece
 

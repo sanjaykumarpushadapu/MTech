@@ -77,6 +77,8 @@ The handout names two concrete API examples because they show two different API 
 
 **The trade in one line:** synchronous buys you a **truthful immediate answer**; asynchronous buys you **survival under load and partial failure**, and pays for it with a more complicated client that must handle "not done yet."
 
+*Everyday picture: synchronous is like phoning a customer-service line and staying on hold until someone answers — you get your answer immediately, but if the line is busy you're stuck waiting with nothing else to do. Asynchronous is like dropping a request into a suggestion box and getting a text message later once it's handled — you walk away immediately and do something else, and the answer catches up with you whenever it's ready.*
+
 That last row is why real systems are usually both. The user-facing read (`GET /orders/123`) stays synchronous because the user needs an answer now; the fulfilment pipeline behind it goes async because nothing there benefits from making anyone wait.
 
 **Mechanism — the example, an order service, both ways.**
@@ -283,6 +285,8 @@ The front-end now builds real screens. When the back-end ships, the URL changes 
 
 **Tradeoff / where mocking misleads** — a mock is **schema-shaped, not behaviour-shaped**. It returns the right *fields*; it does not reproduce latency, pagination limits, rate limiting, partial failures, or the awkward real data (empty strings, nulls, 40-character titles). Teams that build entirely against mocks discover all of that on integration day. Use mocks to unblock, then test against something real as early as you can.
 
+*Everyday picture: mocking is like a movie set with a painted storefront — no working shop exists behind the façade, but it sits exactly where the real shop will go, so filming (front-end work) can proceed without waiting for construction (the back-end) to finish. The catch is the same one film crews know: the façade only has to look right, not function right, so nobody should mistake a walk past the set for a real day of business.*
+
 **This is what "API-first" actually means in practice.** Design-first isn't a philosophical preference — it lets three teams work in parallel off one document instead of serially off each other.
 
 #### 4.2 OpenAPI generators — turning the contract into code
@@ -313,6 +317,8 @@ npx @openapitools/openapi-generator-cli generate \
 The front-end now imports typed methods instead of hand-building URLs and request bodies; the back-end starts from the same request and response shapes.
 
 **Tradeoff / why generated code is not the finish line** — Generated code removes boilerplate, not judgment. A poor contract generates poor code faster. You still need to design good names, auth, retries, pagination, error envelopes, and the behaviour around the contract. Treat generators as accelerators, not as architecture.
+
+*Everyday picture: this is like a tailor with one master pattern for a suit — instead of measuring and cutting each new suit from scratch, the tailor traces the pattern onto fresh fabric every time, guaranteeing the same fit and cutting the repetitive work down to almost nothing. The pattern still needs a skilled tailor to design it well in the first place; tracing a bad pattern just produces bad suits faster.*
 
 **Mechanism — the seven-step lifecycle**, built around a Books API:
 
@@ -374,6 +380,8 @@ Note the shape: collection endpoint `/books` for list and create; item endpoint 
 
 *REST is called "stateless", and section 7 leans on the word again, so it's worth pinning down.* **Stateless** means every request carries everything the server needs to handle it — auth token, resource id, body — and the server keeps **no memory of the client between calls**. There is no server-side "session" that request 2 silently depends on from request 1; if the client needs continuity, the client resends the context. Why this earns REST its "mature and ubiquitous" benefit: if the server remembers nothing, **any server instance can answer any request**, so ten identical servers behind a load balancer just work — that's what lets REST scale horizontally. It's also the exact property RPC gives up (see section 7: *"REST is by definition stateless; with RPC state depends on the implementation"*), which is why RPC can be faster but more coupled.
 
+*Everyday picture: ordering at a fast-food counter is stateless — you state your whole order every time, so any cashier on shift can take it without needing to remember you from a previous visit. A café that runs a tab for you is the opposite — only the barista who opened your tab can serve you correctly, so if they step away, the next person is lost. REST is built like the fast-food counter on purpose: any server behind the load balancer can answer, because nothing is remembered between orders.*
+
 Same resource, two representations:
 
 ```xml
@@ -414,6 +422,8 @@ Same resource, two representations:
 ![The Richardson Maturity Model, four levels](assets/S01-richardson-maturity-staircase.svg)
 
 **Tradeoff / why level 3 is rare** — in practical terms, **level 3 is rarely used in modern RESTful HTTP services**. HATEOAS helps flexible UI-style systems but **doesn't suit interservice calls** — it's a chatty experience, and it's usually short-circuited by having the full specification up front. **Aim for level 2**: it projects an understandable resource model with appropriate actions, which reduces coupling and hides the backing service's detail.
+
+*Everyday picture: level 0 is a single complaints hotline where you say everything to one operator — "I want to book a table," "I want to cancel a table," "I want to change the date" — and the operator has to work out which is which from what you said. Level 2 is a reception desk with separate, clearly labelled windows — one for new bookings, one for cancellations, one for changes — so anyone walking up already knows exactly which window to use and what happens there.*
 
 **A whole system built this way** — the food-delivery architecture, and the best single diagram here — a preview of microservices (S3):
 
@@ -509,6 +519,8 @@ query {
 | **Self-managed GraphQL** | You run the server yourself |
 
 **Tradeoff / when NOT to use GraphQL** — The comparison table gives REST the win on **request caching**, and that's the big one: HTTP caching works on URLs, and GraphQL sends everything to one URL by POST, so standard caching layers stop helping. GraphQL also moves cost from round trips to server-side query planning, and a badly-shaped client query can be expensive in ways REST's fixed endpoints never allowed. Use it when clients need varied slices of connected data; don't use it for a simple resource CRUD API that caches well.
+
+*Everyday picture: REST is like visiting a farmers' market where each stall sells only one thing — you walk to the bread stall, then the cheese stall, then the fruit stall, making three separate trips to fill one basket. GraphQL is like handing one shopping list to a single market assistant who runs around and collects the bread, cheese, and fruit for you in one trip, handing back exactly the basket you asked for and nothing else.*
 
 ---
 
@@ -691,6 +703,8 @@ The lesson: **one system, three correct answers.** Anyone who says "we're a Grap
 - **Adding a new required field** to client requests
 
 That last one catches people — *adding* something can be a breaking change if clients must now supply it.
+
+*Everyday picture: API versioning is like keeping a road open while its replacement is built alongside it, instead of closing it overnight. Drivers who know the old road can keep using it, signs point newcomers to the new route, and only once traffic has clearly moved over does the city close the old road for good — shutting it on day one, just because the new one exists, would strand everyone still relying on the old directions.*
 
 **Mechanism — where the version actually goes.** Four schemes, and the choice is visible in every request:
 

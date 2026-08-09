@@ -289,6 +289,8 @@ Before the algorithm details, keep the main point simple: the model cannot read 
 
 *The cleanest everyday example:* if training saw `low`, `new`, and `newer`, but never saw `lower`, a word-level system is stuck. A subword system can still split `lower` into known pieces and preserve some meaning.
 
+An everyday picture for the same idea: think of a child learning to read who hasn't memorised every whole word yet. Instead of giving up on an unfamiliar word like "unhappiness," they recognise familiar pieces they've seen before — "un-", "happy", "-ness" — and combine them to get the meaning. BPE builds a model's vocabulary the same way: it learns the most useful chunks of text from training and reuses them to handle words it has never seen whole.
+
 **Three token types, and why subwords win in practice:**
 
 | Type | Strength | Failure |
@@ -509,7 +511,11 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 >
 > ![Retrieval-Augmented Generation flow](assets/S01-rag-flow.svg)
 >
-> Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store. Full treatment in L7–L8.
+> Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store.
+>
+> *An everyday way to see the difference: RAG is like an open-book exam instead of a closed-book one — instead of relying purely on what you memorised, and risking a confident but wrong answer, you look up the relevant page first and then write your answer from what's actually in front of you.*
+>
+> Full treatment in L7–L8.
 
 ---
 
@@ -557,6 +563,8 @@ What actually passes between stages:
 | 3 → 6 | A draft answer, once reasoning stops requesting tools |
 
 **The loop is the agent.** Remove it — run each stage exactly once — and you have a *workflow* (section 3b): cheaper, predictable, and unable to recover from a tool returning something unexpected. The loop is what buys adaptability and what makes cost unpredictable, because nothing guarantees how many times it turns.
+
+An everyday way to see the difference: a workflow is like a printed checklist you fill in top to bottom regardless of what you find along the way. The loop is more like a detective working a case — gather a clue, ask "do I know enough yet?", and if not, go gather another one, repeating until the case can actually be closed. That repeated check-and-continue is exactly what a fixed checklist can never do.
 
 **Two exit conditions matter in production:** the model stops asking for tools (the good one), and a **step limit** fires (the guard). Without the second, a confused agent bills you indefinitely — which is the 100-step compounding-error problem from section 12.
 
@@ -655,6 +663,9 @@ Tools: **LangSmith, Arize Phoenix, OpenTelemetry**.
 
 **💰 Cost management**
 **Prompt caching (50–90% cost reduction)** — the model provider stores the computed internal state for a prompt's shared, repeated prefix (e.g. the system prompt and tool definitions), so the next call that reuses that exact prefix skips recomputing it; this is why static content should come first and the varying part (the user's new message) last · model routing (smaller models when appropriate) · token budgets per user/session · efficient retrieval (reduce context size).
+
+*An everyday picture: it's like a coffee shop pre-making the espresso base for its most popular drink every morning — the first cup still takes the normal time, but every cup after that is faster and cheaper because the repeated part is already done.*
+
 Benchmark: customer support ≈ **$0.02–0.10 per conversation**.
 
 **⚡ Latency budgets**
@@ -785,6 +796,8 @@ Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running
 > Thought: I now have what I need.
 > Final Answer: It's 32°C and humid in Tokyo right now.
 > ```
+> An everyday version of the same loop: a cook tasting a dish while cooking — taste, decide it needs more salt, add salt, taste again — rather than dumping every ingredient in at once and serving whatever comes out.
+>
 > That interleaving — **reason, act, read the result, decide the next step** — is the core agent pattern the whole course builds on. It's also why stage 1 (no tools) matters: you watch the model *fail*, then *reach for a tool*.
 
 One detail worth noticing in the code: the tool is declared as

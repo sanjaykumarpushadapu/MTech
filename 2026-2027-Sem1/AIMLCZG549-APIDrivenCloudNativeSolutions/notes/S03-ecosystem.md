@@ -108,6 +108,8 @@ This isn't only a small-team caution — it holds at large-company scale too. Am
 
 **Tradeoff / when NOT to use** — Do not add service mesh when there are only a few services and the main problem is still unclear boundaries or missing tests. A mesh improves traffic control; it does not fix bad service design, bad data ownership, or missing observability discipline.
 
+*Everyday picture: without a service mesh, every employee in a building has to personally check IDs at the door, keep their own phone log, and learn security procedures their own way — repeated, inconsistently, by everyone. A service mesh is like giving every employee a personal assistant stationed right beside them who checks IDs, logs calls, and applies security consistently for everyone in the building, so the employee just gets on with their actual job.*
+
 ---
 
 ## Part 3 · Compute and deployment models
@@ -137,6 +139,8 @@ Serverless is broader than just function compute — the same pay-per-use model 
 **Worked example** — A document-upload API can use an HTTP gateway for `POST /documents`, a function to validate metadata, object storage for the file, a database row for status, and another event-triggered function for asynchronous processing.
 
 **Tradeoff / when NOT to use** — Serverless is weak for long-running tasks, workloads needing deep environment control, and systems where vendor lock-in is unacceptable. Containers or VMs may be better when runtime control and predictable long execution matter more than pay-per-use scaling.
+
+*Everyday picture: running your own servers is like buying and maintaining a home generator that sits idle most of the year just in case you need power. Serverless is like being connected to the electricity grid instead — you don't own or maintain any generating equipment, you draw exactly as much power as you need at that moment, the utility scales its output to match demand across every customer, and your bill reflects only what you actually used.*
 
 ---
 
@@ -181,6 +185,8 @@ Important ideas:
 
 **Worked example** — If the desired state says "run three replicas of order-service" and one pod crashes, Kubernetes detects that actual state is two healthy replicas and starts another pod to return to three.
 
+*Everyday picture: a home thermostat runs the same kind of control loop. You set a desired temperature, and the thermostat keeps checking the actual room temperature, switching the heater on or off to close any gap — nobody has to notice a chill and manually flip a switch. Kubernetes' control loop does this for containers: you declare "3 replicas," and it keeps checking the cluster and starting or stopping pods to correct any drift from that number, continuously and without a human watching a dashboard.*
+
 **Use case — autoscaling under load.** A flash sale sends checkout traffic to 4x its normal level within minutes. A Horizontal Pod Autoscaler watches CPU or request-rate metrics and raises `checkout-service` from 3 replicas to 12 automatically; when the sale ends, it scales back down. Without this, someone has to manually add and remove pods around every predicted spike, or keep enough capacity running idle at all times to survive one.
 
 **Tradeoff / when NOT to use** — Kubernetes has a steep operational cost. If one container on one VM is enough, Kubernetes may add more moving parts than value. It becomes worthwhile when you need repeated deployments, scaling, healing, and many services across environments.
@@ -216,6 +222,8 @@ The difference between delivery and deployment is the production gate. Delivery 
 **Worked example** — A microservice team pushes a change. The pipeline builds the container image, runs unit tests, runs integration tests, scans dependencies, deploys to staging, runs smoke tests, and either waits for approval or automatically deploys to production depending on the CD model.
 
 **Tradeoff / when NOT to use** — Continuous deployment is risky when tests are weak, observability is poor, or rollback is slow. In regulated systems, continuous delivery with human approval may be the better tradeoff.
+
+*Everyday picture: imagine a restaurant where the kitchen and the serving staff work in separate rooms, never talk directly, and every dish needs three separate manager sign-offs before it reaches a table — food arrives cold and orders get crossed. DevOps is like merging cooking and serving into one team that owns a dish from stove to table, with a conveyor belt of automatic quality checks (CI/CD) moving each plate through the required checks on its own, instead of waiting for a manager to walk over and approve it by hand.*
 
 ---
 
@@ -284,6 +292,8 @@ Named examples from the lecture point in the same direction:
 | Scaling boundary | whether the hot capability can scale independently |
 | Resilience | queues, retries, timeouts, **circuit breakers** (stop calling a dependency that's already failing, instead of retrying into a failure and making it worse — the caller "trips the breaker" and fails fast until the dependency recovers), graceful degradation |
 | Observability | metrics and traces that reveal where latency or errors begin |
+
+*Everyday picture: this is the same idea as the circuit breaker in a home's electrical panel. When a circuit draws too much current, the breaker trips and cuts power immediately, instead of letting the wiring keep overheating toward a fire; someone resets it only once the fault is cleared. A software circuit breaker does the same job for a failing dependency — it stops sending requests the moment failures cross a threshold, waits, then cautiously tests whether the dependency has recovered before letting traffic flow again.*
 
 **Worked example** — On a sale day, users report that selected products vanish from carts and money is deducted without orders. That points to state inconsistency between cart/order/payment, missing idempotency, overloaded synchronous calls, and no compensating step for partial failures. A cloud-native redesign would isolate cart, order, inventory, and payment; add idempotency keys; queue bursty order creation; and monitor each step.
 

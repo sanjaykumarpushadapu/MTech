@@ -96,6 +96,8 @@ Cloud-native and cloud-based also diverge on three practical fronts:
 
 **Tradeoff / when NOT to use** — Cloud-native redesign is not automatically worth it for stable workloads. If the application changes rarely, has predictable load, and does not need independent team ownership, cloud-based hosting may give enough availability with much lower design cost.
 
+*Everyday picture: cloud-enabled is a neighborhood restaurant that starts taking orders through a delivery app but still cooks and runs exactly like before. Cloud-based is that same restaurant moving into a rented commercial kitchen it doesn't own, so it stops worrying about the building, but the kitchen workflow is unchanged. Cloud-native is a delivery-only kitchen built from day one as separate stations — grill, salads, drinks — where each station can call in extra staff on its own when only that station gets busy, instead of the whole kitchen scrambling together.*
+
 ---
 
 ### 4. Cloud-native software and technology stack

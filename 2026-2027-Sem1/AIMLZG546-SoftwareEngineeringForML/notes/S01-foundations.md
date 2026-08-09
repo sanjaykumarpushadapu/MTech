@@ -84,7 +84,9 @@ Three consequences follow directly, and each matters later in the course:
 > ***In practice*** *— how "the model ships, not the algorithm" actually works:*
 > - The model is **serialised** to a file and loaded by a runtime. Formats you'll meet: **pickle/joblib** (sklearn — convenient but unsafe to load from untrusted sources, and version-brittle), **ONNX** (framework-neutral, for cross-runtime serving), **safetensors** (the safe standard for deep-learning weights). "Which format" is a real deployment decision.
 > - Trained models live in a **model registry** (MLflow Model Registry, SageMaker) — versioned, staged (staging → production), and rolled back like any other artifact. The registry is to models what git is to code.
+>   *Everyday version:* think of a library's card catalogue. Every new edition of a book gets logged, only one edition is marked "on the shelf, checked out to readers" at a time, and if the newest printing turns out to have a misprint, the librarian pulls the previous edition back out of the archive instead of reprinting from scratch — nobody loses track of which edition is where.
 > - Because **training is non-deterministic** (see below), teams log every run — data version, hyperparameters, metrics, the resulting model — with **experiment tracking** (MLflow, Weights & Biases). "Which data + code produced *this* model?" has to be answerable, and that's what session 14's provenance section is about.
+>   *Everyday version:* it's the digital version of a scientist's lab notebook. Every experiment's exact ingredients, quantities and conditions get written down the moment they're used, not reconstructed from memory afterward — so when batch #47 comes out best, there's a record of exactly what produced it, and it can be repeated on purpose rather than by luck.
 
 #### 2.2 Parameters, hyperparameters, and the compiler analogy
 
@@ -194,6 +196,8 @@ If the acronym is unfamiliar: **SDLC** just means the standard lifecycle a softw
 
 **Shift-left testing** — move testing earlier ("left" on the timeline) rather than treating it as a final gate. Defects found in design cost a fraction of defects found in production. Frequently flagged as exam-worthy.
 
+*Everyday version:* it's far cheaper to notice a wrong measurement while the blueprint is still on the drawing table than after the wall has been built, plastered, and painted. Catching the mistake early costs a pencil correction; catching it late costs tearing out a finished wall.
+
 **Worked example** — Fraud detection. *Planning* — is fraud loss worth a project? *Analysis* — what counts as fraud, what data exists. *Design* — where the scorer sits in the payment flow. *Development* — build it. *Testing* — catches known fraud without blocking good customers. *Deployment* — shadow mode, then live. *Maintenance* — fraud patterns shift, retrain.
 
 **Tradeoff / when the SDLC assumption fails** — The phases are always present; running them **once, in strict order** (Waterfall) only works when requirements are fixed and knowable up front. ML violates that by construction — you cannot specify the accuracy target before seeing whether the data supports it. That is the *lack of specifications* problem, developed in section 8.1.
@@ -263,6 +267,8 @@ Concretely: an Agile team on a 4-week iteration adds an AI pair programmer. Deve
 
 *This is a local-optimisation trap, and it's the same shape as 546's central theme: improving one component doesn't improve the system. Compare section 1 — Sidney's models were excellent and the business still failed.*
 
+*Everyday version:* widening one lane of a four-lane highway doesn't shorten anyone's commute if the other three lanes stay jammed — traffic still moves only as fast as the slowest lane lets it. Speeding up one phase of the SDLC without touching the rest has the same effect.
+
 #### The five GenAI capabilities, and where they pay
 
 | Capability | What it does |
@@ -330,6 +336,8 @@ Cloud Native App = Agile + DevOps + Microservices + Containers + Cloud
 **Mechanism — the four layers reinforce each other.** Agile shortens planning cycles, DevOps shortens release cycles, microservices reduce deployment coupling, containers make environments repeatable, and cloud supplies elastic infrastructure. Remove one layer and the others lose force: microservices without DevOps become many slow releases; containers without cloud still leave capacity planning manual.
 
 **Worked example** — A fraud-scoring service in a monolith ships only when the whole payment system ships. In a cloud-native setup, the scoring service can be packaged in a container, deployed independently, scaled during sale traffic, and monitored separately from checkout. The architecture change only pays off because process, packaging and infrastructure changed together.
+
+*Everyday version:* a moving company that must load an entire house's belongings into one giant truck before anything can be delivered — if the couch doesn't fit, nothing ships that day. Microservices in containers are like packing each room's belongings into its own separate box: the kitchen box can go out today and the bedroom box next week, without either one waiting on the other.
 
 **Tradeoff / when NOT to go cloud-native** — Microservices and containers buy independent deployment and scaling, and cost you distributed-system problems you didn't previously have: network failures between services, distributed tracing, eventual consistency, far more operational surface. A monolith on one server is genuinely right for a small team with modest load. "Cloud native" is not a maturity score.
 
@@ -607,6 +615,8 @@ Providing *internal data* in the prompt is the case that flags forward to **retr
 
 Cost, effort and *how much of the model you change* all rise left → right, and the engineering rule is: **reach for the leftmost rung that works.** Prompt and few-shot change nothing but the text; RAG adds a retrieval system but no training; fine-tuning produces a model you own, host and version; pre-training is for the few orgs building foundation models. The classic mistake is fine-tuning something a better prompt or RAG would have fixed — the expensive rung reached for too early. (RAG's mechanics → session 6.)
 
+*Everyday version:* if you need directions to the station, you stop and ask a local rather than hiring and training a full-time employee to learn the city first. Quick, cheap help — asking around, or handing someone a map (prompting, RAG) — solves most one-off questions; you only invest in someone's months-long training (fine-tuning) when you need that exact expertise applied constantly and no amount of asking around will substitute for it.
+
 **Worked example** — Fraud detection with a foundation model: `"Given this transaction and the customer's last 10 transactions, is this likely fraudulent? Answer yes/no with one reason."` No training data needed, works immediately — and costs an API call per transaction, with latency you don't control, for a task a decision tree does in microseconds.
 
 **Tradeoff / when NOT to use** — bluntly: foundation models "do not have access to proprietary or recent information that was not part of the training data," and "model size and inference costs can become a challenge." Use them where the task is language-shaped, varied, and hard to specify. Don't use them for a high-volume, low-latency, narrow, well-specified task with plenty of labelled data — fraud scoring at 10,000 transactions/second being exactly that. **A foundation model is the expensive general answer to a question you might be able to specify cheaply.**
@@ -649,8 +659,10 @@ Both touch **every** phase — there is no single point in the timeline where ei
 > MLOps is **CI/CD extended to data and models**. On top of the usual code pipeline (git, tests, containers), an ML pipeline adds three things software CI/CD never had:
 > - **Data & model versioning** — DVC or LakeFS version datasets; the model registry versions models. Plain git is the naive fallback and it breaks here: git diffs and stores text well, but a multi-gigabyte dataset or model checkpoint checked straight into git bloats every clone and makes "diffs" meaningless — so these tools leave the actual bytes in cheap object storage and commit only a small pointer to git, giving you versioning without the storage blowup. You can reproduce "the model from March" only if both are versioned alongside the code.
 >   *Everyday version:* imagine mailing a friend updates to a recipe card versus a shipping container of ingredients. The recipe card is small, so you can mail the whole updated card each time and easily spot what changed — that's git. The container is too big and slow to re-mail every time one ingredient changes, so instead you mail a claim ticket and leave the container sitting in a warehouse — that's what DVC does with the dataset or model.
-> - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins.
+> - **Continuous training & evaluation** — a pipeline (Prefect, Airflow, Kubeflow) retrains on new data, evaluates against a held-out set *and* against the current production model, and only promotes if it wins. The naive alternative — push every freshly retrained model straight to production — risks silently replacing a good model with a worse one; evaluating the challenger against the reigning champion first catches that before customers do.
+>   *Everyday version:* a sports team doesn't put a new signing straight into Saturday's starting lineup. The newcomer trains and plays practice matches against the current first team first, and only replaces a starter once they've shown they consistently do better.
 > - **Monitoring for drift** — compare live predictions against ground truth as it arrives, alert when recall slides, and trigger retraining. This is the part that has no equivalent in traditional software, and it is where ML engineers and MLOps engineers spend much of their time. Your 546 lab stack (MLflow, DVC, Prefect, Evidently, Docker/K8s, FastAPI) is this pipeline in miniature.
+>   *Everyday version:* imagine a thermostat that keeps reporting "room temperature: normal" even as the room slowly overheats, because nobody is checking its reading against how the room actually feels. Drift monitoring is putting an independent thermometer in the room that checks the thermostat's claims against reality and sounds an alarm the moment they stop matching.
 
 > ***Going deeper*** *— the three ways a model actually serves predictions; picking the wrong one is a classic mistake:*
 >
