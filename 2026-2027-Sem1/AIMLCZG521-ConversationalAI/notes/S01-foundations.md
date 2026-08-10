@@ -337,6 +337,14 @@ An everyday picture for the same idea: think of a child learning to read who has
 | **Character** | tiny vocabulary; no unknown words | sequences become too long; each token carries little meaning |
 | **Subword** | handles new words while keeping sequences manageable | still imperfect on rare scripts, code, and morphology |
 
+**Three subword algorithms are named in practice**, each associated with the model family that made it famous — recognise the names; BPE is the one worked through below:
+
+| Algorithm | Associated with | One-line distinction |
+|---|---|---|
+| **BPE** (Byte Pair Encoding) | GPT family | merges the most frequent adjacent pair |
+| **SentencePiece** | multilingual models | trains directly on raw text, so it's language-agnostic (no whitespace pre-splitting) |
+| **WordPiece** | BERT | merges by likelihood gain rather than raw frequency |
+
 **Why it matters for conversational AI specifically** — four consequences, and this framing is what makes tokenization a conversational-AI topic, not just a modelling detail:
 
 | | Why |
