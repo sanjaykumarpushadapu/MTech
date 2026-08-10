@@ -52,7 +52,15 @@ Every step rightward buys coverage of a wider query space, and spends predictabi
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
-**Where you already meet this** — three familiar categories, each a different point on the bot ladder above: **voice assistants** (Alexa, Siri, Google Assistant — mostly command/intent handling), **customer support** (banking chatbots, e-commerce help — increasingly LLM- or agent-based), **virtual agents** (healthcare triage, HR assistants — narrow-domain agents with real actions attached, like scheduling or routing a case). None of these are exotic research demos; they're the same six components from section 4, in production, today.
+#### Examples in daily life
+
+You already use conversational AI every day — three familiar categories, each a different point on the bot ladder above:
+
+- **Voice assistants** — Alexa, Siri, Google Assistant (mostly command/intent handling).
+- **Customer support** — banking chatbots, e-commerce help desks (increasingly LLM- or agent-based).
+- **Virtual agents** — healthcare triage, HR assistants (narrow-domain agents with real actions attached, like scheduling or routing a case).
+
+None of these are exotic research demos; they're the same six components from section 4, in production today.
 
 **Industry impact, in numbers** — why this isn't a niche academic topic:
 
