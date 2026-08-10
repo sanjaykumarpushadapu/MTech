@@ -579,7 +579,7 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 
 ### The seven-stage agent lifecycle
 
-**Intuition** — The spine of the whole course. Every later lecture deepens one stage. **Learn this cold; it's the single most likely structured question on the mid-sem.**
+**Intuition** — Every agent turn walks the same path: **take the request in → work out what's needed and which tools fit → do it → remember what happened → check the result is safe → reply.** Those are the seven stages, and the middle of the path (reason → act → remember) **loops** until the agent has gathered enough to answer. That single shape — a fixed intake and exit wrapped around a repeating middle — is what turns a language model into an agent. It's also the spine of the whole course: every later lecture deepens one stage, so **learn it cold — it's the single most likely structured question on the mid-sem.**
 
 ![Seven-stage agent lifecycle](assets/S01-agent-lifecycle.svg)
 
