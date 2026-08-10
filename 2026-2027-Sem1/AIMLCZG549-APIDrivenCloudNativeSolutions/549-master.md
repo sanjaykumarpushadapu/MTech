@@ -26,6 +26,20 @@
 
 **Everything lives in MS Teams** — *"I upload everything in MS Teams. I'll create a folder, and in the course materials everything will be uploaded — the handout, the deck for that particular session, and whatever code will be used for that session."* **Including the code.** Check the shared folder after every session.
 
+## Modules at a glance
+
+The handout names 6 modules before the session-by-session table — the shape of the course, worth holding separately from the flat 16-session list below.
+
+| Module | Theme | Sessions |
+|---|---|---|
+| 1 | Python Programming (self-study) | S0 |
+| 2 | API Basics | S1 |
+| 3 | Cloud Native Application | S2–S3 *(revisited in S12)* |
+| 4 | Data Science & Machine Learning | S4–S7 |
+| 5 | AI & Cognitive Services | S8–S11 |
+| 6 | IoT & Data Analytics | S13–S15 |
+| — | Course Review | S16 |
+
 ## Session index
 
 | S | Topic | Sub-topics | Source | Exam | Note file |

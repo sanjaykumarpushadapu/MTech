@@ -9,8 +9,8 @@
     <rect x="105" y="185" width="230" height="95" rx="16" fill="#fff2bd" stroke="#8a6400" stroke-width="2.3"/><text x="220" y="225" text-anchor="middle" font-size="21" font-weight="700">Tools + data</text><text x="220" y="252" text-anchor="middle" font-size="15">DBs · files · APIs</text>
     <rect x="785" y="185" width="230" height="95" rx="16" fill="#e4f2f4" stroke="#1f6570" stroke-width="2.3"/><text x="900" y="225" text-anchor="middle" font-size="21" font-weight="700">Another agent</text><text x="900" y="252" text-anchor="middle" font-size="15">delegation / collaboration</text>
     <rect x="460" y="355" width="200" height="74" rx="14" fill="#eaf2ff" stroke="#315a99" stroke-width="2.3"/><text x="560" y="386" text-anchor="middle" font-size="20" font-weight="700">Open network</text><text x="560" y="411" text-anchor="middle" font-size="15">discovery</text>
-    <text x="390" y="216" text-anchor="middle" font-size="18" font-weight="700">MCP vertical</text>
-    <text x="730" y="216" text-anchor="middle" font-size="18" font-weight="700">A2A horizontal</text>
+    <text x="397" y="216" text-anchor="middle" font-size="14" font-weight="700">MCP vertical</text>
+    <text x="722" y="216" text-anchor="middle" font-size="13" font-weight="700">A2A horizontal</text>
     <text x="560" y="468" text-anchor="middle" font-size="18">MCP is agent-to-tool; A2A is agent-to-agent; custom REST still wins for one simple internal edge.</text>
   </g>
   <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#a)">

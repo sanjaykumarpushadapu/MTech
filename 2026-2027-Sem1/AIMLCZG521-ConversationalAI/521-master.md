@@ -32,6 +32,17 @@
 
 Strictly **no makeups** for quizzes and assignments. All assignments are plagiarism-checked.
 
+## Modules at a glance
+
+The handout groups all 16 sessions into 4 themes before it lists them one by one — worth holding in your head as the shape of the course, not just a flat list of 16 topics.
+
+| Module | Theme | Sessions |
+|---|---|---|
+| 1 | Foundations — embeddings, retrieval, model landscape, cost engineering | L1–L3 |
+| 2 | Core Building Blocks — function calling, memory systems, RAG pipelines | L4–L8 |
+| 3 | Autonomous Agents — planning, multi-agent systems, evaluation, optimization | L9–L11 |
+| 4 | Production Ecosystem — security, protocols (MCP, A2A), ethics, governance | L12–L16 |
+
 ## Session index
 
 | S | Topic | Sub-topics | Source | Exam | Note file |

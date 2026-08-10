@@ -95,6 +95,16 @@ A session note may mention conceptual overlap with another subject, but it must 
 
 Every session-note touch includes a self-containment review.
 
+### Exhaustive Cross-Checks, Not Spot Checks
+
+When a deck, handout, or paper is provided to check a note against, that is a completeness audit, not a review. Extract and read every page or slide, not a sample — the user is trusting this check specifically because they cannot re-verify it line by line themselves. A missed slide is a missed exam point, not a minor oversight. Do not report a note as complete or aligned without having actually walked the whole source.
+
+When source content overlaps with something the note already covers, check whether the source presents it as its own distinct point (its own heading, its own slide, its own labeled block) before folding it into an existing section. If the source gives it a name and a place, the note should too, even if the underlying idea is covered elsewhere — don't silently merge a source's own structure into a differently-labeled section just because the ideas rhyme. If genuinely unsure whether something is "already covered" or "quietly merged," treat it as missing and give it a visible home matching where the source put it.
+
+### Default to More, Not Less
+
+Session notes exist to teach and to be revised from. When extending a note from new source material, prefer including a genuinely useful fact, number, named model, or example over trimming for length. Concision is a wording-quality goal (see Wording Pass) — write clean sentences, cut filler — not a content-quantity ceiling. Cutting real source content to keep a note short is the wrong tradeoff in this repo. A longer note that teaches more is preferred over a shorter one that teaches less, as long as every addition is accurate, sits under the right heading, and doesn't duplicate something already there.
+
 ## 3. Material Scope
 
 ### Out of Scope Means Out
@@ -148,6 +158,16 @@ Always extract and look at deck images. Slide text often omits equations, shapes
 Auto-transcripts are noisy. Correct obvious terms silently, such as `RoPE`, `SwiGLU`, `GQA`, and `KV-cache`.
 
 ## 5. Session Note Contract
+
+### Master Index Carries a "Modules at a glance" Table
+
+Every `<code>-master.md` gets a `## Modules at a glance` table, placed right before `## Session index`. Source it from the handout's own Part A module structure (its "Modules:" list, or numbered/`M`-prefixed module headers) — do not invent a grouping; use the handout's.
+
+Columns: `Module | Theme | Sessions` (or `Module | Sessions | Hours` when the handout's modules already carry hour counts and map close to 1:1 with sessions, as in 536 — hour weighting is the useful signal there, not a theme grouping).
+
+If a session's topic straddles two modules, or a module gets revisited by a later session out of its original block (as 549's Cloud Native module is extended by S12), say so in a one-line note under the table rather than silently picking one side.
+
+This table is separate from and does not replace the full `## Session index` table — it's the one-glance shape of the course; the session index is the operational detail.
 
 Follow `2026-2027-Sem1/_templates/SESSION-TEMPLATE.md`.
 
@@ -288,6 +308,7 @@ Do not write:
 - "worth memorising verbatim"
 - "quotable"
 - "the deck copied"
+- "the deck's own", "the deck marks", "the deck's structure" — any phrase that names the deck/slide/handout as the reason something is organized a certain way. State the content directly instead of narrating where it came from.
 
 Do not reproduce textbook text. Explain in fresh words. Where origin is itself the knowledge, such as REST = Fielding 2000, GraphQL = Facebook 2015, or BPE = Sennrich 2016, that fact may stay.
 

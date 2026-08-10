@@ -28,6 +28,27 @@
 
 🔴 **Assignments must run on the BITS remote lab, not your laptop.** _"In laptop, no — you have to use the remote lab for the assignments."_ A manual will be shared. No time limit on the lab, but expect contention near deadlines. Colab works only for very small models.
 
+## Modules at a glance
+
+536's handout names each module with an hour count, almost 1:1 with sessions — except two modules that run **4 hours across 2 sessions**, which is a signal of relative weight worth carrying forward (more contact time, likely more exam weight).
+
+| Module | Sessions | Hours |
+|---|---|---|
+| Foundations of LLMs | S1 | 2 |
+| LLM Pre-Training | S2 | 2 |
+| Advancements in LLM Architecture | S3 | 2 |
+| Training and Attention Efficiency | S4 | 2 |
+| LLM Optimization & Serving | **S5–S6** | **4** |
+| LLM Finetuning | S7 | 2 |
+| *(Revision)* | S8 | — |
+| Preference Alignment | S9 | 2 |
+| Prompt Engineering and Reasoning | **S10–S11** | **4** |
+| Retrieval-Augmented / Retrieval-Enhanced LMs | S12 | 2 |
+| LLMs for Agentic AI | S13 | 2 |
+| Evaluation | S14 | 2 |
+| LLM Safety, Security and Ethics | S15 | 2 |
+| Advanced Topics | S16 | 2 |
+
 ## Session index
 
 Titles below follow the handout learning-plan wording as closely as possible so the subject notes and the master index stay aligned.

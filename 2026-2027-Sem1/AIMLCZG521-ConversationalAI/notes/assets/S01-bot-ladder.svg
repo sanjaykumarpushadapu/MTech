@@ -15,8 +15,8 @@
     <text x="745" y="182" text-anchor="middle" font-size="19" font-weight="700">4 Generative</text><text x="745" y="210" text-anchor="middle" font-size="15">fluent, open-ended</text>
     <rect x="860" y="150" width="170" height="90" rx="14" fill="#f7e4e7" stroke="#914252" stroke-width="2.2"/>
     <text x="945" y="182" text-anchor="middle" font-size="19" font-weight="700">5 Agent</text><text x="945" y="210" text-anchor="middle" font-size="15">plans + acts</text>
-    <text x="145" y="305" text-anchor="middle" font-size="18">cheap · deterministic · auditable</text>
-    <text x="945" y="305" text-anchor="middle" font-size="18">adaptive · expensive · less predictable</text>
+    <text x="60" y="305" text-anchor="start" font-size="18">cheap · deterministic · auditable</text>
+    <text x="1030" y="305" text-anchor="end" font-size="18">adaptive · expensive · less predictable</text>
   </g>
   <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">
     <line x1="230" y1="195" x2="250" y2="195"/><line x1="430" y1="195" x2="450" y2="195"/><line x1="630" y1="195" x2="650" y2="195"/><line x1="830" y1="195" x2="850" y2="195"/>

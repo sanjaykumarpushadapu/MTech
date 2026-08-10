@@ -24,6 +24,16 @@ The formal definition is useful because it enumerates exactly what the course te
 
 Note the four verbs — understand, retain, retrieve, act. Each becomes a module.
 
+**Core Capabilities** — three groups, each doing one job, and the natural next question right after a definition like this: *okay, concretely, what does a system need to actually do this?*
+
+| Capability | Job | What it covers |
+|---|---|---|
+| **Natural Language Understanding (NLU)** | Understand user intent and entities | Spans a spectrum from simple **keyword match** and **slot filling**, through **context-aware** understanding, to fully **generative** interpretation |
+| **Dialogue Management** | Manage the conversation itself | Handling complex, multi-turn dialogues; maintaining conversation flow and context |
+| **Natural Language Generation (NLG)** | Produce the reply | Generating human-like responses; **personalization** — adapting to user preferences |
+
+This is the compact, three-part preview. Section 4 is the full picture: it expands this same idea from three capabilities to **six** — NLU and Dialogue Management stay, NLG becomes "Response Generation," and Knowledge Access, Action Execution, and Memory Systems get added as the pieces a bot needs once it moves from *talking* to *doing*. Read this table as capabilities-at-a-glance and section 4 as capabilities-with-engineering-detail.
+
 **Mechanism — the three-part frame** used throughout:
 
 | | | |
@@ -42,6 +52,20 @@ Every step rightward buys coverage of a wider query space, and spends predictabi
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
+**Where you already meet this** — three familiar categories, each a different point on the bot ladder above: **voice assistants** (Alexa, Siri, Google Assistant — mostly command/intent handling), **customer support** (banking chatbots, e-commerce help — increasingly LLM- or agent-based), **virtual agents** (healthcare triage, HR assistants — narrow-domain agents with real actions attached, like scheduling or routing a case). None of these are exotic research demos; they're the same six components from section 4, in production, today.
+
+**Industry impact, in numbers** — why this isn't a niche academic topic:
+
+| Headline stat | Detail |
+|---|---|
+| **$41.39B** conversational-AI market by 2030 | Grand View Research, 2025 |
+| **100M users in 2 months** | ChatGPT — the fastest-growing consumer app in history |
+| **80%** of Fortune 500 companies using AI agents | Microsoft Copilot Studio telemetry, Nov 2025 |
+
+By sector: **banking** — 70% of Tier-1 support queries now handled by AI, with cost reductions up to 60%. **Healthcare** — AI triage cuts ER wait times and supports 24/7 remote patient monitoring. **Enterprise software** — agents autonomously browse, write code, and draft contracts. **E-commerce** — AI-personalised recommendations lift conversion 15–26% on average.
+
+The pattern across all four: this isn't "will conversational AI matter" — it's already load-bearing infrastructure in every sector this course touches.
+
 ---
 
 ### 2. The evolution, 1960s → 2026
@@ -57,7 +81,7 @@ Every step rightward buys coverage of a wider query space, and spends predictabi
 | **1960s–1990s** | Rule-based (ELIZA, ALICE) | Pattern matching, keyword detection, scripted Q&A | **No learning, rigid, no context** | ELIZA (1966): `IF input contains "mother": RESPOND "Tell me more about your family"` — brittle, no real understanding |
 | **2000–2010** | Statistical ML (SVMs, CRFs, HMMs) | Intent classification, entity extraction | **Limited context, hand-crafted features** | Intent via SVM/Naive Bayes; NER via CRF/HMM; dialogue-state tracking via **Markov models**. Frameworks: Microsoft LUIS, early IBM Watson |
 | **2010–2017** | Deep learning (RNNs, LSTMs, Seq2Seq, attention) | End-to-end learning, better context | **Data hungry, task-specific training** | Frameworks: Rasa (open source), Google Dialogflow |
-| **2017–2020** | Transformers (BERT, GPT-2, T5) | Transfer learning, contextual embeddings | **Still needs task-specific fine-tuning** | — |
+| **2017–2020** | Transformers (BERT, GPT-2, T5, RoBERTa) | Transfer learning, contextual embeddings | **Still needs task-specific fine-tuning** | Pre-train once on massive data, fine-tune per task. Concretely for conversational AI: **better intent classification with fewer labelled examples**, **improved entity recognition**, and **more natural response generation** — the first era where the model itself, not hand engineering, drove the improvement |
 | **2020–2023** | LLMs & GenAI (GPT-3, ChatGPT, Claude, PaLM) | Few-shot learning, general-purpose, fluent | **Hallucinations, no real-time data, no actions** | — |
 | **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** | Multi-agent frameworks (agents spawning/supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), 1M+ token contexts, specialised models |
 | **2025–2026** | On-device & multi-modal (SLMs, native multimodality) | Real-time voice/video, privacy-first local processing | **Hardware constraints, fragmented ecosystems** | — |
@@ -155,7 +179,7 @@ The decision rule:
 
 If you remember only one caution from this section, remember this one: **agentic freedom is expensive**. More autonomy means more latency, more cost, and more room for one wrong step to trigger the next wrong step. That is exactly the "reliable long-horizon execution" problem raised again in section 12. Test in sandboxed environments with guardrails.
 
-**On frameworks** — worth knowing, because section 5 lists eight of them approvingly:
+**On frameworks** — worth knowing, because section 5 lists twelve of them approvingly:
 
 > Frameworks make it easy to start by simplifying low-level tasks, but they **often create extra layers of abstraction that obscure the underlying prompts and responses, making them harder to debug.** They can also make it tempting to add complexity when a simpler setup would suffice.
 >
@@ -255,6 +279,8 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 | **Semantic Kernel** | Microsoft's SDK for AI orchestration | Enterprise, .NET/Azure ecosystem |
 | **Haystack** | End-to-end NLP framework | Production RAG systems, search applications |
 | **AutoGen** | Multi-agent conversation framework | Complex workflows with agent collaboration |
+| **AutoGPT** | Fully autonomous, goal-driven agent loop — minimal human steering once launched | Early autonomous-agent experiments; more research demo than production tool |
+| **CrewAI** | Role-based multi-agent orchestration — agents assigned specific "roles" that collaborate on a task | Multi-agent workflows where each agent has a distinct job (researcher, writer, reviewer) |
 
 *What actually changed between the two generations — one assumption flipped, and the rest follows:*
 
@@ -336,7 +362,16 @@ At 10,000 conversations/day:
   10,000 × $0.0032  ≈  $32/day
 ```
 
-> **Key insight: token count directly controls operating cost.** A cheaper model, a shorter prompt, or better retrieval can reduce cost by an order of magnitude without changing the product.
+**The real-world reference numbers, model vs model** (2025 typical pricing, same conversation shape):
+
+| Model | Cost per conversation | At 10,000 conversations/day |
+|---|---|---|
+| GPT-4o | ~$0.01–0.03 | **$100–300/day** |
+| GPT-3.5 Turbo | ~$0.002–0.005 | ~$20–50/day |
+
+The two estimates above don't have to land on the same number — pricing, prompt length, and turn count all shift the total — but the *shape* is the point both make: swapping GPT-4o for GPT-3.5 Turbo on the same workload cuts cost roughly **5–10×** for a task that doesn't need frontier reasoning. That's the concrete version of "model selection can cut cost by an order of magnitude" below.
+
+> **Key insight: token count directly controls operating cost.** A cheaper model, a shorter prompt, or better retrieval can reduce cost by an order of magnitude without changing the product. Model selection and prompt optimisation alone can cut token costs **10–20×** — this is the whole subject of session 11 (cost optimisation, prompt caching, model routing).
 
 **Mechanism — BPE, three steps:** ① **Training** — read a massive corpus, count adjacent pairs of characters. ② **Merging** — take the most frequent pair, add it to the vocabulary as a new unit. ③ **Iterating** — repeat thousands of times until the target vocabulary size.
 
@@ -401,12 +436,15 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 **Mechanism — context is a shared token budget.** System prompt, user turns, retrieved documents, tool output and the answer all consume the same finite window. As the conversation grows, the system must either summarise, retrieve selectively, forget older turns, or move memory outside the prompt.
 
-| Window tier | Approx size | ≈ words | Typical use |
-|---|---|---|---|
-| Standard | 8K-32K | ~6K-24K | ordinary chat, short documents |
-| Extended | 128K-200K | ~96K-150K | long conversations, many retrieved chunks |
-| Ultra-long | 1M+ | ~750K+ | whole books, large codebases, long reports |
-| Practical reality | any size | — | bigger windows help, but retrieval and memory still matter |
+| Window tier | Approx size | ≈ words | Typical use | Example model |
+|---|---|---|---|---|
+| Standard | 8K-32K | ~6K-24K | ordinary chat, short documents | — |
+| Extended | 128K-200K | ~96K-150K | long conversations, many retrieved chunks | GPT-4 Turbo (128K), Claude 3.5 Sonnet (200K) |
+| Ultra-long | 1M+ | ~750K+ | whole books, large codebases, long reports | Gemini 1.5 Pro (1M) |
+| Emerging | 2M+ | ~1.5M+ | specialised use cases | — |
+| Practical reality | any size | — | bigger windows help, but retrieval and memory still matter | — |
+
+**These numbers move fast.** By the time you're reading this, section 13's April-2026 snapshot already shows most frontier models sitting at the "extended/ultra-long" tier by default (1M tokens standard for GPT-5.4, Claude Opus, and Gemini 3.1 Pro; 10M for Llama 4 Scout) — the table above is the reference point the field was arguing about in 2024–25, and it's worth watching *which tier a model sits in*, not memorising a number that will be outdated within a year.
 
 **⚠️ The challenge — the exam-worthy bit, not the numbers:**
 
@@ -737,6 +775,21 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 ### 13. Current capability landscape
 
 **Intuition** — Do not memorise a model leaderboard. Learn the axes that make one model family fit a conversational-AI product better than another.
+
+**A snapshot, so the axes below aren't purely abstract — state of the art as of April 2026:**
+
+| Model | Provider | Context | Strength | Best for |
+|---|---|---|---|---|
+| GPT-5.4 | OpenAI | 1M | Best all-rounder, computer use | Knowledge work, production APIs |
+| Claude Opus | Anthropic | 1M | Coding, safety, long reasoning | Complex agents, coding editors |
+| Gemini 3.1 Pro | Google | 1M | Reasoning leader (**94.3%** GPQA Diamond) | Research, multimodal, cost-efficient |
+| Grok 4.20 | xAI | 128K | Real-time data, multi-agent | Live info, social/market signals |
+| Llama 4 Scout | Meta (open-weight) | **10M** | Open-weight, ultra-long context | On-prem / custom deployments |
+| DeepSeek V3.2 | DeepSeek (open) | 128K | ~90% of GPT-5.4 at **1/50th the cost** | Budget-conscious, high-volume API use |
+
+Three numbers worth carrying: **10M+ token context** is now achievable (Llama 4 Scout), **94.3%** is the current ceiling on GPQA Diamond (a hard graduate-level science benchmark, Gemini 3.1 Pro), and frontier models now ship with **5+ native modalities and agentic workflows** built in (text, image, audio, video, code, browser/OS control, multi-agent, MCP) — capability that used to require bolting on separate tools is increasingly native to the model.
+
+**By the time you read this, the table above is already stale — that's the point of the next paragraph, not a flaw in it.** Six months from now the leader names will have changed and the numbers will have moved; what won't have changed is the six axes below. Learn those, and re-deriving "who's ahead right now" from a model card takes five minutes.
 
 ![Model selection capability axes](assets/S01-model-selection.svg)
 

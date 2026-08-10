@@ -404,7 +404,7 @@ _Two of these ideas map onto familiar teaching patterns:_ Gemma 2's **knowledge 
 
 ---
 
-***Going deeper*** — GPT-1 and T5 are useful historical case studies, but the deck marks them as extra and not examinable, so keep them as intuition builders rather than core syllabus.
+***Going deeper*** — GPT-1 and T5 are useful historical case studies, marked here as beyond-course depth and not examinable — keep them as intuition builders rather than core syllabus.
 
 **GPT-1** — the original decoder-only pretraining recipe. It introduced the two-stage idea that later became standard: unsupervised generative pretraining on a large text corpus followed by supervised finetuning on a specific task. Architecturally: 12 transformer blocks, 768-dimensional hidden states, 12 attention heads (768/12 = 64 dimensions per head), a 3,072-dimensional feedforward layer, about 117 million parameters, a 40,000-token BPE vocabulary, and GELU activations. It trained on BooksCorpus with causal language modeling, cross-entropy loss, a 512-token context window, Adam, linear warmup, cosine decay, and 100 epochs.
 

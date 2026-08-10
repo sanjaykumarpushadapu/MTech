@@ -43,6 +43,23 @@
 
 **Everything is on Taxila** — course materials, announcements, assignments. PPTs and handout also on MS Teams.
 
+## Modules at a glance
+
+The handout names 8 modules (M1–M8) before it breaks them into 16 sessions — this is the shape of the course, worth holding separately from the session-by-session table below.
+
+| Module | Theme | Sessions |
+|---|---|---|
+| M1 | Foundations of ML Systems Engineering | S1–S2 |
+| M2 | Requirements Engineering for ML Systems | S3–S4* |
+| M3 | Architecture & Design | S4*–S6 |
+| M4 | Implementation and Code Sharing | S7–S9 |
+| M5 | Quality Assurance | S10–S11 |
+| M6 | Deployment | S12–S13 |
+| M7 | Responsible ML Engineering | S14 |
+| M8 | SE Principles for Agentic AI (+ course review) | S15–S16 |
+
+*S4 straddles M2 and M3 — the handout's own session row mixes "quality attributes of ML components" (M2) with "thinking like a software architect" (M3 opener).
+
 ## Session index
 
 | S | Topic | Sub-topics | Source | Exam | Note file |
