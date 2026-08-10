@@ -655,7 +655,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 ### Protocol landscape
 
-**Intuition** — As agents proliferate they need standard ways to talk to tools, data, each other and UIs. The argument for standards, stated as a contrast:
+**Intuition** — Every agent needs to plug into tools, data, other agents, and UIs. Without shared standards each of those connections is a **custom cable** — every tool a bespoke integration, no two agents able to interoperate. Protocols are the **USB-C moment**: agree on the shape of the plug once, and anything that speaks it connects to anything else. That is the whole argument for standards:
 
 | Without standards | With standards |
 |---|---|
@@ -703,7 +703,7 @@ The practical principle is the same as the *workflows vs agents* distinction: **
 
 ### Production concerns
 
-**Intuition** — the core point: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
+**Intuition** — An agent that works in a demo and one that works reliably at scale are two different engineering problems. Everything hard about the second — *will it stay up, stay affordable, stay fast, stay safe?* — clusters into **four axes** you manage together, not one at a time.
 
 *The four axes are not independent — every fix on one pushes on another:*
 
@@ -790,7 +790,7 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 
 ### State of the Art — 2026
 
-**Intuition** — Do not memorise a model leaderboard. Learn the axes that make one model family fit a conversational-AI product better than another.
+**Intuition** — No model is simply "best." Each frontier family is a **bundle of tradeoffs** — reasoning quality, context length, cost, openness, safety, speed — and choosing one means choosing which of those axes your product cares about most. So the durable skill isn't memorising who tops this month's leaderboard; it's reading a model by its axes.
 
 **A snapshot, so the axes below aren't purely abstract — state of the art as of April 2026:**
 

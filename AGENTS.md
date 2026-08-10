@@ -245,7 +245,13 @@ Intuition -> Mechanism -> Worked example -> Tradeoff / when NOT to use -> Diagra
 
 Rules:
 
-- The **Intuition** is a real intuition — a plain-language mental model of what the concept *is* and why it works, in the reader's own terms. It is **not** meta-commentary about importance or exam-relevance ("the spine of the course, learn this cold, likely on the mid-sem") and **not** a bare dictionary definition ("the maximum tokens a model can hold"). Lead with the mental model; a one-line definition may follow it but must never replace it, and any "this matters / likely on the exam" note goes at the *end* of the block, never as the whole of it. Test: if the Intuition were the only thing a reader saw, would they understand *what the thing is* — not just that it's important?
+- The **Intuition** is a real intuition — a concrete mental model of what the concept *is* and why it works, in the reader's own terms: a reframe, an analogy, or a walk-through they can picture and hold ("a reasoning system that happens to speak your language"; "protocols are the USB-C moment"; "picture one request handled end to end"). It is **not** any of these four failure modes:
+  - **(a) meta-commentary** about importance or exam-relevance — "the spine of the course, learn this cold, likely on the mid-sem";
+  - **(b) a bare definition** — "the maximum tokens a model can hold";
+  - **(c) a list of terms with no mapping** to what each one is or does — "the six jobs: understand, track, look up, act, respond, remember" (say which component each *is*);
+  - **(d) a section-agenda or summary** — "Four axes.", "the argument, stated as a contrast:".
+
+  Lead with the mental model; a definition, a mapping, or a "this matters / likely on the exam" note may *follow* it but must never *be* it. Test: if the Intuition were the only thing a reader saw, would they come away understanding *what the thing is and why* — not just that it exists, or that it's important?
 - Tradeoff is never blank and never "depends on the use case." Name the specific case where the simpler option wins.
 - Worked examples must be reproducible by hand or in <=30 lines of code.
 - Verify arithmetic by running it before writing it.
