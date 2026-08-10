@@ -240,8 +240,10 @@ You may reorder material within the handout scope when that makes the concept ea
 Each concept must include, in this order:
 
 ```text
-Intuition -> Mechanism -> Worked example -> Tradeoff / when NOT to use -> Diagram
+Intuition -> Mechanism -> Worked example -> Tradeoff / when NOT to use
 ```
+
+The four **text** blocks come in that order. Every concept also has **at least one diagram**, but its placement is **content-driven, not a fixed final slot**: put it where it best illustrates — right after the Intuition as a visual overview, or right after the Mechanism when it depicts the parts that block just introduced. Do not mechanically shove every diagram to the end, and do not reorder a section's blocks just to make placement uniform across sections; each section's flow wins.
 
 Rules:
 

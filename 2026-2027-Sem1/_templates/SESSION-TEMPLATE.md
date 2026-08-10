@@ -43,10 +43,12 @@
 flowchart TD
     A["first step"] --> B["second step"]
 ```
-<!-- Every concept gets ≥1 diagram. Prefer the deck's figure (look at the IMAGE,
-     not just slide text); else a textbook figure; else your own, marked "(my own)".
-     Use `flowchart TD` unless it's a short linear ≤5-box pipeline (`LR`).
-     Validate: cd tools && npm run check -->
+<!-- Every concept gets ≥1 diagram. PLACEMENT is content-driven, not fixed last:
+     put it where it best illustrates — right after the Intuition (a visual
+     overview) or right after the Mechanism (when it depicts the parts). Prefer
+     the deck's figure (look at the IMAGE, not just slide text); else a textbook
+     figure; else your own, marked "(my own)". Use `flowchart TD` unless it's a
+     short linear ≤5-box pipeline (`LR`). Validate: cd tools && npm run check -->
 
 <!-- OPTIONAL depth blocks — add where the concept has real-world weight; marked beyond-course: -->
 
