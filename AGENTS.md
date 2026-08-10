@@ -215,9 +215,13 @@ Lab code lives in `<subject>/labs/S<NN>-<slug>/`, never in `notes/`.
 1. Title: `<Subject Name> · Session NN · <Handout Topic Title>`
 2. One line: `*Learned <date>*`
 3. `## Why this matters`
-4. Body: `## Part N · <title>` then `### N. <Concept>`
+4. Body: `## <part title>` (topic-only major grouping) then `### <Concept>` sections
 5. `## Self-study / Lab / build`
 6. Exam footer linking to the master index
+
+**Headings carry no numbers.** Part and section headings are topic-only — `## Chatbots to Agentic Systems`, `### The six components`, not `## Part 1 · …` or `### 4. …`. Numbered headings read as a rigid list and force every cross-reference to track a number; topic names read as an organised outline and never go stale.
+
+**Cross-reference by name, never by number, and never point forward to future course sessions.** Within a note, refer to another section by its name ("see *Production concerns*", "expanded under *The six components*"), never "section 11". Do **not** add pointers to material taught in later sessions of the course ("session 11", "L7–L8", "Module 2", "full treatment in L4") — at this session the reader hasn't met them, so they are noise; teach the point here and let later sessions stand on their own. The only allowed session references are the exam-scope footer (which states which sessions the exam covers) and a self-reference to the current session.
 
 Do not add a hand-written `## Topics` index. The headings already form the navigable outline and cannot drift.
 

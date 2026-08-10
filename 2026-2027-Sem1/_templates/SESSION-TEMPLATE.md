@@ -14,7 +14,7 @@
 
 **Running example (if any):** <the concrete thread used throughout>.
 
-<!-- NO "## Topics" index. The `## Part N ·` and `### N.` headings below already
+<!-- NO "## Topics" index. The `##` part and `###` section headings below already
      form an outline that GitHub, Obsidian and VS Code render as a navigable table
      of contents — always in sync, zero maintenance. A hand-written index duplicates
      that and drifts from it. This was built with one-line summaries and a Depth
@@ -24,9 +24,11 @@
 
 ---
 
-## Part 1 · <part title>
+## <part title>
 
-### 1. <Concept name>
+<!-- Headings carry NO numbers — topic-only, e.g. "## Chatbots to Agentic Systems". -->
+
+### <Concept name>
 
 <!-- No reference line, no source citation. State the knowledge directly. -->
 
@@ -62,11 +64,15 @@ flowchart TD
 
 ---
 
-### 2. <Next concept>
+### <Next concept>
 
 ...
 
-<!-- start each new Part with its own `## Part N · <title>` divider, then `### ` concepts -->
+<!-- Start each new part with its own `## <title>` divider (topic-only, no number),
+     then `### ` concept sections (topic-only, no number). Cross-reference other
+     sections by NAME, never by number ("see *Production concerns*"), and never
+     point forward to future course sessions ("session 11", "L7–L8", "Module 2"). -->
+
 
 ---
 

@@ -10,11 +10,11 @@ It also sets up the lab work: tokenization/BPE, an AI bot with tool calling, con
 
 By the end of this note, you should be able to explain five things comfortably in your own words: how conversational AI evolved from chatbots to agents, how agentic architecture differs from the older pipeline, what the main system components are, why tokenization and context windows matter in production, and how a modern agent moves through its lifecycle from user request to action.
 
-## Part 1 · Chatbots to Agentic Systems
+## Chatbots to Agentic Systems
 
 *What conversational AI actually is, and the sixty-year history from rule-based ELIZA to today's agents — the history explains why systems look the way they do now.*
 
-### 1. What conversational AI is
+### What conversational AI is
 
 **Intuition** — Conversational AI is not just a chatbot. It is a **reasoning system that happens to speak your language**.
 
@@ -32,7 +32,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 | **Dialogue Management** | Manage the conversation itself | Handling complex, multi-turn dialogues; maintaining conversation flow and context |
 | **Natural Language Generation (NLG)** | Produce the reply | Generating human-like responses; **personalization** — adapting to user preferences |
 
-This is a compact three-part preview; **section 4 expands it to the full six components** — NLU and Dialogue Management stay, NLG becomes "Response Generation," and Knowledge Access, Action Execution, and Memory Systems are added: the pieces a bot needs once it moves from *talking* to *doing*.
+This is a compact three-part preview; **the six components below expand this in full** — NLU and Dialogue Management stay, NLG becomes "Response Generation," and Knowledge Access, Action Execution, and Memory Systems are added: the pieces a bot needs once it moves from *talking* to *doing*.
 
 **Mechanism — the three-part frame** used throughout:
 
@@ -60,7 +60,7 @@ You already use conversational AI every day — three familiar categories, each 
 - **Customer support** — banking chatbots, e-commerce help desks (increasingly LLM- or agent-based).
 - **Virtual agents** — healthcare triage, HR assistants (narrow-domain agents with real actions attached, like scheduling or routing a case).
 
-None of these are exotic research demos; they're the same six components from section 4, in production today.
+None of these are exotic research demos; they're the same six components covered below, in production today.
 
 #### Market Trends & Industry Impact
 
@@ -78,7 +78,7 @@ The pattern across all four: this isn't "will conversational AI matter" — it's
 
 ---
 
-### 2. The evolution, 1960s → 2026
+### The evolution, 1960s → 2026
 
 **Intuition** — Seven eras, each fixing the previous one's fatal limitation and introducing a new one. Learn it by the **Limitations** column: that's what drives the next row.
 
@@ -98,7 +98,7 @@ The pattern across all four: this isn't "will conversational AI matter" — it's
 
 **Mechanism — the key driver:**
 
-> Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (section 8 explains what it is), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
+> Three simultaneous breakthroughs made LLMs possible — **the Transformer architecture (explained later under *LLMs as the brain*), affordable GPU compute, and internet-scale training data.** Remove any one and we're still in the chatbot era.
 
 The 2023–2025 row matters most: it marks the move from assistant to autonomous collaborator.
 
@@ -108,7 +108,7 @@ The 2023–2025 row matters most: it marks the move from assistant to autonomous
 
 ---
 
-### 3. Architecture: traditional vs agentic
+### Architecture: traditional vs agentic
 
 **Intuition** — The old pipeline classified then responded. The new one plans then acts. Everything else follows from that.
 
@@ -141,7 +141,7 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 
 ---
 
-### 3b. Workflows vs agents — and when not to build one
+### Workflows vs agents — and when not to build one
 
 **Intuition** — People say "agentic AI" as if it were one single thing. It isn't. The umbrella term **agentic systems** actually splits into **two distinct levels**, and one question separates them: *who decides the sequence of steps — you, in code, or the model, at runtime?*
 
@@ -183,7 +183,7 @@ The decision rule:
 | Flexibility and model-driven decisions needed at scale | **Agent** |
 | **Many applications** | **Neither** — a single LLM call with retrieval and in-context examples is usually enough |
 
-If you remember only one caution from this section, remember this one: **agentic freedom is expensive**. More autonomy means more latency, more cost, and more room for one wrong step to trigger the next wrong step. That is exactly the "reliable long-horizon execution" problem raised again in section 12. Test in sandboxed environments with guardrails.
+If you remember only one caution from this section, remember this one: **agentic freedom is expensive**. More autonomy means more latency, more cost, and more room for one wrong step to trigger the next wrong step. That is exactly the "reliable long-horizon execution" problem raised again under *Open problems*. Test in sandboxed environments with guardrails.
 
 **On frameworks** — a caution worth holding onto:
 
@@ -203,11 +203,11 @@ The third principle is easy to underestimate. A good rule of thumb is to invest 
 
 ---
 
-## Part 2 · What a system is made of
+## What a system is made of
 
 *The anatomy of a real system — the six components every conversational agent has. Treat this as the checklist you return to whenever one of them fails.*
 
-### 4. The six components of modern conversational AI
+### The six components of modern conversational AI
 
 **Intuition** — Any conversational system, from a 2005 IVR (interactive voice response phone menu) to a 2026 agent, still has to do the same six jobs: understand, track the conversation, look things up, act, respond, and remember. What changed is where the difficulty lives: the LLM absorbs much of **understanding, dialogue, and generation**, while **knowledge, action, and memory** remain the expensive engineering pieces.
 
@@ -263,7 +263,7 @@ Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes
 
 ---
 
-### 5. Frameworks
+### Frameworks
 
 **Intuition** — A framework is glue, not magic. Nothing in the tables below gives a model a brand-new capability. What it gives you is a standard way to wire pieces together: how tools are declared, where memory is stored, how retries work, and how traces are captured. That is genuinely useful on a team. It is much less useful when you are still learning the loop itself, which is why it helps to understand the raw API pattern before handing the work to a framework.
 
@@ -304,11 +304,11 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 ---
 
-## Part 3 · Tokenization, context windows, and the model layer
+## Tokenization, context windows, and the model layer
 
 *Down one level, into the model itself: tokenization, context windows and the mechanics that decide what an agent can and can't do with language.*
 
-### 6. Tokenization
+### Tokenization
 
 **Intuition** — Breaking text into subword units that LLMs process. BPE (Byte Pair Encoding) sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
 
@@ -387,7 +387,7 @@ At 10,000 conversations/day:
 
 The two estimates above don't have to land on the same number — pricing, prompt length, and turn count all shift the total — but the *shape* is the point both make: swapping GPT-4o for GPT-3.5 Turbo on the same workload cuts cost roughly **5–10×** for a task that doesn't need frontier reasoning. That's the concrete version of "model selection can cut cost by an order of magnitude" below.
 
-> **Key insight: token count directly controls operating cost.** A cheaper model, a shorter prompt, or better retrieval can reduce cost by an order of magnitude without changing the product. Model selection and prompt optimisation alone can cut token costs **10–20×** — this is the whole subject of session 11 (cost optimisation, prompt caching, model routing).
+> **Key insight: token count directly controls operating cost.** A cheaper model, a shorter prompt, or better retrieval can reduce cost by an order of magnitude without changing the product. Model selection and prompt optimisation alone can cut token costs **10–20×** — this is the whole subject of later cost-optimisation work (prompt caching, model routing).
 
 **Mechanism — BPE, three steps:** ① **Training** — read a massive corpus, count adjacent pairs of characters. ② **Merging** — take the most frequent pair, add it to the vocabulary as a new unit. ③ **Iterating** — repeat thousands of times until the target vocabulary size.
 
@@ -446,7 +446,7 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 ---
 
-### 7. Context windows
+### Context windows
 
 **Intuition** — The maximum tokens a model can hold, which for a conversation means how much history it can see at once.
 
@@ -460,11 +460,11 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 | Emerging | 2M+ | ~1.5M+ | specialised use cases | — |
 | Practical reality | any size | — | bigger windows help, but retrieval and memory still matter | — |
 
-**These numbers move fast.** By the time you're reading this, section 13's April-2026 snapshot already shows most frontier models sitting at the "extended/ultra-long" tier by default (1M tokens standard for GPT-5.4, Claude Opus, and Gemini 3.1 Pro; 10M for Llama 4 Scout) — the table above is the reference point the field was arguing about in 2024–25, and it's worth watching *which tier a model sits in*, not memorising a number that will be outdated within a year.
+**These numbers move fast.** By the time you're reading this, the April-2026 snapshot below already shows most frontier models sitting at the "extended/ultra-long" tier by default (1M tokens standard for GPT-5.4, Claude Opus, and Gemini 3.1 Pro; 10M for Llama 4 Scout) — the table above is the reference point the field was arguing about in 2024–25, and it's worth watching *which tier a model sits in*, not memorising a number that will be outdated within a year.
 
 **⚠️ The challenge — the exam-worthy bit, not the numbers:**
 
-> **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG (Retrieval-Augmented Generation) + memory systems** (Module 2).
+> **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG (Retrieval-Augmented Generation) + memory systems** — both covered later in the course.
 
 *Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. It's the same way you skim a long email: you reliably catch the opening line and the ask at the very bottom, but a detail buried three paragraphs deep you gloss right over — even though your eyes passed over all of it. So a fact placed mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
 
@@ -497,7 +497,7 @@ You are **over budget before the model answers at all**. That is the operational
 
 ---
 
-### 8. LLMs as the brain — capabilities and limits
+### LLMs as the brain — capabilities and limits
 
 **Intuition** — The LLM is the reasoning engine, and its strengths and failures are *the same property seen twice*. It is a next-token predictor trained to produce plausible continuations — so it is fluent, flexible and good at intent, **and** it will produce a plausible continuation when it has no idea, which is what hallucination is. It is not a bug bolted onto a good system; it's the cost of the mechanism that makes the system work at all.
 
@@ -558,26 +558,26 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 | No memory | **External memory systems** | Remember user preferences |
 | Calculation errors | **Calculator tool, code execution** | Precise math |
 
-**Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why production concerns (section 11) become a topic.
+**Tradeoff** — every row adds a component that can fail independently. Tool calling adds API downtime and auth; RAG adds a retrieval step that can return the wrong passage; memory adds staleness and privacy exposure. **You're trading one unreliable component for several reliable-ish ones plus orchestration** — which is a real improvement, and also why *production concerns* become a topic.
 
 > ***Going deeper*** *— RAG in one picture, since it's named as the fix all through this note but never drawn:*
 > **RAG = Retrieval-Augmented Generation.** Instead of hoping the model *memorised* a fact, you **fetch** the relevant text and hand it to the model in the prompt:
 >
 > ![Retrieval-Augmented Generation flow](assets/S01-rag-flow.svg)
 >
-> Why it's the fix for **hallucination** (section 8) and dodges **"lost in the middle"** (section 7): the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store.
+> Why it's the fix for **hallucination** and dodges **"lost in the middle"**: the model answers from *retrieved, current, citable* text you control, and you send it the **right few thousand tokens** rather than stuffing the whole corpus. Two failure points to remember: retrieval can fetch the **wrong** chunk (garbage in → garbage out), and answers are only as fresh as the vector store.
 >
 > *An everyday way to see the difference: RAG is like an open-book exam instead of a closed-book one — instead of relying purely on what you memorised, and risking a confident but wrong answer, you look up the relevant page first and then write your answer from what's actually in front of you.*
 >
-> Full treatment in L7–L8.
+> Covered in depth later in the course.
 
 ---
 
-## Part 4 · How an agent actually runs
+## How an agent actually runs
 
 *The core of the course: the seven-stage loop that turns a language model into an agent — and why that same loop makes agents both powerful and hard to make reliable.*
 
-### 9. The seven-stage agent lifecycle
+### The seven-stage agent lifecycle
 
 **Intuition** — The spine of the whole course. Every later lecture deepens one stage. **Learn this cold; it's the single most likely structured question on the mid-sem.**
 
@@ -611,16 +611,16 @@ What actually passes between stages:
 |---|---|
 | 1 → 2 | Sanitised text + extracted entities |
 | 2 → 3 | An intent label and a **candidate tool list** — routing narrows what stage 3 may consider |
-| 3 → 4 | A **structured tool call**: name + arguments (this is function calling, session 4) |
+| 3 → 4 | A **structured tool call**: name + arguments (this is function calling) |
 | 4 → 5 | The tool's raw return value, which becomes an **observation** |
 | 5 → 3 | Observations + retrieved context, appended to the running scratchpad |
 | 3 → 6 | A draft answer, once reasoning stops requesting tools |
 
-**The loop is the agent.** Remove it — run each stage exactly once — and you have a *workflow* (section 3b): cheaper, predictable, and unable to recover from a tool returning something unexpected. The loop is what buys adaptability and what makes cost unpredictable, because nothing guarantees how many times it turns.
+**The loop is the agent.** Remove it — run each stage exactly once — and you have a *workflow* (the *workflows vs agents* distinction): cheaper, predictable, and unable to recover from a tool returning something unexpected. The loop is what buys adaptability and what makes cost unpredictable, because nothing guarantees how many times it turns.
 
 An everyday way to see the difference: a workflow is like a printed checklist you fill in top to bottom regardless of what you find along the way. The loop is more like a detective working a case — gather a clue, ask "do I know enough yet?", and if not, go gather another one, repeating until the case can actually be closed. That repeated check-and-continue is exactly what a fixed checklist can never do.
 
-**Two exit conditions matter in production:** the model stops asking for tools (the good one), and a **step limit** fires (the guard). Without the second, a confused agent bills you indefinitely — which is the 100-step compounding-error problem from section 12.
+**Two exit conditions matter in production:** the model stops asking for tools (the good one), and a **step limit** fires (the guard). Without the second, a confused agent bills you indefinitely — which is the 100-step compounding-error problem from *Open problems*.
 
 **Worked example — banking agent.** User: *"What's my account balance and recent transactions?"*
 
@@ -642,18 +642,18 @@ Notice safety appears **twice** — sanitization at stage 1 (input) and validati
 >
 > Map to all seven stages: what entities are extracted? which tools/agents? what's the step-by-step plan? what specific API calls? what should be stored? what validations before acting? how should it communicate?
 
-The interesting stage here is **6 (Safety)** — this request *takes an action in the world*. A booking is not reversible by the agent, so it needs confirmation before execution, not after. That's the human-in-the-loop principle from section 11.
+The interesting stage here is **6 (Safety)** — this request *takes an action in the world*. A booking is not reversible by the agent, so it needs confirmation before execution, not after. That's the human-in-the-loop principle from *Production concerns*.
 
-**Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing (L11) is for.
+**Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing is for.
 
 > ***In practice*** *— how you actually build these seven stages:*
 > - In real code the lifecycle is a **state machine**, and **LangGraph** is the tool the course uses for exactly this: each stage is a **node**, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Drawing the seven stages as a LangGraph is Lab-4-and-beyond work.
-> - Stages 1 and 6 (**safety**) are usually not your own code — you wire in **guardrails libraries** (NeMo Guardrails, Guardrails AI, Llama Guard) for prompt-injection defence, PII redaction and output filtering. "Never rely on a single safety layer" (section 11) means both ends, plus these.
+> - Stages 1 and 6 (**safety**) are usually not your own code — you wire in **guardrails libraries** (NeMo Guardrails, Guardrails AI, Llama Guard) for prompt-injection defence, PII redaction and output filtering. "Never rely on a single safety layer" (see *production concerns*) means both ends, plus these.
 > - Stage 4 (**tool invocation**) is the one that acts on the world, so anything irreversible — a payment, a booking, a delete — gets a **human-in-the-loop** confirmation before execution, not after. This is the single most important production habit in the whole lifecycle.
 
 ---
 
-### 10. Protocol landscape
+### Protocol landscape
 
 **Intuition** — As agents proliferate they need standard ways to talk to tools, data, each other and UIs. The argument for standards, stated as a contrast:
 
@@ -681,7 +681,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Worked example** — A travel-planning agent can use **MCP** to read a calendar and call a flight-search tool, then use **A2A** to delegate visa-checking to another agent. MCP connects the agent downward to tools; A2A connects it sideways to peers.
 
-**A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes in L13–L14.
+**A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes later in the course.
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
 
@@ -694,14 +694,14 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 | One internal team controls both sides and just needs a simple integration | **Custom REST / GraphQL** may still be simpler |
 | You are still prototyping one agent with one or two tools | Start with **direct tool calls** first, standardise later |
 
-The practical principle is the same as workflows vs agents in section 3b: **take the simplest thing that preserves the capability you need**. Standards pay off at scale, not on day one.
+The practical principle is the same as the *workflows vs agents* distinction: **take the simplest thing that preserves the capability you need**. Standards pay off at scale, not on day one.
 
 > ***In practice*** *— MCP is the one to actually know right now:*
 > **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.
 
 ---
 
-### 11. Production concerns
+### Production concerns
 
 **Intuition** — the core point: *building conversational agents that work in development is one thing. Building them to work reliably at scale in production is another.* Four axes.
 
@@ -743,7 +743,7 @@ Input validation (prompt injection defence) · PII detection and redaction · ou
 
 ---
 
-### 12. Open problems
+### Open problems
 
 **Intuition** — Every item below is a limitation of the *current* generation, not a law. It's worth knowing which is which: some of these are engineering problems that money and iteration will close, and some are open research questions that may not close at all. Reading them as a single list of "things AI can't do yet" is the mistake — the useful skill is telling a **workaround** from a **wall**.
 
@@ -775,12 +775,12 @@ Where research is active — useful for essay-style questions asking "what are t
 
 | Problem | What you actually do about it now |
 |---|---|
-| Multi-step reasoning fails | Decompose into a **workflow** with fixed steps (section 3b) rather than trusting an agent to plan |
-| No cross-session memory | Explicit memory store, written and read at defined points (session 6) |
+| Multi-step reasoning fails | Decompose into a **workflow** with fixed steps (see *workflows vs agents*) rather than trusting an agent to plan |
+| No cross-session memory | Explicit memory store, written and read at defined points |
 | Hallucination | Retrieval with **citations the user can check**, so the failure is visible rather than silent |
 | Long-horizon drift | Checkpoints, step limits, and a human approval gate before anything irreversible |
-| Alignment | Layered safety — input filter, tool allow-list, output check (section 11) |
-| Cost | Route easy queries to a small model; cache aggressively (session 11) |
+| Alignment | Layered safety — input filter, tool allow-list, output check (see *production concerns*) |
+| Cost | Route easy queries to a small model; cache aggressively |
 
 **Worked example** — A travel agent asked to plan a three-week itinerary should not run freely for 100 tool calls. The production design turns the open problem into constraints: fixed workflow steps, a maximum tool-call budget, checkpoints after flight and hotel selection, and human approval before booking. The model is still imperfect, but the system no longer lets one imperfect step silently compound into a bad purchase.
 
@@ -788,7 +788,7 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 
 ---
 
-### 13. State of the Art — 2026
+### State of the Art — 2026
 
 **Intuition** — Do not memorise a model leaderboard. Learn the axes that make one model family fit a conversational-AI product better than another.
 
@@ -830,7 +830,7 @@ The durable lesson is not a ranking of vendors; it is the decision rule. In conv
 
 ## Self-study / Lab / build
 
-**521 Lab 1 (session 1): tokenization and an AI bot with tool calling.** Two hands-on demos:
+**521 Lab 1 (this session): tokenization and an AI bot with tool calling.** Two hands-on demos:
 
 **Demo A — BPE with `tiktoken`:** text → tokens, token counting for a sample conversation, cost analysis, model comparison across tokenizers.
 
@@ -850,9 +850,9 @@ The durable lesson is not a ranking of vendors; it is the decision rule. In conv
 
 ⚠️ **The notebook differs from the plan.** The stated approach is "native OpenAI API"; the notebook the instructor actually shared uses **Ollama running `llama3` locally + LangChain + Tavily search** — no paid API, nothing leaves your machine. **Follow the notebook.**
 
-Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in session 1**, three sessions before it's formally taught in L4. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
+Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running the **ReAct loop in this session**, well before it's formally taught later in the course. `verbose=True` prints the agent's thoughts and tool choices; that trace *is* the lesson.
 
-> ***Going deeper*** *— what the ReAct trace you're about to watch actually is (full treatment L4):*
+> ***Going deeper*** *— what the ReAct trace you're about to watch actually is (full treatment later in the course):*
 > **ReAct = Reason + Act.** The agent doesn't answer in one shot — it runs a loop, thinking out loud between tool calls:
 >
 > ![ReAct loop](assets/S01-react-loop.svg)
@@ -877,7 +877,7 @@ def get_weather(city: str) -> str:
     """Get the current weather for a given city by searching the web. Input should be a city name, e.g. 'Paris' or 'New York'."""
 ```
 
-**The docstring is the tool description the model reads to decide when to call it.** That's the agent-computer interface (ACI) point from section 3b made concrete — the docstring is prompt engineering, not documentation.
+**The docstring is the tool description the model reads to decide when to call it.** That's the agent-computer interface (ACI) point from *workflows vs agents* made concrete — the docstring is prompt engineering, not documentation.
 
 Five stages, and the staging is the lesson:
 
