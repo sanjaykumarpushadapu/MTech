@@ -248,7 +248,7 @@ Short-term is free (it *is* the prompt); the other three need real storage, whic
 
 #### Use Case: Customer Support Evolution
 
-**The same request — user says *"I lost my card"* — handled across four eras:**
+**Worked example — the same request across four eras** (user says *"I lost my card"*):
 
 | Approach | Capabilities | Bot response |
 |---|---|---|
@@ -893,4 +893,4 @@ Target interaction: *"What's the weather like in Mumbai?"* — the notebook uses
 
 ---
 
-*Exam: this session is in scope for the **closed-book mid-sem** (sessions 1–8). Full evaluation, weights, dates and course logistics live once in [`521-master.md`](../521-master.md) — not repeated per session.*
+*Exam: this session is in scope for the **closed-book mid-sem** (L1–L8). Full evaluation, weights, dates and course logistics live once in [`521-master.md`](../521-master.md) — not repeated per session.*

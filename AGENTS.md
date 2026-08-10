@@ -244,6 +244,7 @@ Rules:
 - Tradeoff is never blank and never "depends on the use case." Name the specific case where the simpler option wins.
 - Worked examples must be reproducible by hand or in <=30 lines of code.
 - Verify arithmetic by running it before writing it.
+- The required blocks stay **identifiable** even when a heading mirrors a slide title. If the worked example lives under a descriptive/slide-titled subsection (e.g. `#### Use Case: …`), keep a `**Worked example**` label on it so the block is still recognisable as the required one — a compliance scan (and a reader) must be able to point to each of the four blocks by name. Mirroring the slide title and labelling the block are not in conflict; do both.
 - Landscape topics get comparison tables.
 - Hard concepts need a plain-language on-ramp and a short everyday analogy.
 - Dense math must be signposted as skimmable on first pass, with the key takeaway stated plainly.
