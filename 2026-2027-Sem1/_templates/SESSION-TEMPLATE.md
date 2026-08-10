@@ -32,7 +32,7 @@
 
 <!-- No reference line, no source citation. State the knowledge directly. -->
 
-**Intuition** — what it actually is, in one or two plain sentences. No jargon that isn't defined here.
+**Intuition** — the mental model of what it actually *is* and why it works, in plain sentences. NOT meta-commentary about importance ("learn this cold") and NOT a bare definition — neither builds understanding. A one-line definition may follow the mental model, never replace it. No jargon that isn't defined here.
 
 **Mechanism / formula** — how it works. The step-by-step, or the equation with each symbol named.
 

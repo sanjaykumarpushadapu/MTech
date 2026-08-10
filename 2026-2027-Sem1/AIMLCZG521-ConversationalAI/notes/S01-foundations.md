@@ -310,7 +310,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 ### Tokenization
 
-**Intuition** — Breaking text into subword units that LLMs process. BPE (Byte Pair Encoding) sits in the **"Goldilocks" zone** between character-based tokenization (sequences too long, little meaning per token) and word-based tokenization (huge vocabulary, fails on unknown words).
+**Intuition** — A model can't read letters or words directly — it only handles a fixed inventory of numbered pieces, so text has to be chopped into those pieces before the model ever sees it. The real question is the *size* of piece: whole words make a huge, brittle vocabulary that breaks on anything unseen; single characters make sequences endlessly long with little meaning each. **Subword** tokenization — **BPE (Byte Pair Encoding)** — sits in the **"Goldilocks" zone** between the two: pieces big enough to carry meaning, small enough to recombine into words the model never saw whole.
 
 ![Tokenization and BPE](assets/S01-tokenization-bpe.svg)
 
@@ -448,7 +448,7 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 ### Context windows
 
-**Intuition** — The maximum tokens a model can hold, which for a conversation means how much history it can see at once.
+**Intuition** — A model keeps no memory of its own between turns; everything it can use right now has to fit in one finite workspace that it re-reads from scratch on every turn. The **context window** is the size of that workspace, measured in tokens — so for a conversation it is simply *how much of the history the model can still see at once.* Outgrow it and something has to be dropped, summarised, or fetched back in on demand.
 
 **Mechanism — context is a shared token budget.** System prompt, user turns, retrieved documents, tool output and the answer all consume the same finite window. As the conversation grows, the system must either summarise, retrieve selectively, forget older turns, or move memory outside the prompt.
 
