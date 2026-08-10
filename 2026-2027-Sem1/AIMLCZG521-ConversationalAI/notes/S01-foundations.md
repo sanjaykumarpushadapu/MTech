@@ -143,24 +143,20 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 
 ### 3b. Workflows vs agents — and when not to build one
 
-**Intuition** — "Agentic AI" gets used as though it were one thing, but there's a sharper, more useful distinction inside it:
+**Intuition** — People say "agentic AI" as if it were one single thing. It isn't. The umbrella term **agentic systems** actually splits into **two distinct levels**, and one question separates them: *who decides the sequence of steps — you, in code, or the model, at runtime?*
 
-| | Definition |
+1. **Workflows — the lower-autonomy level.** LLMs and tools are orchestrated through **predefined code paths**. *You* write the sequence of steps; the model only fills in a few decisions inside it. Predictable, consistent, easy to test.
+2. **Agents — the higher-autonomy level.** The LLM **dynamically directs its own process and tool use**, staying in control of *how* it accomplishes the task. You hand it a goal and some tools; *it* chooses the path at runtime. Flexible and powerful, but harder to predict and audit.
+
+Both sit under the same umbrella and use the same building blocks (an LLM plus tools). The only real difference is **how much control you hand to the model** — a little (workflow) or a lot (agent).
+
+| Level | Definition |
 |---|---|
-| **Agentic systems** | The umbrella term for all of it |
-| **Workflows** | Systems where LLMs and tools are orchestrated through **predefined code paths** |
-| **Agents** | Systems where LLMs **dynamically direct their own processes and tool usage**, maintaining control over how they accomplish tasks |
+| **Agentic systems** | the umbrella term covering both levels below |
+| **Workflows** | LLMs + tools orchestrated through **predefined code paths** — *you own the path* |
+| **Agents** | LLMs that **dynamically direct their own process and tool use** — *the model owns the path* |
 
-*An everyday analogy that makes the line stick:* a **workflow** is a **recipe** — the steps are written down in advance and followed in the same order every time. An **agent** is a **chef** told *"make me dinner with what's in the fridge"* — it decides the steps at runtime. Same ingredients (LLM plus tools), different amount of freedom handed to the model.
-
-The dividing question: **who decides the sequence of steps — you, in code, or the model, at runtime?**
-
-Before the diagram, keep the contrast simple:
-
-- In a **workflow**, you decide the path and the model fills in a few steps inside it.
-- In an **agent**, you give the model a goal and tools, and the model decides the path itself.
-
-That single difference explains most of the tradeoffs below.
+*An everyday analogy that makes the line stick:* a **workflow** is a **recipe** — the steps are written down in advance and followed in the same order every time. An **agent** is a **chef** told *"make me dinner with what's in the fridge"* — it decides the steps at runtime. Same ingredients, different amount of freedom handed to the model.
 
 **Mechanism — the building block both are made of: the augmented LLM.**
 
@@ -254,12 +250,12 @@ Short-term is free (it *is* the prompt); the other three need real storage, whic
 
 **The same request — user says *"I lost my card"* — handled across four eras:**
 
-| Approach | Bot response |
-|---|---|
-| **Rule-based (2000s)** | *"For lost card, press 1. For stolen, press 2."* — rigid, frustrating |
-| **Intent-based (2015)** | *"I'll help you block your card. Which card — Credit or Debit?"* — better, but limited |
-| **LLM-based (2023)** | *"I understand. Let me help you block it temporarily while you check…"* — natural, **but no action** |
-| **Agentic (2025)** | *"I've immediately blocked your card ending in 1234. I see recent transactions at City Mall — last one was $45.20 at Starbucks 2 hours ago. Should I order a replacement to your home address?"* — proactive, action-oriented |
+| Approach | Capabilities | Bot response |
+|---|---|---|
+| **Rule-based (2000s)** | FAQ matching · keyword detection · fixed responses | *"For lost card, press 1. For stolen, press 2."* — rigid, frustrating |
+| **Intent-based (2015)** | intent classification · entity extraction · dialogue flow | *"I'll help you block your card. Which card — Credit or Debit?"* — better, but limited |
+| **LLM-based (2023)** | natural conversation · context understanding · fluent responses | *"I understand. Let me help you block it temporarily while you check…"* — natural, **but no action** |
+| **Agentic (2025)** | everything above + access banking system · execute transactions · multi-step actions | *"I've immediately blocked your card ending in 1234. I see recent transactions at City Mall — last one was $45.20 at Starbucks 2 hours ago. Should I order a replacement to your home address?"* — proactive, action-oriented |
 
 Business impact quoted: resolution time **15 minutes (human agent) → 2 minutes (agentic AI)**; customer satisfaction **+40%**.
 
