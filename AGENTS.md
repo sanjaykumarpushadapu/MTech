@@ -169,6 +169,10 @@ Do not rely on the master index, the note's history, or a prior audit — **only
 5. **Logistics slides go to the master, not the note** (evaluation scheme, course architecture, learning outcomes, textbooks, prerequisites, references) — their absence from the note is correct. Cross-check them against the master, but **never copy a deck logistics slide over the master**: when a deck slide and the confirmed handout/recording disagree, the handout/recording wins (a deck slide can be wrong — e.g. a quiz count). Flag the discrepancy; do not "fix" the master to match the deck.
 6. **Deliverable:** the complete slide → home table, every gap fixed in the same pass, and a short list of deliberate omissions with reasons. "Matches the index" is never the finish line — only "every slide has a verdict against the rendered source" is.
 
+**This protocol is also the definition of done for *writing* a note from a deck, not only for re-auditing one.** Every gap a later audit finds — a dropped table column, an algorithm named on a slide but absent from the note, a buried subsection, a changed number — exists because the first write skipped a step above. Run all six steps on the first write and there is nothing left for an audit to catch. A note is not "written"; it is written *and* reconciled slide-by-slide against the rendered deck.
+
+**You are the QA — the user is not.** Never report a note or audit as complete on the strength of extracted text, "the topic is present", or a prior pass. It is complete only when you have (a) rendered and actually looked at every slide, (b) produced the slide → home verdict table with a line for every slide, and (c) walked each slide's named items — every table column, algorithm, model, framework, statistic, and worked-example value — as a literal checklist. If you cannot show that table, the audit is not done. Do not make the user find the gap; finding it is your job, and the table is how you prove you did it.
+
 Auto-transcripts are noisy. Correct obvious terms silently, such as `RoPE`, `SwiGLU`, `GQA`, and `KV-cache`.
 
 ## 5. Session Note Contract
