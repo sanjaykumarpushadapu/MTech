@@ -62,7 +62,9 @@ You already use conversational AI every day — three familiar categories, each 
 
 None of these are exotic research demos; they're the same six components from section 4, in production today.
 
-**Industry impact, in numbers** — why this isn't a niche academic topic:
+#### Market Trends & Industry Impact
+
+The numbers say this isn't a niche academic topic:
 
 | Headline stat | Detail |
 |---|---|
