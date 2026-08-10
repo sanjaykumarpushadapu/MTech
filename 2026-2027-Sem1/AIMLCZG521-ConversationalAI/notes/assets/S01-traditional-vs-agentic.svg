@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1220 620" role="img" aria-labelledby="title desc">
   <title id="title">Traditional chatbot architecture versus agentic architecture</title>
   <desc id="desc">Traditional architecture flows through speech recognition, NLU, dialogue management, NLG, and TTS. Agentic architecture uses LLM understanding, orchestration, tools, memory, generation, and safety.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="traditiona_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1172" height="572" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="610" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Architecture shift: classify/respond becomes plan/act</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -21,7 +21,7 @@
     <rect x="550" y="240" width="120" height="95" rx="14" fill="#fff2bd" stroke="#8a6400" stroke-width="2"/>
     <text x="610" y="276" text-anchor="middle" font-size="18" font-weight="700">Shift</text><text x="610" y="303" text-anchor="middle" font-size="14">policy becomes</text><text x="610" y="323" text-anchor="middle" font-size="14">orchestration</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.2" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.2" fill="none" marker-end="url(#traditiona_a)">
     <line x1="300" y1="222" x2="300" y2="238"/><line x1="300" y1="282" x2="300" y2="298"/><line x1="300" y1="342" x2="300" y2="358"/>
     <line x1="920" y1="222" x2="920" y2="238"/><line x1="920" y1="282" x2="825" y2="298"/><line x1="920" y1="282" x2="1015" y2="298"/><line x1="825" y1="342" x2="920" y2="358"/><line x1="1015" y1="342" x2="920" y2="358"/>
     <line x1="540" y1="288" x2="670" y2="288"/>

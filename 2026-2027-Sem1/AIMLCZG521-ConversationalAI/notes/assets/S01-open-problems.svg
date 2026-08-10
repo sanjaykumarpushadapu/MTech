@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
   <title id="title">Open problems in conversational AI</title>
   <desc id="desc">Current open problems split into engineering workarounds and research walls; safe systems narrow scope with workflows, RAG, memory stores, checkpoints, routing, and safety layers.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="openproble_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1072" height="472" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="560" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Open problems: workaround or wall?</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -10,5 +10,5 @@
     <rect x="670" y="260" width="330" height="120" rx="16" fill="#f7e4e7" stroke="#914252" stroke-width="2.3"/><text x="835" y="296" text-anchor="middle" font-size="22" font-weight="700">Research wall</text><text x="835" y="326" text-anchor="middle" font-size="16">reasoning guarantees</text><text x="835" y="350" text-anchor="middle" font-size="16">grounded truth · alignment</text>
     <text x="560" y="452" text-anchor="middle" font-size="18">Production skill is constraining the problem until model reliability is enough.</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#a)"><path d="M515 189 C450 220 360 235 310 255"/><path d="M605 189 C670 220 760 235 810 255"/></g>
+  <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#openproble_a)"><path d="M515 189 C450 220 360 235 310 255"/><path d="M605 189 C670 220 760 235 810 255"/></g>
 </svg>

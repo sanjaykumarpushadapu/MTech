@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 500" role="img" aria-labelledby="title desc">
   <title id="title">Retrieval-Augmented Generation flow</title>
   <desc id="desc">A user question is embedded, matched against a vector store, and combined with retrieved context before the LLM generates a grounded answer.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="ragflow_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1072" height="452" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="560" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">RAG grounds the answer in retrieved text</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -14,7 +14,7 @@
     <rect x="850" y="315" width="190" height="70" rx="12" fill="#fff" stroke="#24304a" stroke-width="2"/><text x="945" y="357" text-anchor="middle" font-size="18" font-weight="700">Grounded answer</text>
     <text x="560" y="440" text-anchor="middle" font-size="15" font-style="italic" fill="#5a5540">Like an open-book exam &#8212; look up the right page first, then answer from what's in front of you.</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#ragflow_a)">
     <line x1="250" y1="180" x2="320" y2="180"/><line x1="510" y1="180" x2="580" y2="180"/><line x1="790" y1="180" x2="850" y2="180"/>
     <path d="M160 215 C160 300 260 300 290 315"/><path d="M950 215 C950 295 520 295 490 315"/>
     <line x1="560" y1="350" x2="590" y2="350"/><line x1="770" y1="350" x2="840" y2="350"/>

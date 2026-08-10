@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
   <title id="title">Six components of modern conversational AI</title>
   <desc id="desc">Conversational AI systems understand language, manage dialogue, retrieve knowledge, execute actions, generate responses, and maintain memory.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="sixcompone_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1072" height="512" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="560" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Six components: LLM core plus outside-world engineering</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -16,7 +16,7 @@
     <text x="560" y="460" text-anchor="middle" font-size="18">Understanding, dialogue and response are mostly absorbed by the LLM;</text>
     <text x="560" y="484" text-anchor="middle" font-size="18">knowledge, actions and memory need real systems.</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.5" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.5" fill="none" marker-end="url(#sixcompone_a)">
     <line x1="310" y1="169" x2="435" y2="169"/><line x1="675" y1="169" x2="800" y2="169"/>
     <path d="M560 208 L560 222"/><line x1="310" y1="359" x2="435" y2="359"/><line x1="675" y1="359" x2="800" y2="359"/>
   </g>

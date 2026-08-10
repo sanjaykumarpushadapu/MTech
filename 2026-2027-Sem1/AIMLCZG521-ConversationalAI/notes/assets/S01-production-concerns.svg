@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 550" role="img" aria-labelledby="title desc">
   <title id="title">Production concerns for conversational agents</title>
   <desc id="desc">Observability, cost, latency, and safety form a connected production tradeoff loop for conversational agents.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="production_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1032" height="502" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="540" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Production agents are four-way tradeoffs</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -12,7 +12,7 @@
     <text x="540" y="461" text-anchor="middle" font-size="18">Observability comes first because cost, latency and safety cannot be tuned without measurement.</text>
     <text x="540" y="498" text-anchor="middle" font-size="14" font-style="italic" fill="#5a5540">Cost caching is like a coffee shop pre-making its espresso base: the first cup is normal, every cup after is faster and cheaper.</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#production_a)">
     <path d="M465 200 C400 240 325 255 275 270"/><path d="M615 200 C680 240 755 255 805 270"/>
     <path d="M360 311 C390 330 405 345 420 360"/><path d="M720 311 C690 330 675 345 660 360"/>
     <path d="M655 371 C760 405 875 380 835 354"/><path d="M425 371 C320 405 205 380 245 354"/>

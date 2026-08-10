@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
   <title id="title">Bot ladder from chatbot to agent</title>
   <desc id="desc">Conversational systems progress from keyword chatbots to task bots, FAQ bots, generative systems, and agents, trading predictability for wider coverage.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="botladder_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1052" height="372" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="550" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">The bot ladder: more general means less predictable</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -18,7 +18,7 @@
     <text x="60" y="305" text-anchor="start" font-size="18">cheap · deterministic · auditable</text>
     <text x="1030" y="305" text-anchor="end" font-size="18">adaptive · expensive · less predictable</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#botladder_a)">
     <line x1="230" y1="195" x2="250" y2="195"/><line x1="430" y1="195" x2="450" y2="195"/><line x1="630" y1="195" x2="650" y2="195"/><line x1="830" y1="195" x2="850" y2="195"/>
   </g>
 </svg>

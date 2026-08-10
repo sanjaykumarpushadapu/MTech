@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
   <title id="title">From transformer to conversational agent</title>
   <desc id="desc">Transformers are pretrained into LLMs, instruction tuned, then augmented with tools, memory, and planning to become conversational agents.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="llmtoagent_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1072" height="372" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="560" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">The model is the brain; architecture makes it an agent</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -13,5 +13,5 @@
     <text x="560" y="324" text-anchor="middle" font-size="18">Hallucination, no actions and no persistent memory are fixed by system design, not by wishful prompting.</text>
     <text x="560" y="358" text-anchor="middle" font-size="15" font-style="italic" fill="#5a5540">Older models read one word at a time through a keyhole; a transformer lays the whole sentence on the table at once.</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)"><line x1="220" y1="196" x2="260" y2="196"/><line x1="420" y1="196" x2="460" y2="196"/><line x1="620" y1="196" x2="660" y2="196"/><line x1="820" y1="196" x2="860" y2="196"/></g>
+  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#llmtoagent_a)"><line x1="220" y1="196" x2="260" y2="196"/><line x1="420" y1="196" x2="460" y2="196"/><line x1="620" y1="196" x2="660" y2="196"/><line x1="820" y1="196" x2="860" y2="196"/></g>
 </svg>

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 520" role="img" aria-labelledby="title desc">
   <title id="title">Model selection capability axes</title>
   <desc id="desc">Conversational AI model choice is driven by quality, latency, cost, control, safety, context length, and modality rather than a static leaderboard.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="modelselec_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1052" height="472" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="550" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Pick models by product constraint, not leaderboard rank</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -14,7 +14,7 @@
     <rect x="465" y="370" width="170" height="62" rx="12" fill="#eaf2ff" stroke="#315a99" stroke-width="2"/><text x="550" y="409" text-anchor="middle" font-size="18" font-weight="700">Context</text>
     <rect x="750" y="350" width="170" height="62" rx="12" fill="#e4f2f4" stroke="#1f6570" stroke-width="2"/><text x="835" y="389" text-anchor="middle" font-size="18" font-weight="700">Modality</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.3" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.3" fill="none" marker-end="url(#modelselec_a)">
     <line x1="250" y1="156" x2="432" y2="230"/><line x1="420" y1="167" x2="495" y2="205"/><line x1="680" y1="167" x2="605" y2="205"/><line x1="850" y1="156" x2="668" y2="230"/>
     <line x1="350" y1="380" x2="444" y2="292"/><line x1="550" y1="370" x2="550" y2="302"/><line x1="750" y1="380" x2="656" y2="292"/>
   </g>

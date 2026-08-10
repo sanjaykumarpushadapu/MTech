@@ -2,8 +2,8 @@
   <title id="title">The loop inside the lifecycle: Reasoning, Tool, Memory</title>
   <desc id="desc">Stages 3 Reasoning, 4 Tool, and 5 Memory cycle repeatedly, with observations feeding back into reasoning, until reasoning has enough evidence to exit to stage 6 Safety.</desc>
   <defs>
-    <marker id="fwd" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker>
-    <marker id="back" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c85a3d"/></marker>
+    <marker id="reasoningt_fwd" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker>
+    <marker id="reasoningt_back" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c85a3d"/></marker>
     <style>
       .bg{fill:#fffdf7}
       .frame{fill:none;stroke:#c7b56f;stroke-width:2}
@@ -25,7 +25,7 @@
   <text class="s" x="45" y="65">stages 3→4→5 cycle until reasoning has enough evidence (section 9)</text>
 
   <!-- loop-back arc: Memory -> Reasoning -->
-  <path d="M770 140 C 700 88 260 88 190 140" fill="none" stroke="#c85a3d" stroke-width="3" stroke-dasharray="2 0" marker-end="url(#back)"/>
+  <path d="M770 140 C 700 88 260 88 190 140" fill="none" stroke="#c85a3d" stroke-width="3" stroke-dasharray="2 0" marker-end="url(#reasoningt_back)"/>
   <text class="loopLbl" x="480" y="93" text-anchor="middle">5→3: observations + retrieved context appended to scratchpad — not done yet</text>
 
   <!-- boxes -->
@@ -42,16 +42,16 @@
   <text class="sub" x="770" y="192" text-anchor="middle">store / retrieve</text>
 
   <!-- forward arrows -->
-  <line x1="290" y1="175" x2="378" y2="175" stroke="#24304a" stroke-width="3" marker-end="url(#fwd)"/>
+  <line x1="290" y1="175" x2="378" y2="175" stroke="#24304a" stroke-width="3" marker-end="url(#reasoningt_fwd)"/>
   <text class="cap" x="335" y="235" text-anchor="middle">3→4: structured</text>
   <text class="cap" x="335" y="250" text-anchor="middle">tool call (name + args)</text>
 
-  <line x1="580" y1="175" x2="668" y2="175" stroke="#24304a" stroke-width="3" marker-end="url(#fwd)"/>
+  <line x1="580" y1="175" x2="668" y2="175" stroke="#24304a" stroke-width="3" marker-end="url(#reasoningt_fwd)"/>
   <text class="cap" x="625" y="235" text-anchor="middle">4→5: raw return value</text>
   <text class="cap" x="625" y="250" text-anchor="middle">becomes an observation</text>
 
   <!-- exit branch -->
-  <line x1="190" y1="210" x2="190" y2="298" stroke="#914252" stroke-width="3" marker-end="url(#fwd)"/>
+  <line x1="190" y1="210" x2="190" y2="298" stroke="#914252" stroke-width="3" marker-end="url(#reasoningt_fwd)"/>
   <text class="exitLbl" x="215" y="260" text-anchor="start">3→6: done —</text>
   <text class="exitLbl" x="215" y="277" text-anchor="start">draft answer</text>
 

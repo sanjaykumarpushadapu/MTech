@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 520" role="img" aria-labelledby="title desc">
   <title id="title">Workflows versus agents</title>
   <desc id="desc">A workflow follows predefined code paths while an agent dynamically chooses tools and steps at runtime.</desc>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
+  <defs><marker id="workflowsv_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
   <rect x="24" y="24" width="1052" height="472" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="550" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Who decides the path?</text>
   <g font-family="Georgia,serif" fill="#17213a">
@@ -19,7 +19,7 @@
     <rect x="675" y="325" width="290" height="42" rx="8" fill="#fff" stroke="#24304a"/><text x="820" y="352" text-anchor="middle" font-size="17">decides when done</text>
     <text x="550" y="462" text-anchor="middle" font-size="19">Use workflows for known steps; use agents when runtime flexibility is worth cost and uncertainty.</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.4" fill="none" marker-end="url(#a)">
+  <g stroke="#24304a" stroke-width="2.4" fill="none" marker-end="url(#workflowsv_a)">
     <line x1="280" y1="237" x2="280" y2="258"/><line x1="280" y1="302" x2="280" y2="323"/>
     <line x1="820" y1="237" x2="820" y2="252"/><line x1="820" y1="302" x2="820" y2="323"/>
   </g>
