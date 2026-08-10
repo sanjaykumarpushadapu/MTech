@@ -352,6 +352,8 @@ No cross-subject links in session notes. Do not write `see 546 S9`, `shared with
 
 Same-subject navigation is fine, such as "see section 4" or "S14".
 
+**Keep cross-references clear and factual — never vague or editorial.** A pointer says plainly *what* is in the target section and *why* it's relevant here: "section 5 lists the frameworks" is fine; "section 5 lists twelve of them approvingly" is not — it's awkward, and readers can't tell what "approvingly" is doing. **Any count or fact inside a cross-reference ("twelve frameworks", "three types", "the six components") must match what the target section actually contains** — a stale count is a factual error. Re-verify the number against the target whenever either section changes; if you don't want to maintain a count, don't state one ("the frameworks in section 5", not "the twelve frameworks").
+
 If a topic appears in multiple subjects, each subject must teach it fully from that subject's angle. Duplication is intentional.
 
 `_shared/` is optional synthesis. A session note may duplicate `_shared`; it must never depend on it.

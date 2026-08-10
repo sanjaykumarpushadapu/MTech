@@ -185,7 +185,7 @@ The decision rule:
 
 If you remember only one caution from this section, remember this one: **agentic freedom is expensive**. More autonomy means more latency, more cost, and more room for one wrong step to trigger the next wrong step. That is exactly the "reliable long-horizon execution" problem raised again in section 12. Test in sandboxed environments with guardrails.
 
-**On frameworks** — worth knowing, because section 5 lists twelve of them approvingly:
+**On frameworks** — read this caution *before* section 5, where eleven frameworks are laid out; it's the counterweight that keeps that list from overselling them:
 
 > Frameworks make it easy to start by simplifying low-level tasks, but they **often create extra layers of abstraction that obscure the underlying prompts and responses, making them harder to debug.** They can also make it tempting to add complexity when a simpler setup would suffice.
 >
