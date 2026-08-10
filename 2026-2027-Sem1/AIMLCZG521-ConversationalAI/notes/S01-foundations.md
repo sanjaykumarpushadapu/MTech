@@ -52,7 +52,7 @@ Every step rightward buys coverage of a wider query space, and spends predictabi
 
 **Tradeoff / when NOT to build one** — a keyword-matching FAQ bot is cheap, deterministic, auditable and never hallucinates. An agentic system is none of those. If the query space is small and closed — "what are your opening hours" — the 1990s answer is still the right one. Sophistication is a cost you take on to buy coverage of an open query space.
 
-#### Examples in daily life
+#### Examples in Daily Life
 
 You already use conversational AI every day — three familiar categories, each a different point on the bot ladder above:
 
