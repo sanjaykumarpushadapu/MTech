@@ -155,7 +155,9 @@ If one deck contains multiple sessions, split it by handout scope and log the sp
 
 Always extract and look at deck images. Slide text often omits equations, shapes, or labels that are only in images.
 
-### Upload audit protocol (run in full whenever a file is uploaded for a session that already has a note)
+### Upload audit protocol (runs automatically on EVERY uploaded file)
+
+**Any file uploaded for a session is itself the trigger — run this protocol in full, unprompted.** It does not matter whether the note doesn't exist yet (first write), already exists (re-audit the note against the deck), or the same deck is being re-uploaded later (re-verify from scratch). "The note was already written / already audited" is never a reason to skip — an existing note is exactly the case that hides stale gaps. Do not wait to be asked to audit; do not assume a prior pass was complete.
 
 Do not rely on the master index, the note's history, or a prior audit — **only the rendered source is authoritative.** Run all six steps in one pass; the reason past audits kept surfacing "new" gaps is that they were done partially. Do not declare the audit done until every slide has a verdict.
 
