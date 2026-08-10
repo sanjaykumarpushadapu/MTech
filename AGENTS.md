@@ -411,6 +411,10 @@ If a diagram only works when crowded into one canvas, split it into smaller stag
 
 If the user flags one example of a recurring issue, audit the whole touched note for that issue. Do not fix only the named diagram.
 
+### Analogy Parity
+
+If a section's prose carries an everyday analogy (per Algorithm Motivation), the diagram teaching that same concept must carry a short version of it too — a caption line or an in-box label, not just a mention in the surrounding text. Check this in the same pass as Visual QA, not as a separate step: a diagram audit that only checks rendering (cut-off text, overlapping arrows) and never checks content parity against its own paragraph will miss this every time.
+
 Render and inspect SVGs when tooling allows. If rendering is unavailable, keep the diagram simpler and state that only syntax/link validation was possible.
 
 ### Mermaid Direction
