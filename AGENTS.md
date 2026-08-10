@@ -243,7 +243,11 @@ Each concept must include, in this order:
 Intuition -> Mechanism -> Worked example -> Tradeoff / when NOT to use
 ```
 
-The four **text** blocks come in that order. Every concept also has **at least one diagram**, but its placement is **content-driven, not a fixed final slot**: put it where it best illustrates — right after the Intuition as a visual overview, or right after the Mechanism when it depicts the parts that block just introduced. Do not mechanically shove every diagram to the end, and do not reorder a section's blocks just to make placement uniform across sections; each section's flow wins.
+The four **text** blocks are the **default order** — follow it unless the content genuinely reads better otherwise, and then only for a teaching reason: a *motivation* example may precede the Mechanism (cost economics before the algorithm); a Worked example may follow the Tradeoff when it *demonstrates* the tradeoff's advice (state the responses, then show them applied). Deviate for flow, never at random.
+
+**Placement of diagrams and depth blocks is content-driven, not a fixed slot.** Every concept has **at least one diagram**; put it where it best illustrates — after the Intuition as a visual overview, or after the Mechanism when it depicts the parts that block just introduced. A depth block (`In practice` / `Going deeper`) sits next to what it illustrates — usually at the section's end, but beside the Mechanism when that's what it deepens (e.g. a self-attention example belongs next to the attention mechanism, not exiled to the bottom).
+
+**Consistency is about structure, not cosmetics.** The standard *is*: every concept has the four blocks, a real intuition, a labelled worked example, a clear diagram, and a non-blank tradeoff. Do **not** reorder a section's blocks or relocate its diagrams/depth blocks just to make sections look identical on a fast scroll — a section's teaching flow always wins over visual uniformity. Rigid uniformity that makes a section read worse is a regression, not a cleanup.
 
 Rules:
 
