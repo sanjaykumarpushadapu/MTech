@@ -2,73 +2,79 @@
 
 *Learned ____*
 
-<!-- ═══════════════════════════════════════════════════════════════════════
-     HOW TO FILL THIS IN  —  delete this block in the real note.
-
-     WHAT GOES HERE   Subject knowledge only. No navigation, admin, logistics,
-                      or "how to use this note". Add your own clarity and
-                      diagrams freely (mark beyond-course).
-     HEADINGS         Topic-only, NO numbers:  "## Chatbots to Agentic Systems",
-                      "### The six components"  —  never "## Part 1 ·" / "### 4.".
-                      No hand-written "## Topics" index (headings are the outline).
-     REFERENCES       Point to other sections by NAME ("see *Production concerns*"),
-                      never by number. Never point forward to future course
-                      sessions ("session 11", "L7–L8", "Module 2"). No source
-                      citations ("the deck", T1/R2). No cross-subject links.
-     EVERY CONCEPT    Has all five, in order:
-                      Intuition → Mechanism → Worked example → Tradeoff → Diagram.
-     ═══════════════════════════════════════════════════════════════════════ -->
+<!-- ── QUICK RULES (reminder only — the full rules live in AGENTS.md) ──────────
+     • Subject knowledge only. No admin, navigation, or "how to use this note".
+     • Headings are plain topics, NO numbers ("## Chatbots to Agentic Systems").
+     • Refer to other sections by name; never point to future classes
+       ("session 11", "L7"); don't name-drop slides/textbooks; no links to
+       other subjects.
+     • Every concept has: Intuition → Mechanism → Worked example → Tradeoff,
+       plus at least one diagram (placed where it best illustrates).
+     • The EXAMPLE section below shows the target shape. Copy its shape, then
+       delete it.
+     ──────────────────────────────────────────────────────────────────────── -->
 
 ## Why this matters
 
-<2–4 sentences: what this is and why it's worth knowing *for a career* — the real-world payoff, what you can do once you have it.>
+<2–4 sentences: what this is and why it's worth knowing *for your career* — what you'll be able to do once you have it.>
 
-**Running example (if any):** <the concrete thread reused throughout>.
+**Running example (if any):** <the concrete thread reused throughout the note>.
 
 ---
 
 ## <Part title — a topic, no number>
 
-### <Concept name — a topic, no number>
+<!-- ▼▼▼ EXAMPLE — this is what a good section looks like. Delete it, then write your own. ▼▼▼ -->
 
-**Intuition** — a concrete mental model of what it *is* and why it works: a reframe, an analogy, or a walk-through the reader can picture and hold. NOT (a) meta-commentary ("learn this cold"), (b) a bare definition, (c) a list of terms with no mapping, or (d) a section summary. A definition or importance note may *follow* the model — never replace it.
+### Binary search
 
-**Mechanism** — how it works: the step-by-step, or the formula with every symbol named.
+**Intuition** — Looking for a name in a sorted phone book, you don't read every page. You open the middle, see whether you've gone too far or not far enough, and throw away half the book. Binary search is exactly that: halve what's left with every guess.
 
-**Worked example** — one concrete instance, by hand or in ≤30 lines of code. Keep the **Worked example** label even when the heading mirrors a slide title. If you can't produce it without looking, you don't have the concept yet.
+**Mechanism** — On a **sorted** list: look at the middle item. If it's your target, stop. If your target is smaller, repeat on the left half; if larger, repeat on the right half. Each step drops half the items, so it finds anything in about log₂(n) steps.
 
-**Tradeoff / when NOT to use** — the cost, the failure mode, the specific case where a simpler option wins. *(Mandatory — never blank, never "depends on the use case".)*
+**Worked example** — Find **7** in `[1, 3, 5, 7, 9, 11]`:
+- middle → **5**. 7 is bigger → keep the right half `[7, 9, 11]`.
+- middle → **9**. 7 is smaller → keep the left half `[7]`.
+- middle → **7**. Found it — in 3 checks instead of up to 6.
+
+**Tradeoff / when NOT to use** — It only works if the list is already **sorted**, and sorting takes time. For a small list, or one you search just once, plain start-to-end scanning is simpler and just as fast. Binary search pays off when the list is big and searched many times.
 
 ```mermaid
 flowchart TD
-    A["first step"] --> B["second step"]
+    A["look at the middle item"] --> B{"is it the target?"}
+    B -->|yes| C["done"]
+    B -->|"target is smaller"| D["repeat on the left half"]
+    B -->|"target is larger"| E["repeat on the right half"]
+    D --> A
+    E --> A
 ```
-<!-- Every concept gets ≥1 diagram. PLACEMENT is content-driven, not fixed last:
-     put it where it best illustrates — right after the Intuition (a visual
-     overview) or right after the Mechanism (when it depicts the parts). Prefer
-     the deck's figure (look at the IMAGE, not just slide text); else a textbook
-     figure; else your own, marked "(my own)". Use `flowchart TD` unless it's a
-     short linear ≤5-box pipeline (`LR`). Validate: cd tools && npm run check -->
 
-<!-- OPTIONAL depth blocks — add where the concept has real-world weight; marked beyond-course: -->
-
-> ***In practice*** *— how this is used on the job: tools, auth/cost/latency realities, what production adds.*
-
-> ***Going deeper*** *— deeper mechanism, or a useful adjacent concept the course skips.*
+<!-- ▲▲▲ END EXAMPLE — delete from "### Binary search" down to here. ▲▲▲ -->
 
 ---
 
-### <Next concept>
+### <Your first concept>
 
-…repeat the Intuition → Mechanism → Worked example → Tradeoff → Diagram block.
+**Intuition** — <the mental model: a picture, analogy, or plain reframe. Not "this is important", not a bare definition.>
 
-<!-- Start each new part with its own `## <title>` divider (topic-only), then its `### ` concepts. -->
+**Mechanism** — <how it works: the steps, or the formula with each symbol named.>
+
+**Worked example** — <one concrete instance, by hand or in ≤30 lines. Keep the **Worked example** label even if the heading mirrors a slide title.>
+
+**Tradeoff / when NOT to use** — <the cost, the failure mode, the case where a simpler option wins. Never blank, never "it depends".>
+
+<diagram — where it best illustrates.>
+
+<!-- New part = a new "## <title>" divider. Optional depth blocks at the end of a
+     concept, marked beyond-course:
+     > ***In practice*** — how it's used on the job.
+     > ***Going deeper*** — deeper mechanism or an adjacent concept the course skips. -->
 
 ---
 
 ## Self-study / Lab / build
 
-<career-useful pointers: what ran, what broke, link to the lab code.>
+<what ran, what broke, link to the lab code.>
 
 ---
 
