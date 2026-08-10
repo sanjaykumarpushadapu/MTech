@@ -32,7 +32,7 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 | **Dialogue Management** | Manage the conversation itself | Handling complex, multi-turn dialogues; maintaining conversation flow and context |
 | **Natural Language Generation (NLG)** | Produce the reply | Generating human-like responses; **personalization** — adapting to user preferences |
 
-This is the compact, three-part preview. Section 4 is the full picture: it expands this same idea from three capabilities to **six** — NLU and Dialogue Management stay, NLG becomes "Response Generation," and Knowledge Access, Action Execution, and Memory Systems get added as the pieces a bot needs once it moves from *talking* to *doing*. Read this table as capabilities-at-a-glance and section 4 as capabilities-with-engineering-detail.
+This is a compact three-part preview; **section 4 expands it to the full six components** — NLU and Dialogue Management stay, NLG becomes "Response Generation," and Knowledge Access, Action Execution, and Memory Systems are added: the pieces a bot needs once it moves from *talking* to *doing*.
 
 **Mechanism — the three-part frame** used throughout:
 
@@ -185,7 +185,7 @@ The decision rule:
 
 If you remember only one caution from this section, remember this one: **agentic freedom is expensive**. More autonomy means more latency, more cost, and more room for one wrong step to trigger the next wrong step. That is exactly the "reliable long-horizon execution" problem raised again in section 12. Test in sandboxed environments with guardrails.
 
-**On frameworks** — read this caution *before* section 5, where eleven frameworks are laid out; it's the counterweight that keeps that list from overselling them:
+**On frameworks** — a caution worth holding onto:
 
 > Frameworks make it easy to start by simplifying low-level tasks, but they **often create extra layers of abstraction that obscure the underlying prompts and responses, making them harder to debug.** They can also make it tempting to add complexity when a simpler setup would suffice.
 >
