@@ -250,7 +250,9 @@ Two quick definitions for the table:
 
 Short-term is free (it *is* the prompt); the other three need real storage, which is why memory sits in the "expensive, touches the outside world" half below.
 
-**Worked example — user says "I lost my card":**
+#### Use Case: Customer Support Evolution
+
+**The same request — user says *"I lost my card"* — handled across four eras:**
 
 | Approach | Bot response |
 |---|---|
@@ -782,7 +784,7 @@ The honest summary: **none of these are solved, and all of them are survivable.*
 
 ---
 
-### 13. Current capability landscape
+### 13. State of the Art — 2026
 
 **Intuition** — Do not memorise a model leaderboard. Learn the axes that make one model family fit a conversational-AI product better than another.
 
