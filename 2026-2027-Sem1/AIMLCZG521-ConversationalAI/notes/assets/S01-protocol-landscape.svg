@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 550" role="img" aria-labelledby="title desc">
   <title id="title">Protocol landscape for agents</title>
   <desc id="desc">MCP connects agents vertically to tools and data sources, while A2A connects agents horizontally to other agents; custom APIs remain useful for simple internal integration.</desc>
   <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
-  <rect x="24" y="24" width="1072" height="472" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
+  <rect x="24" y="24" width="1072" height="502" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="560" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Protocols standardise the edges around an agent</text>
   <g font-family="Georgia,serif" fill="#17213a">
     <rect x="460" y="185" width="200" height="95" rx="16" fill="#f7e4e7" stroke="#914252" stroke-width="2.3"/><text x="560" y="225" text-anchor="middle" font-size="24" font-weight="700">Agent</text><text x="560" y="252" text-anchor="middle" font-size="15">planner + model</text>
@@ -12,6 +12,7 @@
     <text x="397" y="216" text-anchor="middle" font-size="14" font-weight="700">MCP vertical</text>
     <text x="722" y="216" text-anchor="middle" font-size="13" font-weight="700">A2A horizontal</text>
     <text x="560" y="468" text-anchor="middle" font-size="18">MCP is agent-to-tool; A2A is agent-to-agent; custom REST still wins for one simple internal edge.</text>
+    <text x="560" y="502" text-anchor="middle" font-size="15" font-style="italic" fill="#5a5540">USB-C for agents: before it, every device needed its own cable — now one plug fits everything.</text>
   </g>
   <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#a)">
     <line x1="460" y1="232" x2="345" y2="232"/><line x1="660" y1="232" x2="775" y2="232"/><line x1="560" y1="280" x2="560" y2="345"/>

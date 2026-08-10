@@ -14,6 +14,7 @@
     <rect x="160" y="325" width="220" height="70" rx="13" fill="#fff" stroke="#24304a"/><text x="270" y="354" text-anchor="middle" font-size="18" font-weight="700">1 count pairs</text><text x="270" y="378" text-anchor="middle" font-size="15">("u","g") = 20</text>
     <rect x="480" y="325" width="220" height="70" rx="13" fill="#fff" stroke="#24304a"/><text x="590" y="354" text-anchor="middle" font-size="18" font-weight="700">2 merge winner</text><text x="590" y="378" text-anchor="middle" font-size="15">u + g -> ug</text>
     <rect x="800" y="325" width="220" height="70" rx="13" fill="#fff" stroke="#24304a"/><text x="910" y="354" text-anchor="middle" font-size="18" font-weight="700">3 repeat</text><text x="910" y="378" text-anchor="middle" font-size="15">build useful vocabulary</text>
+    <text x="590" y="428" text-anchor="middle" font-size="16" font-style="italic" fill="#5a5540">Like a child reading "unhappiness" as un- + happi- + -ness instead of giving up on the whole word.</text>
     <text x="590" y="470" text-anchor="middle" font-size="18">Modern byte-level tokenizers add a fallback path so names, emoji, code and mixed scripts do not become true unknowns.</text>
   </g>
   <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)">

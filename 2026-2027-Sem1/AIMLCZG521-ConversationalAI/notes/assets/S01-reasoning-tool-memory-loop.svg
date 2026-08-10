@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="510" viewBox="0 0 960 510" role="img" aria-labelledby="title desc">
   <title id="title">The loop inside the lifecycle: Reasoning, Tool, Memory</title>
   <desc id="desc">Stages 3 Reasoning, 4 Tool, and 5 Memory cycle repeatedly, with observations feeding back into reasoning, until reasoning has enough evidence to exit to stage 6 Safety.</desc>
   <defs>
@@ -18,8 +18,8 @@
       .exitLbl{font:700 13px Georgia,serif;fill:#914252}
     </style>
   </defs>
-  <rect class="bg" width="960" height="480"/>
-  <rect class="frame" x="14" y="14" width="932" height="452" rx="18"/>
+  <rect class="bg" width="960" height="510"/>
+  <rect class="frame" x="14" y="14" width="932" height="482" rx="18"/>
 
   <text class="t" x="45" y="45">The loop inside the lifecycle: Reasoning, Tool, Memory</text>
   <text class="s" x="45" y="65">stages 3→4→5 cycle until reasoning has enough evidence (section 9)</text>
@@ -61,4 +61,5 @@
 
   <text class="s" x="45" y="410">The seven-box diagram above draws this left to right, which hides the loop. Only 3→4→5 repeats;</text>
   <text class="s" x="45" y="429">1, 2, 6, 7 each run exactly once — that asymmetry is what makes agent cost unpredictable.</text>
+  <text class="s" x="45" y="460">An everyday version: a detective gathers one clue, asks "enough yet?", and if not, gathers another — until solved.</text>
 </svg>

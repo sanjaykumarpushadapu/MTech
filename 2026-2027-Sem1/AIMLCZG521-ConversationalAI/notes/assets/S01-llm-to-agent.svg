@@ -11,6 +11,7 @@
     <rect x="670" y="155" width="150" height="82" rx="13" fill="#fff2bd" stroke="#8a6400" stroke-width="2"/><text x="745" y="188" text-anchor="middle" font-size="20" font-weight="700">Instruct</text><text x="745" y="215" text-anchor="middle" font-size="15">follow tasks</text>
     <rect x="870" y="130" width="180" height="132" rx="13" fill="#f7e4e7" stroke="#914252" stroke-width="2"/><text x="960" y="166" text-anchor="middle" font-size="20" font-weight="700">Agent</text><text x="960" y="195" text-anchor="middle" font-size="15">+ tools</text><text x="960" y="218" text-anchor="middle" font-size="15">+ memory</text><text x="960" y="241" text-anchor="middle" font-size="15">+ planning</text>
     <text x="560" y="324" text-anchor="middle" font-size="18">Hallucination, no actions and no persistent memory are fixed by system design, not by wishful prompting.</text>
+    <text x="560" y="358" text-anchor="middle" font-size="15" font-style="italic" fill="#5a5540">Older models read one word at a time through a keyhole; a transformer lays the whole sentence on the table at once.</text>
   </g>
   <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#a)"><line x1="220" y1="196" x2="260" y2="196"/><line x1="420" y1="196" x2="460" y2="196"/><line x1="620" y1="196" x2="660" y2="196"/><line x1="820" y1="196" x2="860" y2="196"/></g>
 </svg>

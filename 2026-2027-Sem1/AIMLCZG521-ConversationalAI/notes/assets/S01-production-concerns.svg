@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 520" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 550" role="img" aria-labelledby="title desc">
   <title id="title">Production concerns for conversational agents</title>
   <desc id="desc">Observability, cost, latency, and safety form a connected production tradeoff loop for conversational agents.</desc>
   <defs><marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
-  <rect x="24" y="24" width="1032" height="472" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
+  <rect x="24" y="24" width="1032" height="502" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
   <text x="540" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">Production agents are four-way tradeoffs</text>
   <g font-family="Georgia,serif" fill="#17213a">
     <rect x="415" y="118" width="250" height="82" rx="15" fill="#e4f2f4" stroke="#1f6570" stroke-width="2.3"/><text x="540" y="151" text-anchor="middle" font-size="22" font-weight="700">Observability</text><text x="540" y="178" text-anchor="middle" font-size="15">traces · tokens · errors</text>
@@ -10,6 +10,7 @@
     <rect x="425" y="330" width="230" height="82" rx="15" fill="#eaf2ff" stroke="#315a99" stroke-width="2.3"/><text x="540" y="363" text-anchor="middle" font-size="22" font-weight="700">Latency</text><text x="540" y="390" text-anchor="middle" font-size="15">budget per stage</text>
     <rect x="720" y="270" width="230" height="82" rx="15" fill="#f7e4e7" stroke="#914252" stroke-width="2.3"/><text x="835" y="303" text-anchor="middle" font-size="22" font-weight="700">Safety</text><text x="835" y="330" text-anchor="middle" font-size="15">input · tool · output</text>
     <text x="540" y="461" text-anchor="middle" font-size="18">Observability comes first because cost, latency and safety cannot be tuned without measurement.</text>
+    <text x="540" y="498" text-anchor="middle" font-size="14" font-style="italic" fill="#5a5540">Cost caching is like a coffee shop pre-making its espresso base: the first cup is normal, every cup after is faster and cheaper.</text>
   </g>
   <g stroke="#24304a" stroke-width="2.7" fill="none" marker-end="url(#a)">
     <path d="M465 200 C400 240 325 255 275 270"/><path d="M615 200 C680 240 755 255 805 270"/>
