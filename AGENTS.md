@@ -155,6 +155,8 @@ If one deck contains multiple sessions, split it by handout scope and log the sp
 
 Always extract and look at deck images. Slide text often omits equations, shapes, or labels that are only in images.
 
+**When a file is uploaded for a session that already has a note, audit coverage slide-by-slide against the *rendered* deck — never against the master index, the note's history, or a prior audit.** Walk every slide in order and map each one to where it lives in the note, or flag it as a genuine gap. Render pages to images when text extraction is thin (`pdftoppm`; if poppler is missing, `PyMuPDF`/`fitz` or `pdf2image`) and **look at them** — an image-only slide (e.g. a "daily-life examples" graphic that extracts as just its title) and any slide whose topic is not a named sub-topic are exactly what an index-based or history-based check misses. They count as covered only if you actually saw the slide. A note matching the master index is **not** proof it matches the deck; only the slide-by-slide pass is. Course-logistics slides (evaluation scheme, course architecture, textbooks, prerequisites) are the exception — those belong in the master index, not the session note, so their absence from the note is correct, not a gap.
+
 Auto-transcripts are noisy. Correct obvious terms silently, such as `RoPE`, `SwiGLU`, `GQA`, and `KV-cache`.
 
 ## 5. Session Note Contract
