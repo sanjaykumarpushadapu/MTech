@@ -209,7 +209,7 @@ The third principle is easy to underestimate. A good rule of thumb is to invest 
 
 ### The six components of modern conversational AI
 
-**Intuition** — Any conversational system, from a 2005 IVR (interactive voice response phone menu) to a 2026 agent, still has to do the same six jobs: understand, track the conversation, look things up, act, respond, and remember. What changed is where the difficulty lives: the LLM absorbs much of **understanding, dialogue, and generation**, while **knowledge, action, and memory** remain the expensive engineering pieces.
+**Intuition** — Picture what any assistant must do to handle a single request end to end: work out what you want (**understanding** → NLU), keep track of where the conversation is (**dialogue** → Dialogue Management), look up whatever it doesn't already know (**knowledge** → Knowledge Access), actually do the thing (**action** → Action Execution), phrase a reply (**generation** → Response Generation), and remember it for next time (**memory** → Memory Systems). Those six jobs *are* the six components — every conversational system has had them since the 1990s, whether hand-built or LLM-based. What the LLM changed is the *split*: one model now handles understanding, dialogue and generation almost for free, so the real engineering shifted to the three that reach outside the model — **knowledge, action, and memory.**
 
 *The six, arranged by what the LLM absorbed and what it didn't — the split is the insight:*
 
