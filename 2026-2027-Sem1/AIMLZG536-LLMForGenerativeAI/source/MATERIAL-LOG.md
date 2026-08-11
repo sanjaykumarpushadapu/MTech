@@ -19,7 +19,7 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 |---|---|---|---|---|
 | S1 | Foundations of Large Language Models (LLMs): Introduction to LLMs and Generative AI; Attention Mechanism & Transformer review; Building blocks of LLM; LLM Architectures; Tokenization; LLM landscape | ✓ `CS-1 Intro to LLM.pptx` / `CS-1 Intro to LLM (2).pptx`; S01 transcript; T1 ch2,7,8; T2 ch1,2,3; R1 ch1,2 | ✓ `notes/S01-foundations.md` | none known |
 | S2 | LLM Pre-Training: LLM Pre-training; Pre-training Objectives; Pre-training Data; Continuous Pre training (CPT) and Domain Adaptation; Scaling Laws; Pretraining of popular frontier models | ✓ `CS-2 LLM Training.pptx`; T1 ch7,8; R1 ch2,5; web references | ✓ `notes/S02-pretraining.md` | none known |
-| S3 | Architecture advances | ✗ | ☐ | deck required |
+| S3 | Advancements in LLM Architecture: Normalization (LayerNorm, RMSNorm, norm placement); Positional Encoding Advances (Relative PE, RoPE, NoPE); Advanced activations (GELU, Swish, GLU, SwiGLU); MoE sparse activation and routing; Emerging Architectures | ✓ `CS-3 Advancements in LLM Architecture.pptx`; T2 ch3; Shaw et al. 2018 (verified via web search); Mamba/SSM reference (filled-in, no direct slide coverage) | ✓ `notes/S03-architecture.md` | none known — Emerging Architectures sub-topic marked as filled-in reasoning since the deck only cites it via a references-slide link, not direct teaching content |
 | S4 | Attention/architecture continuation | ✗ | ☐ | deck required |
 | S5 | LLM training/evaluation continuation | ✗ | ☐ | deck required |
 | S6 | Paper/web-only session | ✗ | ☐ | deck and cited paper required |
@@ -50,6 +50,14 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - S02 previously had five Mermaid diagrams; they were replaced with SVGs on 10 Aug 2026 to satisfy the SVG-first rule.
 - No raw textbook, paper, or deck images were copied into the repo; authored SVGs under `notes/assets/` carry the visual teaching value.
 - Source-framing scan passes for current notes via `npm run check`.
+
+## Recheck Notes — 11 Aug 2026
+
+- `CS-1 Intro to LLM (2).pptx` and `CS-2 LLM Training.pptx` arrived as a re-upload alongside the new `CS-3 Advancements in LLM Architecture.pptx`. Both were cross-checked against `notes/S01-foundations.md` and `notes/S02-pretraining.md` via targeted extraction of distinctive facts and numbers; both notes already covered their decks comprehensively. One addition was made to S01 (a current-frontier-models snapshot table); S02 needed no changes.
+- `CS-3 Advancements in LLM Architecture.pptx` (29 slides) unblocked S3, previously listed as deck-required. Full text extraction plus rendered slide images (for diagram/equation-heavy slides) were used to write `notes/S03-architecture.md`.
+- The handout's "Relative PE" sub-topic is cited by the deck via reference to Shaw et al. 2018 but not taught directly; the mechanism (clipped relative-distance embeddings, BLEU gains) was verified via a targeted web search of the cited paper before writing that section, per the Cited Sources Must Be Read rule.
+- The handout's "Emerging Architectures" sub-topic has no deck coverage at all beyond a references-slide link to a Mamba/state-space-models article. That section of the note is marked with a `*filled-in reasoning for this syllabus item*` aside.
+- Six new SVG diagrams were authored for S3 under `notes/assets/`, matching the 536 house style (white background, Georgia serif, black-stroke pastel boxes).
 
 ## Storage Rule
 

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 620" role="img" aria-labelledby="title desc">
+  <title id="title">Pre-Norm versus Post-Norm across three real model families</title>
+  <desc id="desc">Original Transformer decoder uses Post-Norm, normalizing after the residual add. Llama 3 8B uses Pre-Norm, normalizing inside the sublayer branch so the residual stream stays untouched. OLMo 2 7B uses a hybrid: norm after the sublayer but still inside the residual branch. All three add a Final Norm before the output projection.</desc>
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="620" fill="#fff"/>
+  <text x="650" y="46" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700">Where Normalization Sits: Three Real Placements</text>
+
+  <!-- Column 1: Post-Norm -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <text x="220" y="90" font-size="19" font-weight="700">Original Transformer</text>
+    <text x="220" y="112" font-size="14">Post-Norm</text>
+
+    <rect x="90" y="140" width="260" height="50" rx="10" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="220" y="170" font-size="14">x (residual stream)</text>
+    <line x1="220" y1="190" x2="220" y2="215" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="90" y="220" width="260" height="50" rx="10" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="220" y="250" font-size="14">Sublayer(x)</text>
+    <line x1="220" y1="270" x2="220" y2="295" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="90" y="300" width="260" height="50" rx="10" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="220" y="330" font-size="14">+ x  (residual add)</text>
+    <line x1="220" y1="350" x2="220" y2="375" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="90" y="380" width="260" height="50" rx="10" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+    <text x="220" y="410" font-size="14" font-weight="700">LayerNorm (blocks shortcut)</text>
+  </g>
+
+  <!-- Column 2: Pre-Norm -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <text x="650" y="90" font-size="19" font-weight="700">Llama 3 8B</text>
+    <text x="650" y="112" font-size="14">Pre-Norm</text>
+
+    <rect x="520" y="140" width="260" height="50" rx="10" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="650" y="170" font-size="14">x (residual stream)</text>
+
+    <!-- straight shortcut line down, untouched -->
+    <line x1="560" y1="165" x2="560" y2="420" stroke="#2a8f4a" stroke-width="3" stroke-dasharray="1 0"/>
+    <text x="500" y="300" font-size="12" fill="#2a8f4a" font-weight="700" transform="rotate(-90 500 300)">gradient highway</text>
+
+    <line x1="700" y1="190" x2="700" y2="215" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+    <rect x="600" y="220" width="180" height="50" rx="10" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="690" y="242" font-size="13">RMSNorm1</text>
+    <text x="690" y="260" font-size="13">then Attention</text>
+
+    <line x1="690" y1="270" x2="600" y2="400" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+    <rect x="520" y="405" width="260" height="45" rx="10" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="650" y="433" font-size="14">+ (residual add, untouched x)</text>
+  </g>
+
+  <!-- Column 3: OLMo 2 hybrid -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <text x="1080" y="90" font-size="19" font-weight="700">OLMo 2 7B</text>
+    <text x="1080" y="112" font-size="14">Post-Norm inside residual</text>
+
+    <rect x="950" y="140" width="260" height="50" rx="10" fill="#f4f4f4" stroke="#222" stroke-width="2"/>
+    <text x="1080" y="170" font-size="14">x (residual stream)</text>
+    <line x1="1080" y1="190" x2="1080" y2="215" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="950" y="220" width="260" height="50" rx="10" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="1080" y="250" font-size="14">Attention / FFN</text>
+    <line x1="1080" y1="270" x2="1080" y2="295" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="950" y="300" width="260" height="50" rx="10" fill="#f4e6ff" stroke="#222" stroke-width="2"/>
+    <text x="1080" y="330" font-size="14">RMSNorm (still inside branch)</text>
+    <line x1="1080" y1="350" x2="1080" y2="400" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="950" y="405" width="260" height="45" rx="10" fill="#fff7c8" stroke="#222" stroke-width="2"/>
+    <text x="1080" y="433" font-size="14">+ x (residual add)</text>
+  </g>
+
+  <line x1="220" y1="430" x2="420" y2="470" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="650" y1="450" x2="650" y2="470" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="1080" y1="450" x2="880" y2="470" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <rect x="410" y="475" width="480" height="55" rx="10" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+  <text x="650" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700">Final Norm (all three architectures)</text>
+  <text x="650" y="520" text-anchor="middle" font-family="Georgia, serif" font-size="12">reins in scale drift before the output projection</text>
+
+  <text x="650" y="575" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-style="italic">Green dashes = untouched residual shortcut. Post-Norm has none; both Pre-Norm and OLMo 2's hybrid protect it.</text>
+</svg>

@@ -14,7 +14,7 @@ One view across all four subjects. Update the same weekend the session happens.
 |---|---|---|---|---|---|
 | 1 | Foundations of Large Language Models (LLMs) | ✅ | ✅ | ☐ | ☐ L1 · *transcript ✅* |
 | 2 | LLM Pre-Training | ✅ | ✅ | ☐ | ☐ |
-| 3 | Architecture advances (RoPE, MoE) | ☐ | ☐ | ☐ | ☐ L2 |
+| 3 | Architecture advances (RoPE, MoE) | ✅ | ✅ | ☐ | ☐ L2 |
 | 4 | Training & attention efficiency | ☐ | ☐ | ☐ | ☐ |
 | 5 | Inference & KV-cache | ☐ | ☐ | ☐ | ☐ |
 | 6 | Compression & serving | ☐ | ☐ | ☐ | ☐ L3 |

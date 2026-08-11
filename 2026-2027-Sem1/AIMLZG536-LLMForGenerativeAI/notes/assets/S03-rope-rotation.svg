@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 560" role="img" aria-labelledby="title desc">
+  <title id="title">RoPE: rotating Q and K so relative distance falls out of the dot product</title>
+  <desc id="desc">Query and key vectors are rotated by an angle proportional to their position, m*theta and n*theta. Their dot product depends only on the difference (n minus m), so relative position is encoded through geometry rather than a lookup table.</desc>
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="560" fill="#fff"/>
+  <text x="650" y="46" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700">RoPE: Position as Rotation</text>
+
+  <!-- left circle: q rotated by m*theta -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <circle cx="280" cy="260" r="140" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <line x1="280" y1="260" x2="420" y2="260" stroke="#bbb" stroke-width="1.5"/>
+    <line x1="280" y1="120" x2="280" y2="400" stroke="#bbb" stroke-width="1.5"/>
+    <line x1="280" y1="260" x2="410" y2="260" stroke="#888" stroke-width="2"/>
+    <text x="418" y="252" font-size="12" fill="#888">unrotated q</text>
+    <line x1="280" y1="260" x2="360" y2="150" stroke="#1f5fbf" stroke-width="3" marker-end="url(#arrow3)"/>
+    <text x="380" y="140" font-size="15" fill="#1f5fbf" font-weight="700">q~_m = R(m theta) q_m</text>
+    <path d="M 320 260 A 40 40 0 0 0 300 220" fill="none" stroke="#1f5fbf" stroke-width="1.5"/>
+    <text x="330" y="215" font-size="13" fill="#1f5fbf">m theta</text>
+    <text x="280" y="440" font-size="16" font-weight="700">Query at position m</text>
+  </g>
+
+  <!-- right circle: k rotated by n*theta -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <circle cx="750" cy="260" r="140" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <line x1="750" y1="260" x2="890" y2="260" stroke="#bbb" stroke-width="1.5"/>
+    <line x1="750" y1="120" x2="750" y2="400" stroke="#bbb" stroke-width="1.5"/>
+    <line x1="750" y1="260" x2="880" y2="260" stroke="#888" stroke-width="2"/>
+    <text x="888" y="252" font-size="12" fill="#888">unrotated k</text>
+    <line x1="750" y1="260" x2="850" y2="185" stroke="#c0392b" stroke-width="3" marker-end="url(#arrow3)"/>
+    <text x="860" y="175" font-size="15" fill="#c0392b" font-weight="700">k~_n = R(n theta) k_n</text>
+    <path d="M 790 260 A 40 40 0 0 0 778 235" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="805" y="230" font-size="13" fill="#c0392b">n theta</text>
+    <text x="750" y="440" font-size="16" font-weight="700">Key at position n</text>
+  </g>
+
+  <line x1="430" y1="260" x2="600" y2="260" stroke="#333" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <rect x="330" y="470" width="640" height="70" rx="12" fill="#e9f7e7" stroke="#222" stroke-width="2"/>
+  <text x="650" y="498" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="700">score(m, n) = q~_m . k~_n = q_m . R((n - m) theta) k_n</text>
+  <text x="650" y="520" text-anchor="middle" font-family="Georgia, serif" font-size="13">depends only on (n - m) — the relative distance, never m or n alone</text>
+</svg>

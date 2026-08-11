@@ -1085,6 +1085,20 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
 
+**A snapshot, so the categories above aren't purely abstract** — a current-as-of-2026 line-up, one flagship release per family and the capability it's optimizing for:
+
+| Family | Key release | Primary strength |
+|---|---|---|
+| OpenAI | GPT-5.4 Thinking | Deep reasoning, tool use, long-horizon research tasks |
+| Google | Gemini 3.1 Pro | Complex problem-solving, multimodal understanding, tool-based workflows |
+| Google | Gemma 4 | Open-weight reasoning, multimodal understanding, agentic workflows |
+| Anthropic | Claude Opus 4.6 | Long-context reasoning, coding, sustained agentic work |
+| Mistral | Mistral Large 3 | Open-weight multimodal performance with efficient sparse MoE design |
+| xAI | Grok 4.20 | Parallel multi-agent research and collaborative task execution |
+| DeepSeek | DeepSeek-R1 | Reinforcement-learning-driven math, logic, and reasoning performance |
+
+This table will be stale within months — that's expected, not a flaw in it (see the Tradeoff below). Its purpose here is narrower: to make "reasoning-tuned," "multimodal," and "sparse-MoE" in the categories table above feel like real, current products rather than abstract labels.
+
 **Durable frontier family categories** — the names change quickly; the durable thing to learn is _what kind of capability each family is pushing_:
 
 | Family                 | What it's optimizing for                                    |

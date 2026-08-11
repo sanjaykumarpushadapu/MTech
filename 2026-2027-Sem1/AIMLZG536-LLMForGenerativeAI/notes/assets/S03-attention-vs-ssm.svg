@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 500" role="img" aria-labelledby="title desc">
+  <title id="title">Attention's growing cache versus a state-space model's fixed-size running state</title>
+  <desc id="desc">Attention keeps a KV-cache that grows linearly with every new token, referencing the full history at each step. A state-space model like Mamba instead updates one fixed-size hidden state as each token arrives, so its memory footprint per step stays constant regardless of sequence length.</desc>
+  <defs>
+    <marker id="arrow6" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="500" fill="#fff"/>
+  <text x="650" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700">Attention's Cache vs an SSM's Running State</text>
+
+  <!-- Attention side -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <text x="330" y="80" font-size="19" font-weight="700">Attention (KV-cache)</text>
+    <rect x="90" y="100" width="60" height="46" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="120" y="128" font-size="13">t1</text>
+    <rect x="160" y="100" width="60" height="46" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="190" y="128" font-size="13">t2</text>
+    <rect x="230" y="100" width="60" height="46" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="260" y="128" font-size="13">t3</text>
+    <rect x="300" y="100" width="60" height="46" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="330" y="128" font-size="13">t4</text>
+    <rect x="370" y="100" width="60" height="46" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="400" y="128" font-size="13">...</text>
+    <rect x="440" y="100" width="70" height="46" rx="8" fill="#e8eefc" stroke="#222" stroke-width="2"/>
+    <text x="475" y="128" font-size="13">t100k</text>
+
+    <line x1="120" y1="146" x2="475" y2="220" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow6)"/>
+    <line x1="190" y1="146" x2="475" y2="220" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow6)"/>
+    <line x1="260" y1="146" x2="475" y2="220" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow6)"/>
+    <line x1="330" y1="146" x2="475" y2="220" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow6)"/>
+    <line x1="400" y1="146" x2="475" y2="220" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow6)"/>
+
+    <rect x="380" y="225" width="190" height="55" rx="10" fill="#f6d3d6" stroke="#222" stroke-width="2"/>
+    <text x="475" y="250" font-size="13" font-weight="700">new token attends to</text>
+    <text x="475" y="268" font-size="13" font-weight="700">the FULL cached history</text>
+
+    <rect x="90" y="320" width="420" height="90" rx="10" fill="#fff" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="300" y="350" font-size="14" fill="#c0392b" font-weight="700">Cache size grows LINEARLY</text>
+    <text x="300" y="372" font-size="13" fill="#c0392b">with sequence length</text>
+    <text x="300" y="392" font-size="13" fill="#c0392b">(more tokens = more to store and scan)</text>
+  </g>
+
+  <line x1="650" y1="70" x2="650" y2="440" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+  <!-- SSM side -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <text x="980" y="80" font-size="19" font-weight="700">State-space model (Mamba)</text>
+
+    <rect x="900" y="110" width="160" height="60" rx="12" fill="#e9f7e7" stroke="#222" stroke-width="3"/>
+    <text x="980" y="135" font-size="13" font-weight="700">fixed-size</text>
+    <text x="980" y="153" font-size="13" font-weight="700">hidden state</text>
+
+    <line x1="770" y1="200" x2="900" y2="150" stroke="#2a8f4a" stroke-width="2" marker-end="url(#arrow6)"/>
+    <line x1="850" y1="230" x2="905" y2="160" stroke="#2a8f4a" stroke-width="2" marker-end="url(#arrow6)"/>
+    <line x1="1000" y1="230" x2="1000" y2="172" stroke="#2a8f4a" stroke-width="2" marker-end="url(#arrow6)"/>
+    <line x1="1100" y1="220" x2="1030" y2="160" stroke="#2a8f4a" stroke-width="2" marker-end="url(#arrow6)"/>
+
+    <text x="700" y="205" font-size="12">t1</text>
+    <text x="850" y="245" font-size="12">t2</text>
+    <text x="1000" y="245" font-size="12">t3...t100k</text>
+    <text x="1120" y="235" font-size="12">each new token</text>
+    <text x="1120" y="250" font-size="12">just updates the state</text>
+
+    <rect x="900" y="320" width="220" height="90" rx="10" fill="#fff" stroke="#2a8f4a" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="1010" y="350" font-size="14" fill="#2a8f4a" font-weight="700">Memory stays CONSTANT</text>
+    <text x="1010" y="372" font-size="13" fill="#2a8f4a">per step, regardless of</text>
+    <text x="1010" y="392" font-size="13" fill="#2a8f4a">how long the sequence gets</text>
+  </g>
+
+  <text x="650" y="465" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-style="italic">The tradeoff: attention can look up any earlier token exactly; an SSM only has what it compressed into its running state.</text>
+</svg>
