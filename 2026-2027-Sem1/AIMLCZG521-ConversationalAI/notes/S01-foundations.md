@@ -448,9 +448,15 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 ### Context Windows — Conversation Memory
 
-**Intuition** — Picture a **whiteboard of fixed size**. Everything the model can use has to be written on it: the instructions, the whole conversation so far, any documents you looked up, the tool results — *and* the empty space it needs to write its answer. The model remembers nothing off the board; at every turn it re-reads the whole board from the top. The **context window** is simply **how big that whiteboard is**, counted in tokens. Run out of room and something must be erased, shortened, or kept elsewhere and fetched back when needed.
+**Intuition** — Start with the fact that surprises everyone: **the model has no memory at all.** It does not remember your previous message. What actually happens is that, on *every single turn*, the app quietly re-sends **the whole conversation from the beginning** — the instructions, every turn so far, any documents fetched — and the model reads all of it fresh, as if for the first time, before answering.
 
-**Mechanism — context is a shared token budget.** System prompt, user turns, retrieved documents, tool output and the answer all consume the same finite window. As the conversation grows, the system must either summarise, retrieve selectively, forget older turns, or move memory outside the prompt.
+The **context window** is the **size limit on that re-sent bundle**, counted in tokens.
+
+That is exactly why this topic is called **conversation memory**: the window *is* the only memory in the system. There is no separate store the model can consult. Anything that no longer fits in the window has, for practical purposes, been forgotten.
+
+The picture to hold: a **whiteboard of fixed size**. Everything must be written on it — instructions, the conversation, fetched documents, tool results — *plus* the blank space the model needs to write its answer. Each turn it re-reads the whole board from the top. Run out of room and something has to be erased or shortened.
+
+**Mechanism — one budget, shared by five things.** The window is not "space for the conversation." It is split between: ① the system prompt and tool definitions, ② the conversation so far, ③ any retrieved documents, ④ tool results, and ⑤ **the answer the model still has to write**. Items ② and ③ grow on their own as the session runs, which is what eventually squeezes out ⑤.
 
 | Model | Window | ≈ words | What that size is for |
 |---|---|---|---|
@@ -462,21 +468,20 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 **These numbers date fast** — by 2026 the frontier models further down this note are already at 1M as standard. Learn the *size band* a model sits in, not the exact figure.
 
 
-**Worked example — filling up the whiteboard.** A support agent has a **32,000-token** window. Follow the same chat at two moments: early on, and after it has run for a while.
+**Worked example — filling up the whiteboard.** A support agent runs on **GPT-4 Turbo**, so the window is **128,000 tokens** (the first row of the table above). Look at the same agent early in a session, and again after it has been running a long time.
 
-| What's on the whiteboard | Early in the chat | Later: +20 more turns (+8,000) and +8,000 more retrieved docs |
+| On the whiteboard | Early in the session | Long session: 5× the turns, 4× the documents |
 |---|---|---|
-| System prompt and tool instructions | 2,500 | 2,500 |
-| Conversation so far | 4,800 *(12 turns)* | 4,800 + 8,000 = **12,800** |
-| Retrieved policy documents | 9,000 | 9,000 + 8,000 = **17,000** |
-| Tool results | 1,200 | 1,200 |
-| Safety and formatting instructions | 1,000 | 1,000 |
-| **Total used** | **18,500** | **34,500** |
-| **Room left for the answer** (32,000 − used) | **13,500** ✅ | **−2,500** ❌ |
+| ① Instructions + tool definitions | 2,000 | 2,000 |
+| ② Conversation so far | 8,000 *(20 turns)* | **40,000** *(100 turns)* |
+| ③ Retrieved documents | 30,000 *(10 chunks)* | **120,000** *(40 chunks)* |
+| ④ Tool results | 3,000 | 3,000 |
+| **Total used** | **43,000** | **165,000** |
+| **⑤ Room left for the answer** (128,000 − used) | **85,000** ✅ | **−37,000** ❌ |
 
-Early on there's plenty of room. Later, the same request **doesn't fit at all** — the whiteboard is full **before the model writes a single word of its answer**. Nothing got "too long" on its own; the pieces simply added up. That's what a context window really is: **one budget shared by the instructions, the history, the retrieved documents, the tool output, and the answer.**
+Early on, plenty of room. In the long session the same request **doesn't fit at all** — the board is full **before the model writes a single word**. Nothing became "too long" by itself; the pieces simply added up past the limit.
 
-Notice which two rows grew: **conversation history** and **retrieved documents**. Those are the two that keep growing on their own, which is why real systems trim old turns and fetch fewer, better documents.
+Notice **which two rows grew**: the conversation and the retrieved documents. Those are the two that grow on their own as an agent runs — which is why real systems trim old turns and fetch fewer, better documents rather than just buying a bigger window.
 
 **The challenge — flagged here, solved in Module 2:**
 
