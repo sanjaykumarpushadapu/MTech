@@ -523,14 +523,6 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 
 **Worked example** — In *"I need to replace my card. It was stolen yesterday,"* the model must connect **it** to **card**, not to yesterday or the user. That link is exactly the kind of cross-token relationship self-attention supplies.
 
-> ***Going deeper*** *— this isn't just a plausible story; the original transformer paper showed it happening. Vaswani et al., "Attention Is All You Need" (2017) — outside this course's reading list, included here because it's the direct evidence for the claim above — visualised individual attention heads on real sentences after training and found several performing exactly this reference-resolution job.*
->
-> ![Self-attention resolving "its" back to "Law"](assets/S01-attention-anaphora-example.svg)
->
-> *Given the sentence "The Law will never be perfect, but its application should be just," one head — in layer 5 of the model's 6 layers, not the first — attended from the word "its" almost entirely back to **"Law"**, correctly skipping every word in between, including the much closer (and wrong) candidate "perfect." A second, separate head in the same layer was found tracking a completely different long-range link: completing the phrase "making … more difficult" across a dozen intervening words in another sentence. Neither behaviour was hand-built or labelled during training — both emerged purely from being trained to predict the next word, the same claim this section makes about LLMs generally: capability shows up as a side effect of the training objective, not a feature someone coded in.*
->
-> *Two things worth carrying from this: first, reference resolution isn't a metaphor for what self-attention does — it's a literal, observable weight pattern inside a trained model. Second, different heads specialise (this is why multi-head attention exists at all, even though the Q/K/V mechanics behind it are a modelling-course topic): one head's job here was reference resolution, another's was long-range verb-phrase completion, in the same layer, on the same forward pass.*
-
 **Technical capability → conversational consequence** — pair them; the pairing is the point:
 
 | Technical capability | Impact on conversations |
@@ -587,7 +579,7 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 
 ### The seven-stage agent lifecycle
 
-**Intuition** — Every agent turn walks the same path: **take the request in → work out what's needed and which tools fit → do it → remember what happened → check the result is safe → reply.** Those are the seven stages, and the middle of the path (reason → act → remember) **loops** until the agent has gathered enough to answer. That single shape — a fixed intake and exit wrapped around a repeating middle — is what turns a language model into an agent. It's also the spine of the whole course: every later lecture deepens one stage, so **learn it cold — it's the single most likely structured question on the mid-sem.**
+**Intuition** — Every agent turn walks the same path: **take the request in → work out what's needed and which tools fit → do it → remember what happened → check the result is safe → reply.** Those are the seven stages, and the middle of the path (reason → act → remember) **loops** until the agent has gathered enough to answer. That single shape — a fixed intake and exit wrapped around a repeating middle — is what turns a language model into an agent. It's also the spine of the whole course: every later lecture deepens one stage.
 
 ![Seven-stage agent lifecycle](assets/S01-agent-lifecycle.svg)
 
@@ -613,22 +605,9 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 
 ![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
 
-What actually passes between stages:
-
-| Boundary | What crosses it |
-|---|---|
-| 1 → 2 | Sanitised text + extracted entities |
-| 2 → 3 | An intent label and a **candidate tool list** — routing narrows what stage 3 may consider |
-| 3 → 4 | A **structured tool call**: name + arguments (this is function calling) |
-| 4 → 5 | The tool's raw return value, which becomes an **observation** |
-| 5 → 3 | Observations + retrieved context, appended to the running scratchpad |
-| 3 → 6 | A draft answer, once reasoning stops requesting tools |
-
 **The loop is the agent.** Remove it — run each stage exactly once — and you have a *workflow* (the *workflows vs agents* distinction): cheaper, predictable, and unable to recover from a tool returning something unexpected. The loop is what buys adaptability and what makes cost unpredictable, because nothing guarantees how many times it turns.
 
-An everyday way to see the difference: a workflow is like a printed checklist you fill in top to bottom regardless of what you find along the way. The loop is more like a detective working a case — gather a clue, ask "do I know enough yet?", and if not, go gather another one, repeating until the case can actually be closed. That repeated check-and-continue is exactly what a fixed checklist can never do.
-
-**Two exit conditions matter in production:** the model stops asking for tools (the good one), and a **step limit** fires (the guard). Without the second, a confused agent bills you indefinitely — which is the 100-step compounding-error problem from *Open problems*.
+An everyday way to see the difference: a workflow is like a printed checklist you fill in top to bottom regardless of what you find along the way. The loop is more like a detective working a case — gather a clue, ask "do I know enough yet?", and if not, go gather another one, repeating until the case can actually be closed.
 
 **Worked example — banking agent.** User: *"What's my account balance and recent transactions?"*
 
@@ -644,7 +623,7 @@ An everyday way to see the difference: a workflow is like a printed checklist yo
 
 Notice safety appears **twice** — sanitization at stage 1 (input) and validation at stage 6 (output). That bracketing is deliberate and worth stating in an exam answer.
 
-**Exercise — do this, it's likely exam-shaped:**
+**Exercise:**
 
 > *"Find me a good Italian restaurant near my office that's open tonight and make a reservation for 2 at 7 PM"*
 >
@@ -654,10 +633,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing is for.
 
-> ***In practice*** *— how you actually build these seven stages:*
-> - In real code the lifecycle is a **state machine**, and **LangGraph** is the tool the course uses for exactly this: each stage is a **node**, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Drawing the seven stages as a LangGraph is Lab-4-and-beyond work.
-> - Stages 1 and 6 (**safety**) are usually not your own code — you wire in **guardrails libraries** (NeMo Guardrails, Guardrails AI, Llama Guard) for prompt-injection defence, PII redaction and output filtering. "Never rely on a single safety layer" (see *production concerns*) means both ends, plus these.
-> - Stage 4 (**tool invocation**) is the one that acts on the world, so anything irreversible — a payment, a booking, a delete — gets a **human-in-the-loop** confirmation before execution, not after. This is the single most important production habit in the whole lifecycle.
+> ***In practice*** *— in real code the lifecycle is a **state machine**: each stage is a node, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Stages 1 and 6 (**safety**) are usually not hand-written — they wire in guardrails libraries for prompt-injection defence, PII redaction, and output filtering (see *production concerns*).*
 
 ---
 
