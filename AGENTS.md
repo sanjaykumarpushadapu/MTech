@@ -63,6 +63,22 @@ If a slide title names a concept already covered inside an existing subsection, 
 
 If the slide title introduces a genuinely new concept, decide whether it belongs inside the current handout row or in a different session. If it fits the current row, add it as the next appropriate subsection or concept block without creating a new session. If it belongs to a different handout row, do not import it here; log the mismatch and leave the note scoped to the current handout.
 
+### Capture a Slide Inventory at Intake
+
+**The moment a deck is uploaded, before writing or editing the note, write a slide inventory** to `<subject>/source/S<NN>-slide-inventory.md`: one row per slide — slide number, title, and the named items on it (models, algorithms, frameworks, protocols, figures, table labels). Titles and named terms only, never slide prose, so it is an index rather than course material and is safe to commit.
+
+This exists because uploads do not persist. Without an inventory, every later coverage check needs the user to re-upload the same file, and each re-check starts from nothing.
+
+**Verify coverage by matching, not by reading.** Run:
+
+```bash
+cd tools && node check-slide-coverage.mjs <inventory.md> <note.md>
+```
+
+It reports every named item absent from the note. Judge each hit: a genuine omission gets added to the note; a false positive (PDF character corruption, a spelling variant, a word the note phrases differently) gets pruned from the inventory so the signal stays clean. The gate is a clean run, recorded in the compliance line.
+
+Reading the deck and concluding "this looks covered" is not a coverage check. That judgement repeatedly passed notes that had dropped named items, collapsed the deck's own structure, and replaced concrete lists with an ellipsis. Matching is not a judgement call.
+
 ### Respect the Deck's Own Deferrals
 
 When a source marks a topic as covered later — "(Module 2)", "we'll see this in L7", "detail next session", "more on this later" — **name the point, name where it is covered, and stop.** Do not teach the deferred material now. The instructor chose the order; pre-empting it buries this session's own point under material the reader has no grounding for, and duplicates the later session badly. If you are explaining the mechanism behind a fix the source postponed, you have left this session's scope.
