@@ -448,7 +448,7 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 ### Context windows
 
-**Intuition** — A model keeps no memory of its own between turns; everything it can use right now has to fit in one finite workspace that it re-reads from scratch on every turn. The **context window** is the size of that workspace, measured in tokens — so for a conversation it is simply *how much of the history the model can still see at once.* Outgrow it and something has to be dropped, summarised, or fetched back in on demand.
+**Intuition** — Picture a **whiteboard of fixed size**. Everything the model can use has to be written on it: the instructions, the whole conversation so far, any documents you looked up, the tool results — *and* the empty space it needs to write its answer. The model remembers nothing off the board; at every turn it re-reads the whole board from the top. The **context window** is simply **how big that whiteboard is**, counted in tokens. Run out of room and something must be erased, shortened, or kept elsewhere and fetched back when needed.
 
 **Mechanism — context is a shared token budget.** System prompt, user turns, retrieved documents, tool output and the answer all consume the same finite window. As the conversation grows, the system must either summarise, retrieve selectively, forget older turns, or move memory outside the prompt.
 
@@ -462,36 +462,36 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 **These numbers move fast.** By the time you're reading this, the April-2026 snapshot below already shows most frontier models sitting at the "extended/ultra-long" tier by default (1M tokens standard for GPT-5.4, Claude Opus, and Gemini 3.1 Pro; 10M for Llama 4 Scout) — the table above is the reference point the field was arguing about in 2024–25, and it's worth watching *which tier a model sits in*, not memorising a number that will be outdated within a year.
 
-**⚠️ The challenge — the exam-worthy bit, not the numbers:**
+
+**Worked example — filling up the whiteboard.** A support agent has a **32,000-token** window. Follow the same chat at two moments: early on, and after it has run for a while.
+
+| What's on the whiteboard | Early in the chat | Later: +20 more turns (+8,000) and +8,000 more retrieved docs |
+|---|---|---|
+| System prompt and tool instructions | 2,500 | 2,500 |
+| Conversation so far | 4,800 *(12 turns)* | 4,800 + 8,000 = **12,800** |
+| Retrieved policy documents | 9,000 | 9,000 + 8,000 = **17,000** |
+| Tool results | 1,200 | 1,200 |
+| Safety and formatting instructions | 1,000 | 1,000 |
+| **Total used** | **18,500** | **34,500** |
+| **Room left for the answer** (32,000 − used) | **13,500** ✅ | **−2,500** ❌ |
+
+Early on there's plenty of room. Later, the same request **doesn't fit at all** — the whiteboard is full **before the model writes a single word of its answer**. Nothing got "too long" on its own; the pieces simply added up. That's what a context window really is: **one budget shared by the instructions, the history, the retrieved documents, the tool output, and the answer.**
+
+Notice which two rows grew: **conversation history** and **retrieved documents**. Those are the two that keep growing on their own, which is why real systems trim old turns and fetch fewer, better documents.
+
+#### A second, separate problem: "lost in the middle"
+
+Size is only half the story. Even when something **does** fit on the whiteboard, the model may still not use it properly — and this, not the numbers above, is the exam-worthy part:
 
 > **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG (Retrieval-Augmented Generation) + memory systems** — both covered later in the course.
 
 *Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. It's the same way you skim a long email: you reliably catch the opening line and the ask at the very bottom, but a detail buried three paragraphs deep you gloss right over — even though your eyes passed over all of it. So a fact placed mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
 
-*"Lost in the middle" drawn — recall accuracy against position in the context:*
+*Both ideas in one picture — the shared budget across the top, and how well the model recalls something depending on where it sits:*
 
 ![Context window as shared token budget](assets/S01-context-window.svg)
 
 Accuracy is U-shaped, not flat. A fact placed halfway through a long context is the one the model is most likely to overlook — so **where** you put something in the prompt matters as much as whether you put it there at all.
-
-**Worked example — a context budget by hand.** Suppose a support agent has a **32K-token** window. One request might spend it like this:
-
-| Budget item | Tokens |
-|---|---|
-| System prompt and tool instructions | 2,500 |
-| Conversation so far (12 turns) | 4,800 |
-| Retrieved policy documents | 9,000 |
-| Tool results | 1,200 |
-| Safety wrapper and formatting instructions | 1,000 |
-| Room left for the answer | **13,500** |
-
-Now extend the chat by another 20 turns and retrieve another 8K tokens of documentation:
-
-```
-32,000 - (2,500 + 12,800 + 17,000 + 1,200 + 1,000) = -2,500
-```
-
-You are **over budget before the model answers at all**. That is the operational meaning of "context window": it is a finite budget shared by instructions, history, retrieval, tool output, and the answer.
 
 **Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
 
