@@ -134,6 +134,8 @@ Plain language: `QK^T` asks which tokens matter to each token, softmax converts 
 
 Read this as a lookup table for "which architecture for this task," not a ranking of architectures in general — semantic search and text generation land on opposite ends on purpose.
 
+**Popular models by architecture (2025 snapshot)** — concrete anchors for each category above: **encoder-only** — BERT, RoBERTa, DeBERTa, ALBERT, DistilBERT; **decoder-only** — GPT-4, GPT-3.5, Claude 3/4, Llama 3, Mistral; **encoder-decoder** — T5, BART, mT5, PEGASUS, mBART, FLAN-T5. Like any specific model list, this dates quickly — the categories and their fit-per-task above are the durable part.
+
 **Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can inspect both emotional words before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the source sentence and a decoder writes the target sentence while attending to the encoded source.
 
 **Tradeoff / when NOT to use** — Do not force one architecture onto every problem. A decoder-only model can perform understanding tasks after suitable fine-tuning, but for embeddings a purpose-built encoder is usually cheaper, faster, and easier to index.
@@ -192,7 +194,7 @@ Without position information, `"the dog bit the man"` and `"the man bit the dog"
 | Mean pooling | `v = (1/n) sum_i h_i` | semantic similarity, search, RAG |
 | Max pooling | `v_j = max(h_1j, ..., h_nj)` | some retrieval/classification setups |
 
-Many BERT-family checkpoints expose `[CLS]` conveniently, but sentence-embedding models often prefer mean pooling because it uses signal from every token.
+Many BERT-family checkpoints expose `[CLS]` conveniently, but sentence-embedding models often prefer mean pooling because it uses signal from every token. **Sentence-BERT** (Reimers & Gurevych, 2019) is the model that established this pattern — a siamese/triplet network fine-tuned specifically to make mean-pooled sentence vectors directly comparable by cosine similarity — and it's why mean pooling is the default for BGE, GTE, and most modern sentence-embedding models, not just an arbitrary alternative to CLS pooling.
 
 **Worked example** — Three 2D token vectors:
 
@@ -399,6 +401,8 @@ At small scale, linear scan and HNSW cost about the same — the indexing overhe
 | Partition-based | IVF | cluster vectors; search selected partitions | scalable, works with compression | needs training; sensitive to `nprobe` |
 | Compression-based | PQ | compress vectors into compact codes | 8-32x memory reduction, billion-scale search | lower recall, needs training |
 
+PQ — the compression-based strategy in the table above — comes from Jégou et al. (2011).
+
 **Worked example** — For 10M vectors and enough RAM, HNSW is a strong default because it gives high recall and simple tuning. For hundreds of millions of vectors where RAM is the binding constraint, IVF+PQ can be the better engineering choice even if recall is lower.
 
 **Tradeoff / when NOT to use** — Graph indexes are not automatically best. If memory cost dominates, compression can beat HNSW. If insertion rate is very high, a partitioned or disk-backed design may be easier to operate.
@@ -406,6 +410,8 @@ At small scale, linear scan and HNSW cost about the same — the indexing overhe
 ---
 
 ### 13. HNSW: Hierarchical Navigable Small World
+
+HNSW was introduced by Malkov & Yashunin (2018).
 
 **Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; the bottom layer is the local street map containing all points.
 
@@ -526,6 +532,8 @@ Chunking is separate because one vector for a whole document often becomes a blu
 ---
 
 ### 17. Dense Passage Retrieval
+
+Dense Passage Retrieval was introduced by Karpukhin et al. (2020) and is the foundation modern dense retrieval builds on.
 
 **Intuition** — Dense Passage Retrieval uses a dual encoder: one encoder embeds the question, another embeds passages. Retrieval is maximum similarity between the query vector and passage vectors.
 
