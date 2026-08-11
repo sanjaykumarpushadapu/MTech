@@ -1,17 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
-  <title id="title">From transformer to conversational agent</title>
-  <desc id="desc">Transformers are pretrained into LLMs, instruction tuned, then augmented with tools, memory, and planning to become conversational agents.</desc>
-  <defs><marker id="llmtoagent_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker></defs>
-  <rect x="24" y="24" width="1072" height="372" rx="20" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
-  <text x="560" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="700" fill="#17213a">The model is the brain; architecture makes it an agent</text>
-  <g font-family="Georgia,serif" fill="#17213a">
-    <rect x="70" y="155" width="150" height="82" rx="13" fill="#e4f2f4" stroke="#1f6570" stroke-width="2"/><text x="145" y="188" text-anchor="middle" font-size="20" font-weight="700">Transformer</text><text x="145" y="215" text-anchor="middle" font-size="15">attention</text>
-    <rect x="270" y="155" width="150" height="82" rx="13" fill="#eaf2ff" stroke="#315a99" stroke-width="2"/><text x="345" y="188" text-anchor="middle" font-size="20" font-weight="700">Pre-train</text><text x="345" y="215" text-anchor="middle" font-size="15">massive data</text>
-    <rect x="470" y="155" width="150" height="82" rx="13" fill="#eaf2ff" stroke="#315a99" stroke-width="2"/><text x="545" y="188" text-anchor="middle" font-size="20" font-weight="700">LLM</text><text x="545" y="215" text-anchor="middle" font-size="15">fluent predictor</text>
-    <rect x="670" y="155" width="150" height="82" rx="13" fill="#fff2bd" stroke="#8a6400" stroke-width="2"/><text x="745" y="188" text-anchor="middle" font-size="20" font-weight="700">Instruct</text><text x="745" y="215" text-anchor="middle" font-size="15">follow tasks</text>
-    <rect x="870" y="130" width="180" height="132" rx="13" fill="#f7e4e7" stroke="#914252" stroke-width="2"/><text x="960" y="166" text-anchor="middle" font-size="20" font-weight="700">Agent</text><text x="960" y="195" text-anchor="middle" font-size="15">+ tools</text><text x="960" y="218" text-anchor="middle" font-size="15">+ memory</text><text x="960" y="241" text-anchor="middle" font-size="15">+ planning</text>
-    <text x="560" y="324" text-anchor="middle" font-size="18">Hallucination, no actions and no persistent memory are fixed by system design, not by wishful prompting.</text>
-    <text x="560" y="358" text-anchor="middle" font-size="15" font-style="italic" fill="#5a5540">Older models read one word at a time through a keyhole; a transformer lays the whole sentence on the table at once.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 180" role="img" aria-labelledby="title desc">
+  <title id="title">The model as the brain of conversational AI</title>
+  <desc id="desc">Transformer to conversational agent flow: transformer, pre-training, LLM, fine-tuning or instruction tuning, then tools, memory, and planning lead to a conversational agent.</desc>
+  <rect x="0" y="0" width="1600" height="180" fill="#ffffff"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#111111">
+    <rect x="20" y="34" width="220" height="96" fill="#d7eef5"/>
+    <text x="130" y="82" text-anchor="middle" font-size="20" font-weight="700">Transformer</text>
+    <text x="130" y="108" text-anchor="middle" font-size="20" font-weight="700">(2017)</text>
+
+    <rect x="280" y="34" width="220" height="96" fill="#d7eef5"/>
+    <text x="390" y="76" text-anchor="middle" font-size="20" font-weight="700">Pre-training</text>
+    <text x="390" y="104" text-anchor="middle" font-size="20" font-weight="700">on Massive Data</text>
+
+    <rect x="540" y="34" width="220" height="96" fill="#d7eef5"/>
+    <text x="650" y="72" text-anchor="middle" font-size="20" font-weight="700">LLM</text>
+    <text x="650" y="98" text-anchor="middle" font-size="20" font-weight="700">(GPT / BERT /</text>
+    <text x="650" y="122" text-anchor="middle" font-size="20" font-weight="700">T5)</text>
+
+    <rect x="800" y="34" width="240" height="96" fill="#d7eef5"/>
+    <text x="920" y="72" text-anchor="middle" font-size="20" font-weight="700">Fine-tuning /</text>
+    <text x="920" y="98" text-anchor="middle" font-size="20" font-weight="700">Instruction</text>
+    <text x="920" y="122" text-anchor="middle" font-size="20" font-weight="700">Tuning</text>
+
+    <rect x="1080" y="34" width="220" height="96" fill="#d7eef5"/>
+    <text x="1190" y="72" text-anchor="middle" font-size="20" font-weight="700">Tools + Memory</text>
+    <text x="1190" y="98" text-anchor="middle" font-size="20" font-weight="700">+ Planning</text>
+
+    <rect x="1340" y="34" width="240" height="96" fill="#d7eef5"/>
+    <text x="1460" y="82" text-anchor="middle" font-size="20" font-weight="700">Conversational</text>
+    <text x="1460" y="108" text-anchor="middle" font-size="20" font-weight="700">Agent</text>
   </g>
-  <g stroke="#24304a" stroke-width="2.6" fill="none" marker-end="url(#llmtoagent_a)"><line x1="220" y1="196" x2="260" y2="196"/><line x1="420" y1="196" x2="460" y2="196"/><line x1="620" y1="196" x2="660" y2="196"/><line x1="820" y1="196" x2="860" y2="196"/></g>
+  <g fill="#ef9e59">
+    <rect x="240" y="76" width="40" height="8"/>
+    <rect x="500" y="76" width="40" height="8"/>
+    <rect x="760" y="76" width="40" height="8"/>
+    <rect x="1040" y="76" width="40" height="8"/>
+    <rect x="1300" y="76" width="40" height="8"/>
+  </g>
 </svg>

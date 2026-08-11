@@ -507,9 +507,9 @@ So a fact can be inside the window and still be missed: fitting on the board and
 
 That's why the fixes below are all *architectural* rather than *model* fixes. You don't repair hallucination by finding a better model; you repair it by giving the model evidence (retrieval) or by not asking it questions it can't ground.
 
-**The path from architecture to agent:**
+**The model as the brain of conversational AI:**
 
-![From transformer to conversational agent](assets/S01-llm-to-agent.svg)
+![The model as the brain of conversational AI](assets/S01-llm-to-agent.svg)
 
 *Two boxes in that chain deserve a plain definition, since the table below and the rest of this note lean on them:*
 
