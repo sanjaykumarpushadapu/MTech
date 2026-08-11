@@ -672,7 +672,7 @@ Untied:  E + separate lm_head     ≈ 1.05 B
 |                                    | Models                                                         |
 | ---------------------------------- | -------------------------------------------------------------- |
 | **Tied** (small models)            | Gemma-3 · Llama-3.2-1B/3B · Qwen3-0.6B/4B · SmolLM2            |
-| **Untied** (larger/general models) | Llama-3/3.1-8B+ · Qwen3-8B+ · many frontier-scale decoder LLMs |
+| **Untied** (larger/general models) | Llama-3/3.1-8B+ · Llama 4 · DeepSeek-V3 · OLMo 2 · Qwen3-8B+ |
 
 **Tradeoff / when NOT to tie** — tying saves one full `|V| × d` matrix and is attractive when the vocabulary matrix is a large fraction of the model budget. Untying costs extra parameters, but it lets the output classifier learn a geometry that is not forced to match the input embedding geometry, which can improve modelling quality. For very small models, tie; for larger models with enough budget, untying is often worth paying for. The decision is _ratio of vocabulary matrix to total parameters_, not a universal best practice — which makes it a good tradeoff question.
 
@@ -1031,19 +1031,19 @@ _The chain, each link forcing the next:_
 
 **Mechanism — why this matters for the course:** the middle link is why sessions 9–16 exist at all. If anyone could pre-train, the syllabus would be about pre-training. Because they can't, it's about adaptation.
 
-**Pre-neural (before 2010s)** — as early as 1950, a language model was used to measure the **entropy of English**; then decades of **n-gram** language models for machine translation and speech recognition.
+**Pre-neural (before 2010s)** — as early as 1950, **Shannon** used a language model to measure the **entropy of English**; then decades of **n-gram** language models for machine translation and speech recognition.
 
 **Neural ingredients (2010s)** — each a component the transformer needed:
 
-| Year     | Contribution                                |
-| -------- | ------------------------------------------- |
-| 2003     | First **neural language model**             |
-| 2014     | **Sequence-to-sequence** modelling (for MT) |
-| 2014     | **Adam** optimizer                          |
-| 2014     | **Attention** mechanism (for MT)            |
-| **2017** | **Transformer** architecture (for MT)       |
-| 2017     | **Mixture of experts**                      |
-| 2018–19  | **Model parallelism**                       |
+| Year     | Contribution                                | Source              |
+| -------- | -------------------------------------------- | -------------------- |
+| 2003     | First **neural language model**              | Bengio et al.         |
+| 2014     | **Sequence-to-sequence** modelling (for MT)  | Sutskever et al.      |
+| 2014     | **Adam** optimizer                           | Kingma et al.          |
+| 2014     | **Attention** mechanism (for MT)             | Bahdanau et al.       |
+| **2017** | **Transformer** architecture (for MT)        | Vaswani et al.        |
+| 2017     | **Mixture of experts**                       | Shazeer et al.        |
+| 2018–19  | **Model parallelism**                        | Huang et al. · Rajbhandari et al. · Shoeybi et al. |
 
 Note that attention, seq2seq and the transformer all arrived **for machine translation**. None of them were built to make chatbots.
 
@@ -1079,11 +1079,13 @@ PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 
 
 | Level           | Representative case                            | What you get                                                                                                     |
 | --------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Closed**      | managed proprietary model                      | **API access only**                                                                                              |
-| **Open-weight** | published weights without full training recipe | **Weights available**, paper with architecture and some training details, **no full reproducibility**            |
-| **Open-source** | reproducible research release                  | **Weights and data available**, paper with most details — though not necessarily rationale or failed experiments |
+| **Closed**      | e.g. **GPT-4o** — managed proprietary model    | **API access only**                                                                                              |
+| **Open-weight** | e.g. **DeepSeek** — published weights without full training recipe | **Weights available**, paper with architecture and some training details, **no full reproducibility**            |
+| **Open-source** | e.g. **OLMo** — reproducible research release  | **Weights and data available**, paper with most details — though not necessarily rationale or failed experiments |
 
 "Open-weight ≠ open-source" is the point: you can run the model but cannot reproduce it, because the data isn't there.
+
+**Frontier models at time of authoring** — the session material's own snapshot, already older than the current-as-of-2026 table above but worth keeping as the concrete anchor the "levels of openness" table above was built against: OpenAI's o3, Anthropic's Claude Sonnet 3.7, xAI's Grok 3, Google's Gemini 2.5, Meta's Llama 3.3, DeepSeek's r1, Alibaba's Qwen 2.5 Max, Tencent's Hunyuan-T1. The list changes every few months — that instability is itself the lesson, not a gap in this note.
 
 **A snapshot, so the categories above aren't purely abstract** — a current-as-of-2026 line-up, one flagship release per family and the capability it's optimizing for:
 

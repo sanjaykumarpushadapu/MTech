@@ -60,11 +60,13 @@ LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm does
 
 **Worked example — three real architectures, three placements.** The original Transformer decoder uses Post-Norm throughout. **Llama 3 8B** uses Pre-Norm: RMSNorm1 sits before the attention block, RMSNorm2 sits before the feed-forward block, and the residual stream itself is never normalized mid-flow. **OLMo 2 7B** uses a third variant — "Post-Norm but inside the residual": RMSNorm is applied *after* attention/FFN, like Post-Norm, but the placement is arranged so it still sits inside the residual branch rather than wrapping the whole running sum, closer in spirit to Pre-Norm's stability. All three architectures also add a **Final Norm** right before the output projection — because Pre-Norm's untouched residual stream can still grow in scale across many layers, and one last normalization reins that back in before the logits are computed.
 
+A fourth pattern is worth naming separately: **Gemma 3** normalizes **both before and after** each sublayer — a "sandwich" that pays for two normalization passes per sublayer instead of one, in exchange for controlling activation scale on both the way in and the way out. It's neither pure Pre-Norm nor pure Post-Norm; it's evidence that "normalize once, in one place" isn't the only viable design once a lab is willing to spend the extra compute.
+
 ![Pre-Norm versus Post-Norm across three real model families](assets/S03-norm-placement.svg)
 
-**Sample exam question (from the deck):** *You are designing a decoder-only LLM with more than 100 layers and want stable training with lower computation. Which normalization strategy would you choose, and why?* Answer: **RMSNorm with Pre-Norm placement** — RMSNorm removes the mean-centering pass (cheaper, 7-15% faster, section 1), and Pre-Norm gives gradients a direct highway through the residual stream (stable at depth, tolerates larger learning rates without warmup). This combination is the default for scaling deep LLMs: **Llama, Qwen, DeepSeek, and Mistral all use it.**
+**Worked example — an exam-style question.** *You are designing a decoder-only LLM with more than 100 layers and want stable training with lower computation. Which normalization strategy would you choose, and why?* Answer: **RMSNorm with Pre-Norm placement** — RMSNorm removes the mean-centering pass (cheaper, 7-15% faster, section 1), and Pre-Norm gives gradients a direct highway through the residual stream (stable at depth, tolerates larger learning rates without warmup). This combination is the default for scaling deep LLMs: **Llama, Qwen, DeepSeek, and Mistral all use it.**
 
-**Tradeoff / when NOT to use** — Pre-Norm's stability isn't free: because the residual stream is never itself normalized, activation magnitudes can drift upward across many layers, which is exactly why every Pre-Norm model still needs a Final Norm before the output projection. Post-Norm doesn't have this drift problem, but pays for it with training instability at real depth. OLMo 2's hybrid placement is evidence that the question isn't fully settled — different labs are still making different bets here, not converging on one universally "correct" placement.
+**Tradeoff / when NOT to use** — Pre-Norm's stability isn't free: because the residual stream is never itself normalized, activation magnitudes can drift upward across many layers, which is exactly why every Pre-Norm model still needs a Final Norm before the output projection. Post-Norm doesn't have this drift problem, but pays for it with training instability at real depth. OLMo 2's hybrid placement and Gemma 3's sandwich placement are both evidence that the question isn't fully settled — different labs are still making different bets here, not converging on one universally "correct" placement.
 
 ---
 
@@ -90,7 +92,7 @@ LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm does
 
 ### 4. RoPE (Rotary Positional Embeddings)
 
-**Intuition** — Instead of *adding* a position vector, RoPE *rotates* the query and key vectors by an angle that depends on their position. Rotating two vectors by different amounts changes the angle *between* them in a way that depends only on the *difference* in how much each was rotated — so relative position falls directly out of the geometry, with no separate lookup table required.
+**Intuition** — Instead of *adding* a position vector, RoPE *rotates* the query and key vectors by an angle that depends on their position. Rotating two vectors by different amounts changes the angle *between* them in a way that depends only on the *difference* in how much each was rotated — so relative position falls directly out of the geometry, with no separate lookup table required. RoPE was introduced by Su et al. in the RoFormer paper (2021).
 
 **Mechanism** — Basic 2D rotation of a point by angle θ:
 
@@ -152,7 +154,7 @@ By the algebra of rotations, the combined rotation term depends only on `(n - m)
 
 **The problem it solves** — A plain feed-forward layer is `FFN(x) = act(x W1) W2` — linear, then activation, then linear, one path, and the activation is a plain filter. If `act` is ReLU, any input landing on the negative side is truncated to exactly zero and contributes exactly zero gradient during backpropagation. In a very deep stack, enough neurons can get permanently stuck this way that they stop learning entirely, for the rest of training.
 
-**The fix** — **GELU** (Gaussian Error Linear Unit) weights each input by the probability that a value drawn from a standard normal distribution would be less than that input — in effect, it multiplies `x` by a smooth S-shaped function of `x`, instead of a hard 0/1 gate, so small negative inputs are *down-weighted* rather than zeroed outright. **Swish** (also written SiLU, `x * sigmoid(x)`) does something similar using a sigmoid gate instead of the Gaussian CDF. Both are smooth, both dip slightly negative before rising (unlike ReLU's flat-then-linear shape), and both keep a small gradient flowing even for negative inputs.
+**The fix** — **GELU** (Gaussian Error Linear Unit, Hendrycks & Gimpel) weights each input by the probability that a value drawn from a standard normal distribution would be less than that input — in effect, it multiplies `x` by a smooth S-shaped function of `x`, instead of a hard 0/1 gate, so small negative inputs are *down-weighted* rather than zeroed outright. **Swish** (also written SiLU, `x * sigmoid(x)`, from Elfwing et al.'s "Sigmoid-Weighted Linear Units for Neural Network Function Approximation in Reinforcement Learning") does something similar using a sigmoid gate instead of the Gaussian CDF. Both are smooth, both dip slightly negative before rising (unlike ReLU's flat-then-linear shape), and both keep a small gradient flowing even for negative inputs.
 
 **An everyday picture** — ReLU is a bouncer with one strict cutoff line: below it, absolutely nobody gets in, no matter how close they were. GELU and Swish are more like a bouncer who gradually lets fewer people through as the line looks less promising, rather than drawing one hard line — nobody is flatly zeroed out just for being slightly on the wrong side.
 
@@ -168,7 +170,7 @@ By the algebra of rotations, the combined rotation term depends only on `(n - m)
 
 **The problem it solves** — A regular FFN's activation is one shared filter, applied uniformly. The network can't easily learn "let this dimension through strongly for these tokens, but suppress it for those tokens" without contorting its single pair of weight matrices to do double duty: deciding relevance *and* carrying content through the exact same linear transform.
 
-**The fix** — A **Gated Linear Unit (GLU)** uses three weight matrices instead of two:
+**The fix** — A **Gated Linear Unit (GLU)** uses three weight matrices instead of two. GLU and its variants (including GEGLU and SwiGLU) come from Shazeer's "GLU Variants Improve Transformer" (2020):
 
 ```text
 Regular FFN:  FFN(x) = act(x W1) W2                        (2 weight matrices, one path)
@@ -237,6 +239,8 @@ Gated FFN:    FFN(x) = ( act(x W) (x) x V ) W2              (3 weight matrices, 
 | Routing | top-8 of 256 | top-1 (all layers MoE) |
 | Layer pattern | — | alternating dense + MoE layers |
 | Design bet | many small specialists | fewer, sharper, bigger experts |
+
+A naming trap worth flagging: "dense" gets reused with two different meanings in this part of the session. In concept 8, a **dense layer** meant a plain FFN with no MoE at all — every parameter always active. Inside MoE specifically, a **Sparse MoE** is the hard-routing design covered so far — the router selects only a few experts (top-1 or top-k) and the rest sit fully idle for that token. A **Dense MoE**, by contrast, still runs *every* expert for every token, like a plain dense layer would, but combines their outputs in different proportions (weighted differently per token) rather than selecting a hard subset. A Dense MoE keeps the "many specialized sub-networks, weighted per token" idea without the routing/capacity/overflow machinery of concepts 9-10 — at the cost of losing the compute savings that make sparse MoE attractive in the first place, since every expert still runs regardless of relevance.
 
 A related pattern is **dynamic sparsity**: newer models like **Qwen3-Next** and **Llama 4** (Maverick/Scout) adjust how many experts activate based on task difficulty — increasing active experts during a reasoning-heavy "thinking mode" (reinforcement-learning-driven extended reasoning) and decreasing them for ordinary chat, effectively behaving like two different models sharing one set of weights.
 

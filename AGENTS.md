@@ -118,6 +118,12 @@ When a deck, handout, or paper is provided to check a note against, that is a co
 
 When source content overlaps with something the note already covers, check whether the source presents it as its own distinct point (its own heading, its own slide, its own labeled block) before folding it into an existing section. If the source gives it a name and a place, the note should too, even if the underlying idea is covered elsewhere — don't silently merge a source's own structure into a differently-labeled section just because the ideas rhyme. If genuinely unsure whether something is "already covered" or "quietly merged," treat it as missing and give it a visible home matching where the source put it.
 
+### Draft-to-Source Reconciliation
+
+Reading every slide before writing is necessary but not sufficient — synthesis drops things. Writing a note from memory of "I read the whole deck" misses one-line mentions: a fourth named example buried in a bullet, a paper citation given once, a naming distinction that only appears in a single sentence. These get seen during extraction and then quietly dropped during writing, because writing summarizes rather than transcribes.
+
+After a note is drafted from a source, do a second, separate pass: work through the extracted source text bullet by bullet (or slide by slide) and check each concrete fact, named model, named example, and cited paper off against the draft. Do not consider the note checked until this reconciliation pass has actually happened — "I read the source already" is not the same claim as "I verified the draft still has everything the source had."
+
 ### Default to More, Not Less
 
 Session notes exist to teach and to be revised from. When extending a note from new source material, prefer including a genuinely useful fact, number, named model, or example over trimming for length. Concision is a wording-quality goal (see Wording Pass) — write clean sentences, cut filler — not a content-quantity ceiling. Cutting real source content to keep a note short is the wrong tradeoff in this repo. A longer note that teaches more is preferred over a shorter one that teaches less, as long as every addition is accurate, sits under the right heading, and doesn't duplicate something already there.
