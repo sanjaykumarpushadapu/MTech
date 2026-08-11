@@ -497,7 +497,7 @@ So a fact can be inside the window and still be missed: fitting on the board and
 
 ---
 
-### LLMs as the brain — capabilities and limits
+### Transformers & LLMs — the brain of modern conversational AI
 
 **Intuition** — The LLM is the reasoning engine, and its strengths and failures are *the same property seen twice*. It is a next-token predictor trained to produce plausible continuations — so it is fluent, flexible and good at intent, **and** it will produce a plausible continuation when it has no idea, which is what hallucination is. It is not a bug bolted onto a good system; it's the cost of the mechanism that makes the system work at all.
 
@@ -536,7 +536,9 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 | **Long-range dependencies** — connect ideas across long passages | **Natural responses** — fluent, human-like replies |
 | **Parallel processing** — faster training than RNNs | **Ambiguity handling** — resolve underspecified requests |
 
-**What LLMs do well vs where they fail:**
+#### LLM capabilities & limitations
+
+The two lists the instructor puts side by side — the same model, its strengths and its hard limits:
 
 | ✅ Do well | ✗ Limitations |
 |---|---|
@@ -548,7 +550,9 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 | Entity extraction | **Consistency** — different answers to the same question |
 | Sentiment analysis | **No verification** — can't check facts |
 
-**Why agentic architecture exists** — every limitation maps to a fix, and this table *is* the course structure:
+#### Why we need agentic architecture
+
+Every limitation above maps to a fix — **augment the LLM with external capabilities.** This table *is* the course structure:
 
 | LLM limitation | Agentic solution | Example |
 |---|---|---|
@@ -632,7 +636,7 @@ An everyday way to see the difference: a workflow is like a printed checklist yo
 | **4 Tool invocation** | `get_balance(user_id)` → $5,432.10 · `get_transactions(user_id, limit=5)` → [Transaction1, …] |
 | **5 Memory** | Store: user asked about balance at 2:30 PM · Update: preference for transaction details · Context: maintain for follow-ups |
 | **6 Safety** | Validate balance & transactions belong to the **correct user** · check no PII in logs · verify only authorized info |
-| **7 Response** | *"Your current balance is $5,432.10. Here are your recent transactions: … Would you like more details on any of these?"* |
+| **7 Response** | *"Your current balance is $5,432.10. Here are your recent transactions: 1. Starbucks −$4.50 (Today) · 2. Amazon −$89.99 (Yesterday) · 3. Shell Gas −$45.00 (Yesterday) · 4. Grocery Store −$123.45 (2 days ago) · 5. Netflix −$15.99 (3 days ago). Would you like more details on any of these?"* |
 
 Notice safety appears **twice** — sanitization at stage 1 (input) and validation at stage 6 (output). That bracketing is deliberate and worth stating in an exam answer.
 
@@ -825,6 +829,21 @@ Three numbers worth carrying: **10M+ token context** is now achievable (Llama 4 
 **Tradeoff / how to study this section** — landscape tables go stale when treated as rankings. Use this table as a decision checklist: first name the product constraint, then pick the model family whose tradeoff is acceptable.
 
 The durable lesson is not a ranking of vendors; it is the decision rule. In conversational AI, model selection is usually a trade among **quality, latency, cost, control, and safety**. The names at the frontier change quickly; these axes are what stay useful.
+
+---
+
+## Key takeaways
+
+The instructor's own six-point summary of the session — the shortest version of everything above:
+
+| # | Takeaway | In one line |
+|---|---|---|
+| 1 | **Evolution of Conversational AI** | Rule-based (1960s) → ML (2000s) → Deep learning (2010s) → Transformers (2017) → LLMs (2020) → Agentic AI (2023+) |
+| 2 | **Architecture shift** | Traditional: Intent → Dialogue Manager → Template. Modern: LLM + Tools + Memory + Planning + Safety |
+| 3 | **Components matter** | Modern systems need all six: NLU, Dialogue Management, Knowledge Access, Action Execution, Response Generation, Memory |
+| 4 | **LLMs are the brain** | But they need external systems for tools, memory, real-time data and action execution to be truly useful |
+| 5 | **Agent lifecycle** | Request → Routing → Reasoning → Tool Invocation → Memory → Safety → Response |
+| 6 | **Production is different** | Observability, cost optimization, latency management and safety are non-negotiable in real systems |
 
 ---
 
