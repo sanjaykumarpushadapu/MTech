@@ -65,11 +65,17 @@ If the slide title introduces a genuinely new concept, decide whether it belongs
 
 ### Respect the Deck's Own Deferrals
 
-When a slide names a topic and marks it as covered later — "(Module 2)", "we'll see this in L7", "detail in the next session" — the note must **state the point and the deferral, and stop there**. Do not teach the deferred material now. The instructor decided the order; pre-empting it buries this session's actual point under material the reader has no context for yet, and duplicates the later session badly.
+When a source marks a topic as covered later — "(Module 2)", "we'll see this in L7", "detail next session", "more on this later" — **name the point, name where it is covered, and stop.** Do not teach the deferred material now. The instructor chose the order; pre-empting it buries this session's own point under material the reader has no grounding for, and duplicates the later session badly. If you are explaining the mechanism behind a fix the source postponed, you have left this session's scope.
 
-Concretely: slide 39 of 521 S01 gives four context-window sizes plus one warning line — *"Lost in the middle — models struggle with info in long contexts. Solution: RAG + Memory systems (Module 2)"*. The correct note states the warning and that Module 2 covers the fix. It does **not** explain the U-shaped recall curve, why retrieval beats a bigger window, or how RAG works — that is Module 2's content and was 15 lines of over-explanation on a one-line slide.
+**Match the source's weight.** How much the note says about something tracks how much the source says:
 
-**Match the slide's own weight.** One warning line on a slide gets roughly a warning line in the note, not a subsection. A table of four rows stays four rows — do not add invented rows or rename the slide's own labels into a different scheme. Your own clarity additions (an analogy, a worked example, a plain-English bridge) are still welcome, but they explain *what the slide teaches*; they never open up what the slide explicitly postponed.
+| Source gives | Note gives |
+| ------------------------------ | ------------------------------------------------------------ |
+| A one-line warning or aside     | About a line — not its own subsection                        |
+| A table                         | The same rows, with the source's own labels — no invented rows, no dropped rows, no renamed categories |
+| A full slide of mechanism       | Full treatment, with all required blocks                      |
+
+Your own clarity work — an analogy, a worked example, a plain-English bridge — is still expected and still welcome. It exists to explain **what the source teaches**. It must never open up what the source postponed, and never reshape what the source presented.
 
 When the deck uses a short label as a teaching anchor, keep that wording visible in the note as a heading or short label instead of burying it only in prose, even if the underlying concept is already covered elsewhere. This is especially important for early definitional slides and section-divider titles that help the reader follow the sequence.
 
