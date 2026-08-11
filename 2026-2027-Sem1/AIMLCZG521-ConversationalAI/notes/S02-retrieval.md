@@ -428,6 +428,8 @@ Key ideas:
 | navigable graph | greedy movement usually finds a near-optimal path |
 | robustness | multiple possible routes reduce local-minimum risk |
 
+This is the complexity payoff, stated plainly: brute-force search is **O(N)** — every query compares against every stored vector. HNSW's layered structure turns that into **O(log N)** — each layer eliminates most of the remaining candidates before the next layer even starts, which is the same "skip across, then narrow down" shape as the CPU-core math in concept 11.
+
 **Worked example — one concrete run, step by step.** Say the graph has 8 stored vectors, numbered 1-8, and a query vector arrives (drawn as the target point).
 
 1. **Enter at the top layer** at a random entry point, node 1. Node 1 connects to node 2 at this sparse top layer; comparing both to the query, node 2 is closer. Current best: **node 2**.

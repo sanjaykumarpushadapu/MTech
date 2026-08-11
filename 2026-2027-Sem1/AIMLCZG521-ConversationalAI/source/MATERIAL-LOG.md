@@ -78,6 +78,11 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - Also added the deck's own "Popular models by architecture (2025 snapshot)" list (encoder-only / decoder-only / encoder-decoder named examples) to §4, which the note's per-task decision table didn't carry even though the underlying architecture comparison was already thorough.
 - `npm run check` clean after fixes (36/36 diagrams, 0 source-framing violations).
 
+## Recheck Notes — 11 Aug 2026 (fourth pass, image slides)
+
+- Explicitly re-rendered and visually inspected the HNSW walkthrough slides (pp. 40-42) and the computational-challenge slide (p. 33), since these carry mostly diagram content that plain text extraction under-represents. The step-by-step walkthrough (entry 1→2, greedy to 4, final closest 7) and the 10M/768-dim/7.68s/768-core numbers all matched §11/§13 exactly — no gap there. One thing the diagram carried that the note's prose didn't state explicitly: the deck's own **Brute-Force O(N) vs HNSW O(log N)** complexity labels, shown visually on p. 42 rather than as a bullet. The note only said "near logarithmic" in prose; added the explicit Big-O comparison to §13.
+- `npm run check` clean (36/36 diagrams, 0 source-framing violations).
+
 ## Storage Rule
 
 Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.
