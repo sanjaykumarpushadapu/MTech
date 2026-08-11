@@ -39,11 +39,11 @@ Run `byte_pair_encoding.ipynb` before the agent notebooks. It makes the tokeniza
 
 Cell numbers below are the **code** cells; each links back to the note section it demonstrates (note → cell map lives in the note's *Lab / build* section).
 
-1. **Baseline** — Step 4, cell 10: LLM connected, no tools yet, so the limitation is visible first → note **§8** (*"LLMs can't take actions"*)
-2. **Tool definition** — Step 5, cell 12: `@tool def get_weather(city: str)`; the **docstring is the tool description the LLM reads** → note **§3b** (the ACI point)
-3. **Tool selection** — Step 6, cell 14: `initialize_agent(..., verbose=True)` — the model picks the path → note **§3b** (agent vs workflow), **§9** (routing → reasoning)
-4. **Execution** — Step 7, cells 16–17: Tokyo, then a two-city comparison → note **§9** (tool invocation)
-5. **Response generation** — the agent turns raw search output into prose → note **§9** (response stage)
+1. **Baseline** — Step 4, cell 10: LLM connected, no tools yet, so the limitation is visible first → note **Transformers & LLMs — the brain of modern conversational AI** (*"LLMs can't take actions"*)
+2. **Tool definition** — Step 5, cell 12: `@tool def get_weather(city: str)`; the **docstring is the tool description the LLM reads** → note **Protocol landscape** (the ACI point)
+3. **Tool selection** — Step 6, cell 14: `initialize_agent(..., verbose=True)` — the model picks the path → note **Workflows vs agents — and when not to build one** and **The seven-stage agent lifecycle**
+4. **Execution** — Step 7, cells 16–17: Tokyo, then a two-city comparison → note **The seven-stage agent lifecycle** (tool invocation)
+5. **Response generation** — the agent turns raw search output into prose → note **The seven-stage agent lifecycle** (response stage)
 
 **`verbose=True` is the point of the lab.** It prints the agent's thoughts and tool choices — the ReAct loop made visible. Don't turn it off.
 

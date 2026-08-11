@@ -34,7 +34,7 @@ An API is a contract between a service and its clients: send a request shaped li
 
 **Worked example** — Amazon Bedrock exposes `GET /models` and `POST /models/{model-id}/invoke`. You never see the GPUs or serving stack — only the contract. Hugging Face, LangChain, Prefect are the same.
 
-**Tradeoff / when NOT to use** — publishing an API is a commitment, not a feature: once clients build against it, changing it breaks them (→ versioning, §7). Public APIs (Google Maps, RapidAPI) are fast to integrate but create external dependency, quota, pricing, and outage risk — for a core capability like payments or identity, choose deliberately and design fallbacks.
+**Tradeoff / when NOT to use** — publishing an API is a commitment, not a feature: once clients build against it, changing it breaks them (→ versioning, *Choosing between REST, GraphQL and gRPC*). Public APIs (Google Maps, RapidAPI) are fast to integrate but create external dependency, quota, pricing, and outage risk — for a core capability like payments or identity, choose deliberately and design fallbacks.
 
 ```mermaid
 flowchart LR
@@ -144,7 +144,7 @@ curl -X GET "https://jsonplaceholder.typicode.com/posts"
 
 `GET /posts` → `200 OK` with a JSON array. A `POST` that creates a resource returns `201 Created`.
 
-**Tradeoff** — HTTP's ubiquity is its strength and ceiling: text-based, request-per-resource, header overhead on every call. Invisible for a browser fetching a page, very visible for two internal services exchanging millions of messages — the gap gRPC exists to fill (§5).
+**Tradeoff** — HTTP's ubiquity is its strength and ceiling: text-based, request-per-resource, header overhead on every call. Invisible for a browser fetching a page, very visible for two internal services exchanging millions of messages — the gap gRPC exists to fill (*GraphQL* is for flexible reads; *gRPC* is for lean service-to-service calls).
 
 ```mermaid
 flowchart LR
@@ -232,7 +232,7 @@ flowchart TD
 | Supports sync request-response | |
 | No intermediate broker | |
 
-That "fetching multiple resources" drawback is the setup for GraphQL (§5).
+That "fetching multiple resources" drawback is the setup for *GraphQL*.
 
 **Worked example** — a student API:
 
@@ -451,7 +451,7 @@ flowchart LR
 | Course | Session | What that course emphasises | Extra detail it adds |
 |---|---|---|---|
 | 549 Cloud Native | S1 (mid-sem, closed book) | Full API-design foundations: contract, sync/async, HTTP, OpenAPI, REST/GraphQL/gRPC, versioning | The original worked examples above (order-service timing, Books API lifecycle, calculator `.proto`) |
-| 546 SE4ML | S9 (mid-sem, closed book — Refactoring, APIs, packaging) | *Not yet written* — expected to be a narrower pass: designing an API around an ML model/service, likely reusing §0, §2, §4 directly | — |
+| 546 SE4ML | S9 (mid-sem, closed book — Refactoring, APIs, packaging) | *Not yet written* — expected to be a narrower pass: designing an API around an ML model/service, likely reusing *What an API is*, *HTTP mechanics*, and *REST* directly | — |
 
 ## Exam scope
 

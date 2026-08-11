@@ -12,7 +12,7 @@ Conversational systems need a way to find the right knowledge before the LLM ans
 
 **Prerequisites recap** — this session assumes basic transformer architecture, self-attention, feedforward layers, and matrix operations.
 
-> - **Transformer architecture**: token IDs become token embeddings, position information is added, transformer layers rewrite the token vectors, and a pooling step can turn many token vectors into one sentence vector.
+> - **Transformer architecture**: token IDs become token embeddings, position information is added, transformer layers rewrite the token vectors, and a pooling step can turn many token vectors into one sentence vector. Spelled out block by block: **Embeddings + Positional Encoding** turn token IDs into dense vectors carrying position info; **Multi-Head Self-Attention** runs parallel attention over different learned subspaces; **LayerNorm + Residual** adds and normalizes after each sub-layer; the **Feed-Forward Network (FFN)** is two linear layers with a ReLU in between, applied per position; this whole block repeats for **Nx layers**; a decoder finishes with **Linear + Softmax**, projecting to vocabulary size for a probability distribution.
 > - **Self-attention vs cross-attention**: self-attention compares tokens inside the same sequence; cross-attention lets a decoder attend to an encoded source sequence, as in translation. Concretely: in `"The bank was closed because the river overflowed its banks"`, self-attention lets the model reach the first `bank`, look at the rest of the *same* sentence, see `river` and `overflowed`, and realize `bank` means a landform, not a financial institution — query and result both come from one sequence. Translating `"I love Mangoes"` into `"Mujhe Aam pasand hain"` is different: the decoder's query comes from the Hindi word it is generating, but the key/value data it attends to comes from the English input — that is cross-attention, query and data from two different sequences.
 >
 >   | Mechanism | Where it runs | Query (Q) source | Key/Value (K, V) source |
@@ -136,13 +136,15 @@ Read this as a lookup table for "which architecture for this task," not a rankin
 
 **Popular models by architecture (2025 snapshot)** — concrete anchors for each category above: **encoder-only** — BERT, RoBERTa, DeBERTa, ALBERT, DistilBERT; **decoder-only** — GPT-4, GPT-3.5, Claude 3/4, Llama 3, Mistral; **encoder-decoder** — T5, BART, mT5, PEGASUS, mBART, FLAN-T5. Like any specific model list, this dates quickly — the categories and their fit-per-task above are the durable part.
 
+Concrete products behind those categories, to ground the abstractions: **ChatGPT and Claude** are decoder-only conversational AI; **GitHub Copilot** is decoder-only code synthesis; encoder-decoder machine translation is the classic "English to French" framing; encoder-decoder summarization means encoding a document and decoding a summary.
+
 **Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can inspect both emotional words before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the source sentence and a decoder writes the target sentence while attending to the encoded source.
 
 **Tradeoff / when NOT to use** — Do not force one architecture onto every problem. A decoder-only model can perform understanding tasks after suitable fine-tuning, but for embeddings a purpose-built encoder is usually cheaper, faster, and easier to index.
 
 > ***Going deeper*** — Fine-tuned decoders can match encoders on some classification tasks, so "encoders understand, decoders generate" is a practical default, not an absolute law. The production question is cost: if an encoder reaches the same retrieval or classification quality with smaller vectors, faster inference, and simpler indexing, it is still the better tool.
 >
-> The concrete evidence: Borodach et al., *"Decoders Laugh as Loud as Encoders"* (2025), tested 17 encoders, several encoder-decoders, and several decoders on a six-way humor classification task (five joke types plus "no joke", 1,392 human-authored jokes). Best fine-tuned encoder: RoBERTa-base at F1 0.86 — the prior state of the art. Best fine-tuned decoder: GPT-4o at F1 0.85 — statistically equal. Zero/few-shot decoders, not fine-tuned, only reached F1 ≈ 0.18. The finding that overturns the old assumption isn't "decoders are now better" — it's that **fine-tuning, not architecture, is what closes the gap**; an un-tuned decoder is nowhere close.
+> The concrete evidence: Borodach et al., *"Decoders Laugh as Loud as Encoders"* (2025), tested 17 encoders (including BERT, RoBERTa, DeBERTa, **XLNet**, ALBERT, **ModernBERT**, **NeoBERT**), several encoder-decoders (**BART-large-mnli**, **Flan-T5-base**), and several decoders (GPT-4, GPT-4o, Llama 3.2, Gemma 2, **Qwen2**, Mistral) on a six-way humor classification task (five joke types plus "no joke", 1,392 human-authored jokes). Best fine-tuned encoder: RoBERTa-base at F1 0.86 — the prior state of the art. Best fine-tuned decoder: GPT-4o at F1 0.85 — statistically equal. Zero/few-shot decoders, not fine-tuned, only reached F1 ≈ 0.18. The finding that overturns the old assumption isn't "decoders are now better" — it's that **fine-tuning, not architecture, is what closes the gap**; an un-tuned decoder is nowhere close.
 
 > ![Zero/few-shot decoders lag far behind — fine-tuning closes the gap](assets/S02-decoder-vs-encoder-classification.svg)
 
@@ -272,6 +274,8 @@ loss = -log( exp(sim(a,p)) / sum_i exp(sim(a,n_i)) )
 Plain language: reward the positive pair for scoring high, and punish it if negatives score nearly as high.
 
 **Worked example** — Anchor: `"The cat sat on the mat"`. Positive: `"A feline rested on the rug"`. Negative: `"How to bake chocolate cookies"`. A good embedding model raises anchor-positive similarity and lowers anchor-negative similarity.
+
+Models built on each objective, as concrete anchors: **contrastive learning** — SimCSE, DPR, SBERT, E5, GTE, mE5, NV-Embed; **MLM** — BERT, RoBERTa, SpanBERT; **RetroMAE** — RetroMAE, RetroMAE v2, RetroMAE-BEIR.
 
 For MLM, `"The [MASK] brown fox [MASK] over the lazy dog"` teaches the encoder to predict `quick` and `jumps` from both sides. For RetroMAE, a more heavily masked sentence forces the encoder to compress the surviving context well enough for the decoder to reconstruct the original.
 
@@ -413,7 +417,7 @@ PQ — the compression-based strategy in the table above — comes from Jégou e
 
 HNSW was introduced by Malkov & Yashunin (2018).
 
-**Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; the bottom layer is the local street map containing all points.
+**Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; the bottom layer is the local street map containing all points. Formally, this layered structure is a **multi-layer skip list for vectors** — the same "sparse shortcuts on top, dense detail at the bottom" idea skip lists use for ordered data, generalized to a graph over vector similarity instead of a sorted sequence.
 
 ![HNSW search process](assets/S02-hnsw-search.svg)
 
@@ -620,14 +624,14 @@ Run the DistilBERT notebook before building the retriever. It makes sections 3, 
 
 | This note's concept | Notebook cell | What you run / see |
 |---|---|---|
-| §5 — BERT pipeline, but on DistilBERT's 6 layers instead of BERT-base's 12 | cell 3 | a spec table: 6 layers, 768 hidden, 12 heads, ~66M params, 512 max tokens |
+| **How Encoder Transformers Create Embeddings** — BERT pipeline, but on DistilBERT's 6 layers instead of BERT-base's 12 | cell 3 | a spec table: 6 layers, 768 hidden, 12 heads, ~66M params, 512 max tokens |
 | Setup — loading an encoder model | cell 5 | `AutoModel.from_pretrained("distilbert-base-uncased")` |
-| §3 — contextual embeddings, the mechanism itself | cell 6 | `get_token_embedding()` — runs the model, finds the target word's token(s), averages sub-word pieces into one vector |
-| §3 — worked example: `bank` in a river sentence vs a finance sentence | cell 7 | the two `bank` embeddings computed side by side, with their token positions printed |
-| §3 + §9 — contextual embeddings compared with cosine similarity | cell 8 | `cosine_similarity(bank_river_vec, bank_finance_vec)` — a number well below 1.0, proving the two vectors genuinely differ |
-| §9 — reading a cosine similarity number | cell 9 (markdown) | the scale this note's Mechanism table describes: ~1.0 identical, 0.8-0.95 very similar, 0.5-0.75 related, ~0.0 unrelated |
-| §3 — same-context vs cross-context comparisons (does `bank` move *toward* the right neighbor?) | cell 10 | `bank` (river) scored against `river`, and `bank` (finance) scored against `money`/`account` — same-context scores come out higher than cross-context ones |
-| §6 — mean pooling, applied to whole sentences | cell 11 | `mean_pool_sentence_embedding()` over 4 sentences, then a full pairwise similarity matrix — the two river sentences and the two finance sentences cluster together |
+| **What are Encoder Models?** — contextual embeddings, the mechanism itself | cell 6 | `get_token_embedding()` — runs the model, finds the target word's token(s), averages sub-word pieces into one vector |
+| **What are Encoder Models?** — worked example: `bank` in a river sentence vs a finance sentence | cell 7 | the two `bank` embeddings computed side by side, with their token positions printed |
+| **What are Encoder Models?** + **Vector similarity mathematics** — contextual embeddings compared with cosine similarity | cell 8 | `cosine_similarity(bank_river_vec, bank_finance_vec)` — a number well below 1.0, proving the two vectors genuinely differ |
+| **Vector similarity mathematics** — reading a cosine similarity number | cell 9 (markdown) | the scale this note's Mechanism table describes: ~1.0 identical, 0.8-0.95 very similar, 0.5-0.75 related, ~0.0 unrelated |
+| **What are Encoder Models?** — same-context vs cross-context comparisons (does `bank` move *toward* the right neighbor?) | cell 10 | `bank` (river) scored against `river`, and `bank` (finance) scored against `money`/`account` — same-context scores come out higher than cross-context ones |
+| **Pooling strategies** — mean pooling, applied to whole sentences | cell 11 | `mean_pool_sentence_embedding()` over 4 sentences, then a full pairwise similarity matrix — the two river sentences and the two finance sentences cluster together |
 
 *(Cell 12 is the notebook's own one-line takeaway: `bank` has no single fixed vector — self-attention keeps rewriting it based on whatever words happen to be nearby.)*
 

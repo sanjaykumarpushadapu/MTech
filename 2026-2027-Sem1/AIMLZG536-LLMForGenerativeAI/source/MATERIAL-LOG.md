@@ -84,6 +84,16 @@ Applied the new Draft-to-Source Reconciliation rule (`AGENTS.md`) to the same th
 
 S02 and S03 held up well under the same bullet-by-bullet check — only the one S02 fix above. `npm run check` clean after fixes (36/36 diagrams, 0 source-framing violations).
 
+## Slide Inventories Backfilled — 11 Aug 2026
+
+`source/S01-slide-inventory.md` existed only for 521 S01, never generated for any 536 session despite the "Capture a Slide Inventory at Intake" rule in `AGENTS.md` requiring one per deck. Backfilled `S01-slide-inventory.md`, `S02-slide-inventory.md`, and `S03-slide-inventory.md` from the already-held decks and ran `tools/check-slide-coverage.mjs` against each note. After pruning extraction noise (OCR corruption, logistics slides, generic words) from the inventories, all three came back clean, but the first raw run before pruning surfaced several genuine gaps that the manual reconciliation passes had missed:
+
+- **S01:** author attributions for BPE (Sennrich et al., 2016), Unigram (Kudo, 2018), and WordPiece (Schuster & Nakajima, 2012); Press & Wolf (2017) for weight tying; DeepMind attribution for Chinchilla plus the models it beat (GPT-3, Gopher, MT-NLG); the SentencePiece/tiktoken table had been genericized away from the deck's exact named models (restored Llama-2/Mistral-7B, Gemma-2/Gemma-3, Llama-3/Llama-4, GPT-4o/GPT-5).
+- **S02:** Raffel et al. (2020) citation and GLUE/SuperGLUE/SQuAD/WMT downstream-task names for T5; "Model-as-a-Judge" as the deck's own label for the Llama 3 data-curation pipeline; Gopher/MT-NLG named again in this note's own Chinchilla section (S01 and S02 cover it independently); GELU spelled out as Gaussian Error Linear Unit.
+- **S03:** held up clean on the automated pass — validates the earlier manual reconciliation.
+
+All three inventories are now committed and will catch drift automatically on future runs without needing the decks re-uploaded.
+
 ## Storage Rule
 
 Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.

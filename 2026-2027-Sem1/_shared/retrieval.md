@@ -542,7 +542,7 @@ flowchart TD
 |---|---|---|---|
 | 521 Conversational AI | L2 (mid-sem, closed book) | Full pipeline: embeddings → similarity → ANN → hybrid, as the knowledge-access layer of a RAG chatbot | The original worked examples above (cosine/L2 by hand, RRF by hand, HNSW memory estimate) |
 | 549 Cloud Native | S10–11 (comprehensive, open book) | *Not yet written* — expected to be a lighter, infrastructure-facing pass: vector DB as a deployed service, API surface for retrieval, RAG metrics | — |
-| 536 LLMs | S12 (comprehensive, open book) | *Not yet written* — expected to connect back to §11 architecture families (why encoder-only fits embeddings) and to RAG as the fix for hallucination/"lost in the middle" | — |
+| 536 LLMs | S12 (comprehensive, open book) | *Not yet written* — expected to connect back to *Semantic search vs keyword search* and to RAG as the fix for hallucination/"lost in the middle" | — |
 
 ## Exam scope
 

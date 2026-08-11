@@ -2,7 +2,7 @@
 
 BITS Pilani WILP · 536 LLMs · 549 Cloud Native · 521 Conversational AI · 546 SE4ML
 Built 26 Jul 2026 · revised after session-1 material arrived.
-Weekends = 4 contact sessions (2h each) + a 2–3h lab block. Weekdays = 1h per subject. **~17h/week committed** — see §3.
+Weekends = 4 contact sessions (2h each) + a 2–3h lab block. Weekdays = 1h per subject. **~17h/week committed** — see *Weekly engine*.
 
 ---
 

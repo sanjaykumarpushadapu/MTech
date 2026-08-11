@@ -197,6 +197,10 @@ Never trust a deck filename alone, either. Verify identity from title slide, age
 
 If one deck contains multiple sessions, split it by handout scope and log the split in `source/MATERIAL-LOG.md`. If the boundary is ambiguous, stop and ask; do not blend two sessions.
 
+### Every Deck Gets a Slide Inventory, No Exceptions
+
+**The moment any deck is uploaded — every subject, every session, no exceptions for "beyond course," re-uploads, or decks that look already covered — write `<subject>/source/S<NN>-slide-inventory.md` before writing or editing the note.** See "Capture a Slide Inventory at Intake" in section 2 for the format and the checker command. This step belongs to intake itself, not to a later audit — if it is skipped here, it does not reliably happen later. A deck without a committed inventory has not finished intake, regardless of how thorough the note looks.
+
 | Format                      | Extract with    | Required care                                       |
 | --------------------------- | --------------- | --------------------------------------------------- |
 | `.pptx`                     | `python-pptx`   | Read slide text, speaker notes, and embedded images |
@@ -591,6 +595,7 @@ git status --short
 
 Do not eyeball the checklist:
 
+- [ ] `source/S<NN>-slide-inventory.md` exists for this deck and `check-slide-coverage.mjs` was run clean (false positives pruned, genuine gaps folded into the note)
 - [ ] Handout row checked directly from `.docx`/`.pdf`
 - [ ] Every handout topic and sub-topic explicitly covered in the same note
 - [ ] Handout-cited sources read/extracted or gaps recorded

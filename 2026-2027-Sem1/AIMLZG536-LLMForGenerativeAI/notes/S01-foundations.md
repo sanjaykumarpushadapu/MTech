@@ -651,7 +651,7 @@ Training vs inference differ in _which position_ is used: during training **ever
 
 **Use case — why weight tying shows up in small models.** Suppose you want a local code assistant that fits on a single consumer GPU. If the vocabulary matrices take up a big fraction of the model, tying the LM head to the embedding table can save hundreds of millions of parameters without touching the transformer stack. On a much larger model, that saving is a smaller fraction of the total, so paying for a separate output matrix may be worth it.
 
-**Weight tying** — the same learned matrix **E [|V| × d]** is used on both sides. Input uses it as a lookup table; output reuses its transpose as the classifier over vocabulary. Tying only works when the hidden size `d` matches the embedding width, which is true for standard decoder-only LLMs.
+**Weight tying** — the same learned matrix **E [|V| × d]** is used on both sides. Input uses it as a lookup table; output reuses its transpose as the classifier over vocabulary. Tying only works when the hidden size `d` matches the embedding width, which is true for standard decoder-only LLMs. Weight tying was introduced by Press & Wolf (2017) and was standard practice through GPT-2, BERT, and RoBERTa.
 
 An implementation detail worth knowing: on the input side **no matrix multiplication actually happens** — the one-hot picks out row _t_ of E, an **O(1) row lookup (gather)** per token.
 
@@ -853,11 +853,11 @@ _Everyday version:_ think of how you'd read an unfamiliar surname you've never s
 
 Three, all sharing the same two-part structure:
 
-| Algorithm                      | Core idea (how the vocabulary is learned)                                                        |
-| ------------------------------ | ------------------------------------------------------------------------------------------------ |
-| **Byte-Pair Encoding (BPE)**   | Start from characters; **greedily merge the most frequent adjacent pair**, over and over         |
-| **Unigram language modelling** | Start from a large vocabulary; **prune the tokens whose removal costs the least likelihood**     |
-| **WordPiece**                  | Merge the pair that **most increases the training corpus's likelihood** (not just raw frequency) |
+| Algorithm                      | Core idea (how the vocabulary is learned)                                                        | Source |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ | ------ |
+| **Byte-Pair Encoding (BPE)**   | Start from characters; **greedily merge the most frequent adjacent pair**, over and over         | Sennrich et al., 2016 |
+| **Unigram language modelling** | Start from a large vocabulary; **prune the tokens whose removal costs the least likelihood**     | Kudo, 2018 |
+| **WordPiece**                  | Merge the pair that **most increases the training corpus's likelihood** (not just raw frequency) | Schuster & Nakajima, 2012 |
 
 Every one has **two parts** — this is the definitional split, and it's examinable:
 
@@ -959,10 +959,10 @@ tiktoken BPE (Llama-3):
 | Tokenizer family             | Vocab    | Representative model families                            |
 | ---------------------------- | -------- | -------------------------------------------------------- |
 | SentencePiece unigram        | 32K-250K | T5, mT5                                                  |
-| SentencePiece BPE            | 32K      | Llama-2, Mistral-class models                            |
-| SentencePiece BPE            | 256K     | Gemma-family models                                      |
-| **tiktoken-style byte BPE**  | 128K     | Llama-3 and similar newer decoder-only families          |
-| Larger byte-BPE vocabularies | ~200K    | frontier chat models optimized for long prompts and code |
+| SentencePiece BPE            | 32K      | Llama-2, Mistral-7B                                      |
+| SentencePiece BPE            | 256K     | Gemma-2, Gemma-3                                         |
+| **tiktoken-style byte BPE**  | 128K     | Llama-3, Llama-4                                         |
+| Larger byte-BPE vocabularies (tiktoken o200k) | ~200K    | GPT-4o, GPT-5                        |
 
 ⚠️ **Llama-3 switched from SentencePiece → tiktoken** for a better compression ratio — fewer tokens per byte of English and code.
 
@@ -1057,9 +1057,9 @@ Note that attention, seq2seq and the transformer all arrived **for machine trans
 | —              | —    | **Scaling laws** — hope/predictability for scaling (**Kaplan** law)    |
 | GPT-3          | 175B | **In-context learning**; closed                                        |
 | PaLM           | 540B | Massive scale, **undertrained**                                        |
-| **Chinchilla** | 70B  | **Compute-optimal scaling laws** — smaller and better, correcting PaLM |
+| **Chinchilla** | 70B  | **DeepMind**'s compute-optimal scaling laws — smaller and better, correcting PaLM |
 
-PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 in two rows: bigger stopped being automatically better.
+PaLM "undertrained" followed by Chinchilla "compute-optimal" is the story of S2 in two rows: bigger stopped being automatically better. Concretely, DeepMind's 70B Chinchilla, trained compute-optimally, beat **GPT-3 (175B)**, **Gopher (280B)**, and **MT-NLG (530B)** — all larger, all undertrained by comparison.
 
 **Worked example** — GPT-3 made scaling look like the main story: bigger model, better behaviour, new in-context learning. Chinchilla changed the lesson: a smaller model trained on more data can beat a larger undertrained one. That is why S2 treats data and compute as first-class design variables, not background details.
 
