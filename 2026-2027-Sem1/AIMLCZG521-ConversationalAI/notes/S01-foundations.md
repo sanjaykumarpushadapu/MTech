@@ -446,21 +446,20 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 ---
 
-### Context windows
+### Context Windows — Conversation Memory
 
 **Intuition** — Picture a **whiteboard of fixed size**. Everything the model can use has to be written on it: the instructions, the whole conversation so far, any documents you looked up, the tool results — *and* the empty space it needs to write its answer. The model remembers nothing off the board; at every turn it re-reads the whole board from the top. The **context window** is simply **how big that whiteboard is**, counted in tokens. Run out of room and something must be erased, shortened, or kept elsewhere and fetched back when needed.
 
 **Mechanism — context is a shared token budget.** System prompt, user turns, retrieved documents, tool output and the answer all consume the same finite window. As the conversation grows, the system must either summarise, retrieve selectively, forget older turns, or move memory outside the prompt.
 
-| Window tier | Approx size | ≈ words | Typical use | Example model |
-|---|---|---|---|---|
-| Standard | 8K-32K | ~6K-24K | ordinary chat, short documents | — |
-| Extended | 128K-200K | ~96K-150K | long conversations, many retrieved chunks | GPT-4 Turbo (128K), Claude 3.5 Sonnet (200K) |
-| Ultra-long | 1M+ | ~750K+ | whole books, large codebases, long reports | Gemini 1.5 Pro (1M) |
-| Emerging | 2M+ | ~1.5M+ | specialised use cases | — |
-| Practical reality | any size | — | bigger windows help, but retrieval and memory still matter | — |
+| Model | Window | ≈ words | What that size is for |
+|---|---|---|---|
+| GPT-4 Turbo | 128K tokens | ~96K | Standard production |
+| Claude 3.5 Sonnet | 200K tokens | ~150K | Extended conversations |
+| Gemini 1.5 Pro | 1M tokens | ~750K | Entire codebases |
+| Emerging models | 2M+ tokens | — | Specialized use cases |
 
-**These numbers move fast.** By the time you're reading this, the April-2026 snapshot below already shows most frontier models sitting at the "extended/ultra-long" tier by default (1M tokens standard for GPT-5.4, Claude Opus, and Gemini 3.1 Pro; 10M for Llama 4 Scout) — the table above is the reference point the field was arguing about in 2024–25, and it's worth watching *which tier a model sits in*, not memorising a number that will be outdated within a year.
+**These numbers date fast** — by 2026 the frontier models further down this note are already at 1M as standard. Learn the *size band* a model sits in, not the exact figure.
 
 
 **Worked example — filling up the whiteboard.** A support agent has a **32,000-token** window. Follow the same chat at two moments: early on, and after it has run for a while.
@@ -479,21 +478,17 @@ Early on there's plenty of room. Later, the same request **doesn't fit at all** 
 
 Notice which two rows grew: **conversation history** and **retrieved documents**. Those are the two that keep growing on their own, which is why real systems trim old turns and fetch fewer, better documents.
 
-#### A second, separate problem: "lost in the middle"
+**The challenge — flagged here, solved in Module 2:**
 
-Size is only half the story. Even when something **does** fit on the whiteboard, the model may still not use it properly — and this, not the numbers above, is the exam-worthy part:
+> ⚠️ **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG + memory systems**, which **Module 2** covers.
 
-> **"Lost in the middle"** — models struggle with information placed in the middle of long contexts. **Solution: RAG (Retrieval-Augmented Generation) + memory systems** — both covered later in the course.
+So a fact can be inside the window and still be missed: fitting on the board and being read reliably are two different things. The *how* — retrieval and memory — belongs to Module 2, so it isn't opened up here.
 
-*Why it happens: a model attends most reliably to the **start** and the **end** of its context and least to the **middle** — a U-shaped recall curve. It's the same way you skim a long email: you reliably catch the opening line and the ask at the very bottom, but a detail buried three paragraphs deep you gloss right over — even though your eyes passed over all of it. So a fact placed mid-context is effectively half-ignored even though it's technically "in the window." This is also why the fix is retrieval, not a bigger window: doubling the window just makes the neglected middle bigger.*
+*The two things this section is about — the shared budget across the top, and recall depending on position:*
 
-*Both ideas in one picture — the shared budget across the top, and how well the model recalls something depending on where it sits:*
+![Context window: a shared token budget, and recall by position](assets/S01-context-window.svg)
 
-![Context window as shared token budget](assets/S01-context-window.svg)
-
-Accuracy is U-shaped, not flat. A fact placed halfway through a long context is the one the model is most likely to overlook — so **where** you put something in the prompt matters as much as whether you put it there at all.
-
-**Tradeoff / why a bigger window isn't the answer** — "lost in the middle" means context length and *effective* context length diverge. Doubling the window doesn't double what the model reliably uses, while it does double cost and latency. This is the argument for retrieval: **fetch the right 4K tokens rather than stuffing 200K and hoping.**
+**Tradeoff / why a bigger window isn't automatically the answer** — a larger window costs more per call and adds latency, and it doesn't guarantee the model uses the extra material well (that's the "lost in the middle" warning above). Bigger is not free, and not automatically better.
 
 ---
 

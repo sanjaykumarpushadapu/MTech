@@ -63,6 +63,14 @@ If a slide title names a concept already covered inside an existing subsection, 
 
 If the slide title introduces a genuinely new concept, decide whether it belongs inside the current handout row or in a different session. If it fits the current row, add it as the next appropriate subsection or concept block without creating a new session. If it belongs to a different handout row, do not import it here; log the mismatch and leave the note scoped to the current handout.
 
+### Respect the Deck's Own Deferrals
+
+When a slide names a topic and marks it as covered later — "(Module 2)", "we'll see this in L7", "detail in the next session" — the note must **state the point and the deferral, and stop there**. Do not teach the deferred material now. The instructor decided the order; pre-empting it buries this session's actual point under material the reader has no context for yet, and duplicates the later session badly.
+
+Concretely: slide 39 of 521 S01 gives four context-window sizes plus one warning line — *"Lost in the middle — models struggle with info in long contexts. Solution: RAG + Memory systems (Module 2)"*. The correct note states the warning and that Module 2 covers the fix. It does **not** explain the U-shaped recall curve, why retrieval beats a bigger window, or how RAG works — that is Module 2's content and was 15 lines of over-explanation on a one-line slide.
+
+**Match the slide's own weight.** One warning line on a slide gets roughly a warning line in the note, not a subsection. A table of four rows stays four rows — do not add invented rows or rename the slide's own labels into a different scheme. Your own clarity additions (an analogy, a worked example, a plain-English bridge) are still welcome, but they explain *what the slide teaches*; they never open up what the slide explicitly postponed.
+
 When the deck uses a short label as a teaching anchor, keep that wording visible in the note as a heading or short label instead of burying it only in prose, even if the underlying concept is already covered elsewhere. This is especially important for early definitional slides and section-divider titles that help the reader follow the sequence.
 
 When polishing an existing note, prefer the deck's short teaching label for the visible heading when it clearly names the same concept, and reserve paraphrase for the explanatory paragraph beneath it. In other words: keep the heading deck-shaped, keep the explanation human-shaped, and avoid inventing a new label just because the deck title feels terse.
