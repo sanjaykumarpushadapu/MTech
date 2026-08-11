@@ -66,8 +66,8 @@ The handout groups all 16 sessions into 4 themes before it lists them one by one
 
 | Lab | Objective | Session ref | Done |
 |---|---|---|---|
-| 1 | Tokenization and AI bot with tool calling — **notebooks in `labs/S01-…`**: Ollama `llama3` + LangChain + Tavily, ReAct agent | L1 | ☐ |
-| 2 | Similarity metrics, text-to-speech, rule-based systems, sentiment analysis | L2 | ☐ |
+| 1 | Tokenization and AI bot with tool calling — **notebooks in `labs/S01-…`**: BPE from scratch, Ollama `llama3` + LangChain + Tavily, ReAct agent | L1 | ☐ |
+| 2 | Similarity metrics, text-to-speech, rule-based systems, sentiment analysis — **current notebook in `labs/S02-…` covers DistilBERT contextual embeddings + cosine; remaining items open** | L2 | ☐ |
 | 3 | Hybrid search implementation | L3 | ☐ |
 | 4 | Function calling, prompting techniques, multimodal AI | L5 & L6 | ☐ |
 | 5a | LLM fine-tuning | L6 & L7 | ☐ |

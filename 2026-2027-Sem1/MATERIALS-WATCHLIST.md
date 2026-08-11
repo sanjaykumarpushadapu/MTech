@@ -2,7 +2,7 @@
 
 **Everything still needed, with the date it starts blocking work.** Checked at the start of every session that touches a listed item, and raised **unprompted** as its date approaches — the user asked to be told forcefully rather than politely.
 
-*Last checked: 8 Aug 2026 — 11 of 12 books held; only Kimothi (536 R3) outstanding. 536 S1/S2 deck visual audit completed; 536 handout file still not present locally for direct row verification; 521 L2 notebooks still missing.*
+*Last checked: 10 Aug 2026 — all four handouts are now held in `_handouts/`; 11 of 12 books held; only Kimothi (536 R3) outstanding. Current material logs were rebuilt from direct handout checks. 521 L2 DistilBERT embedding notebook is received, but remaining Lab 2 items are still unverified.*
 
 ---
 
@@ -10,10 +10,9 @@
 
 | Item | Subject | Portal | Why it blocks |
 |---|---|---|---|
-| **L2 notebooks** | **521** | Canvas | S2 note is written from the deck; Lab 2 still cannot be checked or completed without the notebooks |
+| **Remaining L2 lab items** | **521** | Canvas | `Embedding-distilbert.ipynb` is held, but the handout lab row also names text-to-speech, rule-based systems, and sentiment analysis; those files still need either upload or instructor confirmation that they are not issued separately |
 | **S2 deck** | 546 | Taxila | Reading (Kästner ch1–2) already held |
-| **S1–S2 transcripts** | all four | Teams export | Not blocking, but S1's resolved all four EC-1 conflicts |
-| **536 handout file (.docx/.pdf)** | **536** | Teams / course materials | S1 and S2 notes are written and deck-verified, but AGENTS' direct handout-row completion gate cannot be proven locally until the actual handout file is present |
+| **S2 transcripts** | all four | Teams export | Not blocking, but useful for resolving instructor emphasis and EC/date conflicts |
 
 **Every weekend, all semester: collect four decks.** This row never leaves the table.
 

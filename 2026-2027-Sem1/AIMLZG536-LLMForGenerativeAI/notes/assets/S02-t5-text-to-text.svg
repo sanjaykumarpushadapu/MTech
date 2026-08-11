@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="450" viewBox="0 0 1120 450" role="img" aria-labelledby="title desc">
+  <title id="title">T5 text-to-text pretraining pattern</title>
+  <desc id="desc">T5 reframes every NLP task as text-to-text: a task prefix and input go through an encoder, and a decoder autoregressively generates the output text.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10z" fill="#263238"/>
+    </marker>
+    <style>
+      .bg{fill:#f7f3e8}.box{fill:#fffdf7;stroke:#b99d63;stroke-width:2;rx:20}.h{fill:#1f3340;font:700 25px Georgia,serif}.b{fill:#1f3340;font:700 16px Georgia,serif}.t{fill:#40545e;font:500 14px Georgia,serif}.arr{stroke:#263238;stroke-width:3;fill:none;marker-end:url(#arrow)}.input{fill:#e7f0ed;stroke:#8aa39a;stroke-width:1.5;rx:14}.out{fill:#f3ded6;stroke:#c66b4e;stroke-width:1.5;rx:14}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="450"/>
+  <text class="h" x="560" y="48" text-anchor="middle">T5 turns every task into the same input-text to output-text pattern</text>
+  <rect class="input" x="55" y="125" width="265" height="120"/>
+  <text class="b" x="187" y="158" text-anchor="middle">Task prefix + content</text>
+  <text class="t" x="187" y="187" text-anchor="middle">translate English to German:</text>
+  <text class="t" x="187" y="211" text-anchor="middle">That is good.</text>
+  <path class="arr" d="M330 185 H420"/>
+  <rect class="box" x="430" y="115" width="220" height="140"/>
+  <text class="b" x="540" y="152" text-anchor="middle">Encoder</text>
+  <text class="t" x="540" y="183" text-anchor="middle">fully visible attention</text>
+  <text class="t" x="540" y="208" text-anchor="middle">over the input prefix</text>
+  <path class="arr" d="M660 185 H750"/>
+  <rect class="box" x="760" y="115" width="220" height="140"/>
+  <text class="b" x="870" y="152" text-anchor="middle">Decoder</text>
+  <text class="t" x="870" y="183" text-anchor="middle">causal attention</text>
+  <text class="t" x="870" y="208" text-anchor="middle">generates one token at a time</text>
+  <path class="arr" d="M870 265 V315"/>
+  <rect class="out" x="735" y="320" width="270" height="58"/>
+  <text class="b" x="870" y="356" text-anchor="middle">Das ist gut.</text>
+  <text class="t" x="560" y="415" text-anchor="middle">Classification, translation, summarization, and QA all become text generation with different prefixes.</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+  <title id="title">HNSW memory layout and tuning budget</title>
+  <desc id="desc">A teaching diagram showing that HNSW stores raw vector bytes plus graph links, then tunes M, ef construction, and ef search to balance recall, memory, build time, and latency.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#31556f"/>
+    </marker>
+    <style>
+      .bg { fill: #f7f4ec; }
+      .panel { fill: #ffffff; stroke: #2d3d4f; stroke-width: 2.2; rx: 22; }
+      .soft { fill: #eef6f4; stroke: #3b6f68; stroke-width: 2; rx: 18; }
+      .warn { fill: #fff1df; stroke: #b66a2b; stroke-width: 2; rx: 18; }
+      .ink { fill: #1f2a35; font-family: Avenir, "Trebuchet MS", sans-serif; }
+      .title { font-size: 32px; font-weight: 800; }
+      .h { font-size: 22px; font-weight: 800; }
+      .t { font-size: 17px; }
+      .small { font-size: 15px; }
+      .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 16px; }
+      .arrow { stroke: #31556f; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .grid { stroke: #d8d2c5; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="1200"/>
+  <text x="600" y="92" text-anchor="middle" class="ink title">HNSW Memory and Tuning</text>
+  <text x="600" y="130" text-anchor="middle" class="ink t">The graph makes search fast, but every extra edge and search beam has a cost.</text>
+
+  <rect x="90" y="190" width="290" height="230" class="panel"/>
+  <text x="235" y="232" text-anchor="middle" class="ink h">1. Raw vector bytes</text>
+  <rect x="125" y="270" width="220" height="46" class="soft"/>
+  <text x="235" y="300" text-anchor="middle" class="ink mono">768 x 4 = 3,072 B</text>
+  <text x="125" y="352" class="ink t">Float32 embedding storage</text>
+  <text x="125" y="384" class="ink small">Dominates when dimension is high.</text>
+
+  <rect x="455" y="190" width="290" height="230" class="panel"/>
+  <text x="600" y="232" text-anchor="middle" class="ink h">2. Graph link bytes</text>
+  <rect x="490" y="270" width="220" height="46" class="warn"/>
+  <text x="600" y="300" text-anchor="middle" class="ink mono">M x 4 ~= 64 B</text>
+  <text x="490" y="352" class="ink t">Neighbor IDs and layers</text>
+  <text x="490" y="384" class="ink small">Grows fast as M and scale rise.</text>
+
+  <rect x="820" y="190" width="290" height="230" class="panel"/>
+  <text x="965" y="232" text-anchor="middle" class="ink h">3. Operating budget</text>
+  <rect x="850" y="270" width="230" height="46" class="soft"/>
+  <text x="965" y="292" text-anchor="middle" class="ink mono">vector + graph</text>
+  <text x="965" y="316" text-anchor="middle" class="ink mono">+ metadata</text>
+  <text x="855" y="352" class="ink t">Plan RAM before knobs.</text>
+  <text x="855" y="384" class="ink small">10M vectors: roughly 41-51 GB.</text>
+
+  <path d="M380 305 H445" class="arrow"/>
+  <path d="M745 305 H810" class="arrow"/>
+
+  <rect x="90" y="620" width="290" height="260" class="soft"/>
+  <text x="235" y="665" text-anchor="middle" class="ink h">M</text>
+  <text x="130" y="710" class="ink t">Neighbors per node</text>
+  <text x="130" y="750" class="ink small">Raise for recall</text>
+  <text x="130" y="786" class="ink small">Costs: memory + insert time</text>
+  <text x="130" y="838" class="ink mono">typical: 16-64</text>
+
+  <rect x="455" y="620" width="290" height="260" class="soft"/>
+  <text x="600" y="665" text-anchor="middle" class="ink h">ef_construction</text>
+  <text x="495" y="710" class="ink t">Build-time candidate beam</text>
+  <text x="495" y="750" class="ink small">Raise for index quality</text>
+  <text x="495" y="786" class="ink small">Costs: slower index build</text>
+  <text x="495" y="838" class="ink mono">typical: 100-200+</text>
+
+  <rect x="820" y="620" width="290" height="260" class="soft"/>
+  <text x="965" y="665" text-anchor="middle" class="ink h">ef_search</text>
+  <text x="860" y="710" class="ink t">Query-time candidate beam</text>
+  <text x="860" y="750" class="ink small">Raise first when recall is weak</text>
+  <text x="860" y="786" class="ink small">Costs: query latency</text>
+  <text x="860" y="838" class="ink mono">typical: 50-500</text>
+
+  <path d="M235 420 V608" class="arrow"/>
+  <path d="M600 420 V608" class="arrow"/>
+  <path d="M965 420 V608" class="arrow"/>
+
+  <line x1="150" y1="985" x2="1050" y2="985" class="grid"/>
+  <text x="600" y="1030" text-anchor="middle" class="ink t">Teaching checkpoint</text>
+  <text x="600" y="1070" text-anchor="middle" class="ink small">Maximize only the knob that fixes the measured problem.</text>
+  <text x="600" y="1100" text-anchor="middle" class="ink small">Do not blindly maximize all three.</text>
+</svg>

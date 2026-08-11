@@ -34,11 +34,7 @@ _Everyday version:_ it's like a student practicing with flashcards where the ans
 
 **Tradeoff / when NOT to use** — self-supervised pretraining from scratch is only worth its enormous cost when you have web-scale unlabeled text and need a general-purpose base model. If you have a narrow task and a modest labeled dataset, don't pretrain a new model — finetune an existing pretrained one (session 7). Reproducing a GPT-3-scale pretraining run to solve one narrow classification task throws away the entire benefit self-supervision was meant to buy you: paying pretraining's cost without needing its generality.
 
-```mermaid
-flowchart LR
-    A["Pre-training\n(this session)"] --> B["Instruction tuning / SFT\n(session 7)"]
-    B --> C["Alignment\nRLHF / DPO (session 9)"]
-```
+![Three training stages for an LLM](assets/S02-training-stages.svg)
 
 ---
 
@@ -63,11 +59,7 @@ _Everyday version:_ CLM is like reading a mystery novel one page at a time and g
 
 **Tradeoff / when NOT to use** — a CLM model cannot see future context during training or inference, which is precisely why it must generate one token at a time instead of filling gaps in parallel; an MLM model can't generate free-form text in its native form at all — there is no "predict the next token" once every position was trained bidirectionally. That is why encoder embeddings need a decoder (or a task-specific head) attached to produce output text: the encoder supplies a context-rich representation of the input, but a separate output mechanism is still needed to turn that representation into generated tokens.
 
-```mermaid
-flowchart TD
-    T["'The bank was ___ because ___ overflowed'"] --> CLM["CLM: predict next token only,\nleft-to-right, one at a time"]
-    T --> MLM["MLM: predict masked tokens,\nusing left AND right context at once"]
-```
+![Causal and masked language-modeling objectives](assets/S02-clm-vs-mlm-objectives.svg)
 
 ---
 
@@ -111,14 +103,7 @@ Every probability here is tiny (~10⁻⁵, roughly 1-in-100,000) because the unt
 
 **Tradeoff / when NOT to use** — cross-entropy on held-out text is the standard way to compare two models trained on the _same_ tokenizer and roughly the same domain; it stops being meaningful the moment tokenizers differ, or the moment the eval text overlaps with training data (a live problem for public benchmarks — see concept 4's MMLU aside). It also does not directly measure whether generated text is _correct_, only whether it was _likely_ under the model's training distribution — a fluent, confident, wrong answer can still carry a good loss.
 
-```mermaid
-flowchart TD
-    A["Token sequence (true history)"] --> B["Model forward pass"]
-    B --> C["Predicted distribution over vocabulary, per position"]
-    C --> D["Look up probability of the TRUE next token"]
-    D --> E["-log(that probability), averaged over the sequence"]
-    E --> F["Cross-entropy loss"]
-```
+![Cross-entropy loss pipeline](assets/S02-cross-entropy-loss.svg)
 
 > **_In practice_** _— production numbers this maps to._ Real pretraining runs feed the full context window before moving to the next batch: GPT-4 uses a 4,096-token window, Llama 3 uses 8,192; if a document is shorter, several documents are **packed** into one window separated by a special end-of-text token (mechanism detail in concept 6). The batch size for gradient descent is large — the biggest GPT-3 model trained with a batch size of **3.2 million tokens** at once, not 3.2 million _examples_.
 
@@ -410,21 +395,11 @@ _Two of these ideas map onto familiar teaching patterns:_ Gemma 2's **knowledge 
 
 Worked example: for classification, GPT-1 formats input as `<start> ... <extract>`, runs the same pretrained decoder-only transformer, and feeds only the output vector at `<extract>` into a small classifier. Input `<start> This movie was surprisingly emotional, beautifully acted, and worth watching again. <extract>` can then map to the label `Positive`.
 
-```mermaid
-flowchart TD
-    A["12 transformer blocks\nd=768, 12 heads"] --> B["Causal LM pretraining\non BooksCorpus"]
-    B --> C["Finetune: format with\nstart/delim/extract tokens"]
-    C --> D["Take <extract> token's\noutput vector -> linear classifier"]
-```
+![GPT-1 pretraining and classification finetuning](assets/S02-gpt1-classification.svg)
 
 **T5** (Text-to-Text Transfer Transformer) — an encoder-decoder alternative that reframes every NLP problem, including classification, as text-to-text. A task prefix tells the model what to do, so `"translate English to German: That is good. target:"` yields `"Das ist gut."`, while `"mnli premise: I hate pigeons. hypothesis: My feelings towards pigeons are filled with animosity. target:"` yields `entailment` directly as output text. T5 uses a prefix-LM attention pattern: fully visible attention over the input prefix, then causal masking while generating the output. It pretrained on C4 with learned relative position embeddings and a shared 32,000-wordpiece SentencePiece vocabulary.
 
-```mermaid
-flowchart TD
-    A["Every task reframed as text-to-text"] --> B["Input: task prefix + content\ne.g. 'translate English to German: ...'"]
-    B --> C["Encoder: fully-visible attention over input"]
-    C --> D["Decoder: causal attention,\ngenerates output text autoregressively"]
-```
+![T5 text-to-text pretraining pattern](assets/S02-t5-text-to-text.svg)
 
 |                          | GPT-1                                             | T5                                                      |
 | ------------------------ | ------------------------------------------------- | ------------------------------------------------------- |

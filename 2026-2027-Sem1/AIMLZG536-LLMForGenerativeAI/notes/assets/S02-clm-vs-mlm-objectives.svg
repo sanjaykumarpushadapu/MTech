@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Causal and masked language-modeling objectives</title>
+  <desc id="desc">CLM predicts the next token from left context only; MLM predicts masked tokens using context on both sides.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10z" fill="#284b63"/>
+    </marker>
+    <style>
+      .bg{fill:#f7f3e8}.panel{fill:#fffdf7;stroke:#c0a56e;stroke-width:2;rx:24}.h{fill:#1f3340;font:700 26px Georgia,serif}.sub{fill:#40545e;font:500 15px Georgia,serif}.tok{fill:#eef4f1;stroke:#8aa39a;stroke-width:1.4;rx:11}.mask{fill:#f7ded6;stroke:#c66b4e;stroke-width:1.6;rx:11}.label{fill:#1f3340;font:700 17px Georgia,serif}.small{fill:#40545e;font:500 14px Georgia,serif}.arr{stroke:#284b63;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="h" x="560" y="48" text-anchor="middle">Two objectives teach two different habits</text>
+  <rect class="panel" x="55" y="95" width="485" height="335"/>
+  <text class="h" x="297" y="135" text-anchor="middle">CLM: causal language modeling</text>
+  <text class="sub" x="297" y="164" text-anchor="middle">Decoder-only models learn to continue text</text>
+  <rect class="tok" x="100" y="215" width="95" height="44"/><text class="label" x="147" y="243" text-anchor="middle">The</text>
+  <rect class="tok" x="210" y="215" width="95" height="44"/><text class="label" x="257" y="243" text-anchor="middle">bank</text>
+  <rect class="tok" x="320" y="215" width="95" height="44"/><text class="label" x="367" y="243" text-anchor="middle">was</text>
+  <rect class="mask" x="430" y="215" width="70" height="44"/><text class="label" x="465" y="243" text-anchor="middle">?</text>
+  <path class="arr" d="M370 287 C410 287 430 275 458 260"/>
+  <text class="small" x="297" y="325" text-anchor="middle">Only tokens to the left are visible.</text>
+  <text class="small" x="297" y="350" text-anchor="middle">Best fit: generation, chat, completion.</text>
+  <rect class="panel" x="580" y="95" width="485" height="335"/>
+  <text class="h" x="822" y="135" text-anchor="middle">MLM: masked language modeling</text>
+  <text class="sub" x="822" y="164" text-anchor="middle">Encoder models learn bidirectional understanding</text>
+  <rect class="tok" x="620" y="215" width="95" height="44"/><text class="label" x="667" y="243" text-anchor="middle">The</text>
+  <rect class="mask" x="730" y="215" width="95" height="44"/><text class="label" x="777" y="243" text-anchor="middle">[MASK]</text>
+  <rect class="tok" x="840" y="215" width="95" height="44"/><text class="label" x="887" y="243" text-anchor="middle">overflowed</text>
+  <rect class="tok" x="950" y="215" width="75" height="44"/><text class="label" x="987" y="243" text-anchor="middle">today</text>
+  <path class="arr" d="M700 288 C720 270 745 260 770 259"/>
+  <path class="arr" d="M890 288 C860 270 830 260 792 259"/>
+  <text class="small" x="822" y="325" text-anchor="middle">Both left and right context are visible.</text>
+  <text class="small" x="822" y="350" text-anchor="middle">Best fit: embeddings, classification, retrieval.</text>
+</svg>

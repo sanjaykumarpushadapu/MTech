@@ -1,108 +1,55 @@
-# Material log
+# AIML ZG546 · Software Engineering for Machine Learning · Material Log
 
-What raw material exists for each session, and whether it has been processed into notes.
-Fill this in **when you get the material**, not when you process it — the gap is the point.
+Rebuilt: 10 Aug 2026.
 
-Legend: ✓ have · ✗ missing · — n/a
+This file records held teaching material, direct handout scope, processed outputs, and unresolved gaps. Raw decks, recordings, transcripts, and downloaded books are source inputs only; they must not be committed.
 
-> 🔴 **Slides are mandatory.** No deck → **no note is written** for that session. The handout is too coarse to define scope and the textbook is too broad; only the deck shows what this instructor taught and what they emphasised. Collect the deck for every session the same weekend, without exception.
+Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing · `—` not applicable.
 
-| S | Slides (.pptx) | Textbook ch | Recording | Transcript | Processed → notes |
-|---|---|---|---|---|---|
-| 1 | ✓ `Session 1- Intro.pptx` (28 sl) | ✓ T1 ch1 + ch3 · R1 full | ✓ Teams | ✅ received & extracted into note (not stored) | ✅ `notes/S01-foundations.md` |
-| 2 |  |  |  |  | ☐ |
-| 3 |  |  |  |  | ☐ |
-| 4 |  |  |  |  | ☐ |
-| 5 |  |  |  |  | ☐ |
-| 6 |  |  |  |  | ☐ |
-| 7 |  |  |  |  | ☐ |
-| 8 |  |  |  |  | ☐ |
-| 9 |  |  |  |  | ☐ |
-| 10 |  |  |  |  | ☐ |
-| 11 |  |  |  |  | ☐ |
-| 12 |  |  |  |  | ☐ |
-| 13 |  |  |  |  | ☐ |
-| 14 |  |  |  |  | ☐ |
-| 15 |  |  |  |  | ☐ |
-| 16 |  |  |  |  | ☐ |
+## Handout
 
-## Textbook
+| Item | Status |
+|---|---|
+| Direct handout file | ✓ `_handouts/AIML ZG546 COURSE HANDOUT-9335246709.docx` |
+| Direct row verification | ✓ S1 checked directly on 10 Aug 2026 |
 
-`Machine Learning in Production: From Models to Products` (Kästner, MIT Press 2025) — 847 pp, full book held in Drive.
-Free online: https://mlip-cmu.github.io/book/ · CC BY-NC-ND.
+## Session Material Status
 
-| Ch | Title | PDF pages | Session |
-|---|---|---|---|
-| 1 | Introduction | 4–31 | S1 ✅ |
-| 2 | From Models to Systems | 32–56 | S2 |
-| 3 | ML in a Nutshell | 57–67 | S1 ✅ |
-| 4 | When to use Machine Learning | 68–78 | S3 |
-| 5 | Setting and Measuring Goals | 79–101 | S3 |
-| 6 | Gathering Requirements | 102–129 | S3 |
-| 7 | Planning for Mistakes | 130–159 | S3 |
-| 8 | Thinking like a Software Architect | 160–187 | S4–S6 |
-| 9 | Quality Attributes of ML Components | 188– | S4 |
+| Session | Handout topic and required sub-topics | Material held | Processed output | Open gap |
+|---|---|---|---|---|
+| S1 | Foundations of ML Systems Engineering: Introduction; Software Engineering process models and roles; Data Science pipeline and roles; Machine Learning basic terminology, ML pipeline, foundation models, and types of ML domains | ✓ `Session 1- Intro.pptx`; S01 transcript; T1 ch1,ch3; R1 | ✓ `notes/S01-foundations.md` | none known |
+| S2 | Foundations of ML Systems Engineering: ML in production; models to systems; ML/non-ML components; predictive/generative/agentic AI; cloud-native ML systems; case studies | ✗ deck; T1 ch1,ch2 held; public references fetchable | ☐ | S2 deck required before writing note |
+| S3 | Requirements Engineering for ML Systems | ✗ | ☐ | deck and public references required |
+| S4 | Requirements Engineering for ML Systems Architecture & Design | ✗ | ☐ | deck required |
+| S5 | Architecture & Design: common architecture challenges; system architectures; architectural patterns; microservices for ML; heartbeat tactic | ✗ | ☐ | deck required |
+| S6 | Architecture & Design: ML design patterns; feature-store pattern; RAG model for LLMs | ✗ | ☐ | deck required |
+| S7 | Implementation and Code sharing: coding practices; good code; performance analysis; data structures | ✗ | ☐ | deck required |
+| S8 | Implementation and Code sharing: OOP/functional programming; errors/logging/debugging; formatting/linting; research vs production code | ✗ | ☐ | deck required |
+| S9 | Implementation and Code sharing: design/refactoring; APIs for ML services; version control, dependencies, packaging | ✗ | ☐ | deck required |
+| S10 | Quality Assurance: test types; ML tests; training tests; inference tests; model quality; data quality | ✗ | ☐ | deck required |
+| S11 | Quality Assurance: pipeline quality; system quality; production experimentation; ML security | ✗ | ☐ | deck required |
+| S12 | Deployment: Docker/Kubernetes; batch/real-time/edge deployment; model inference functions; feature stores; serving infrastructure | ✗ | ☐ | deck required |
+| S13 | Deployment: deployment models; model cards; ML pipeline stages; automation; infrastructure design; code quality; observability | ✗ | ☐ | deck required |
+| S14 | Responsible ML Engineering: responsible engineering; versioning, provenance, reproducibility; explainability; fairness; safety; security/privacy | ✗ | ☐ | deck required |
+| S15 | Application of SE Principles for Agentic AI: ADLC phases; SE principles for agentic AI | ✗ | ☐ | lecture notes/deck required |
+| S16 | Application of SE Principles for Agentic AI & Course Review: agentic AI patterns; course wrap-up and review | ✗ | ☐ | lecture notes/deck required |
 
-*(Later chapters — 10 Deploying a Model, 11 Automating the Pipeline, 14–19 Quality Assurance, 23–29 Responsible ML — map to S12, S13, S10–S11 and S14. Locate by heading when needed.)*
+## Reference Scope
 
-## R1 · Tech Mahindra, *Moving from SDLC to ADLC* — **S1, S15**
+| Reference | Scope/status |
+|---|---|
+| T1 Kästner, *Machine Learning in Production* | ch1,ch3 for S1; ch1,ch2 for S2; later chapters by handout row only |
+| T2 Nelson, *Software Engineering for Data Scientists* | S7-S9 implementation/code-sharing block only: ch1-3, ch4-6, ch8,ch10,ch11 |
+| R1 Tech Mahindra, *Moving from SDLC to ADLC* | S1 and later S15 support; read in full |
+| R2-R6 public references | fetch when the corresponding session arrives; do not ask user unless blocked |
 
-Landing page: https://www.techmahindra.com/insights/whitepapers/moving-sdlc-ai-driven-software-development-lifecycle-adlc-generate-value/
-PDF: `sdlc-to-adlc.pdf` (12 pp) — ✅ **read in full**.
+## Recheck Notes — 10 Aug 2026
 
-**Correction to an earlier assumption:** I had guessed the report would "add narrative, not new examinable content." Wrong. Slide 19 reproduces only §1 of five sections. The other four contain the paper's actual argument:
+- S01 note title matches the direct handout row.
+- S01 covers the deck agenda gap: the deck did not fully teach ML terminology, ML pipeline, foundation models, or types of ML domains, so those syllabus items were filled from T1/handout scope inside the note.
+- S2 remains blocked because the handout row is known but the deck is not held, and the repo rule says no deck means no note.
+- Source-framing scan passes for current notes via `npm run check`.
 
-| § | Content | Where it landed |
-|---|---|---|
-| 1 | Evolution of SDLC — the table on slide 19 | S1 §4 |
-| 2 | **Opportunities from AI/GenAI** — five capabilities (Generate, Recommend, Review, Summarize, Knowledge Search); productivity gains by phase (Requirements 20%, Design 15%, Build 30%, Test 30%) | S1 §4 |
-| 3 | **Why adoption fails** — Planning & Execution, Technology, Commercial, Stakeholder Management; the **AI Pair Programming** example | S1 §4 |
-| 4 | **Four-stage adoption journey** — Experiment → Onboard & Pilot → Scale & Soar → Sustain (>80% usage) | S1 §4 |
-| 5 | Benefits and key influencing factors | — |
+## Storage Rule
 
-Also relevant to **S15** (ADLC phases in detail), which is lecture-notes-only in the handout — so this paper is the closest thing to a source for that session.
-
-## T2 · Nelson, *Software Engineering for Data Scientists* (O'Reilly 2024, 249 pp)
-
-Covers **546 sessions 7, 8 and 9** — the implementation and code-sharing block.
-
-| Ch | Title | PDF page | Session |
-|---|---|---|---|
-| 1 | What Is Good Code? | 20 | **S7** |
-| 2 | Analyzing Code (performance) | 30 | **S7** |
-| 3 | Using Data Structures | 50 | **S7** |
-| 4 | Object-Oriented Programming | 65 | **S8** |
-| 5 | Errors, Logging, and Debugging | 76 | **S8** |
-| 6 | Code Formatting, Linting | 90 | **S8** |
-| 7 | Testing Your Code | 103 | ✗ **OUT OF SCOPE** — S10 testing comes from T1 ch14–16 |
-| 8 | Design and Refactoring | 117 | **S9** |
-| 9 | Documentation | 131 | ✗ **OUT OF SCOPE** |
-| 10 | Sharing Your Code: Version Control | 146 | **S9** |
-| 11 | APIs | 163 | **S9** → `_shared/api-design.md`, **549 S1** |
-| 12 | Automation | 177 | ✗ **OUT OF SCOPE** — S13 comes from T1 ch11 |
-| 13 | Security | 190 | ✗ **OUT OF SCOPE** — S11 comes from T1 ch17–19 |
-| 14 | Working in Software Teams | 201 | ✗ **OUT OF SCOPE** |
-| 15 | Next Steps | 213 | ✗ **OUT OF SCOPE** |
-
-**Scope: the handout cites only T2 ch1–3 (S7), ch4–6 (S8) and ch8, 10, 11 (S9). Every other T2 chapter is out of the syllabus.**
-Topics that look like gaps are covered from the *other* textbook instead — testing and security come from **T1 ch14–19** at S10–S11, automation from **T1 ch11** at S13. So nothing is actually missing; T2 simply isn't the source for them.
-
-## Where things live
-
-Recordings and slides stay in Google Drive / Canvas — never in this repo.
-Transcripts are **raw source, not committed** — `source/transcripts/` is gitignored. Read a transcript to build or update the note, fold the important content (instructor quotes, emphasis, off-slide clarifications) into it, then it's done. The note is the record.
-
-## Deck vs its own agenda — session 1
-
-⚠️ The deck's agenda (slide 14) promises four blocks. **It delivers three.** The deck ends at
-slide 28, *Data Science — Hierarchy of Needs*, and never reaches:
-
-> Machine Learning — Basic terminologies, ML Pipeline, Foundation Models, **Types of ML Domains**
-
-The recording does not cover it either (every transcript hit for "domain" is about students own
-industry backgrounds). Terminology, pipeline and foundation models were written from **T1 Kästner
-ch1/ch3**; **Types of ML Domains** was written from the syllabus line itself and is marked as such
-in the note (section 2.3).
-
-**Watch session 2** — it is titled *Foundations (cont.)*, so this material most likely lands there.
-If the S2 deck covers ML domains, reconcile section 2.3 against it rather than duplicating.
+Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.

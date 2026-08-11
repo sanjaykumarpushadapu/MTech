@@ -26,6 +26,23 @@ Important: 536/546 are `AIML`; 549/521 are `AIMLC`.
 
 ## 2. Non-Negotiable Gates
 
+### AGENTS Compliance Is Automatic
+
+Every task that creates or edits files must be done under this `AGENTS.md` contract automatically. The user should not have to ask, "did you follow the agent rules?"
+
+Before editing, identify which AGENTS gates apply to the task. After editing, run the applicable checks and state the result in the final response. If a hard gate could not be checked, say exactly which gate remains open and why. Do not answer as if the work is complete when an applicable AGENTS gate was skipped.
+
+For session-note, lab, source-log, master-index, progress, or watchlist work, the minimum required compliance pass is:
+
+- Read `STUDY-PLAN.md` and `MATERIALS-WATCHLIST.md`.
+- Check the session's handout Learning Plan row directly from the handout file when the task touches session scope, title, topic coverage, lab scope, or completion status.
+- Verify uploaded material against the handout row and deck/session identity before changing scope.
+- Keep notes self-contained; never leave core knowledge only in a notebook, `_shared/`, transcript, slide, PDF, or local scratch file.
+- Update all tracking files affected by the change.
+- Run `cd tools && npm run check` and `git status --short` before the final response.
+
+The final response must include a short compliance line, for example: `AGENTS check: handout row checked, tracking updated, repo checks passed; open gap: S02 remaining lab files not held.` Keep it concise, but do not omit it.
+
 ### Handout First
 
 Every session note is created from the handout Learning Plan row, not from uploaded material.

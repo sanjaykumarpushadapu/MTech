@@ -55,8 +55,8 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | S | Topic | Deck | Note | Open | Lab |
 |---|---|---|---|---|---|
-| 1 | Foundations, chatbots → agents | ✅ | ✅ | ☐ | ☐ L1 *(notebooks ✅)* · *transcript ✅* |
-| 2 | Embeddings & hybrid retrieval | ✅ | ✅ | ☐ | ☐ L2 |
+| 1 | Foundations, chatbots → agents | ✅ | ✅ | ☐ | ☐ L1 *(BPE + agent notebooks ✅)* · *transcript ✅* |
+| 2 | Embeddings & hybrid retrieval | ✅ | ✅ | ☐ | ☐ L2 *(DistilBERT notebook ✅; other handout lab items open)* |
 | 3 | Model landscape & cost | ☐ | ☐ | ☐ | ☐ L3 |
 | 4 | Function calling & ReAct | ☐ | ☐ | ☐ | ☐ |
 | 5 | Fine-tuning & DPO | ☐ | ☐ | ☐ | ☐ L4 |

@@ -4,8 +4,22 @@ Instructor-supplied notebooks from session 1 (26 Jul 2026), shared via OneDrive.
 
 | File | What it does |
 |---|---|
+| `byte_pair_encoding.ipynb` | 25 cells. Builds BPE from scratch on a tiny corpus, applies learned merges to new words, then compares with Hugging Face tokenizers and the GPT-2 tokenizer |
 | `LocalGPT.ipynb` | 7 cells (2 code). Minimal local chat loop over Ollama `gemma3:1b`. Proves the local model works before anything else is attempted |
 | `tavily_weather_agent.ipynb` | 20 cells (8 code). The full **weather agent** demo from deck slide 47 — the five-stage build |
+
+## BPE notebook
+
+Run `byte_pair_encoding.ipynb` before the agent notebooks. It makes the tokenization section concrete:
+
+| Notebook step | What it proves |
+|---|---|
+| Start from characters | BPE does not need every full word in the vocabulary |
+| Count adjacent pairs | The merge decision is frequency-driven, not semantic |
+| First merge `("u", "g") -> "ug"` | Frequent chunks become reusable subword tokens |
+| Encode `bug` as `["b", "ug"]` | A new word can be represented if its pieces are known |
+| Encode `mug` as `["[UNK]", "ug"]` | Character-level BPE still fails if a character was absent from the base vocabulary |
+| Inspect GPT-2 tokenization | Production tokenizers use large learned vocabularies and byte-level fallbacks |
 
 ## The stack she chose, and why it matters
 
@@ -45,8 +59,8 @@ Cell numbers below are the **code** cells; each links back to the note section i
 
 - `LocalGPT.ipynb` uses `gemma3:1b` (much smaller); the agent notebook uses `llama3`. Pull both, or edit the model name.
 - Troubleshooting from the notebook: `Connection refused` means Ollama isn't running or `ollama pull llama3` was never run.
-- 536 Lab 1 is *also* tokenization. See `_shared/tokenization.md` for the script that serves both.
+- 536 Lab 1 is *also* tokenization, but this lab README is self-contained so it can be used without `_shared/`.
 
 ## Status
 
-☐ Ollama installed · ☐ `llama3` pulled · ☐ Tavily key in `.env` · ☐ `LocalGPT.ipynb` runs · ☐ agent answers the Tokyo question · ☐ ReAct trace observed in verbose output
+☐ `byte_pair_encoding.ipynb` runs · ☐ first BPE merge verified · ☐ GPT-2 tokenizer inspected · ☐ Ollama installed · ☐ `llama3` pulled · ☐ Tavily key in `.env` · ☐ `LocalGPT.ipynb` runs · ☐ agent answers the Tokyo question · ☐ ReAct trace observed in verbose output

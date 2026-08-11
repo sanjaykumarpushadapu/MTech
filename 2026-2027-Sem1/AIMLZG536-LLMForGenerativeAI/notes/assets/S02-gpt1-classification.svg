@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">GPT-1 pretraining and classification finetuning</title>
+  <desc id="desc">GPT-1 first learns a decoder-only language model, then finetunes by formatting inputs with special tokens and classifying the extract-token vector.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10z" fill="#263238"/>
+    </marker>
+    <style>
+      .bg{fill:#f7f3e8}.box{fill:#fffdf7;stroke:#b99d63;stroke-width:2;rx:20}.h{fill:#1f3340;font:700 25px Georgia,serif}.t{fill:#40545e;font:500 14px Georgia,serif}.b{fill:#1f3340;font:700 16px Georgia,serif}.arr{stroke:#263238;stroke-width:3;fill:none;marker-end:url(#arrow)}.token{fill:#e7f0ed;stroke:#8aa39a;stroke-width:1.4;rx:12}.head{fill:#f3ded6;stroke:#c66b4e;stroke-width:1.5;rx:16}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="420"/>
+  <text class="h" x="560" y="48" text-anchor="middle">GPT-1 reused one pretrained decoder for downstream classification</text>
+  <rect class="box" x="55" y="125" width="210" height="130"/>
+  <text class="b" x="160" y="160" text-anchor="middle">Decoder stack</text>
+  <text class="t" x="160" y="188" text-anchor="middle">12 transformer blocks</text>
+  <text class="t" x="160" y="214" text-anchor="middle">d=768, 12 heads</text>
+  <path class="arr" d="M275 190 H365"/>
+  <rect class="box" x="375" y="125" width="225" height="130"/>
+  <text class="b" x="487" y="160" text-anchor="middle">Causal pretraining</text>
+  <text class="t" x="487" y="188" text-anchor="middle">BooksCorpus</text>
+  <text class="t" x="487" y="214" text-anchor="middle">next-token objective</text>
+  <path class="arr" d="M610 190 H700"/>
+  <rect class="box" x="710" y="105" width="355" height="170"/>
+  <text class="b" x="887" y="140" text-anchor="middle">Finetuning format</text>
+  <rect class="token" x="745" y="165" width="76" height="34"/><text class="t" x="783" y="187" text-anchor="middle">start</text>
+  <rect class="token" x="835" y="165" width="118" height="34"/><text class="t" x="894" y="187" text-anchor="middle">input text</text>
+  <rect class="token" x="967" y="165" width="76" height="34"/><text class="t" x="1005" y="187" text-anchor="middle">extract</text>
+  <path class="arr" d="M1005 205 V250"/>
+  <rect class="head" x="895" y="290" width="220" height="60"/>
+  <text class="b" x="1005" y="315" text-anchor="middle">Linear classifier</text>
+  <text class="t" x="1005" y="338" text-anchor="middle">uses extract-token vector</text>
+  <text class="t" x="560" y="375" text-anchor="middle">The pretrained model supplies representations; the small head maps the final special-token vector to a label.</text>
+</svg>

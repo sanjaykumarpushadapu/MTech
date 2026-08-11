@@ -4,63 +4,86 @@
 
 ## Why this matters
 
-Retrieval is what lets a conversational system answer from current, private, or domain-specific knowledge instead of relying only on what the model memorized during training. This session explains the full chain: embeddings, similarity, efficient search, and hybrid retrieval. By the end, you should be able to explain the knowledge-access layer of a RAG system and justify why "just use embeddings" is usually not a complete answer.
+Conversational systems need a way to find the right knowledge before the LLM answers. This session teaches that retrieval chain: represent text as embeddings, compare vectors, index them efficiently, and combine dense search with keyword search. After reading it, you should be able to explain why "just use embeddings" is not enough for production RAG.
 
-**Prerequisites recap** *— this session assumes self-attention, feedforward layers, and basic matrix operations. The five-second version:*
+## Part 1 · Semantic vs Keyword Search
 
-> - **Matrix ops**: a *dot product* (multiply matching numbers, add them up) is the similarity score behind attention; *softmax* turns a row of scores into weights that sum to 1; a *weighted sum* (matrix multiply) blends vectors using those weights.
-> - **Self-attention**: every token makes a Query ("what am I looking for"), Key ("what do I contain"), and Value ("what do I contribute"). Dot-product every Query against every Key → scale → softmax → weighted sum of Values. The output is each token's *context-aware* vector — this is exactly what section 2 below relies on for contextual embeddings.
-> - **Feedforward layer**: after attention mixes information *between* tokens, each token's vector is individually expanded then shrunk by a small 2-layer network — no cross-token mixing here.
+*The core retrieval tradeoff is simple: semantic search retrieves by meaning, keyword search retrieves by exact lexical evidence, and real systems usually need both.*
 
-## Part 1 · Embeddings for understanding
+**Prerequisites recap** — this session assumes basic transformer architecture, self-attention, feedforward layers, and matrix operations.
 
-*An embedding is a numeric representation of meaning. The important shift is from static word vectors to contextual sentence/document vectors that can be searched.*
+> - **Transformer architecture**: token IDs become token embeddings, position information is added, transformer layers rewrite the token vectors, and a pooling step can turn many token vectors into one sentence vector.
+> - **Self-attention vs cross-attention**: self-attention compares tokens inside the same sequence; cross-attention lets a decoder attend to an encoded source sequence, as in translation.
+> - **Multi-headed attention**: several attention heads learn different projections of `Q`, `K`, and `V`, then concatenate their outputs so the final representation can carry several relationship patterns at once.
+> - **Matrix operations**: dot product scores similarity, softmax turns scores into weights, and weighted sums blend vectors.
 
-### 1. What an embedding is
+### 1. Semantic search vs keyword search
 
-**Intuition** — An embedding is a numeric representation of meaning. The goal is simple: things that mean similar things should end up near each other in vector space, even when they do not use the same words.
+**Intuition** — Keyword search asks, "which documents contain these words?" Semantic search asks, "which documents mean the same thing?" They fail in opposite ways, which is why hybrid retrieval exists.
 
-An everyday analogy: imagine a library map where books are not arranged alphabetically, but by meaning. Books on "credit cards", "bank accounts", and "loans" sit near each other; "river bank erosion" sits far away even though it shares the word "bank".
+![Semantic keyword hybrid retrieval](assets/S02-semantic-keyword-hybrid.svg)
 
-**Mechanism** — An embedding model takes text as input and returns a fixed-length vector:
+**Mechanism** —
+
+| Retrieval type | Representation | Best for | Failure mode |
+|---|---|---|---|
+| Keyword / sparse | term counts, inverted indexes, BM25-style weighting | names, IDs, exact phrases, rare terms | misses paraphrases |
+| Dense / semantic | neural embeddings | synonyms, concepts, natural-language questions | can blur exact facts |
+| Hybrid | sparse + dense + fusion | production RAG | more components to tune and monitor |
+
+**Worked example** — Query: `"laptop reimbursement policy"`.
+
+| Document | Keyword behavior | Dense behavior |
+|---|---|---|
+| `"employee device expense rules"` | may miss: no exact laptop/reimbursement words | likely match |
+| `"laptop serial number inventory"` | may match: exact laptop word | likely demote |
+| `"reimbursement form LAP-2026"` | likely match exact term/code | likely match if context is enough |
+
+**Tradeoff / when NOT to use** — Dense-only search is risky for compliance, support, and ticketing systems where exact product names, IDs, SKUs, policy clauses, and version numbers matter. Keyword-only search is risky when users describe the same idea with different words from the document.
+
+---
+
+### 2. What an embedding is
+
+**Intuition** — An embedding is a numeric representation of meaning. Texts with similar meanings should land near each other in vector space, even when they use different words.
+
+Imagine a library map arranged by meaning instead of alphabetically: credit cards, accounts, and loans sit near each other; river-bank erosion sits far away even though it shares the word `bank`.
+
+**Mechanism** — An embedding model maps text to a fixed-length vector:
 
 ```text
 "refund my cancelled flight" -> [0.12, -0.44, 0.87, ..., 0.09]
 ```
 
-For retrieval, both stored documents and incoming queries are embedded into the same vector space. Search then becomes nearest-neighbor search: find document vectors closest to the query vector.
+For retrieval, stored chunks and incoming queries are embedded into the same vector space. Search then becomes nearest-neighbor search: find the stored vectors closest to the query vector.
 
 ![Embedding retrieval flow](assets/S02-embedding-retrieval.svg)
 
-**Worked example** — Suppose the query is `"reset my password"` and the store contains three snippets:
+**Worked example** — Query: `"reset my password"`.
 
-| Text | Meaning match | Why |
+| Candidate text | Match | Why |
 |---|---:|---|
 | `"change forgotten password"` | high | different words, same intent |
 | `"delete account"` | medium | account-related but different action |
 | `"weather in Hyderabad"` | low | unrelated |
 
-Keyword search may miss `"change forgotten password"` if it expects the exact word `"reset"`. Embeddings can still retrieve it because the semantic intent is close.
-
-**Tradeoff / when NOT to use** — Embeddings are weak for exact identifiers, codes, invoice numbers, legal clauses, and rare proper nouns. If the user searches `"INC-48291"` or `"Section 14.2(b)"`, keyword or metadata filtering should lead; semantic similarity can follow.
+**Tradeoff / when NOT to use** — Embeddings are weak when the important signal is an exact token. If a user searches `INC-48291`, `v2.3.7`, or `Section 14.2(b)`, keyword search or metadata filtering should lead and semantic search can follow.
 
 ---
 
-### 2. Encoder models and contextual embeddings
+### 3. What are Encoder Models?
 
-**Intuition** — Encoder models are good embedding machines because they read the entire input at once. That bidirectional view lets them represent meaning in context.
+**Intuition** — Encoder models are good embedding machines because they see the whole input at once. That bidirectional view lets them represent meaning in context rather than treating each word as one fixed object.
 
-The key word is **contextual**: the vector for `"bank"` should change depending on whether the sentence mentions a river or an account.
+**Why Encoders for Embeddings?** The important word is **contextual**: the vector for `bank` should change depending on whether the sentence mentions a river or an account.
 
-Older embedding methods (word2vec, GloVe) assign each word exactly one fixed vector, learned once from overall co-occurrence statistics across the whole training corpus. That breaks on polysemous words: `"bank"` gets a single point in vector space that has to serve both river-bank and account-bank contexts at once, so it settles somewhere between the two senses and drags unrelated documents into the same neighborhood. A contextual encoder fixes this by computing the vector at inference time, conditioned on the surrounding words, so the same word can land in different places depending on what it actually means in that sentence.
+Older methods such as word2vec and GloVe assign one learned vector to each word. That breaks on polysemy: one `bank` vector has to serve both finance and geography. A contextual encoder computes the vector at inference time, using surrounding words to decide the meaning.
 
-An everyday analogy: a static vector for `"bank"` is like printing one business card that has to work for both a bank teller and a river tour guide — it ends up a vague mix of both, so neither their customers nor the hikers quite know what to make of it. A contextual embedding is like printing a fresh card for each situation instead: `"riverbank"` gets a nature-themed card, `"savings bank"` gets a finance-themed card, and each one is instantly recognizable for what it actually means there.
-
-**Mechanism** — An encoder transformer uses self-attention so every token can look at every other token in the input. The final token vectors are not just word meanings; they are word-in-sentence meanings.
+**Mechanism** — Encoder self-attention lets every token attend to every other token in the input. The final token vectors are not just word meanings; they are word-in-this-sentence meanings.
 
 ![Contextual embedding disambiguation](assets/S02-contextual-bank.svg)
 
-For a token sequence `X`, an attention layer computes:
+For token matrix `X`, one attention layer computes:
 
 ```text
 Q = X W_Q
@@ -69,60 +92,55 @@ V = X W_V
 Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) V
 ```
 
-Plain language first: `QK^T` asks "which other tokens matter to this token?", softmax turns those scores into attention weights, and multiplying by `V` blends useful information from the other tokens.
+Plain language: `QK^T` asks which tokens matter to each token, softmax converts those scores into weights, and multiplying by `V` blends the useful information.
 
-**Worked example** — In `"the bank was closed because the river overflowed"`, self-attention lets `"bank"` attend to `"river"` and `"overflowed"`, pulling its representation toward geography. In `"the bank account was closed"`, `"bank"` attends to `"account"`, pulling the representation toward finance.
+**Worked example** — In `"the bank was closed because the river overflowed"`, `bank` attends to `river` and `overflowed`, so its vector moves toward geography. In `"the bank account was closed"`, `bank` attends to `account`, so its vector moves toward finance.
 
-**Tradeoff / when NOT to use** — Encoder embeddings are ideal for understanding and search, but they are not the natural architecture for open-ended generation. If the task is "write the answer token by token", decoder-only LLMs are the standard choice.
+**Tradeoff / when NOT to use** — Encoder embeddings are ideal for understanding and search, but they are not the natural architecture for open-ended generation. If the task is to write an answer token by token, a decoder-only LLM is the standard choice.
 
 ---
 
-### 3. Encoder vs decoder vs encoder-decoder
+### 4. Encoder vs Decoder vs Encoder-Decoder
 
-**Intuition** — The architecture decides what kind of task feels natural. Encoders understand, decoders generate, and encoder-decoders translate or transform one sequence into another.
+**Intuition** — The architecture decides what kind of task feels natural. Encoders understand, decoders generate, and encoder-decoders transform one sequence into another.
 
 ![Encoder decoder architecture choice](assets/S02-architecture-choice.svg)
 
-**Mechanism** — The masking pattern is the difference:
+**Mechanism** —
 
-| Architecture | Context view | Best at | Weak at |
+| Architecture | Context view | Best use cases | Weak fit |
 |---|---|---|---|
-| Encoder-only | Bidirectional: sees the whole input | embeddings, classification, NER, semantic search | free-form generation |
-| Decoder-only | Causal: sees previous tokens only | chat, code, instruction following, generation | pure embedding quality unless specially trained |
-| Encoder-decoder | encoder sees source; decoder generates target | translation, summarization, text-to-text conversion | heavier architecture when one side is enough |
+| Encoder-only | bidirectional: sees the whole input | embeddings, classification, sentiment, NER, semantic search | free-form generation |
+| Decoder-only | causal: sees previous tokens only | chat, code, instruction following, text generation | pure embedding quality unless specially trained |
+| Encoder-decoder | encoder sees source; decoder generates target | translation, summarization, text-to-text conversion | heavier when one side is enough |
 
-**Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can see both `"slow"` and `"excellent"` before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the English sentence and a decoder writes the Hindi sentence while attending to the encoded source.
+**Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can inspect both emotional words before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the source sentence and a decoder writes the target sentence while attending to the encoded source.
 
-**Tradeoff / when NOT to use** — Do not force one architecture onto every problem. Using a decoder-only chat model as an embedding model can work if it is trained for embeddings, but a purpose-built encoder embedding model is usually cheaper, faster, and easier to index.
+**Tradeoff / when NOT to use** — Do not force one architecture onto every problem. A decoder-only model can perform understanding tasks after suitable fine-tuning, but for embeddings a purpose-built encoder is usually cheaper, faster, and easier to index.
 
-> ***Going deeper*** *— is "decoder-only is weaker at understanding tasks" still true once you fine-tune it? A 2025 study puts a number on it. Borodach et al., "Decoders Laugh as Loud as Encoders" (2025) — outside this course's reading list, included as direct evidence for the tradeoff above — fine-tuned a decoder (GPT-4o) and several encoders on the same task: classifying text into six categories (five humor types plus "not a joke").*
->
+> ***Going deeper*** — Fine-tuned decoders can match encoders on some classification tasks, so "encoders understand, decoders generate" is a practical default, not an absolute law. The production question is cost: if an encoder reaches the same retrieval or classification quality with smaller vectors, faster inference, and simpler indexing, it is still the better tool.
+
 > ![Zero/few-shot decoders lag far behind — fine-tuning closes the gap](assets/S02-decoder-vs-encoder-classification.svg)
->
-> *The chart is the whole finding: every decoder tested **without** fine-tuning — zero-shot or with a few examples in the prompt — scored far below the best encoder, topping out around 0.60 F1-macro even for GPT-4. The same architecture, fine-tuned, jumped to **0.852** — statistically indistinguishable (Welch's t-test) from the best fine-tuned encoder, RoBERTa, at **0.857**. Worth noticing too: the encoder-**decoder** models tested (BART, Flan-T5, zero/few-shot only) did *worse* than the decoder-only models at the same shot count — a third data point, not just two, and the weakest of the three families here.*
->
-> *This sharpens rather than overturns the tradeoff above: a decoder-only model's weakness at understanding-style tasks reads as a **cost** — it needs fine-tuning, and fine-tuning a large decoder is heavier than fine-tuning a purpose-built encoder — not a **final-accuracy ceiling**. "Purpose-built encoder is cheaper, faster, easier to index" still holds; "decoder-only can't match it" does not, once fine-tuning is on the table. ⚠️ One caveat the paper is upfront about: this is a small dataset (1,392 examples), so treat the specific numbers as directional, not definitive.*
 
 ---
 
-### 4. BERT-style embedding pipeline
+### 5. How Encoder Transformers Create Embeddings
 
-**Intuition** — A sentence embedding is not produced in one magic step. It is built through tokenization, lookup, positional addition, transformer layers, and pooling.
+**Intuition** — A sentence embedding is not produced in one magic step. It is built through tokenization, embedding lookup, positional addition, transformer layers, and pooling.
 
 ![BERT-style embedding pipeline](assets/S02-bert-embedding-pipeline.svg)
 
-**Mechanism** — For `"Machine learning is fascinating"` in a BERT-like encoder:
+**Mechanism** — BERT Pipeline. For `"Machine learning is fascinating"` in a BERT-like encoder:
 
 | Step | What happens | Output shape idea |
 |---|---|---|
-| 1 | Add `[CLS]` at the start and `[SEP]` at the end | 6 tokens |
-| 2 | Convert tokens to IDs | `[101, 8394, 4083, 2003, 17117, 102]` |
-| 3 | Look up token embeddings | 6 vectors, each 768-dim |
-| 4 | Add positional embeddings | 6 input vectors, each 768-dim |
-| 5 | Run 12 transformer layers | 6 contextual vectors |
-| 6 | Pool token vectors | 1 sentence vector |
+| 1. Tokenization | add `[CLS]` at the start and `[SEP]` at the end | 6 tokens |
+| 2. Token embeddings | each token ID looks up one row in a learned table | 6 vectors, each 768-dim |
+| 3. Positional embeddings | add a learned position vector elementwise | 6 position-aware input vectors |
+| 4. Transformer layers | 12 BERT-base layers mix information with self-attention and FFNs | 6 contextual vectors |
+| 5. Pooling strategy | compress token vectors into one sentence/chunk vector | 1 vector |
 
-Token embeddings are static at lookup time: the same token ID selects the same row. Context appears only after self-attention layers rewrite the vectors.
+Token embeddings are static at lookup time: the same token ID selects the same row. Context appears only after transformer layers rewrite the vectors.
 
 **Worked example** — Position addition is elementwise:
 
@@ -132,17 +150,15 @@ position embedding   [0.02,  0.03, 0.01]
 input embedding      [0.25, -0.12, 0.90]
 ```
 
-That input vector now carries both token identity and position.
+Without position information, `"the dog bit the man"` and `"the man bit the dog"` contain the same token vectors in a different order, and the lookup table alone has no way to tell the difference.
 
-Without that step, the model would have no way to tell `"the dog bit the man"` apart from `"the man bit the dog"` — both sentences contain the exact same token vectors, just in a different order, and a plain lookup table has no notion of order at all. Adding a position vector to each token embedding is what lets the model tell them apart. An everyday picture: think of a form letter where every blank is filled from the same pool of words, but each line also gets a stamped page number — the stamp is what lets you reconstruct the original order later, even if someone shuffles the pages.
-
-**Tradeoff / when NOT to use** — BERT-style encoders are excellent for medium-length text, but context length can be short for long documents. If a document exceeds the embedding model's context window, chunk it carefully instead of truncating silently.
+**Tradeoff / when NOT to use** — BERT-style encoders are excellent for medium-length text, but their context window can be short for long documents. If a document exceeds the model's context window, chunk it carefully instead of truncating silently.
 
 ---
 
-### 5. Pooling strategies
+### 6. Pooling strategies
 
-**Intuition** — The encoder outputs one vector per token, but search needs one vector for the whole sentence or chunk. Pooling compresses many token vectors into one vector.
+**Intuition** — The encoder returns one vector per token, but search needs one vector for the whole sentence or chunk. Pooling compresses many contextual token vectors into one vector.
 
 ![Pooling strategies](assets/S02-pooling-strategies.svg)
 
@@ -153,6 +169,8 @@ Without that step, the model would have no way to tell `"the dog bit the man"` a
 | CLS pooling | `v = h_[CLS]` | classification, sentiment, NLI |
 | Mean pooling | `v = (1/n) sum_i h_i` | semantic similarity, search, RAG |
 | Max pooling | `v_j = max(h_1j, ..., h_nj)` | some retrieval/classification setups |
+
+Many BERT-family checkpoints expose `[CLS]` conveniently, but sentence-embedding models often prefer mean pooling because it uses signal from every token.
 
 **Worked example** — Three 2D token vectors:
 
@@ -165,37 +183,34 @@ mean pooling = [(1+3+5)/3, (4+2+0)/3] = [3, 2]
 max pooling  = [max(1,3,5), max(4,2,0)] = [5, 4]
 ```
 
-**Tradeoff / when NOT to use** — CLS pooling is convenient but not automatically best for retrieval. For sentence search and RAG, mean pooling often performs better because it uses all token outputs instead of trusting one summary token.
-
-An everyday picture for the difference: CLS pooling is like asking only the meeting chair to summarise what was said — fast, but you lose whatever the chair didn't personally emphasise. Mean pooling is like averaging what every attendee thought the meeting was about — slower to gather, but it reflects the whole room rather than one person's take.
-
-**Use case — a ranking bug traced to pooling.** A team dropped a general-purpose BERT checkpoint into a FAQ search box and got near-random results: obviously related questions didn't rank near each other. The checkpoint's default output was the `[CLS]` vector, trained for next-sentence prediction, not similarity — so the embedding model wasn't bad, the pooling choice was wrong. Switching the same checkpoint to mean pooling over all token vectors fixed the ranking with no retraining.
+**Tradeoff / when NOT to use** — CLS pooling is convenient but not automatically best for retrieval. If a search system returns near-random FAQ matches from a general BERT checkpoint, the issue may be pooling rather than the whole model; mean pooling or a sentence-embedding model may be the simpler fix.
 
 ---
 
-### 6. Embedding model selection
+### 7. Embedding Models: Key Players
 
-**Intuition** — An embedding model is a production component, not a generic utility. Dimension, context window, language coverage, cost, and latency decide whether search works well.
+**Intuition** — An embedding model is a production component, not a generic utility. Dimension, context window, training objective, language coverage, latency, deployment type, and cost decide whether retrieval works well.
 
 ![Embedding model selection criteria](assets/S02-embedding-model-selection.svg)
 
-**Mechanism** — Common decision factors:
+**Mechanism** — Read model specifications as a selection checklist, not as a leaderboard.
 
-| Factor | Why it matters |
-|---|---|
-| Dimension | Larger vectors can carry more signal but cost more storage, RAM, and compute |
-| Context window | Long documents need either long-context embedding models or careful chunking |
-| Training objective | Contrastive/retrieval training is better for search than generic language modeling |
-| Deployment type | API is simpler; open model gives control, privacy, and batch economics |
-| Domain/language | General English models may underperform on legal, medical, code, or multilingual corpora |
+| Model | Provider | Output dim | Context | Type | Best fit |
+|---|---|---:|---:|---|---|
+| `bge-large-en-v1.5` | BAAI | 1024 | 512 | open | strong general English baseline |
+| `gte-large-en-v1.5` | Alibaba | 1024 | 8192 | open | longer documents |
+| `e5-mistral-7b-instruct` | Microsoft | 4096 | 32768 | open | instruction-following, very long context |
+| `jina-embeddings-v2` | Jina AI | 768 | 8192 | open | multilingual, faster inference |
+| `text-embedding-3-large` | OpenAI | 3072 | 8191 | API | high-quality production embedding |
+| `embed-english-v3.0` | Cohere | 1024 | 512 | API | production embedding with compression support |
 
-**Worked example** — For a small internal FAQ, a 768- or 1024-dim open embedding model is enough. For long policy documents with sections over 1000 tokens, choose a longer-context model or chunk by headings. For sensitive customer data, local/open deployment may be preferable even if an API model scores slightly higher.
+**Worked example** — For a small English FAQ, start with a 768- or 1024-dimensional open model. For policy documents where sections exceed 1000 tokens, choose a longer-context model or chunk by headings. For sensitive customer data, local/open deployment may beat a higher-scoring API model because privacy and batch economics dominate.
 
-**Tradeoff / when NOT to use** — Do not chase the largest dimension blindly. A 4096-dim vector can improve quality, but if it doubles RAM and slows HNSW traversal without measurable recall gain on your data, a smaller model wins.
+**Tradeoff / when NOT to use** — Do not chase the largest dimension blindly. A 4096-dimensional vector can improve quality, but if it doubles RAM and slows index traversal without measurable recall gain on your data, a smaller model wins.
 
 ---
 
-### 7. How embedding models are trained
+### 8. Embedding Models: Training Objectives
 
 **Intuition** — Embedding quality comes from the training objective. The model must learn that related texts should be close and unrelated texts should be far.
 
@@ -203,49 +218,45 @@ An everyday picture for the difference: CLS pooling is like asking only the meet
 
 **Mechanism** —
 
-| Objective | Core idea | Strength | Main risk |
+| Training objective | Core idea | Strength | Main risk |
 |---|---|---|---|
-| Contrastive learning | Pull positive pairs close; push negatives far | directly trains semantic similarity | needs good negatives |
-| Masked language modeling | Hide tokens and predict them from context | strong bidirectional understanding | not optimized for retrieval by itself |
-| RetroMAE | reconstruct heavily masked input through encoder/decoder | compact retrieval-oriented representations | more complex training |
+| Training Objective - Contrastive Learning | pull positive pairs close; push negatives far | directly trains semantic similarity | needs good negatives and careful batches |
+| Training Objective - Masked Language Modeling (MLM) | hide tokens and predict them from context | strong bidirectional understanding | not optimized for retrieval by itself |
+| Training Objective - RetroMAE | reconstruct heavily masked input through an encoder-decoder setup | compact retrieval-oriented representations | more complex training and mask-ratio tuning |
 
-Contrastive loss for an anchor `a`, positive `p`, and negatives `n`:
+Contrastive loss for an anchor `a`, positive `p`, and negatives `n_i`:
 
 ```text
-loss = -log( exp(sim(a,p)) / sum exp(sim(a,n_i)) )
+loss = -log( exp(sim(a,p)) / sum_i exp(sim(a,n_i)) )
 ```
 
 Plain language: reward the positive pair for scoring high, and punish it if negatives score nearly as high.
 
-**Worked example** — Anchor: `"The cat sat on the mat"`. Positive: `"A feline rested on the rug"`. Negative: `"How to bake chocolate cookies"`. A good embedding model makes the anchor-positive similarity high and the anchor-negative similarity low.
+**Worked example** — Anchor: `"The cat sat on the mat"`. Positive: `"A feline rested on the rug"`. Negative: `"How to bake chocolate cookies"`. A good embedding model raises anchor-positive similarity and lowers anchor-negative similarity.
 
-An everyday picture: training this way is like teaching someone to sort photos by physically pulling matching pairs closer together on a table and pushing mismatched pairs further apart, over and over, until similar photos naturally cluster — rather than just describing each photo in isolation and hoping similar ones happen to end up near each other.
+For MLM, `"The [MASK] brown fox [MASK] over the lazy dog"` teaches the encoder to predict `quick` and `jumps` from both sides. For RetroMAE, a more heavily masked sentence forces the encoder to compress the surviving context well enough for the decoder to reconstruct the original.
 
-**Tradeoff / when NOT to use** — Contrastive training is powerful but sensitive to negative sampling. If the "negative" is actually relevant, the model learns the wrong boundary. That is why retrieval datasets need careful construction and why hard-negative mining must be checked, not blindly trusted.
+**Tradeoff / when NOT to use** — Contrastive training is powerful but sensitive to negative sampling. If a "negative" is actually relevant, the model learns the wrong boundary. MLM is a strong pretraining task for understanding, but search quality usually needs retrieval-oriented training or fine-tuning.
 
----
+## Part 2 · Vector Database Architecture (HNSW, ANN)
 
-## Part 2 · Similarity search
+*Once vectors exist, the system must search them fast enough for conversational latency.*
 
-*Once text becomes vectors, retrieval becomes a measurement problem: how close is the query vector to each candidate vector?*
-
-### 8. Vector similarity metrics
+### 9. Vector similarity mathematics
 
 **Intuition** — Similarity metrics define what "near" means. Cosine cares about direction, Euclidean distance cares about physical distance, and dot product combines direction with magnitude unless vectors are normalized.
 
 ![Vector similarity metrics](assets/S02-vector-similarity-metrics.svg)
 
-In plain language: once text has become vectors, retrieval needs a scoring rule. The question is simply, "which stored vector looks most like the query vector?" These three metrics are three ways of answering that question.
-
 **Mechanism** —
 
-| Metric | Formula | High value means |
+| Metric | Formula | How to read it |
 |---|---|---|
-| Cosine similarity | `cos(A,B) = (A dot B) / (||A|| ||B||)` | more similar direction |
-| Euclidean distance | `d(A,B) = sqrt(sum_i (A_i - B_i)^2)` | more different, because distance is larger |
-| Dot product | `A dot B = sum_i A_i B_i` | stronger alignment and/or larger magnitude |
+| Cosine similarity | `cos(A,B) = (A dot B) / (||A|| ||B||)` | high value means similar direction |
+| Euclidean / L2 distance | `d(A,B) = sqrt(sum_i (A_i - B_i)^2)` | low value means close points |
+| Dot product | `A dot B = sum_i A_i B_i` | high value means alignment and/or larger magnitude |
 
-If vectors are normalized so `||A|| = ||B|| = 1`, dot product equals cosine similarity.
+If vectors are normalized so `||A|| = ||B|| = 1`, dot product equals cosine similarity. This is why many vector systems normalize text embeddings before using inner-product search.
 
 **Worked example** — Let `A = [3,4]`, `B = [4,3]`, and `C = [-4,3]`.
 
@@ -260,19 +271,17 @@ cos(A,C) = 0 / 25 = 0
 L2(A,C) = sqrt((3+4)^2 + (4-3)^2) = sqrt(50) = 7.071
 ```
 
-So `B` is very close to `A`; `C` is much farther and orthogonal by cosine.
+`B` is close to `A`; `C` is much farther and orthogonal by cosine.
 
-**Tradeoff / when NOT to use** — Cosine is usually safer for text because it ignores vector length. Dot product is fast and common in vector DBs, but only behaves like cosine if embeddings are normalized or the model was trained for dot-product scoring.
+**Tradeoff / when NOT to use** — Cosine is usually safer for text because it ignores vector length. Dot product is fast, but it only behaves like cosine when vectors are normalized or the model was trained for dot-product scoring. L2 can be useful for geometric/image-style spaces but is often too magnitude-sensitive for text.
 
 ---
 
-### 9. Linear scan and the computational wall
+### 10. The Computational Challenge
 
 **Intuition** — Exact nearest-neighbor search is simple: compare the query with every stored vector. It also becomes impossible at production scale.
 
 ![Linear scan computational wall](assets/S02-linear-scan-wall.svg)
-
-The plain-English point is cost. A search that feels simple on paper becomes too slow once the collection is large enough, because the system is doing a small calculation against every stored item.
 
 **Mechanism** — Linear scan cost is:
 
@@ -286,107 +295,163 @@ For 10 million vectors of dimension 768:
 10,000,000 * 768 = 7,680,000,000 multiply-add operations
 ```
 
-At 1 billion operations per second, that is about 7.68 seconds per query. At 100 queries per second, that implies about 768 CPU-core seconds per second of traffic.
+At 1 billion operations per second, that is about 7.68 seconds per query. At 100 queries per second, it implies 768 CPU-core seconds per second of traffic.
 
-**Worked example** — If one query over 10M vectors takes 7.68 seconds on one CPU core, then serving 100 simultaneous queries per second requires:
+**Worked example** — If one query over 10M vectors takes 7.68 seconds on one CPU core, then serving 100 queries per second requires:
 
 ```text
 7.68 seconds/query * 100 queries/second = 768 cores
 ```
 
-That is before network overhead, filters, reranking (reordering the top candidates with a slower, more precise model), and the LLM call.
+That is before network overhead, filters, reranking, and the LLM call.
 
-An everyday picture: it's like finding a name in a phone book by reading every single entry from the first page to the last, rather than using the alphabetical tabs. It always finds the right answer, but the time it takes grows directly with how many entries there are — fine for a slim address book, unworkable for a book with ten million names.
-
-**Tradeoff / when NOT to use** — Linear scan is fine for tiny collections, offline evaluation, and verifying ANN recall. It is not the serving strategy for millions of vectors unless the hardware is specialized and the workload justifies brute force.
+**Tradeoff / when NOT to use** — Linear scan is fine for tiny collections, offline evaluation, and verifying ANN recall. It is not the serving strategy for millions of vectors unless specialized hardware and workload economics justify brute force.
 
 ---
 
-### 10. ANN and vector indexing
+### 11. Linear Scan vs ANN Solution
 
 **Intuition** — Approximate Nearest Neighbor search avoids checking every vector. It accepts "close enough" top-k results in exchange for large speedups.
 
 ![Approximate nearest neighbor indexing](assets/S02-ann-index.svg)
 
-The useful mental model is: exact search asks every candidate; ANN uses structure so it can skip most of them.
+**Mechanism** — ANN uses index structure to skip most candidates. The contrast is the point:
 
-**Mechanism** — ANN indexes structure the vector space so the query can skip most candidates. Three common strategies:
+| Search style | Example latency at 10M vectors | How it works |
+|---|---:|---|
+| Linear scan | about 7.68 seconds/query | brute-force comparison against all vectors |
+| ANN index such as HNSW | about 10 milliseconds/query | navigates an index and avoids unnecessary comparisons |
 
-| Strategy | Example | How it works | Strength | Weakness |
-|---|---|---|---|---|
-| Graph-based | HNSW | connect nearby vectors in a navigable graph | high recall, fast search, no training | memory-heavy |
-| Partition-based | IVF | cluster vectors; search selected clusters | scalable and tunable | needs training; sensitive to cluster count |
-| Compression-based | PQ | compress vectors into compact codes | huge memory savings | lower recall; more approximation |
+Scale intuition:
 
-**Worked example** — For a RAG FAQ with 10M chunks, exact scan might take seconds. HNSW can return a high-quality approximate top-10 in milliseconds because it walks through graph links instead of scoring all 10M vectors.
+| Documents | Linear scan | HNSW-style ANN |
+|---:|---:|---:|
+| 10K | ~8 ms | ~2 ms |
+| 100K | ~77 ms | ~3 ms |
+| 1M | ~770 ms | ~5 ms |
+| 10M | ~7.7 s | ~10 ms |
 
-An everyday picture: it's like a warehouse worker who walks straight to the general aisle where similar items are usually kept, rather than checking every single shelf in the building for every order. They might occasionally miss the one item shelved out of place, but for the overwhelming majority of orders they find a great match in a fraction of the time.
+**Worked example** — A support RAG system with 10M chunks does not need the mathematically exact top-10 every time. If ANN returns 9 of the true top-10 in milliseconds, a reranker can often recover the final ordering while keeping end-to-end latency acceptable.
 
-**Tradeoff / when NOT to use** — ANN is a latency-recall tradeoff (recall here means the fraction of the true nearest neighbors the approximate search actually returns). If the collection is small or the top-1 result must be mathematically exact, brute force may be safer. In RAG, approximate recall of 95-99% is usually acceptable because the LLM answer is already probabilistic and a reranker can clean up the candidate set.
-
----
-
-### 11. HNSW: Hierarchical Navigable Small World
-
-**Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; bottom layers are local streets containing all points.
-
-![HNSW search process](assets/S02-hnsw-search.svg)
-
-**Mechanism** — HNSW stores vectors as graph nodes. Edges connect nearby nodes. Search starts at a high sparse layer, greedily moves closer to the query, then descends layer by layer until the dense base layer.
-
-Important knobs:
-
-| Parameter | Meaning | Raising it does |
-|---|---|---|
-| `M` | max connections per node/layer | improves recall, increases memory and insert cost |
-| `ef_construction` | candidate list during index build | better index quality, slower build |
-| `ef_search` | candidate list during query | better recall, slower query |
-
-**Worked example** — With 768-dim float32 vectors and `M=16`:
-
-```text
-raw vector bytes = 768 * 4 = 3,072 bytes
-connection bytes approx = 16 * 4 = 64 bytes per layer-like average
-rough per-vector storage = about 3,136 bytes before broader graph overhead
-```
-
-At 1M vectors, raw vectors alone are about 3.07 GB decimal. Production HNSW often needs roughly 1.5-2.0x raw vector memory once graph overhead and metadata are included.
-
-**Tradeoff / when NOT to use** — HNSW is a strong default up to large but memory-manageable datasets. If memory is the binding constraint at hundreds of millions or billions of vectors, IVF+PQ or another compressed/partitioned setup may beat HNSW even with lower recall.
+**Tradeoff / when NOT to use** — ANN is a latency-recall tradeoff. If the collection is tiny or the top-1 result must be mathematically exact, brute force may be safer. In RAG, 95-99% approximate recall is usually acceptable because retrieval is followed by reranking, answer generation, and citation checks.
 
 ---
 
-## Part 3 · Keyword, dense and hybrid retrieval
+### 12. ANN Indexing Strategies
 
-*Dense vectors retrieve by meaning. Keyword retrieval retrieves by exact lexical evidence. Production systems usually need both.*
+**Intuition** — "ANN" is not one algorithm. It is a family of indexing strategies that trade memory, build cost, query speed, and recall differently.
 
-### 12. Semantic search vs keyword search
-
-**Intuition** — Semantic search answers "what means the same thing?" Keyword search answers "what contains the words or terms?" They fail differently, so hybrid retrieval combines them.
-
-![Semantic keyword hybrid retrieval](assets/S02-semantic-keyword-hybrid.svg)
+![Approximate nearest neighbor indexing](assets/S02-ann-index.svg)
 
 **Mechanism** —
 
-| Retrieval type | Representation | Best for | Failure mode |
-|---|---|---|---|
-| Keyword / sparse | term counts, BM25-style weighting | names, IDs, exact phrases, rare terms | misses paraphrases |
-| Dense / semantic | neural embeddings | synonyms, concepts, natural-language questions | can blur exact facts |
-| Hybrid | sparse + dense + fusion | production RAG | more moving parts |
+| Strategy | Example | How it works | Strength | Weakness |
+|---|---|---|---|---|
+| Graph-based | HNSW | connect nearby vectors in a navigable graph | high recall, fast search, no training | high memory, slower inserts |
+| Partition-based | IVF | cluster vectors; search selected partitions | scalable, works with compression | needs training; sensitive to `nprobe` |
+| Compression-based | PQ | compress vectors into compact codes | 8-32x memory reduction, billion-scale search | lower recall, needs training |
 
-**Worked example** — Query: `"laptop reimbursement policy"`.
+**Worked example** — For 10M vectors and enough RAM, HNSW is a strong default because it gives high recall and simple tuning. For hundreds of millions of vectors where RAM is the binding constraint, IVF+PQ can be the better engineering choice even if recall is lower.
 
-| Document | Keyword result | Dense result |
-|---|---|---|
-| `"employee device expense rules"` | may miss: no laptop/reimbursement words | likely match |
-| `"laptop serial number inventory"` | may match: laptop keyword | likely demote |
-| `"reimbursement form LAP-2026"` | likely match exact term/code | likely match if context is enough |
-
-**Tradeoff / when NOT to use** — Dense-only search is risky for compliance and support systems where exact product names, ticket IDs, SKUs, or policy clauses matter. Keyword-only search is risky when users describe the idea with different words from the document.
+**Tradeoff / when NOT to use** — Graph indexes are not automatically best. If memory cost dominates, compression can beat HNSW. If insertion rate is very high, a partitioned or disk-backed design may be easier to operate.
 
 ---
 
-### 13. BM25
+### 13. HNSW: Hierarchical Navigable Small World
+
+**Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; the bottom layer is the local street map containing all points.
+
+![HNSW search process](assets/S02-hnsw-search.svg)
+
+**Mechanism** — HNSW stores vectors as graph nodes. Edges connect nearby nodes. Search starts at a sparse high layer, greedily moves closer to the query, then descends layer by layer until the dense base layer. A final beam-style search expands candidates at layer 0.
+
+Key ideas:
+
+| Idea | Meaning |
+|---|---|
+| hierarchical structure | top layers skip across the dataset quickly |
+| small-world property | average path length stays short, often near logarithmic |
+| navigable graph | greedy movement usually finds a near-optimal path |
+| robustness | multiple possible routes reduce local-minimum risk |
+
+**Worked example** — If the query vector starts near a broad "software" region, the top layer can jump toward "cloud-native ML", then the lower layers refine toward "API-driven ML deployment" without scoring every unrelated vector.
+
+**Tradeoff / when NOT to use** — HNSW is a strong default up to large but memory-manageable datasets. If the dataset reaches hundreds of millions or billions of vectors and RAM is the main constraint, IVF+PQ or another compressed setup may beat HNSW despite lower recall.
+
+---
+
+### 14. HNSW: Memory Layout and Parameter Tuning
+
+**Intuition** — HNSW speed is not free. The graph needs memory for connections, and its tuning parameters decide the latency-recall-memory balance.
+
+![HNSW memory and tuning budget](assets/S02-hnsw-memory-tuning.svg)
+
+**Mechanism** — Per vector, the rough storage components are:
+
+```text
+vector bytes      = dimension * 4 bytes for float32
+connection bytes  = M * 4 bytes * layer factor
+```
+
+For 768-dimensional float32 vectors and `M = 16`:
+
+```text
+raw vector bytes        = 768 * 4 = 3,072 bytes
+connection bytes approx = 16 * 4 = 64 bytes
+rough storage           = about 3,136 bytes before broader graph/metadata overhead
+```
+
+Planning table:
+
+| Scale | Raw vector data | Graph overhead | Production memory budget |
+|---:|---:|---:|---:|
+| 1M vectors | ~3.1 GB | ~0.5-1 GB | ~3.6-4.1 GB |
+| 10M vectors | ~31 GB | ~10-20 GB | ~41-51 GB |
+| 100M vectors | ~310 GB | ~200-300 GB | ~510-610 GB |
+
+Important knobs:
+
+| Parameter | Typical range | Raising it does |
+|---|---:|---|
+| `M` | 16-64 | better recall, more memory, slower inserts |
+| `ef_construction` | 100-200+ | better index quality, slower build |
+| `ef_search` | 50-500 | better query recall, slower query |
+
+**Worked example** — Start with `M=16`, `ef_construction=200`, and `ef_search=100`. If recall is weak but latency has room, raise `ef_search` first because it affects query-time search without rebuilding the index.
+
+**Tradeoff / when NOT to use** — Do not maximize every knob. `M=64` and high `ef_search` may improve recall, but if the product has strict latency or memory limits, a smaller index plus reranking can be better.
+
+---
+
+### 15. Vector database architecture
+
+**Intuition** — A vector database is not just a table with vectors. It is a retrieval system around embeddings, indexes, metadata filters, update pipelines, sparse search, fusion, reranking, and observability.
+
+![Vector database architecture](assets/S02-vector-database-architecture.svg)
+
+**Mechanism** —
+
+| Component | Job |
+|---|---|
+| chunker | splits documents into retrievable passages |
+| embedding service | converts chunks and queries to vectors |
+| vector index | serves fast ANN search |
+| metadata filters | restrict by tenant, date, access control, document type |
+| sparse index | BM25 / keyword retrieval |
+| fusion / reranker | combines and improves candidate ordering |
+| monitoring | tracks recall, latency, cost, freshness, and failed searches |
+
+Chunking is separate because one vector for a whole document often becomes a blurry average of many topics. Smaller, topically coherent chunks keep each vector specific enough for targeted retrieval.
+
+**Worked example** — In an HR assistant, `"Can I claim a monitor for work from home?"` should search only documents the employee is allowed to see, retrieve semantically related policy chunks, preserve exact policy-code matches, and pass the top few chunks to the LLM with citations or source IDs.
+
+**Tradeoff / when NOT to use** — A vector database does not automatically fix bad retrieval. If chunks are too large, metadata is missing, embeddings are mismatched, or access filters are bolted on after search, the system can return plausible but unsafe context. For a small stable FAQ, a curated keyword index plus approved answers may be easier to audit.
+
+## Part 3 · BM25 + Dense Retrieval + RRF
+
+*Dense and keyword retrieval become useful when they are combined into one production retrieval layer.*
+
+### 16. BM25
 
 **Intuition** — BM25 is the strong classical baseline for keyword search. It rewards documents that contain query terms, especially rare terms, while avoiding unlimited reward for repeated words.
 
@@ -396,27 +461,23 @@ At 1M vectors, raw vectors alone are about 3.07 GB decimal. Production HNSW ofte
 
 | Component | Plain meaning |
 |---|---|
-| term frequency | a term appearing more often is useful, but saturates |
+| term frequency | a query term appearing more often helps, but the gain saturates |
 | inverse document frequency | rare terms matter more than common terms |
-| length normalization | long documents should not win just because they contain more words |
+| length normalization | long documents should not win only because they contain more words |
 
-**Worked example** — Query: `"HNSW ef_search"`.
-
-BM25 strongly rewards a document containing the exact rare term `"ef_search"`. A dense retriever may understand the general HNSW tuning topic, but exact-match evidence is important here because `ef_search` is a parameter name.
-
-An everyday picture: imagine judging how relevant a witness statement is to a case. Mentioning a rare, specific detail once — like a getaway car's exact license plate — is a much stronger clue than a common word repeated many times, and a witness shouldn't be judged more credible just because they gave a longer statement. BM25 scores documents the same way: rare, distinctive terms count for more, repeating a word gives diminishing extra credit, and long documents don't win purely by containing more words.
+**Worked example** — Query: `"HNSW ef_search"`. BM25 strongly rewards a document containing the exact rare term `ef_search`. A dense retriever may understand the general HNSW tuning topic, but exact-match evidence is important because `ef_search` is a parameter name.
 
 **Tradeoff / when NOT to use** — BM25 struggles with vocabulary mismatch. A user asking `"how do I make vector lookup faster?"` may need a document titled `"ANN indexing and HNSW tuning"`; semantic retrieval is more likely to bridge that wording gap.
 
 ---
 
-### 14. Dense Passage Retrieval
+### 17. Dense Passage Retrieval
 
-**Intuition** — Dense Passage Retrieval uses two encoders: one embeds the question, one embeds passages. Retrieval is then maximum similarity between the query vector and passage vectors.
+**Intuition** — Dense Passage Retrieval uses a dual encoder: one encoder embeds the question, another embeds passages. Retrieval is maximum similarity between the query vector and passage vectors.
 
 ![Dense Passage Retrieval dual encoder](assets/S02-dpr-dual-encoder.svg)
 
-**Mechanism** — DPR is a dual-encoder architecture:
+**Mechanism** —
 
 ```text
 q = Encoder_question(question)
@@ -424,37 +485,29 @@ p = Encoder_passage(passage)
 score(question, passage) = q dot p
 ```
 
-The passage vectors can be precomputed and indexed. At query time, only the question is embedded; the index retrieves high-scoring passage vectors.
+Passage vectors can be precomputed and indexed. At query time, only the question is embedded, then the vector index retrieves high-scoring passages.
 
-Why two separate encoders rather than one model that reads the question and passage together? A joint model — feeding question and passage into a single encoder so every question token can attend to every passage token before scoring — is usually more accurate. But it means re-running the full model for every candidate passage at query time, which is the same linear-scan wall as section 9: fine for judging a handful of candidates, unusable for scoring millions of passages per query. The dual-encoder trades away that cross-attention accuracy for the ability to embed passages once, offline, and turn retrieval into a fast vector lookup.
+Why not use one model that reads the question and passage together? A cross-encoder is usually more accurate, but it must rerun the full model for every candidate passage. That is too slow over millions of passages. The dual encoder trades away cross-attention accuracy so passage vectors can be embedded once and searched quickly.
 
-An everyday analogy: a joint/cross-attention model is like phoning a friend and reading them your exact question plus the entire contents of a book, every time, for every book in the library, before they can tell you if it's relevant — thorough, but you can't do that a million times. A dual-encoder is like having someone write a short summary card for every book in the library ahead of time, so at question time you only compare your question to those pre-written cards — much faster, though a summary card occasionally misses a subtlety the full book would have caught.
+**Worked example** — Question: `"Who wrote Pride and Prejudice?"`. The positive passage says `"Pride and Prejudice is a novel by Jane Austen..."`; a hard negative might discuss the 2005 film. Training pushes the question vector closer to the answer-bearing passage and farther from negatives.
 
-**Worked example** — Question: `"Who wrote Pride and Prejudice?"`.
-
-Positive passage: `"Pride and Prejudice is a novel by Jane Austen..."`.
-
-Negative passage: `"Pride and Prejudice is a 2005 romantic drama film..."`.
-
-Training pushes the question vector closer to the answer-bearing passage and farther from negatives. At inference, the nearest passage becomes the context for the answer generator.
-
-**Tradeoff / when NOT to use** — DPR-style dense retrieval is excellent for semantic question answering, but it can underperform on exact lexical constraints and fresh domain terminology unless the embedding model is trained or adapted for that domain. Hybrid retrieval is the safer production default.
+**Tradeoff / when NOT to use** — DPR-style dense retrieval is excellent for semantic question answering, but it can underperform on exact lexical constraints and fresh domain terminology unless adapted for the domain. Hybrid retrieval is the safer production default.
 
 ---
 
-### 15. Reciprocal Rank Fusion
+### 18. Reciprocal Rank Fusion
 
 **Intuition** — RRF combines rankings, not raw scores. That matters because BM25 scores and dense similarity scores live on different scales.
 
 ![Reciprocal Rank Fusion](assets/S02-rrf-fusion.svg)
 
-**Mechanism** — RRF gives each document a score based on where it appears in each ranking:
+**Mechanism** —
 
 ```text
 RRF(doc) = sum_over_rankers 1 / (k + rank(doc))
 ```
 
-`k` is a constant, often around 60, that softens the effect of rank position. A document appearing reasonably high in both lists often beats a document that appears high in only one.
+`k` is often around 60. A document appearing reasonably high in both lists can beat a document that appears high in only one.
 
 **Worked example** — Use `k = 60`.
 
@@ -466,45 +519,36 @@ RRF(doc) = sum_over_rankers 1 / (k + rank(doc))
 
 Document B wins because it is strong in both systems.
 
-**Tradeoff / when NOT to use** — RRF is robust and simple, but it ignores score margins. If a dense retriever is overwhelmingly confident and BM25 is only weakly matching, rank-only fusion can over-promote the keyword result. Production systems often follow hybrid retrieval with reranking.
-
-An everyday picture: imagine combining two friends' restaurant recommendations when one rates places out of 5 stars and the other out of 100 points — the raw numbers aren't on the same scale, so comparing them directly is misleading. But asking "was this their #1 pick, or their #5th?" can be compared directly across both friends. RRF combines search rankings the same way: it looks at each ranking's position, not its raw score, so two very different scoring systems can still be combined fairly.
-
-That final reranking step earns its place because BM25 and dense retrieval both score each document independently and cheaply — a bag-of-words match or a single vector dot product — without ever directly comparing the query against a candidate's full text in detail. That is fast enough to run over millions of documents, but it leaves genuinely irrelevant, merely-superficially-similar passages sitting near the top. A reranker re-scores only that short candidate list, reading the query and each candidate together, which is far more accurate at the cost of being too slow to run over the whole collection. Reranking is a separate step because "search everything cheaply" and "judge a few candidates carefully" need different cost profiles.
-
-An everyday analogy: picture scanning a library shelf and pulling every book whose spine mentions your topic — fast, but some of those books turn out to be irrelevant once you actually open them. A librarian then skims just those ten or twenty pulled books before handing you the best one — slower per book, but affordable only because you're no longer skimming the whole shelf, just the shortlist.
+**Tradeoff / when NOT to use** — RRF is robust and simple, but it ignores score margins. If dense retrieval is overwhelmingly confident and BM25 is only weakly matching, rank-only fusion can over-promote the keyword result. Production systems often follow hybrid retrieval with reranking.
 
 ---
 
-### 16. Vector database architecture
+### 19. Hybrid retrieval end-to-end
 
-**Intuition** — A vector database is not just a table with vectors. It is a retrieval system around embeddings, indexes, metadata filters, update pipelines, and observability.
+**Intuition** — Hybrid retrieval is the practical answer to the whole session: use semantic search for meaning, keyword search for exact evidence, ANN for speed, and fusion/reranking for final quality.
 
 ![Vector database architecture](assets/S02-vector-database-architecture.svg)
 
-**Mechanism** — A production retrieval layer usually includes:
+**Mechanism** — A typical flow:
 
-| Component | Job |
-|---|---|
-| chunker | splits documents into retrievable passages |
-| embedding service | converts chunks and queries to vectors |
-| vector index | serves fast ANN search |
-| metadata filters | restrict by tenant, date, access control, document type |
-| sparse index | BM25/keyword retrieval |
-| fusion/reranker | combines and improves candidate ordering |
-| monitoring | tracks recall, latency, cost, freshness, and failed searches |
+```text
+user query
+  -> dense embedding -> ANN vector search
+  -> keyword terms   -> BM25 sparse search
+  -> RRF fusion
+  -> optional reranker
+  -> top passages to the LLM
+```
 
-Chunking earns its place as a separate step for more than fitting the embedding model's context window (section 4). Even when a whole document fits, embedding it as a single vector forces pooling (section 5) to average signal across every paragraph — a document covering ten unrelated topics ends up with one vector representing a vague blend of all ten, and a query about one specific part has to compete with that dilution instead of matching a focused passage. Splitting into smaller, topically coherent chunks keeps each vector specific enough for a targeted query to actually find its match, at the cost of managing many more vectors and needing sensible chunk boundaries.
+**Worked example** — Query: `"policy for monitor reimbursement LAP-2026"`. Dense search can find `"work-from-home equipment expenses"` even without the exact wording. BM25 preserves `LAP-2026`. RRF promotes documents that satisfy both meaning and exact evidence.
 
-An everyday analogy: asking "what does chapter 7 say about refunds" but only having one blurry photo that blends every page of a 400-page book into a single averaged image is not going to help — chapter 7's details get washed out by all the other pages. Chunking is like taking one sharp photo per chapter instead, so a chapter-7 question can actually match a chapter-7 photo rather than the whole-book blur.
-
-**Worked example** — In an HR assistant, a query `"Can I claim a monitor for work from home?"` should search only documents the employee is allowed to see, retrieve semantically related policy chunks, preserve exact policy-code matches, and pass the top few chunks to the LLM with citations or source IDs.
-
-**Tradeoff / when NOT to use** — A vector database does not automatically fix bad retrieval. If chunks are too large, metadata is missing, embeddings are mismatched, or access filters are bolted on after search, the system can return plausible but unsafe context. For small, stable FAQ data, a simple keyword index plus curated answers may be easier to audit.
-
----
+**Tradeoff / when NOT to use** — Hybrid retrieval is overkill for tiny, stable, curated FAQ sets where exact approved answers already exist. For live document corpora with paraphrases, product codes, policy clauses, and changing terminology, hybrid is usually worth the extra moving parts.
 
 ## Self-study / Lab / build
+
+**521 Lab 2 material now held:** `labs/S02-embeddings-vector-search/Embedding-distilbert.ipynb`.
+
+Run the DistilBERT notebook before building the retriever. It makes sections 3 and 9 concrete: the same token `bank` receives different final vectors in river and finance contexts, and cosine similarity gives a quick way to compare those vectors.
 
 Build a tiny hybrid retriever on 10-20 short documents:
 
@@ -516,6 +560,8 @@ Build a tiny hybrid retriever on 10-20 short documents:
 6. Print the top-5 results for queries that test paraphrase, exact ID, and mixed cases.
 
 The lab lesson is not the library call; it is seeing which query fails under dense-only or keyword-only retrieval.
+
+⚠️ The held S02 notebook covers embeddings, contextual vectors, and cosine similarity. The rest of the expected Lab 2 package also includes text-to-speech, rule-based systems, and sentiment analysis; keep those open until their files arrive or the instructor confirms they are not part of this offering's Lab 2.
 
 ---
 
