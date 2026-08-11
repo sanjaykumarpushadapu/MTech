@@ -30,7 +30,10 @@ Note the four verbs — understand, retain, retrieve, act. Each becomes a module
 |---|---|---|
 | **Natural Language Understanding (NLU)** | Understand user intent and entities | Spans a spectrum from simple **keyword match** and **slot filling**, through **context-aware** understanding, to fully **generative** interpretation |
 | **Dialogue Management** | Manage the conversation itself | Handling complex, multi-turn dialogues; maintaining conversation flow and context |
-| **Natural Language Generation (NLG)** | Produce the reply | Generating human-like responses; **personalization** — adapting to user preferences |
+| **Natural Language Generation (NLG)** | Produce the reply | Generating human-like responses |
+| **Context Awareness** | Remember what was said | Remembering conversation history so later turns make sense |
+| **Multi-turn Interaction** | Handle a real dialogue | Handling complex, back-and-forth exchanges rather than one-shot questions |
+| **Personalization** | Fit the individual | Adapting to user preferences |
 
 This is a compact three-part preview; **the six components below expand this in full** — NLU and Dialogue Management stay, NLG becomes "Response Generation," and Knowledge Access, Action Execution, and Memory Systems are added: the pieces a bot needs once it moves from *talking* to *doing*.
 
@@ -90,10 +93,10 @@ The pattern across all four: this isn't "will conversational AI matter" — it's
 |---|---|---|---|---|
 | **1960s–1990s** | Rule-based (ELIZA, ALICE) | Pattern matching, keyword detection, scripted Q&A | **No learning, rigid, no context** | ELIZA (1966): `IF input contains "mother": RESPOND "Tell me more about your family"` — brittle, no real understanding |
 | **2000–2010** | Statistical ML (SVMs, CRFs, HMMs) | Intent classification, entity extraction | **Limited context, hand-crafted features** | Intent via SVM/Naive Bayes; NER via CRF/HMM; dialogue-state tracking via **Markov models**. Frameworks: Microsoft LUIS, early IBM Watson |
-| **2010–2017** | Deep learning (RNNs, LSTMs, Seq2Seq, attention) | End-to-end learning, better context | **Data hungry, task-specific training** | Frameworks: Rasa (open source), Google Dialogflow |
+| **2010–2017** | Deep learning (RNNs, LSTMs, **Seq2Seq encoder–decoder**, attention) | End-to-end learning, better context | **Data hungry, task-specific training** | Frameworks: Rasa (open source), Google Dialogflow |
 | **2017–2020** | Transformers (BERT, GPT-2, T5, RoBERTa) | Transfer learning, contextual embeddings | **Still needs task-specific fine-tuning** | Pre-train once on massive data, fine-tune per task. Concretely for conversational AI: **better intent classification with fewer labelled examples**, **improved entity recognition**, and **more natural response generation** — the first era where the model itself, not hand engineering, drove the improvement |
 | **2020–2023** | LLMs & GenAI (GPT-3, ChatGPT, Claude, PaLM) | Few-shot learning, general-purpose, fluent | **Hallucinations, no real-time data, no actions** | GPT-3 (2020), ChatGPT (2022), Claude, PaLM — billions-to-trillions of parameters. The conversational leap was **no fine-tuning needed for most tasks**: one model handles complex multi-turn dialogue and generates creative, contextual replies straight from a prompt |
-| **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** | Multi-agent frameworks (agents spawning/supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), 1M+ token contexts, specialised models |
+| **2023–2025** | **Agentic AI** (LLMs + Tools + Memory + Planning) | Execute actions, multi-step reasoning, autonomous workflows | **Complex orchestration, scaling, cost** | Multi-agent frameworks (agents spawning/supervising sub-agents), **extended thinking** (chain-of-thought at scale), **computer use** (browsing, running code, controlling desktop apps), 1M+ token contexts, specialised models (**coding agents like Claude Code and Cursor**, science models) |
 | **2025–2026** | On-device & multi-modal (SLMs, native multimodality) | Real-time voice/video, privacy-first local processing | **Hardware constraints, fragmented ecosystems** | — |
 
 **Mechanism — the key driver:**
@@ -120,8 +123,9 @@ Read the **shift box** in the middle — it is the entire architectural change. 
 
 **Mechanism — two structural differences to be able to name:**
 
-1. **Intent and entities collapse into one LLM pass** — no separate classifier and extractor.
-2. **A new orchestration layer appears** between understanding and generating, and it's where planning, tool selection and memory retrieval live. That layer is what makes it an agent.
+1. **The voice stages sit at the two ends.** If the input is speech, the traditional pipeline starts with **speech recognition** and ends with **text-to-speech**; everything between them works on text.
+2. **Intent and entities collapse into one LLM pass** — no separate classifier and extractor.
+3. **A new orchestration layer appears** between understanding and generating, and it's where planning, tool selection and memory retrieval live. That layer is what makes it an agent.
 
 **The agentic shift, point by point**:
 
@@ -762,7 +766,7 @@ Where research is active — useful for essay-style questions asking "what are t
 | **Grounded factual accuracy** | Hallucination: confident, plausible falsehoods. **RAG reduces but doesn't eliminate** at scale | Attribution, RLHF, verification agents |
 | **Reliable long-horizon execution** | Agents running 100-step tasks drift, get stuck, or make **compounding errors** | Agent benchmarks (GAIA, SWE-bench) |
 | **Safety & alignment at scale** | More autonomy → harder to ensure agents follow human intent without side-effects | Constitutional AI, RLAIF, interpretability |
-| **Compute & energy efficiency** | SOTA models need enormous infrastructure; efficient inference is an open engineering problem | Mamba, QLoRA, mixture-of-experts |
+| **Compute & energy efficiency** | SOTA models need enormous infrastructure; efficient inference (**SSMs**, quantization) is an open engineering problem | Mamba, QLoRA, mixture-of-experts |
 
 **Mechanism — sort each limitation by the kind of response it allows:**
 
