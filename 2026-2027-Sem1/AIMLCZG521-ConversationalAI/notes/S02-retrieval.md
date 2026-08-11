@@ -13,8 +13,13 @@ Conversational systems need a way to find the right knowledge before the LLM ans
 **Prerequisites recap** — this session assumes basic transformer architecture, self-attention, feedforward layers, and matrix operations.
 
 > - **Transformer architecture**: token IDs become token embeddings, position information is added, transformer layers rewrite the token vectors, and a pooling step can turn many token vectors into one sentence vector.
-> - **Self-attention vs cross-attention**: self-attention compares tokens inside the same sequence; cross-attention lets a decoder attend to an encoded source sequence, as in translation.
-> - **Multi-headed attention**: several attention heads learn different projections of `Q`, `K`, and `V`, then concatenate their outputs so the final representation can carry several relationship patterns at once.
+> - **Self-attention vs cross-attention**: self-attention compares tokens inside the same sequence; cross-attention lets a decoder attend to an encoded source sequence, as in translation. Concretely: in `"The bank was closed because the river overflowed its banks"`, self-attention lets the model reach the first `bank`, look at the rest of the *same* sentence, see `river` and `overflowed`, and realize `bank` means a landform, not a financial institution — query and result both come from one sequence. Translating `"I love Mangoes"` into `"Mujhe Aam pasand hain"` is different: the decoder's query comes from the Hindi word it is generating, but the key/value data it attends to comes from the English input — that is cross-attention, query and data from two different sequences.
+>
+>   | Mechanism | Where it runs | Query (Q) source | Key/Value (K, V) source |
+>   |---|---|---|---|
+>   | Self-attention | Encoder and decoder | Current layer's input | Current layer's input (same sequence) |
+>   | Cross-attention | Decoder only | Decoder's current state | Encoder's final output (different sequence) |
+> - **Multi-headed attention**: several attention heads learn different projections of `Q`, `K`, and `V`, then concatenate their outputs and project through a learned matrix `W^O` back to the model's embedding dimension — so the final representation can carry several relationship patterns (syntax, coreference, topic) at once instead of averaging them into one.
 > - **Matrix operations**: dot product scores similarity, softmax turns scores into weights, and weighted sums blend vectors.
 
 ### 1. Semantic search vs keyword search
@@ -114,11 +119,28 @@ Plain language: `QK^T` asks which tokens matter to each token, softmax converts 
 | Decoder-only | causal: sees previous tokens only | chat, code, instruction following, text generation | pure embedding quality unless specially trained |
 | Encoder-decoder | encoder sees source; decoder generates target | translation, summarization, text-to-text conversion | heavier when one side is enough |
 
+**Per-task decision table** — the same three-way choice, task by task, with the reasoning that drives each verdict:
+
+| Task | Encoder-only | Decoder-only | Encoder-Decoder | Why |
+|---|---|---|---|---|
+| Sentiment analysis | ✓ Best | ○ Possible | ✗ Overkill | needs bidirectional context, no generation required |
+| Text generation | ✗ No | ✓ Best | ○ Possible | requires autoregressive generation capability |
+| Machine translation | ✗ No | ○ Suboptimal | ✓ Best | cross-attention optimally aligns source-target pairs |
+| Named entity recognition | ✓ Best | ✗ Inefficient | ✗ Overkill | token-level classification needs bidirectional context |
+| Conversational AI | ✗ No | ✓ Best | ○ Outdated | decoder-only scales better for dialogue and instruction following |
+| Summarization | ✗ No | ✓ Modern | ✓ Traditional | both work; decoder-only now preferred for a unified architecture |
+| Semantic search | ✓ Best | ○ Possible | ✗ Overkill | encoder creates optimal dense representations for similarity |
+| Code generation | ✗ No | ✓ Best | ○ Rare | sequential generation with context — decoder-only excels |
+
+Read this as a lookup table for "which architecture for this task," not a ranking of architectures in general — semantic search and text generation land on opposite ends on purpose.
+
 **Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can inspect both emotional words before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the source sentence and a decoder writes the target sentence while attending to the encoded source.
 
 **Tradeoff / when NOT to use** — Do not force one architecture onto every problem. A decoder-only model can perform understanding tasks after suitable fine-tuning, but for embeddings a purpose-built encoder is usually cheaper, faster, and easier to index.
 
 > ***Going deeper*** — Fine-tuned decoders can match encoders on some classification tasks, so "encoders understand, decoders generate" is a practical default, not an absolute law. The production question is cost: if an encoder reaches the same retrieval or classification quality with smaller vectors, faster inference, and simpler indexing, it is still the better tool.
+>
+> The concrete evidence: Borodach et al., *"Decoders Laugh as Loud as Encoders"* (2025), tested 17 encoders, several encoder-decoders, and several decoders on a six-way humor classification task (five joke types plus "no joke", 1,392 human-authored jokes). Best fine-tuned encoder: RoBERTa-base at F1 0.86 — the prior state of the art. Best fine-tuned decoder: GPT-4o at F1 0.85 — statistically equal. Zero/few-shot decoders, not fine-tuned, only reached F1 ≈ 0.18. The finding that overturns the old assumption isn't "decoders are now better" — it's that **fine-tuning, not architecture, is what closes the gap**; an un-tuned decoder is nowhere close.
 
 > ![Zero/few-shot decoders lag far behind — fine-tuning closes the gap](assets/S02-decoder-vs-encoder-classification.svg)
 
@@ -195,14 +217,29 @@ max pooling  = [max(1,3,5), max(4,2,0)] = [5, 4]
 
 **Mechanism** — Read model specifications as a selection checklist, not as a leaderboard.
 
-| Model | Provider | Output dim | Context | Type | Best fit |
-|---|---|---:|---:|---|---|
-| `bge-large-en-v1.5` | BAAI | 1024 | 512 | open | strong general English baseline |
-| `gte-large-en-v1.5` | Alibaba | 1024 | 8192 | open | longer documents |
-| `e5-mistral-7b-instruct` | Microsoft | 4096 | 32768 | open | instruction-following, very long context |
-| `jina-embeddings-v2` | Jina AI | 768 | 8192 | open | multilingual, faster inference |
-| `text-embedding-3-large` | OpenAI | 3072 | 8191 | API | high-quality production embedding |
-| `embed-english-v3.0` | Cohere | 1024 | 512 | API | production embedding with compression support |
+| Model | Provider | Output dim | Context | Type | Cost | Best fit |
+|---|---|---:|---:|---|---|---|
+| `bge-large-en-v1.5` | BAAI | 1024 | 512 | open | self-hosted (compute only) | strong general English baseline |
+| `gte-large-en-v1.5` | Alibaba | 1024 | 8192 | open | self-hosted (compute only) | longer documents |
+| `e5-mistral-7b-instruct` | Microsoft | 4096 | 32768 | open | self-hosted (compute only) | instruction-following, very long context |
+| `jina-embeddings-v2` | Jina AI | 768 | 8192 | open | self-hosted (compute only) | multilingual, faster inference |
+| `text-embedding-3-large` | OpenAI | 3072 | 8191 | API | **$0.13 / 1M tokens** | highest quality, production |
+| `embed-english-v3.0` | Cohere | 1024 | 512 | API | **$0.10 / 1M tokens** | compression support, production |
+
+The cost column is why "just use the best API model" is not automatically the right call: at high query volume, the per-token API charge compounds, while an open model's cost is the (roughly fixed) compute to host it — the crossover point is a real production sizing decision, not a footnote.
+
+**Full spec reference** — architecture, layer count, and training objective for the same six models, for when the summary table above isn't enough to explain a quality difference:
+
+| Model | Provider | Architecture | Layers | Hidden size | Training | Type |
+|---|---|---|---:|---:|---|---|
+| `text-embedding-3-large` | OpenAI | Transformer | N/A | N/A | Contrastive | API |
+| `embed-v3` | Cohere | Transformer | N/A | N/A | Multi-task | API |
+| `bge-large-en-v1.5` | BAAI | BERT | 24 | 1,024 | RetroMAE + Contrastive | Open |
+| `gte-large-en-v1.5` | Alibaba | BERT | 24 | 1,024 | Contrastive | Open |
+| `e5-mistral-7b-instruct` | Microsoft | Mistral 7B | 32 | 4,096 | Contrastive pre-training | Open |
+| `jina-embeddings-v2` | Jina AI | BERT | 12 | 768 | Contrastive | Open |
+
+`bge-large-en-v1.5` combining RetroMAE pretraining *and* contrastive fine-tuning (rather than one or the other) is why it's the recommended general-purpose open default in the selection guide above — it gets both the compact-representation benefit of RetroMAE (section 8) and the direct similarity-training benefit of contrastive learning.
 
 **Worked example** — For a small English FAQ, start with a 768- or 1024-dimensional open model. For policy documents where sections exceed 1000 tokens, choose a longer-context model or chunk by headings. For sensitive customer data, local/open deployment may beat a higher-scoring API model because privacy and batch economics dominate.
 
@@ -331,6 +368,17 @@ Scale intuition:
 | 1M | ~770 ms | ~5 ms |
 | 10M | ~7.7 s | ~10 ms |
 
+**The cost engineering angle** — latency is only half the production picture; the same scale table, priced monthly, is the other half:
+
+| Documents | Linear scan latency | Linear scan cost/month | HNSW latency | HNSW cost/month |
+|---:|---:|---:|---:|---:|
+| 10K | 8 ms | $50 | 2 ms | $50 |
+| 100K | 77 ms | $50 | 3 ms | $50 |
+| 1M | 770 ms | $200 | 5 ms | $120 |
+| 10M | 7.7 s | **$5,000** | 10 ms | **$250** |
+
+At small scale, linear scan and HNSW cost about the same — the indexing overhead isn't worth it yet. The gap only opens up at scale: by 10M documents, linear scan is both too slow to serve *and* 20× more expensive to run, because "too slow" in production means throwing more CPU cores at the problem, and CPU cores are what you're paying for. ANN indexing isn't just a speed trick; past a certain scale it's the cheaper option too.
+
 **Worked example** — A support RAG system with 10M chunks does not need the mathematically exact top-10 every time. If ANN returns 9 of the true top-10 in milliseconds, a reranker can often recover the final ordering while keeping end-to-end latency acceptable.
 
 **Tradeoff / when NOT to use** — ANN is a latency-recall tradeoff. If the collection is tiny or the top-1 result must be mathematically exact, brute force may be safer. In RAG, 95-99% approximate recall is usually acceptable because retrieval is followed by reranking, answer generation, and citation checks.
@@ -374,7 +422,13 @@ Key ideas:
 | navigable graph | greedy movement usually finds a near-optimal path |
 | robustness | multiple possible routes reduce local-minimum risk |
 
-**Worked example** — If the query vector starts near a broad "software" region, the top layer can jump toward "cloud-native ML", then the lower layers refine toward "API-driven ML deployment" without scoring every unrelated vector.
+**Worked example — one concrete run, step by step.** Say the graph has 8 stored vectors, numbered 1-8, and a query vector arrives (drawn as the target point).
+
+1. **Enter at the top layer** at a random entry point, node 1. Node 1 connects to node 2 at this sparse top layer; comparing both to the query, node 2 is closer. Current best: **node 2**.
+2. **Drop down** to the middle layer at node 2. This layer has more nodes and edges: 1, 5, 4, 2, 3. A greedy search from node 2 checks its neighbors and finds node 4 is closer to the query than node 2 was. Current best: **node 4**.
+3. **Drop down** to the dense bottom layer (layer 0), which holds all 8 vectors and their full connections. A final expanded (beam) search around node 4 checks its neighbors — including node 7 — and finds **node 7 is the closest point to the query**. Search stops here and returns node 7 (plus its nearest neighbors, for top-k).
+
+Three comparisons at the top, a handful at the middle, and one expanded search at the bottom found the true nearest neighbor without ever comparing the query against all 8 points directly — and the saving gets more dramatic as the dataset grows from 8 points to 10 million.
 
 **Tradeoff / when NOT to use** — HNSW is a strong default up to large but memory-manageable datasets. If the dataset reaches hundreds of millions or billions of vectors and RAM is the main constraint, IVF+PQ or another compressed setup may beat HNSW despite lower recall.
 
@@ -548,7 +602,24 @@ user query
 
 **521 Lab 2 material now held:** `labs/S02-embeddings-vector-search/Embedding-distilbert.ipynb`.
 
-Run the DistilBERT notebook before building the retriever. It makes sections 3 and 9 concrete: the same token `bank` receives different final vectors in river and finance contexts, and cosine similarity gives a quick way to compare those vectors.
+Run the DistilBERT notebook before building the retriever. It makes sections 3, 6, and 9 concrete: the same token `bank` receives different final vectors depending on context, mean pooling turns those token vectors into sentence vectors, and cosine similarity gives a quick way to compare all of it.
+
+⚠️ **One spec detail worth noticing.** Section 5's pipeline walkthrough uses BERT-base numbers (12 layers) because that is the canonical teaching example. The notebook actually loads `distilbert-base-uncased` — a **6-layer, ~66M-parameter distilled version of BERT**, same 768 hidden size and 12 attention heads, trained so a small "student" model imitates the larger BERT "teacher" (knowledge distillation). Fewer layers means faster, cheaper inference at a small quality cost — a real production tradeoff, not a mismatch to worry about. The pipeline mechanics (tokenize → embed → position → transformer layers → pool) are identical; only the layer count differs.
+
+**Note → code map** — reading a concept and want to see it run? Jump to the exact cell:
+
+| This note's concept | Notebook cell | What you run / see |
+|---|---|---|
+| §5 — BERT pipeline, but on DistilBERT's 6 layers instead of BERT-base's 12 | cell 3 | a spec table: 6 layers, 768 hidden, 12 heads, ~66M params, 512 max tokens |
+| Setup — loading an encoder model | cell 5 | `AutoModel.from_pretrained("distilbert-base-uncased")` |
+| §3 — contextual embeddings, the mechanism itself | cell 6 | `get_token_embedding()` — runs the model, finds the target word's token(s), averages sub-word pieces into one vector |
+| §3 — worked example: `bank` in a river sentence vs a finance sentence | cell 7 | the two `bank` embeddings computed side by side, with their token positions printed |
+| §3 + §9 — contextual embeddings compared with cosine similarity | cell 8 | `cosine_similarity(bank_river_vec, bank_finance_vec)` — a number well below 1.0, proving the two vectors genuinely differ |
+| §9 — reading a cosine similarity number | cell 9 (markdown) | the scale this note's Mechanism table describes: ~1.0 identical, 0.8-0.95 very similar, 0.5-0.75 related, ~0.0 unrelated |
+| §3 — same-context vs cross-context comparisons (does `bank` move *toward* the right neighbor?) | cell 10 | `bank` (river) scored against `river`, and `bank` (finance) scored against `money`/`account` — same-context scores come out higher than cross-context ones |
+| §6 — mean pooling, applied to whole sentences | cell 11 | `mean_pool_sentence_embedding()` over 4 sentences, then a full pairwise similarity matrix — the two river sentences and the two finance sentences cluster together |
+
+*(Cell 12 is the notebook's own one-line takeaway: `bank` has no single fixed vector — self-attention keeps rewriting it based on whatever words happen to be nearby.)*
 
 Build a tiny hybrid retriever on 10-20 short documents:
 

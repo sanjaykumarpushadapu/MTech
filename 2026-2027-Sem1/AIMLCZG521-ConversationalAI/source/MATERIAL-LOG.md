@@ -68,6 +68,10 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - `Session3-ANN-HybridSearch-Ranking.pdf` is deliberately logged as extra L2/Lab 3 material and must not be used as the official L3 model-landscape deck.
 - Source-framing scan passes for current notes via `npm run check`.
 
+## Recheck Notes — 11 Aug 2026
+
+- Second-pass line-by-line re-audit of `Session_02_Embeddings_Vector_Search.pdf` and `Embedding-distilbert.ipynb` against `notes/S02-retrieval.md`. Files are unchanged (byte-identical to the 10 Aug upload) but the earlier pass had summarized several of the deck's own concrete numbers into abstract prose instead of keeping the numbers. Folded in: the Borodach et al. 2025 humor-classification F1 stats and dataset size (§4); the deck's own per-task encoder/decoder/encoder-decoder decision table from its "Comparison" slide (§4); the self-attention-vs-cross-attention English/Hindi worked example and Q/K,V source table (prerequisites recap); commercial embedding API pricing and the fuller architecture/layer/training spec table (§7); the deck's $/month cost-at-scale table for linear scan vs HNSW (§11); and the deck's own concrete numbered HNSW walkthrough (entry 1 → 2 → 4 → final 7), added to both the prose worked example and the `S02-hnsw-search.svg` diagram caption. Also rebuilt the Self-study section's note-to-notebook-cell map (previously just a one-line summary) now that the notebook's 13 cells have been read in full, and flagged that the notebook's DistilBERT model is a 6-layer distilled variant while §5's pipeline walkthrough uses BERT-base's 12-layer numbers as the generic teaching example.
+
 ## Storage Rule
 
 Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.
