@@ -593,7 +593,7 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 | 6 | 🛡️ **Safety** | Guardrails & output validation · check toxic content · verify factual accuracy · **PII redaction** |
 | 7 | 📤 **Response** | Final output delivered · NLG · format for channel (text/voice/UI) · send to user |
 
-**Mechanism — it is a loop, not a pipeline.** The diagram draws seven boxes left to right, which is the one misleading thing about it: stages 3 → 4 → 5 (**reason → act → remember**) *cycle* until the agent has enough to answer, then hand off to safety and response.
+**Mechanism — the deck's linear pipeline, and the loop inside it.** The deck presents this as a *Request → Response pipeline* (its exact title) — seven stages left to right, intake to exit. That linear sequence is the model to reproduce in an exam. In practice the middle stages 3 → 4 → 5 (**reason → act → remember**) *cycle* until the agent has enough to answer, then hand off to safety and response — the ReAct loop the lab demonstrates.
 
 ![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
 
@@ -641,11 +641,11 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 | Protocol | By | What it standardises | Use case |
 |---|---|---|---|
 | **MCP** (Model Context Protocol) | Anthropic, 2024 | How LLMs connect to **data sources and tools** | Agent accessing DBs, files, APIs consistently |
-| **A2A** (Agent-to-Agent) | Google, emerging | Inter-agent communication | Multi-agent orchestration |
-| **OpenAI Assistant API** | OpenAI | Built-in tools, file access, code interpreter | Rapid agent development on OpenAI infrastructure |
-| **LangGraph** | LangChain | Graph-based agent workflows and state management | Complex multi-step reasoning, agent coordination |
-| **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery** across heterogeneous networks | Decentralised agent ecosystems |
-| **Custom REST / GraphQL** | — | Traditional service integration | Enterprise systems, legacy integrations |
+| **A2A** (Agent-to-Agent) | Google, emerging | Standardized inter-agent communication | Multi-agent orchestration (emerging, 2025) |
+| **OpenAI Assistant API** | OpenAI | Built-in tools, file access, code interpreter | Rapid agent development with OpenAI infrastructure |
+| **LangGraph** (Protocol) | LangChain | Graph-based agent workflows and state management | Complex multi-step reasoning, agent coordination |
+| **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery and communication** across heterogeneous networks | Decentralised agent ecosystems, cross-platform interoperability |
+| **Custom REST / GraphQL** | Universal | Traditional service integration | Enterprise systems, legacy integrations |
 
 **Mechanism — what each protocol standardises:** each solves a different problem, which is why they are not competitors:
 
@@ -655,7 +655,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 **Worked example** — A travel-planning agent can use **MCP** to read a calendar and call a flight-search tool, then use **A2A** to delegate visa-checking to another agent. MCP connects the agent downward to tools; A2A connects it sideways to peers.
 
-**A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* Detail comes later in the course.
+**A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* The deck defers the detail to **Lectures 14–15** (MCP and A2A get their own deep-dive sessions).
 
 **Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
 
