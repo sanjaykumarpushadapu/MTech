@@ -63,6 +63,16 @@ If a slide title names a concept already covered inside an existing subsection, 
 
 If the slide title introduces a genuinely new concept, decide whether it belongs inside the current handout row or in a different session. If it fits the current row, add it as the next appropriate subsection or concept block without creating a new session. If it belongs to a different handout row, do not import it here; log the mismatch and leave the note scoped to the current handout.
 
+### Deck-title section split
+
+The top-level `##` Part/session headings follow the handout (above). Beneath them, the `###`/`####` topic headings should mirror the deck: **give each distinctly-titled deck slide its own section, and use the deck's exact slide title as the heading** (lightly de-corrupted for PDF ligature errors, e.g. `Produc7on` → `Production`). This keeps the note's topic structure a mirror of the deck the instructor taught from, and makes a slide findable by its title.
+
+- **One titled slide, one section.** Do not merge two separately-titled deck slides under a single heading, and do not bury a titled slide as a "worked example", "exercise", or sub-bullet inside another section. If the deck gives it a title and a slide, the note gives it a heading. (S01: the *Lifecycle Example — Banking* slide and the *Exercise: Map the Agent Lifecycle* slide are their own sections, not blocks under the pipeline heading. S02: *HNSW: Memory Layout* and *Parameter Tuning: HNSW* are two sections, not one merged "Memory Layout and Parameter Tuning".)
+- **Carry the deck's numbering when it has one.** If the deck numbers its topic slides (`1. Tokenization — The Foundation`, … `6. Production Concerns …`), reproduce those numbers in the headings. If the deck does not number its topics, a note-local sequential numbering is fine — but keep it contiguous, and renumber the following sections after any split.
+- **Several slides sharing one title** (a multi-slide build-up — e.g. the five `BERT Pipeline` slides) fold into the single deck-titled section; do not emit five near-identical headings.
+- **Synthesis sections keep their own name.** When a section has no single corresponding deck slide — a bridge/intro the note adds, or handout scope the deck doesn't cover (e.g. BM25/DPR/RRF absent from the S02 deck) — give it a plain descriptive heading. Do not invent a fake deck title.
+- After any retitle or split, re-run the coverage checker: a heading word the checker was matching against (e.g. "mathematics") can disappear in a rename and surface a false negative to fix in the body.
+
 ### Capture a Slide Inventory at Intake
 
 **The moment a deck is uploaded, before writing or editing the note, write a slide inventory** to `<subject>/source/S<NN>-slide-inventory.md`: one row per slide — slide number, title, and the named items on it (models, algorithms, frameworks, protocols, figures, table labels). Titles and named terms only, never slide prose, so it is an index rather than course material and is safe to commit.
