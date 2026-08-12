@@ -285,9 +285,9 @@ For MLM, `"The [MASK] brown fox [MASK] over the lazy dog"` teaches the encoder t
 
 *Once vectors exist, the system must search them fast enough for conversational latency.*
 
-### 9. Vector similarity mathematics
+### 9. Vector Similarity: Mathematical Foundations
 
-**Intuition** — Similarity metrics define what "near" means. Cosine cares about direction, Euclidean distance cares about physical distance, and dot product combines direction with magnitude unless vectors are normalized.
+**Intuition** — Similarity metrics define what "near" means, and the mathematics behind them is short. Cosine cares about direction, Euclidean distance cares about physical distance, and dot product combines direction with magnitude unless vectors are normalized.
 
 ![Vector similarity metrics](assets/S02-vector-similarity-metrics.svg)
 
@@ -446,9 +446,9 @@ Three comparisons at the top, a handful at the middle, and one expanded search a
 
 ---
 
-### 14. HNSW: Memory Layout and Parameter Tuning
+### 14. HNSW: Memory Layout
 
-**Intuition** — HNSW speed is not free. The graph needs memory for connections, and its tuning parameters decide the latency-recall-memory balance.
+**Intuition** — HNSW speed is not free: the graph needs extra memory for its connections on top of the raw vectors.
 
 ![HNSW memory and tuning budget](assets/S02-hnsw-memory-tuning.svg)
 
@@ -475,7 +475,11 @@ Planning table:
 | 10M vectors | ~31 GB | ~10-20 GB | ~41-51 GB |
 | 100M vectors | ~310 GB | ~200-300 GB | ~510-610 GB |
 
-Important knobs:
+---
+
+### 15. Parameter Tuning: HNSW
+
+**Intuition** — HNSW's tuning parameters decide the latency–recall–memory balance. Three knobs matter:
 
 | Parameter | Typical range | Raising it does |
 |---|---:|---|
@@ -489,7 +493,7 @@ Important knobs:
 
 ---
 
-### 15. Vector database architecture
+### 16. Vector database architecture
 
 **Intuition** — A vector database is not just a table with vectors. It is a retrieval system around embeddings, indexes, metadata filters, update pipelines, sparse search, fusion, reranking, and observability.
 
@@ -517,7 +521,7 @@ Chunking is separate because one vector for a whole document often becomes a blu
 
 *Dense and keyword retrieval become useful when they are combined into one production retrieval layer.*
 
-### 16. BM25
+### 17. BM25
 
 **Intuition** — BM25 is the strong classical baseline for keyword search. It rewards documents that contain query terms, especially rare terms, while avoiding unlimited reward for repeated words.
 
@@ -537,7 +541,7 @@ Chunking is separate because one vector for a whole document often becomes a blu
 
 ---
 
-### 17. Dense Passage Retrieval
+### 18. Dense Passage Retrieval
 
 Dense Passage Retrieval was introduced by Karpukhin et al. (2020) and is the foundation modern dense retrieval builds on.
 
@@ -563,7 +567,7 @@ Why not use one model that reads the question and passage together? A cross-enco
 
 ---
 
-### 18. Reciprocal Rank Fusion
+### 19. Reciprocal Rank Fusion
 
 **Intuition** — RRF combines rankings, not raw scores. That matters because BM25 scores and dense similarity scores live on different scales.
 
@@ -591,7 +595,7 @@ Document B wins because it is strong in both systems.
 
 ---
 
-### 19. Hybrid retrieval end-to-end
+### 20. Hybrid retrieval end-to-end
 
 **Intuition** — Hybrid retrieval is the practical answer to the whole session: use semantic search for meaning, keyword search for exact evidence, ANN for speed, and fusion/reranking for final quality.
 
@@ -628,8 +632,8 @@ Run the DistilBERT notebook before building the retriever. It makes sections 3, 
 | Setup — loading an encoder model | cell 5 | `AutoModel.from_pretrained("distilbert-base-uncased")` |
 | **What are Encoder Models?** — contextual embeddings, the mechanism itself | cell 6 | `get_token_embedding()` — runs the model, finds the target word's token(s), averages sub-word pieces into one vector |
 | **What are Encoder Models?** — worked example: `bank` in a river sentence vs a finance sentence | cell 7 | the two `bank` embeddings computed side by side, with their token positions printed |
-| **What are Encoder Models?** + **Vector similarity mathematics** — contextual embeddings compared with cosine similarity | cell 8 | `cosine_similarity(bank_river_vec, bank_finance_vec)` — a number well below 1.0, proving the two vectors genuinely differ |
-| **Vector similarity mathematics** — reading a cosine similarity number | cell 9 (markdown) | the scale this note's Mechanism table describes: ~1.0 identical, 0.8-0.95 very similar, 0.5-0.75 related, ~0.0 unrelated |
+| **What are Encoder Models?** + **Vector Similarity: Mathematical Foundations** — contextual embeddings compared with cosine similarity | cell 8 | `cosine_similarity(bank_river_vec, bank_finance_vec)` — a number well below 1.0, proving the two vectors genuinely differ |
+| **Vector Similarity: Mathematical Foundations** — reading a cosine similarity number | cell 9 (markdown) | the scale this note's Mechanism table describes: ~1.0 identical, 0.8-0.95 very similar, 0.5-0.75 related, ~0.0 unrelated |
 | **What are Encoder Models?** — same-context vs cross-context comparisons (does `bank` move *toward* the right neighbor?) | cell 10 | `bank` (river) scored against `river`, and `bank` (finance) scored against `money`/`account` — same-context scores come out higher than cross-context ones |
 | **Pooling strategies** — mean pooling, applied to whole sentences | cell 11 | `mean_pool_sentence_embedding()` over 4 sentences, then a full pairwise similarity matrix — the two river sentences and the two finance sentences cluster together |
 
