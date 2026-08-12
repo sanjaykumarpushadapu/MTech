@@ -566,6 +566,8 @@ BITS bans loose sheets. The bound open-book file must be printed and bound by 22
 
 ## 9. Tone and Communication
 
+**Chat replies are short by default.** The note/deliverable is where detail belongs; the chat reply is a receipt, not a report. State what changed, the verification result, and any blocker — a few lines, not a recap of every edit. Do not re-explain the diff, restate the whole file, or list every heading; the user can read the file. Expand only when the user asks for detail. This applies to every prompt.
+
 Write plainly. Define jargon on first use.
 
 Prefer:
