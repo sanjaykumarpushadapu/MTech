@@ -312,7 +312,7 @@ The bottom row is the honest trade: the old stack failed **loudly and predictabl
 
 *Down one level, into the model itself: tokenization, context windows and the mechanics that decide what an agent can and can't do with language.*
 
-### Tokenization
+### 1. Tokenization — The Foundation
 
 **Intuition** — A model can't read letters or words directly — it only handles a fixed inventory of numbered pieces, so text has to be chopped into those pieces before the model ever sees it. The real question is the *size* of piece: whole words make a huge, brittle vocabulary that breaks on anything unseen; single characters make sequences endlessly long with little meaning each. **Subword** tokenization — **BPE (Byte-Pair Encoding)** — sits in the **"Goldilocks" zone** between the two: pieces big enough to carry meaning, small enough to recombine into words the model never saw whole.
 
@@ -450,7 +450,7 @@ This is why modern chat systems handle emoji, mixed scripts, code, and product I
 
 ---
 
-### Context Windows — Conversation Memory
+### 2. Context Windows — Conversation Memory
 
 **Intuition** — Start with the fact that surprises everyone: **the model has no memory at all.** It does not remember your previous message. What actually happens is that, on *every single turn*, the app quietly re-sends **the whole conversation from the beginning** — the instructions, every turn so far, any documents fetched — and the model reads all of it fresh, as if for the first time, before answering.
 
@@ -501,7 +501,7 @@ So a fact can be inside the window and still be missed: fitting on the board and
 
 ---
 
-### Transformers & LLMs — the brain of modern conversational AI
+### 3. Transformers & LLMs — The Brain of Modern Conversational AI
 
 **Intuition** — The LLM is the reasoning engine, and its strengths and failures are *the same property seen twice*. It is a next-token predictor trained to produce plausible continuations — so it is fluent, flexible and good at intent, **and** it will produce a plausible continuation when it has no idea, which is what hallucination is. It is not a bug bolted onto a good system; it's the cost of the mechanism that makes the system work at all.
 
@@ -532,7 +532,7 @@ The word **"it"** means nothing on its own; self-attention lets "it" attend back
 | **Long-range dependencies** — connect ideas across long passages | **Natural responses** — fluent, human-like replies |
 | **Parallel processing** — faster training than RNNs | **Ambiguity handling** — resolve underspecified requests |
 
-#### LLM capabilities & limitations
+#### 3. LLM Capabilities & Limitations of Conversational AI
 
 The two lists the instructor puts side by side — the same model, its strengths and its hard limits:
 
@@ -546,7 +546,7 @@ The two lists the instructor puts side by side — the same model, its strengths
 | Entity extraction | **Consistency** — different answers to the same question |
 | Sentiment analysis | **No verification** — can't check facts |
 
-#### Why we need agentic architecture
+#### 3. Why We Need Agentic Architecture
 
 Every limitation above maps to a fix — **augment the LLM with external capabilities.** This table *is* the course structure:
 
@@ -577,9 +577,9 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 
 *How the agent's parts run as one process — the seven-stage lifecycle the deck puts at the centre of the course, then the protocols that connect it to the world and the production concerns that keep it working at scale.*
 
-### The seven-stage agent lifecycle
+### 4. Agentic Conversational AI — Request → Response Pipeline
 
-**Intuition** — A modern conversational agent turns one user message into one reply by moving it through seven stages in order (deck slide title: *Agentic Conversational AI — Request → Response Pipeline*). The shape is: take the request in, route it, reason out a plan, invoke tools, update memory, run safety checks, then respond.
+**Intuition** — A modern conversational agent turns one user message into one reply by moving it through seven stages in order. The shape is: take the request in, route it, reason out a plan, invoke tools, update memory, run safety checks, then respond.
 
 ![Seven-stage agent lifecycle](assets/S01-agent-lifecycle.svg)
 
@@ -595,7 +595,13 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 
 Safety appears **twice** — input sanitization at stage 1 and output validation at stage 6 — so the agent is guarded on the way in and on the way out.
 
-**Worked example — banking agent** (deck slide 44). User: *"What's my account balance and recent transactions?"*
+> ***Going deeper*** *— the middle stages loop.* The deck draws the seven stages as a straight line, and that linear pipeline is the model to reproduce. In real agent code the middle — **reason → act → observe the result** — repeats until the agent has gathered enough to answer, then hands off to safety and response. That repeating middle is the **ReAct loop** you run in this session's lab (`ZERO_SHOT_REACT_DESCRIPTION`).
+>
+> ![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
+
+### 4. Lifecycle Example — Banking Conversational Agent
+
+Deck slide 44. User: *"What's my account balance and recent transactions?"*
 
 | Stage | What the agent does |
 |---|---|
@@ -607,7 +613,9 @@ Safety appears **twice** — input sanitization at stage 1 and output validation
 | **6 Safety** | Validate balance & transactions are for the correct user · check no PII exposure in logs · verify response contains only authorized info |
 | **7 Response** | *"Your current balance is $5,432.10. Here are your recent transactions: 1. Starbucks −$4.50 (Today) · 2. Amazon −$89.99 (Yesterday) · 3. Shell Gas −$45.00 (Yesterday) · 4. Grocery Store −$123.45 (2 days ago) · 5. Netflix −$15.99 (3 days ago). Would you like more details on any of these?"* |
 
-**Exercise** (deck slides 45–46) — map this request to the seven stages:
+### Exercise: Map the Agent Lifecycle
+
+Deck slides 45–46 — map this request to the seven stages:
 
 > *"Find me a good Italian restaurant near my office that's open tonight and make a reservation for 2 at 7 PM"*
 >
@@ -615,13 +623,9 @@ Safety appears **twice** — input sanitization at stage 1 and output validation
 
 The stage that carries the lesson is **6 Safety**: unlike the banking query, this request *takes an action in the world* — a booking — so it needs a confirmation (human-in-the-loop) before the reservation is made, not after.
 
-> ***Going deeper*** *— the middle stages loop.* The deck draws the seven stages as a straight line, and that linear pipeline is the model to reproduce. In real agent code the middle — **reason → act → observe the result** — repeats until the agent has gathered enough to answer, then hands off to safety and response. That repeating middle is the **ReAct loop** you run in this session's lab (`ZERO_SHOT_REACT_DESCRIPTION`).
->
-> ![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
-
 ---
 
-### Protocol landscape
+### 5. Protocol Landscape for Conversational Agents
 
 **Intuition** (deck slide 48) — As conversational agents become more prevalent, they need standardized ways to communicate with tools, data, each other, and UIs. **Why protocols matter:** standards are what turn one-off integrations into a connected ecosystem.
 
@@ -651,7 +655,7 @@ The stage that carries the lesson is **6 Safety**: unlike the banking query, thi
 
 ---
 
-### Production concerns
+### 6. Production Concerns for Conversational AI
 
 **Intuition** (deck slides 50–51) — Building a conversational agent that works in development is one thing; building one that works reliably at scale in production is another. The hard parts cluster into four axes, managed together:
 
@@ -791,9 +795,9 @@ The instructor's own six-point summary of the session — the shortest version o
 |---|---|---|
 | **Tokenization** (Demo A) | `byte_pair_encoding.ipynb` · full notebook | character vocabulary → pair counts → first merge `("u", "g") -> "ug"` → `bug` tokenizes but `mug` exposes `[UNK]` |
 | **Transformers & LLMs — the brain of modern conversational AI** — *"LLMs can't take actions"* | `LocalGPT.ipynb` · cell 5 · then `tavily_weather_agent.ipynb` Step 4 · cell 10 | a bare model answering with **no tools** — the gap everything else fills |
-| **Workflows vs agents — and when not to build one** · **Protocol landscape** | `tavily_weather_agent.ipynb` Step 5 · cell 12 | `@tool def get_weather(...)` — the **docstring *is* the tool description** the model reads |
-| **Workflows vs agents — and when not to build one** · **The seven-stage agent lifecycle** | `tavily_weather_agent.ipynb` Step 6 · cell 14 | `initialize_agent(… ZERO_SHOT_REACT_DESCRIPTION, verbose=True)` — the *model*, not your code, decides |
-| **The seven-stage agent lifecycle** | `tavily_weather_agent.ipynb` Step 7 · cells 16–17 | the `verbose` **Thought → Action → Observation** trace — the loop made visible |
+| **Workflows vs agents — and when not to build one** · **5. Protocol Landscape for Conversational Agents** | `tavily_weather_agent.ipynb` Step 5 · cell 12 | `@tool def get_weather(...)` — the **docstring *is* the tool description** the model reads |
+| **Workflows vs agents — and when not to build one** · **4. Agentic Conversational AI — Request → Response Pipeline** | `tavily_weather_agent.ipynb` Step 6 · cell 14 | `initialize_agent(… ZERO_SHOT_REACT_DESCRIPTION, verbose=True)` — the *model*, not your code, decides |
+| **4. Agentic Conversational AI — Request → Response Pipeline** | `tavily_weather_agent.ipynb` Step 7 · cells 16–17 | the `verbose` **Thought → Action → Observation** trace — the loop made visible |
 
 *(The notebook also opens with its own "How this maps to the course" cell — this table is the reverse direction, note → cell.)*
 
