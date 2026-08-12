@@ -158,6 +158,8 @@ After a note is drafted from a source, do a second, separate pass: work through 
 
 Session notes exist to teach and to be revised from. When extending a note from new source material, prefer including a genuinely useful fact, number, named model, or example over trimming for length. Concision is a wording-quality goal (see Wording Pass) — write clean sentences, cut filler — not a content-quantity ceiling. Cutting real source content to keep a note short is the wrong tradeoff in this repo. A longer note that teaches more is preferred over a shorter one that teaches less, as long as every addition is accurate, sits under the right heading, and doesn't duplicate something already there.
 
+**"More" means more facts, rows, examples, and named items — not more words for the same point.** A second analogy, a duplicate diagram, or a paragraph re-explaining what a table already shows is over-cooking, not teaching (see the Wording Pass over-cooking and meta-aside bullets). Default to more *content*; default to fewer *restatements*.
+
 ## 3. Material Scope
 
 ### Out of Scope Means Out
@@ -356,6 +358,8 @@ Before marking a note reviewed, read it end to end for:
 - The same concept named two different ways in different sections of the same note
 - Decorative or vague metaphors that do not actually clarify anything (the canonical bad example: "predicting text and generating text are the same machine, run in two directions") — cut them or replace with a direct statement of what is actually happening
 - Compressed, mechanical phrasing that sounds like a lecture dump rather than a human teacher
+- **Over-cooking — the same point taught more than once.** One concept gets **one** analogy: if it already has a working analogy or a clear plain-English explanation, a second one is padding, not clarity. Never keep the same structure as both an ASCII sketch **and** an SVG (or two SVGs) — pick the clearer one and delete the other. Do not follow a table or worked example with a paragraph that re-explains what it already showed.
+- **Meta-asides and exhortations.** Cut "worth stating in an exam answer", "the most X in this table", "if you learn one thing, learn Y", and similar commentary — state the substance and let it stand. Say a thing once; repeating it for emphasis reads as filler.
 
 A wording pass never changes technical correctness, formulas, tables, numbers, or the Intuition → Mechanism → Worked example → Tradeoff → Diagram order.
 
