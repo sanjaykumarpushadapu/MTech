@@ -417,7 +417,7 @@ PQ — the compression-based strategy in the table above — comes from Jégou e
 
 HNSW was introduced by Malkov & Yashunin (2018).
 
-**Intuition** — HNSW is like a multi-level road network for vectors. Top layers are highways with long jumps; the bottom layer is the local street map containing all points. Formally, this layered structure is a **multi-layer skip list for vectors** — the same "sparse shortcuts on top, dense detail at the bottom" idea skip lists use for ordered data, generalized to a graph over vector similarity instead of a sorted sequence.
+**Intuition** — HNSW's core structure is a **multi-layer skip list for vectors** (the deck's framing): sparse long-range shortcuts at the top, all points with dense connections at the bottom. Search jumps across the dataset on the top layers, then descends into local detail — the same "sparse shortcuts on top, dense detail below" idea skip lists use for ordered data, generalized to a graph over vector similarity.
 
 ![HNSW search process](assets/S02-hnsw-search.svg)
 
