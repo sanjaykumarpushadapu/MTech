@@ -593,21 +593,11 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 | 6 | 🛡️ **Safety** | Guardrails & output validation · check toxic content · verify factual accuracy · **PII redaction** |
 | 7 | 📤 **Response** | Final output delivered · NLG · format for channel (text/voice/UI) · send to user |
 
-**Mechanism — it is a loop, not a pipeline.** The diagram draws seven boxes left to right, which is the one misleading thing about it. Stages 3 → 4 → 5 **cycle** until the agent decides it has enough to answer:
-
-```
-1 Request  ─→  2 Routing  ─→  ┌─→ 3 Reasoning ─→ 4 Tool ─→ 5 Memory ─┐
-                              └────────── not done yet ──────────────┘
-                                              │ done
-                                              ▼
-                                   6 Safety ─→ 7 Response
-```
+**Mechanism — it is a loop, not a pipeline.** The diagram draws seven boxes left to right, which is the one misleading thing about it: stages 3 → 4 → 5 (**reason → act → remember**) *cycle* until the agent has enough to answer, then hand off to safety and response.
 
 ![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
 
-**The loop is the agent.** Remove it — run each stage exactly once — and you have a *workflow* (the *workflows vs agents* distinction): cheaper, predictable, and unable to recover from a tool returning something unexpected. The loop is what buys adaptability and what makes cost unpredictable, because nothing guarantees how many times it turns.
-
-An everyday way to see the difference: a workflow is like a printed checklist you fill in top to bottom regardless of what you find along the way. The loop is more like a detective working a case — gather a clue, ask "do I know enough yet?", and if not, go gather another one, repeating until the case can actually be closed.
+**The loop is the agent.** Run each stage exactly once and you have a *workflow* (the *workflows vs agents* distinction): cheaper and predictable, but unable to recover when a tool returns something unexpected. The loop is what buys adaptability — and what makes cost unpredictable, since nothing fixes how many times it turns.
 
 **Worked example — banking agent.** User: *"What's my account balance and recent transactions?"*
 
@@ -621,7 +611,7 @@ An everyday way to see the difference: a workflow is like a printed checklist yo
 | **6 Safety** | Validate balance & transactions belong to the **correct user** · check no PII in logs · verify only authorized info |
 | **7 Response** | *"Your current balance is $5,432.10. Here are your recent transactions: 1. Starbucks −$4.50 (Today) · 2. Amazon −$89.99 (Yesterday) · 3. Shell Gas −$45.00 (Yesterday) · 4. Grocery Store −$123.45 (2 days ago) · 5. Netflix −$15.99 (3 days ago). Would you like more details on any of these?"* |
 
-Notice safety appears **twice** — sanitization at stage 1 (input) and validation at stage 6 (output). That bracketing is deliberate and worth stating in an exam answer.
+Notice safety appears **twice** — input sanitization at stage 1 and output validation at stage 6. The agent is guarded on the way in and on the way out.
 
 **Exercise:**
 
@@ -661,7 +651,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 ![Protocol landscape for agents](assets/S01-protocol-landscape.svg)
 
-**The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges. USB-C is the natural analogy, and it's a good one — before it, every device needed its own cable.
+**The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges.
 
 **Worked example** — A travel-planning agent can use **MCP** to read a calendar and call a flight-search tool, then use **A2A** to delegate visa-checking to another agent. MCP connects the agent downward to tools; A2A connects it sideways to peers.
 
@@ -680,8 +670,7 @@ The interesting stage here is **6 (Safety)** — this request *takes an action i
 
 The practical principle is the same as the *workflows vs agents* distinction: **take the simplest thing that preserves the capability you need**. Standards pay off at scale, not on day one.
 
-> ***In practice*** *— MCP is the one to actually know right now:*
-> **MCP** went from an Anthropic proposal (late 2024) to a de-facto industry standard adopted across major AI tools within a year — it's the most career-relevant item in this table today. Concretely, an **MCP server** is a small program that exposes *tools*, *resources* and *prompts* over a standard protocol, so **any** MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue. Writing one is a few dozen lines with the official SDK. The mental model: **MCP is to agent-tool connections what REST was to web services** — the standard that lets things you didn't build talk to each other. If you learn one protocol from this section for your career, learn MCP.
+> ***In practice*** *— MCP is the one to know right now.* It went from an Anthropic proposal (late 2024) to a de-facto industry standard within a year. An **MCP server** is a small program that exposes *tools*, *resources*, and *prompts* over a standard protocol, so any MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue — a few dozen lines with the official SDK. Mental model: **MCP is to agent-tool connections what REST was to web services.**
 
 ---
 
@@ -700,9 +689,7 @@ Conversation flows · tool invocations · **token usage per conversation** · re
 Tools: **LangSmith, Arize Phoenix, OpenTelemetry**.
 
 **💰 Cost management**
-**Prompt caching (50–90% cost reduction)** — the model provider stores the computed internal state for a prompt's shared, repeated prefix (e.g. the system prompt and tool definitions), so the next call that reuses that exact prefix skips recomputing it; this is why static content should come first and the varying part (the user's new message) last · model routing (smaller models when appropriate) · token budgets per user/session · efficient retrieval (reduce context size).
-
-*An everyday picture: it's like a coffee shop pre-making the espresso base for its most popular drink every morning — the first cup still takes the normal time, but every cup after that is faster and cheaper because the repeated part is already done.*
+**Prompt caching (50–90% cost reduction)** — the provider caches the computed state for a prompt's repeated prefix (system prompt, tool definitions), so the next call reusing that exact prefix skips recomputing it; put static content first and the varying user message last · **model routing** (smaller models when appropriate) · **token budgets** per user/session · **efficient retrieval** (reduce context size).
 
 Benchmark: customer support ≈ **$0.02–0.10 per conversation**.
 
@@ -864,8 +851,6 @@ Agent type is **`AgentType.ZERO_SHOT_REACT_DESCRIPTION`** — so you are running
 > Thought: I now have what I need.
 > Final Answer: It's 32°C and humid in Tokyo right now.
 > ```
-> An everyday version of the same loop: a cook tasting a dish while cooking — taste, decide it needs more salt, add salt, taste again — rather than dumping every ingredient in at once and serving whatever comes out.
->
 > That interleaving — **reason, act, read the result, decide the next step** — is the core agent pattern the whole course builds on. It's also why stage 1 (no tools) matters: you watch the model *fail*, then *reach for a tool*.
 
 One detail worth noticing in the code: the tool is declared as

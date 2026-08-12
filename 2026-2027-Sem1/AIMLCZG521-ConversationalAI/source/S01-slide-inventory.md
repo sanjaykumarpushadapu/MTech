@@ -60,13 +60,13 @@ belong in `521-master.md`, not the session note — the checker skips them.
 | 40 | 3. Transformers & LLMs — The Brain of | Agent, Ambiguity, BERT, Brain, Coherence, Connect, Contextual, Conversational, Data, Dependencies, Faster, Fine-tuning, Generate, Grasp, Handling, Insight, Intent, LLMs |
 | 41 | 3. LLM Capabilities & Limitations of | Calculation, Capabilities, Consistency, Conversational, Fluent, Forget, Generate, Grasp, Hallucinations, Human-like, Iden, Intent, LLMs, Limitations, Natural, Response, Sentiment |
 | 42 | 3. Why We Need Agentic Architecture | APIs, Agentic, Architecture, Augment, Book, Calculation, Calculator, Check, External, Function, Generation, Ground, Hallucinations, LLMs, Need, Precise, Remember, Retrieval-Augmented |
-| 43 | 4. Agentic Conversational AI — Request | Agentic, Break, Check, Classify, Code, Conversational, Database, Determine, Execute, External, Extract, Final, Format, Guardrails, INVOCATION, Input, Intent, MEMORY |
+| 43 | 4. Agentic Conversational AI — Request → Response Pipeline | Agentic, Break, Check, Classify, Code, Conversational, Database, Determine, Execute, External, Extract, Final, Format, Guardrails, INVOCATION, Input, Intent, MEMORY |
 | 44 | 4.Lifecycle Example — Banking | Agent, Amazon, Balance, Banking, Call, Check, Conversational, Fetch, Format, Grocery, Intent, Invocation, Lifecycle, Maintain, Memory, Netflix, Permission, Plan |
 | 45 | Exercise: Map the Agent Lifecycle | Agent, Exercise, Find, Italian, Lifecycle, Request |
 | 46 | Exercise: Map the Agent Lifecycle | Agent, Exercise, Find, Happen, Invocation, Italian, Lifecycle, Memory, Needs, Reasoning, Request, Response, Routing, Safety, Tool |
-| 47 | Handson-Building a Simple Conversational | Agent, Baseline, Call, Calls, Cloudy, Conversational, Define, Definition, Execution, Extracts, Generation, Humid, Information, Interaction, Mumbai |
+| 47 | Handson - Building a Simple Conversational Agent | Agent, Baseline, Call, Calls, Cloudy, Conversational, Define, Definition, Execution, Extracts, Generation, Humid, Information, Interaction, Mumbai |
 | 48 | 5.Protocol Landscape for Conversational Agents | Agents, Conversational, Duplicated, Ecosystem, Landscape, Matter, Multi-agent, Plug-and-play, Protocol, Protocols, Standards, Vendor |
-| 49 | 5. Protocol Landscape for Conversational | APIs, Agent, Agent-to-Agent, Agents, Anthropic, Assistant, Built-in, Complex, Conversational, Custom, Emerging, Enterprise, Google, Graph-based, LLMs, Landscape |
+| 49 | 5. Protocol Landscape for Conversational Agents | APIs, Agent, Agent-to-Agent, Agents, Anthropic, Assistant, Built-in, Complex, Conversational, Custom, Emerging, Enterprise, Google, Graph-based, LLMs, Landscape |
 | 50 | 6. Produc7on Concerns for Conversa7onal AI | Arize, Budgets, Building, Chat, Complex, Concerns, Cost, Customer, Efficient, Human-in-the-loop, Input, Latency, Management, Monitor, Never, Observability, Optimization |
 | 51 | 6. Produc7on Concerns for Conversa7onal AI | Building, Concerns |
 | 52 | Key Takeaways | Access, Action, Agent, Architecture, Brain, Components, Conv, Deep, Dialogue, Different, Evolution, Execution, Generation, Intent, Invocation, Knowledge, LLMs, Learning |
