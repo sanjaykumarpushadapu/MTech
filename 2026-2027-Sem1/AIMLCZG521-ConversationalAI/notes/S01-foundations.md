@@ -113,7 +113,7 @@ The 2023–2025 row matters most: it marks the move from assistant to autonomous
 
 ### Architecture: traditional vs agentic
 
-**Intuition** — The old pipeline classified then responded. The new one plans then acts. Everything else follows from that.
+**Intuition** — The old pipeline classified then responded. The new one plans then acts — the shift the deck calls **from answering to acting**. Everything else follows from that.
 
 *Both pipelines, one after the other — the contrast is the content, and the shift box in the middle marks what changed:*
 
@@ -575,11 +575,11 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 
 ## How an agent actually runs
 
-*The core of the course: the seven-stage loop that turns a language model into an agent — and why that same loop makes agents both powerful and hard to make reliable.*
+*How the agent's parts run as one process — the seven-stage lifecycle the deck puts at the centre of the course, then the protocols that connect it to the world and the production concerns that keep it working at scale.*
 
 ### The seven-stage agent lifecycle
 
-**Intuition** — Every agent turn walks the same path: **take the request in → work out what's needed and which tools fit → do it → remember what happened → check the result is safe → reply.** Those are the seven stages, and the middle of the path (reason → act → remember) **loops** until the agent has gathered enough to answer. That single shape — a fixed intake and exit wrapped around a repeating middle — is what turns a language model into an agent. It's also the spine of the whole course: every later lecture deepens one stage.
+**Intuition** — A modern conversational agent turns one user message into one reply by moving it through seven stages in order (deck slide title: *Agentic Conversational AI — Request → Response Pipeline*). The shape is: take the request in, route it, reason out a plan, invoke tools, update memory, run safety checks, then respond.
 
 ![Seven-stage agent lifecycle](assets/S01-agent-lifecycle.svg)
 
@@ -590,127 +590,90 @@ Every limitation above maps to a fix — **augment the LLM with external capabil
 | 3 | 🧠 **Reasoning** | Planning & decision making · break into steps · **identify information gaps** · plan tool call sequence |
 | 4 | ⚙️ **Tool invocation** | External API calls & actions · execute API calls · database queries · code execution |
 | 5 | 💾 **Memory** | Context storage & retrieval · store conversation history · update user preferences · maintain session state |
-| 6 | 🛡️ **Safety** | Guardrails & output validation · check toxic content · verify factual accuracy · **PII redaction** |
-| 7 | 📤 **Response** | Final output delivered · NLG · format for channel (text/voice/UI) · send to user |
+| 6 | 🛡️ **Safety** | Guardrails & output validation · check for toxic content · verify factual accuracy · **PII redaction** |
+| 7 | 📤 **Response** | Final output delivered · natural language generation · format for channel (text/voice/UI) · send to user |
 
-**Mechanism — the deck's linear pipeline, and the loop inside it.** The deck presents this as a *Request → Response pipeline* (its exact title) — seven stages left to right, intake to exit. That linear sequence is the model to reproduce in an exam. In practice the middle stages 3 → 4 → 5 (**reason → act → remember**) *cycle* until the agent has enough to answer, then hand off to safety and response — the ReAct loop the lab demonstrates.
+Safety appears **twice** — input sanitization at stage 1 and output validation at stage 6 — so the agent is guarded on the way in and on the way out.
 
-![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
-
-**The loop is the agent.** Run each stage exactly once and you have a *workflow* (the *workflows vs agents* distinction): cheaper and predictable, but unable to recover when a tool returns something unexpected. The loop is what buys adaptability — and what makes cost unpredictable, since nothing fixes how many times it turns.
-
-**Worked example — banking agent.** User: *"What's my account balance and recent transactions?"*
+**Worked example — banking agent** (deck slide 44). User: *"What's my account balance and recent transactions?"*
 
 | Stage | What the agent does |
 |---|---|
 | **1 Request** | Intent: `account_inquiry` · Entities: `{type: [balance, transactions]}` · Validate: user authenticated |
-| **2 Routing** | Route to: Banking Agent · Required tools: `get_balance`, `get_transactions` · **Permission check: user has access** |
-| **3 Reasoning** | Plan: ① fetch balance ② fetch recent transactions (last 5) ③ format response with both |
-| **4 Tool invocation** | `get_balance(user_id)` → $5,432.10 · `get_transactions(user_id, limit=5)` → [Transaction1, …] |
-| **5 Memory** | Store: user asked about balance at 2:30 PM · Update: preference for transaction details · Context: maintain for follow-ups |
-| **6 Safety** | Validate balance & transactions belong to the **correct user** · check no PII in logs · verify only authorized info |
+| **2 Routing** | Route to: Banking Agent · Required tools: `get_balance`, `get_transactions` · Permission check: user has access |
+| **3 Reasoning** | Plan: ① fetch account balance ② fetch recent transactions (last 5) ③ format response with both |
+| **4 Tool invocation** | Call `get_balance(user_id)` → $5,432.10 · call `get_transactions(user_id, limit=5)` → [Transaction1, Transaction2, …] |
+| **5 Memory** | Store: user asked about balance at 2:30 PM · Update: preference for transaction details · Context: maintain for follow-up questions |
+| **6 Safety** | Validate balance & transactions are for the correct user · check no PII exposure in logs · verify response contains only authorized info |
 | **7 Response** | *"Your current balance is $5,432.10. Here are your recent transactions: 1. Starbucks −$4.50 (Today) · 2. Amazon −$89.99 (Yesterday) · 3. Shell Gas −$45.00 (Yesterday) · 4. Grocery Store −$123.45 (2 days ago) · 5. Netflix −$15.99 (3 days ago). Would you like more details on any of these?"* |
 
-Notice safety appears **twice** — input sanitization at stage 1 and output validation at stage 6. The agent is guarded on the way in and on the way out.
-
-**Exercise:**
+**Exercise** (deck slides 45–46) — map this request to the seven stages:
 
 > *"Find me a good Italian restaurant near my office that's open tonight and make a reservation for 2 at 7 PM"*
 >
-> Map to all seven stages: what entities are extracted? which tools/agents? what's the step-by-step plan? what specific API calls? what should be stored? what validations before acting? how should it communicate?
+> **1 Request** — what entities need to be extracted from the input? · **2 Routing** — which tools or agents are needed? · **3 Reasoning** — what's the step-by-step plan? · **4 Tool invocation** — what specific API calls need to be made? · **5 Memory** — what should be stored for future use? · **6 Safety** — what validations are required before taking action? · **7 Response** — how should the agent communicate with the user?
 
-The interesting stage here is **6 (Safety)** — this request *takes an action in the world*. A booking is not reversible by the agent, so it needs confirmation before execution, not after. That's the human-in-the-loop principle from *Production concerns*.
+The stage that carries the lesson is **6 Safety**: unlike the banking query, this request *takes an action in the world* — a booking — so it needs a confirmation (human-in-the-loop) before the reservation is made, not after.
 
-**Tradeoff / when the full lifecycle is overkill** — a pure question ("what's the capital of France?") needs stages 1, 3 and 7. Running routing, tool invocation, memory and safety for it adds latency and cost for nothing. Production systems **short-circuit** simple requests — which is exactly what model routing is for.
-
-> ***In practice*** *— in real code the lifecycle is a **state machine**: each stage is a node, edges are the transitions, and shared state (the conversation, retrieved context, tool results) flows through. Stages 1 and 6 (**safety**) are usually not hand-written — they wire in guardrails libraries for prompt-injection defence, PII redaction, and output filtering (see *production concerns*).*
+> ***Going deeper*** *— the middle stages loop.* The deck draws the seven stages as a straight line, and that linear pipeline is the model to reproduce. In real agent code the middle — **reason → act → observe the result** — repeats until the agent has gathered enough to answer, then hands off to safety and response. That repeating middle is the **ReAct loop** you run in this session's lab (`ZERO_SHOT_REACT_DESCRIPTION`).
+>
+> ![The loop inside the lifecycle: Reasoning, Tool, Memory](assets/S01-reasoning-tool-memory-loop.svg)
 
 ---
 
 ### Protocol landscape
 
-**Intuition** — Every agent needs to plug into tools, data, other agents, and UIs. Without shared standards each of those connections is a **custom cable** — every tool a bespoke integration, no two agents able to interoperate. Protocols are the **USB-C moment**: agree on the shape of the plug once, and anything that speaks it connects to anything else. That is the whole argument for standards:
+**Intuition** (deck slide 48) — As conversational agents become more prevalent, they need standardized ways to communicate with tools, data, each other, and UIs. **Why protocols matter:** standards are what turn one-off integrations into a connected ecosystem.
 
 | Without standards | With standards |
 |---|---|
-| Every vendor has a custom API | **Plug-and-play integrations** |
-| Agents can't interoperate | **Multi-agent collaboration** |
-| Vendor lock-in | **Vendor flexibility** |
-| Duplicated integration effort | **Ecosystem growth** |
+| Every vendor has a custom API | Plug-and-play integrations |
+| Agents can't interoperate | Multi-agent collaboration |
+| Vendor lock-in | Vendor flexibility |
+| Duplicated integration effort | Ecosystem growth |
+
+**The protocols** (deck slide 49):
 
 | Protocol | By | What it standardises | Use case |
 |---|---|---|---|
-| **MCP** (Model Context Protocol) | Anthropic, 2024 | How LLMs connect to **data sources and tools** | Agent accessing DBs, files, APIs consistently |
-| **A2A** (Agent-to-Agent) | Google, emerging | Standardized inter-agent communication | Multi-agent orchestration (emerging, 2025) |
+| **MCP** (Model Context Protocol) | Anthropic (2024) | Standardize how LLMs connect to data sources and tools | Agent accessing DBs, files, APIs consistently |
+| **A2A** (Agent-to-Agent) | Google / emerging | Standardized inter-agent communication | Multi-agent orchestration (emerging, 2025) |
 | **OpenAI Assistant API** | OpenAI | Built-in tools, file access, code interpreter | Rapid agent development with OpenAI infrastructure |
+| **Custom REST / GraphQL APIs** | Universal | Traditional service integration | Enterprise systems, legacy integrations |
 | **LangGraph** (Protocol) | LangChain | Graph-based agent workflows and state management | Complex multi-step reasoning, agent coordination |
-| **ANP** (Agent Network Protocol) | emerging | Open standard for **peer-to-peer agent discovery and communication** across heterogeneous networks | Decentralised agent ecosystems, cross-platform interoperability |
-| **Custom REST / GraphQL** | Universal | Traditional service integration | Enterprise systems, legacy integrations |
-
-**Mechanism — what each protocol standardises:** each solves a different problem, which is why they are not competitors:
+| **ANP** (Agent Network Protocol) | emerging | Open standard for peer-to-peer agent discovery and communication across heterogeneous networks | Decentralized agent ecosystems, cross-platform interoperability |
 
 ![Protocol landscape for agents](assets/S01-protocol-landscape.svg)
 
-**The distinction to carry:** **MCP is vertical** (agent → tools), **A2A is horizontal** (agent → agent). A real agent speaks both, on different edges.
+**The one distinction to carry:** MCP is **vertical** (agent → tools and data); A2A is **horizontal** (agent → agent). A real agent uses both, on different edges.
 
-**Worked example** — A travel-planning agent can use **MCP** to read a calendar and call a flight-search tool, then use **A2A** to delegate visa-checking to another agent. MCP connects the agent downward to tools; A2A connects it sideways to peers.
-
-**A caveat worth carrying into an exam answer:** *the protocol landscape is rapidly evolving. Standards like MCP are emerging, while **many production systems still use custom APIs**.* The deck defers the detail to **Lectures 14–15** (MCP and A2A get their own deep-dive sessions).
-
-**Tradeoff** — a standard is only worth adopting once enough of the ecosystem speaks it. Adopting MCP for a single internal tool is pure overhead versus a REST endpoint you already have. The value appears at the *N*th integration, not the first.
-
-**Decision rule — which protocol for which edge?**
-
-| Situation | Reach for |
-|---|---|
-| One agent needs to call **tools or data sources** from different vendors in a standard way | **MCP** |
-| Multiple agents need to **delegate tasks or collaborate** | **A2A** |
-| One internal team controls both sides and just needs a simple integration | **Custom REST / GraphQL** may still be simpler |
-| You are still prototyping one agent with one or two tools | Start with **direct tool calls** first, standardise later |
-
-The practical principle is the same as the *workflows vs agents* distinction: **take the simplest thing that preserves the capability you need**. Standards pay off at scale, not on day one.
-
-> ***In practice*** *— MCP is the one to know right now.* It went from an Anthropic proposal (late 2024) to a de-facto industry standard within a year. An **MCP server** is a small program that exposes *tools*, *resources*, and *prompts* over a standard protocol, so any MCP-aware client (Claude, IDEs, agent frameworks) can use it without custom glue — a few dozen lines with the official SDK. Mental model: **MCP is to agent-tool connections what REST was to web services.**
+**Deferred by the deck** — *the protocol landscape is rapidly evolving; standards like MCP are emerging, while many production systems still use custom APIs.* The deck defers the detail to **Lectures 14–15**, where MCP and A2A each get a dedicated session — so treat this slide as the map, with the mechanism coming later in the course.
 
 ---
 
 ### Production concerns
 
-**Intuition** — An agent that works in a demo and one that works reliably at scale are two different engineering problems. Everything hard about the second — *will it stay up, stay affordable, stay fast, stay safe?* — clusters into **four axes** you manage together, not one at a time.
-
-*The four axes are not independent — every fix on one pushes on another:*
+**Intuition** (deck slides 50–51) — Building a conversational agent that works in development is one thing; building one that works reliably at scale in production is another. The hard parts cluster into four axes, managed together:
 
 ![Production concerns for conversational agents](assets/S01-production-concerns.svg)
 
-**Mechanism — observability comes first:** not because it matters most, but because the other three are unmanageable without it. You cannot tune a latency budget you are not measuring.
-
 **📊 Observability — what to track**
-Conversation flows · tool invocations · **token usage per conversation** · response latencies & error traces.
+Track conversation flows · monitor tool invocations · **token usage per conversation** · response latencies & error traces.
 Tools: **LangSmith, Arize Phoenix, OpenTelemetry**.
 
-**💰 Cost management**
-**Prompt caching (50–90% cost reduction)** — the provider caches the computed state for a prompt's repeated prefix (system prompt, tool definitions), so the next call reusing that exact prefix skips recomputing it; put static content first and the varying user message last · **model routing** (smaller models when appropriate) · **token budgets** per user/session · **efficient retrieval** (reduce context size).
+**💰 Cost management — optimization strategies**
+**Prompt caching (50–90% cost reduction)** · model routing (smaller models when appropriate) · token budgets per user/session · efficient retrieval (reduce context size).
+Example: customer support ≈ **$0.02–0.10 per conversation**.
 
-Benchmark: customer support ≈ **$0.02–0.10 per conversation**.
+**⚡ Latency budgets — target latencies**
+Chat responses **< 2 seconds** · tool execution **< 5 seconds** · complex reasoning **< 30 seconds**. Set user expectations with progress indicators.
 
-**⚡ Latency budgets**
-
-| Operation | Target |
-|---|---|
-| Chat responses | **< 2 seconds** |
-| Tool execution | **< 5 seconds** |
-| Complex reasoning | **< 30 seconds** |
-
-Plus: set user expectations with progress indicators.
-
-**🛡️ Safety & security — defence layers**
-Input validation (prompt injection defence) · PII detection and redaction · output filtering (toxicity, hallucinations) · human-in-the-loop for critical actions.
+**🛡️ Safety & security — defense layers**
+Input validation (prompt injection defense) · PII detection and redaction · output filtering (toxicity, hallucinations) · human-in-the-loop for critical actions.
 
 > **Principle: never rely on a single safety layer.**
 
-**Worked example** — A banking agent that is too slow might be slow because retrieval returns 40 chunks, one tool call retries twice, or the model is routed to a large reasoning model unnecessarily. Without traces, token counts and tool timing, the team can only guess. With observability, cost and latency become diagnosable engineering variables.
-
-**Tradeoff** — these four pull against each other, and naming the tension is what a good exam answer does. Every safety layer adds latency. Cheaper model routing costs quality. Prompt caching saves 50–90% but constrains how you structure prompts. There is no configuration that maximises all four; production work is **choosing which to sacrifice for this particular product.**
+**Why the four go together** — they pull against each other: every safety layer adds latency, cheaper model routing can cost quality, prompt caching saves cost but constrains prompt structure. Observability is first because you cannot tune cost, latency, or safety you are not measuring — it is what turns the other three from guesswork into engineering.
 
 ---
 
