@@ -140,7 +140,15 @@ So "encoders understand, decoders generate" is the **consequence**, not the rule
 
 Read this as a lookup table for "which architecture for this task," not a ranking of architectures in general — semantic search and text generation land on opposite ends on purpose.
 
-**Popular models by architecture (2025 snapshot)** — concrete anchors for each category above: **encoder-only** — BERT, RoBERTa, DeBERTa, ALBERT, DistilBERT; **decoder-only** — GPT-4, GPT-3.5, Claude 3/4, Llama 3, Mistral; **encoder-decoder** — T5, BART, mT5, PEGASUS, mBART, FLAN-T5. Like any specific model list, this dates quickly — the categories and their fit-per-task above are the durable part.
+**Popular models by architecture (2025 snapshot)** — concrete anchors for each category, and the give-away that tells you which family a new model belongs to:
+
+| Architecture | Models you'll meet | Products built on them | Tell-tale sign |
+|---|---|---|---|
+| **Encoder-only** | BERT, RoBERTa, DeBERTa, ALBERT, DistilBERT | search backends, classifiers, embedding APIs | name usually ends in **-BERT**; ships as an *embedding* or *classification* model, has no chat interface |
+| **Decoder-only** | GPT-3, GPT-4, Claude, Llama 3, Mistral | ChatGPT, GitHub Copilot | you can **chat** with it; it streams output word by word |
+| **Encoder-decoder** | T5, FLAN-T5, BART, PEGASUS, mT5, mBART | translation and summarization services | described as **text-to-text** or **seq2seq**; takes one sequence in, gives a different one out |
+
+Like any specific model list this dates quickly — but the **tell-tale sign** column doesn't. Categories and per-task fit are the durable part; the names are just today's examples.
 
 Concrete products behind those categories, to ground the abstractions: **ChatGPT and Claude** are decoder-only conversational AI; **GitHub Copilot** is decoder-only code synthesis; encoder-decoder machine translation is the classic "English to French" framing; encoder-decoder summarization means encoding a document and decoding a summary.
 
