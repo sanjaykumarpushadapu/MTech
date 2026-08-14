@@ -1,1 +1,81 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc"><title id="title">Encoder decoder architecture choice</title><desc id="desc">Encoder-only models understand full input, decoder-only models generate next tokens, and encoder-decoder models transform source to target.</desc><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10z" fill="#28536b"/></marker><style>.bg{fill:#f8f4ea}.panel{fill:#fff8e8;stroke:#d8c79f;stroke-width:2;rx:22}.enc{fill:#e8f3f6;stroke:#4c8191;stroke-width:2;rx:18}.dec{fill:#f3edf7;stroke:#8e6aa5;stroke-width:2;rx:18}.both{fill:#eaf5ef;stroke:#3b856d;stroke-width:2;rx:18}.t{font:700 25px Georgia,serif;fill:#17313d}.l{font:700 17px Georgia,serif;fill:#17313d}.s{font:500 13px Georgia,serif;fill:#3f5861}.arr{stroke:#28536b;stroke-width:3;fill:none;marker-end:url(#a)}</style></defs><rect class="bg" width="1120" height="520"/><text class="t" x="54" y="55">Architecture decides the natural task</text><rect class="panel" x="65" y="120" width="300" height="285"/><text class="l" x="215" y="155" text-anchor="middle">Encoder-only</text><rect class="enc" x="115" y="205" width="200" height="58"/><text class="l" x="215" y="240" text-anchor="middle">See full input</text><path class="arr" d="M215 263 L215 315"/><rect class="enc" x="115" y="315" width="200" height="58"/><text class="l" x="215" y="350" text-anchor="middle">Embed / classify</text><rect class="panel" x="410" y="120" width="300" height="285"/><text class="l" x="560" y="155" text-anchor="middle">Decoder-only</text><rect class="dec" x="460" y="205" width="200" height="58"/><text class="l" x="560" y="240" text-anchor="middle">See left context</text><path class="arr" d="M560 263 L560 315"/><rect class="dec" x="460" y="315" width="200" height="58"/><text class="l" x="560" y="350" text-anchor="middle">Generate token</text><rect class="panel" x="755" y="120" width="300" height="285"/><text class="l" x="905" y="155" text-anchor="middle">Encoder-decoder</text><rect class="both" x="790" y="205" width="120" height="58"/><text class="l" x="850" y="240" text-anchor="middle">Encode</text><path class="arr" d="M910 234 L945 234"/><rect class="both" x="945" y="205" width="80" height="58"/><text class="l" x="985" y="240" text-anchor="middle">Decode</text><text class="s" x="905" y="335" text-anchor="middle">translation, summarization, text-to-text</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1220 470" role="img" aria-labelledby="title desc">
+  <title id="title">Encoder, decoder and encoder-decoder differ by what each word may look at</title>
+  <desc id="desc">In an encoder every word sees every other word in both directions. In a decoder a word sees only the words already written; later words do not exist yet. An encoder-decoder reads the whole source both ways, then writes the target left to right while attending back to the source.</desc>
+  <defs>
+    <marker id="archchoice_a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24304a"/></marker>
+    <marker id="archchoice_x" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a6400"/></marker>
+  </defs>
+  <rect x="14" y="14" width="1192" height="442" rx="18" fill="#fffdf7" stroke="#c7b56f" stroke-width="2"/>
+  <text x="610" y="52" text-anchor="middle" font-family="Georgia,serif" font-size="26" font-weight="700" fill="#17213a">The only real difference: what each word is allowed to look at</text>
+
+  <g font-family="Georgia,serif" fill="#17213a">
+    <!-- ENCODER -->
+    <rect x="36" y="76" width="372" height="356" rx="14" fill="#f2f8f9" stroke="#1f6570" stroke-width="1.8"/>
+    <text x="222" y="108" text-anchor="middle" font-size="19" font-weight="700">Encoder-only</text>
+    <text x="222" y="132" text-anchor="middle" font-size="14" fill="#3b4a63">reading a letter already written</text>
+    <g stroke="#1f6570" stroke-width="1.8" fill="none" marker-end="url(#archchoice_a)">
+      <path d="M222 236 Q156 186 96 234"/>
+      <path d="M222 236 Q189 202 156 234"/>
+      <path d="M222 236 Q255 202 288 234"/>
+      <path d="M222 236 Q288 186 348 234"/>
+    </g>
+    <g>
+      <rect x="66" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="94" y="259" text-anchor="middle" font-size="13">w1</text>
+      <rect x="132" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="160" y="259" text-anchor="middle" font-size="13">w2</text>
+      <rect x="194" y="238" width="56" height="32" rx="6" fill="#e4f2f4" stroke="#1f6570" stroke-width="2"/><text x="222" y="259" text-anchor="middle" font-size="13" font-weight="700">w3</text>
+      <rect x="260" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="288" y="259" text-anchor="middle" font-size="13">w4</text>
+      <rect x="322" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="350" y="259" text-anchor="middle" font-size="13">w5</text>
+    </g>
+    <text x="222" y="306" text-anchor="middle" font-size="14" font-weight="700">w3 sees all five — both directions</text>
+    <text x="222" y="336" text-anchor="middle" font-size="13" fill="#3b4a63">The whole text already exists,</text>
+    <text x="222" y="356" text-anchor="middle" font-size="13" fill="#3b4a63">so nothing has to be hidden.</text>
+    <text x="222" y="392" text-anchor="middle" font-size="13" font-weight="700" fill="#1f6570">→ embeddings, classification, search</text>
+  </g>
+
+  <g font-family="Georgia,serif" fill="#17213a">
+    <!-- DECODER -->
+    <rect x="424" y="76" width="372" height="356" rx="14" fill="#faf3f5" stroke="#914252" stroke-width="1.8"/>
+    <text x="610" y="108" text-anchor="middle" font-size="19" font-weight="700">Decoder-only</text>
+    <text x="610" y="132" text-anchor="middle" font-size="14" fill="#3b4a63">writing a letter, one word at a time</text>
+    <g stroke="#914252" stroke-width="1.8" fill="none" marker-end="url(#archchoice_a)">
+      <path d="M676 236 Q610 186 488 234"/>
+      <path d="M676 236 Q610 196 550 234"/>
+      <path d="M676 236 Q643 202 612 234"/>
+    </g>
+    <g>
+      <rect x="460" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="488" y="259" text-anchor="middle" font-size="13">w1</text>
+      <rect x="522" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="550" y="259" text-anchor="middle" font-size="13">w2</text>
+      <rect x="584" y="238" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="612" y="259" text-anchor="middle" font-size="13">w3</text>
+      <rect x="648" y="238" width="56" height="32" rx="6" fill="#f7e4e7" stroke="#914252" stroke-width="2"/><text x="676" y="259" text-anchor="middle" font-size="13" font-weight="700">w4</text>
+      <rect x="710" y="238" width="56" height="32" rx="6" fill="#f4f4f4" stroke="#9aa3b0" stroke-dasharray="4 3"/><text x="738" y="259" text-anchor="middle" font-size="13" fill="#8a93a3">w5</text>
+    </g>
+    <text x="738" y="290" text-anchor="middle" font-size="11" fill="#8a93a3">not written yet</text>
+    <text x="610" y="320" text-anchor="middle" font-size="14" font-weight="700">w4 sees only what came before</text>
+    <text x="610" y="348" text-anchor="middle" font-size="13" fill="#3b4a63">Not a design limit — the rest of the</text>
+    <text x="610" y="368" text-anchor="middle" font-size="13" fill="#3b4a63">sentence genuinely does not exist yet.</text>
+    <text x="610" y="400" text-anchor="middle" font-size="13" font-weight="700" fill="#914252">→ chat, code, any text generation</text>
+  </g>
+
+  <g font-family="Georgia,serif" fill="#17213a">
+    <!-- ENCODER-DECODER -->
+    <rect x="812" y="76" width="372" height="356" rx="14" fill="#fffaf0" stroke="#8a6400" stroke-width="1.8"/>
+    <text x="998" y="108" text-anchor="middle" font-size="19" font-weight="700">Encoder-decoder</text>
+    <text x="998" y="132" text-anchor="middle" font-size="14" fill="#3b4a63">translating: read all, then write</text>
+    <rect x="852" y="160" width="292" height="52" rx="8" fill="#e4f2f4" stroke="#1f6570" stroke-width="1.8"/>
+    <text x="998" y="182" text-anchor="middle" font-size="13" font-weight="700">SOURCE — encoder</text>
+    <text x="998" y="201" text-anchor="middle" font-size="12">every word sees every word</text>
+    <line x1="998" y1="214" x2="998" y2="256" stroke="#8a6400" stroke-width="2" marker-end="url(#archchoice_x)"/>
+    <text x="1006" y="240" font-size="11" fill="#8a6400">cross-attention</text>
+    <g stroke="#914252" stroke-width="1.8" fill="none" marker-end="url(#archchoice_a)">
+      <path d="M1030 300 Q998 274 918 298"/>
+    </g>
+    <g>
+      <rect x="890" y="300" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="918" y="321" text-anchor="middle" font-size="13">t1</text>
+      <rect x="952" y="300" width="56" height="32" rx="6" fill="#fff" stroke="#24304a"/><text x="980" y="321" text-anchor="middle" font-size="13">t2</text>
+      <rect x="1014" y="300" width="56" height="32" rx="6" fill="#f7e4e7" stroke="#914252" stroke-width="2"/><text x="1042" y="321" text-anchor="middle" font-size="13" font-weight="700">t3</text>
+    </g>
+    <text x="998" y="356" text-anchor="middle" font-size="13">TARGET — decoder, left to right</text>
+    <text x="998" y="382" text-anchor="middle" font-size="13" fill="#3b4a63">Two jobs, so two parts.</text>
+    <text x="998" y="410" text-anchor="middle" font-size="13" font-weight="700" fill="#8a6400">→ translation, summarization</text>
+  </g>
+</svg>

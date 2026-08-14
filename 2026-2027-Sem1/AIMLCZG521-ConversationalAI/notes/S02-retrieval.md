@@ -107,7 +107,13 @@ Plain language: `QK^T` asks which tokens matter to each token, softmax converts 
 
 ### 4. Encoder vs Decoder vs Encoder-Decoder
 
-**Intuition** — The architecture decides what kind of task feels natural. Encoders understand, decoders generate, and encoder-decoders transform one sequence into another.
+**Intuition** — These sound like three different machines. They are the **same machine with one setting changed: how much of the text each word is allowed to look at.** And that setting isn't a design preference — it follows from whether the text already exists.
+
+- **Encoder — reading a letter someone already wrote.** The whole text is in front of you, so every word may look at **every other word, in both directions**. Natural when you need to *understand* something complete: classify it, or squeeze it into one embedding vector.
+- **Decoder — writing a letter, one word at a time.** You may only look at what you have **already written**, because the rest doesn't exist yet. That restriction isn't a weakness of the design; the task forces it. Natural when you need to *produce* text.
+- **Encoder-decoder — translating.** Two jobs, so two parts: **read** the whole source sentence first (encoder, looking both ways), then **write** the translation word by word (decoder, looking back at what it wrote) while glancing at the encoded source.
+
+So "encoders understand, decoders generate" is the **consequence**, not the rule. The rule is: *can this word see ahead or not* — and it can only see ahead if the text is already there.
 
 ![Encoder decoder architecture choice](assets/S02-architecture-choice.svg)
 
