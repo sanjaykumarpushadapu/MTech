@@ -144,7 +144,17 @@ Read this as a lookup table for "which architecture for this task," not a rankin
 
 Concrete products behind those categories, to ground the abstractions: **ChatGPT and Claude** are decoder-only conversational AI; **GitHub Copilot** is decoder-only code synthesis; encoder-decoder machine translation is the classic "English to French" framing; encoder-decoder summarization means encoding a document and decoding a summary.
 
-**Worked example** — For sentiment analysis on `"The food was slow but excellent"`, an encoder can inspect both emotional words before deciding. For chatbot response generation, a decoder predicts one token at a time. For translation, an encoder reads the source sentence and a decoder writes the target sentence while attending to the encoded source.
+**Worked example — one sentence, all three architectures.** Take `"The food was slow but excellent"`. This sentence is chosen deliberately: **the word that decides the meaning arrives last.**
+
+*① Encoder — classify the sentiment.* Read it strictly left to right and you would commit too early: after `The food was slow` every signal says **negative**. But an encoder never reads left to right. While it processes `slow`, the words `but excellent` are already visible to its right, so it can treat `slow` as the concession and `excellent` as the verdict. Output: one vector → **positive**.
+
+> This is the whole case for bidirectional attention in one line: **the deciding word came after the misleading one.** Hide the right-hand side and you get the answer wrong.
+
+*② Decoder — continue the sentence.* Give it `The food was slow but ___`. It predicts the next word from those five words alone, because `excellent` **has not been written yet** — there is literally nothing to its right to look at. It outputs a distribution over the vocabulary: `excellent 0.31 · tasty 0.18 · worth 0.09 · …`, samples one, appends it, and repeats. Same sentence, but the restriction is forced by the task, not chosen.
+
+*③ Encoder-decoder — translate it.* The encoder reads all six words both ways (as in ①) and hands over an encoded source. The decoder then writes the translation one word at a time (as in ②), and for each target word it looks at **two** things: what it has written so far, and the whole encoded source. That second link — cross-attention — is why the target can reorder freely: target word 1 may draw on source word 6.
+
+**The pattern:** same sentence, three architectures, and the only thing that changed each time was **what was visible.**
 
 **Tradeoff / when NOT to use** — Do not force one architecture onto every problem. A decoder-only model can perform understanding tasks after suitable fine-tuning, but for embeddings a purpose-built encoder is usually cheaper, faster, and easier to index.
 
