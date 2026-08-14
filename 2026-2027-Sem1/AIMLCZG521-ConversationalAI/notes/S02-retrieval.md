@@ -158,15 +158,38 @@ Concrete products behind those categories, to ground the abstractions: **ChatGPT
 
 **Tradeoff / when NOT to use** — Do not force one architecture onto every problem. A decoder-only model can perform understanding tasks after suitable fine-tuning, but for embeddings a purpose-built encoder is usually cheaper, faster, and easier to index.
 
-> ***Going deeper*** — Fine-tuned decoders can match encoders on some classification tasks, so "encoders understand, decoders generate" is a practical default, not an absolute law. The production question is cost: if an encoder reaches the same retrieval or classification quality with smaller vectors, faster inference, and simpler indexing, it is still the better tool.
->
-> The concrete evidence: Borodach et al., *"Decoders Laugh as Loud as Encoders"* (2025), tested 17 encoders (including BERT, RoBERTa, DeBERTa, **XLNet**, ALBERT, **ModernBERT**, **NeoBERT**), several encoder-decoders (**BART-large-mnli**, **Flan-T5-base**), and several decoders (GPT-4, GPT-4o, Llama 3.2, Gemma 2, **Qwen2**, Mistral) on a six-way humor classification task (five joke types plus "no joke", 1,392 human-authored jokes). Best fine-tuned encoder: RoBERTa-base at F1 0.86 — the prior state of the art. Best fine-tuned decoder: GPT-4o at F1 0.85 — statistically equal. Zero/few-shot decoders, not fine-tuned, only reached F1 ≈ 0.18. The finding that overturns the old assumption isn't "decoders are now better" — it's that **fine-tuning, not architecture, is what closes the gap**; an un-tuned decoder is nowhere close.
-
-> ![Zero/few-shot decoders lag far behind — fine-tuning closes the gap](assets/S02-decoder-vs-encoder-classification.svg)
+**Tradeoff note carried into the next section** — "encoders understand, decoders generate" is a practical default, not a law. The slide that follows is the evidence.
 
 ---
 
-### 5. How Encoder Transformers Create Embeddings
+### 5. Decoders Laugh as Loud as Encoders
+
+**Intuition** — For years the rule of thumb was that **encoders win at understanding tasks** and decoders are for generation. This study tested that head-on, on a task that is genuinely hard to fake — recognising *what kind of joke* a text is — and found the gap had closed. The twist is *why* it closed, and it is not the reason people assume.
+
+**Mechanism — the study.** Borodach et al. (2025) compared three architecture families on one six-way humor-classification dataset (five joke types plus "no joke", **1,392 human-authored jokes**):
+
+| Family | Models compared |
+|---|---|
+| **Encoders** (17 tested) | BERT, RoBERTa, DeBERTa, XLNet, ALBERT, ModernBERT, NeoBERT |
+| **Encoder-decoders** | BART-large-mnli, Flan-T5-base |
+| **Decoders** | GPT-4, GPT-4o, Llama 3.2, Gemma 2, Qwen2, Mistral |
+
+**Worked example — read the result, then read the catch:**
+
+| Model | Setup | F1 |
+|---|---|---|
+| RoBERTa-base | fine-tuned — the **prior** state of the art | **0.86** |
+| GPT-4o | fine-tuned | **0.85** — statistically equal |
+| Decoders | zero/few-shot, **not** fine-tuned | **≈0.18** |
+
+The headline looks like "decoders caught up." The real finding is the third row: **fine-tuning, not architecture, is what closed the gap.** An un-tuned decoder is nowhere near — it collapses from 0.85 to 0.18 on the identical task.
+
+![Zero/few-shot decoders lag far behind — fine-tuning closes the gap](assets/S02-decoder-vs-encoder-classification.svg)
+
+**Tradeoff / what this does *not* license** — it does not mean "use a decoder for embeddings now." Matching quality is only half the decision; the other half is cost. If an encoder reaches the same retrieval or classification quality with **smaller vectors, faster inference and simpler indexing**, it is still the better production tool. What changed is the *reason* to choose an encoder: economics, not capability.
+
+
+### 6. How Encoder Transformers Create Embeddings
 
 **Intuition** — A sentence embedding is not produced in one magic step. It is built through tokenization, embedding lookup, positional addition, transformer layers, and pooling.
 
@@ -198,7 +221,7 @@ Without position information, `"the dog bit the man"` and `"the man bit the dog"
 
 ---
 
-### 6. Pooling strategies
+### 7. Pooling strategies
 
 **Intuition** — The encoder returns one vector per token, but search needs one vector for the whole sentence or chunk. Pooling compresses many contextual token vectors into one vector.
 
@@ -229,7 +252,7 @@ max pooling  = [max(1,3,5), max(4,2,0)] = [5, 4]
 
 ---
 
-### 7. Embedding Models: Key Players
+### 8. Embedding Models: Key Players
 
 **Intuition** — An embedding model is a production component, not a generic utility. Dimension, context window, training objective, language coverage, latency, deployment type, and cost decide whether retrieval works well.
 
@@ -267,7 +290,7 @@ The cost column is why "just use the best API model" is not automatically the ri
 
 ---
 
-### 8. Embedding Models: Training Objectives
+### 9. Embedding Models: Training Objectives
 
 **Intuition** — Embedding quality comes from the training objective. The model must learn that related texts should be close and unrelated texts should be far.
 
@@ -301,7 +324,7 @@ For MLM, `"The [MASK] brown fox [MASK] over the lazy dog"` teaches the encoder t
 
 *Once vectors exist, the system must search them fast enough for conversational latency.*
 
-### 9. Vector Similarity: Mathematical Foundations
+### 10. Vector Similarity: Mathematical Foundations
 
 **Intuition** — Similarity metrics define what "near" means, and the mathematics behind them is short. Cosine cares about direction, Euclidean distance cares about physical distance, and dot product combines direction with magnitude unless vectors are normalized.
 
@@ -336,7 +359,7 @@ L2(A,C) = sqrt((3+4)^2 + (4-3)^2) = sqrt(50) = 7.071
 
 ---
 
-### 10. The Computational Challenge
+### 11. The Computational Challenge
 
 **Intuition** — Exact nearest-neighbor search is simple: compare the query with every stored vector. It also becomes impossible at production scale.
 
@@ -368,7 +391,7 @@ That is before network overhead, filters, reranking, and the LLM call.
 
 ---
 
-### 11. Linear Scan vs ANN Solution
+### 12. Linear Scan vs ANN Solution
 
 **Intuition** — Approximate Nearest Neighbor search avoids checking every vector. It accepts "close enough" top-k results in exchange for large speedups.
 
@@ -407,7 +430,7 @@ At small scale, linear scan and HNSW cost about the same — the indexing overhe
 
 ---
 
-### 12. ANN Indexing Strategies
+### 13. ANN Indexing Strategies
 
 **Intuition** — "ANN" is not one algorithm. It is a family of indexing strategies that trade memory, build cost, query speed, and recall differently.
 
@@ -429,7 +452,7 @@ PQ — the compression-based strategy in the table above — comes from Jégou e
 
 ---
 
-### 13. HNSW: Hierarchical Navigable Small World
+### 14. HNSW: Hierarchical Navigable Small World
 
 HNSW was introduced by Malkov & Yashunin (2018).
 
@@ -462,7 +485,7 @@ Three comparisons at the top, a handful at the middle, and one expanded search a
 
 ---
 
-### 14. HNSW: Memory Layout
+### 15. HNSW: Memory Layout
 
 **Intuition** — HNSW speed is not free: the graph needs extra memory for its connections on top of the raw vectors.
 
@@ -493,7 +516,7 @@ Planning table:
 
 ---
 
-### 15. Parameter Tuning: HNSW
+### 16. Parameter Tuning: HNSW
 
 **Intuition** — HNSW's tuning parameters decide the latency–recall–memory balance. Three knobs matter:
 
@@ -509,7 +532,7 @@ Planning table:
 
 ---
 
-### 16. Vector database architecture
+### 17. Vector database architecture
 
 **Intuition** — A vector database is not just a table with vectors. It is a retrieval system around embeddings, indexes, metadata filters, update pipelines, sparse search, fusion, reranking, and observability.
 
@@ -537,7 +560,7 @@ Chunking is separate because one vector for a whole document often becomes a blu
 
 *Dense and keyword retrieval become useful when they are combined into one production retrieval layer.*
 
-### 17. BM25
+### 18. BM25
 
 **Intuition** — BM25 is the strong classical baseline for keyword search. It rewards documents that contain query terms, especially rare terms, while avoiding unlimited reward for repeated words.
 
@@ -557,7 +580,7 @@ Chunking is separate because one vector for a whole document often becomes a blu
 
 ---
 
-### 18. Dense Passage Retrieval
+### 19. Dense Passage Retrieval
 
 Dense Passage Retrieval was introduced by Karpukhin et al. (2020) and is the foundation modern dense retrieval builds on.
 
@@ -583,7 +606,7 @@ Why not use one model that reads the question and passage together? A cross-enco
 
 ---
 
-### 19. Reciprocal Rank Fusion
+### 20. Reciprocal Rank Fusion
 
 **Intuition** — RRF combines rankings, not raw scores. That matters because BM25 scores and dense similarity scores live on different scales.
 
@@ -611,7 +634,7 @@ Document B wins because it is strong in both systems.
 
 ---
 
-### 20. Hybrid retrieval end-to-end
+### 21. Hybrid retrieval end-to-end
 
 **Intuition** — Hybrid retrieval is the practical answer to the whole session: use semantic search for meaning, keyword search for exact evidence, ANN for speed, and fusion/reranking for final quality.
 
