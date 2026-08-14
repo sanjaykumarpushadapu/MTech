@@ -31,7 +31,7 @@ belong in `521-master.md`, not the session note — the checker skips them.
 | 11 | Evolution Deep Dive: Deep Learning Era | BERT, Better, Breakthrough, Contextual, Conversational, Deep, Embeddings, Evolution, GPT-2, Improved, Learning, Models, Need, Pre-train, Transfer, Transformer |
 | 12 | Evolution: Modern Era (2020-2025) | Billions, Claude, Evolution, Few-Shot, Fluency, GPT-3, Game, General, Generate, Human-like, Language, Large, Learn, Learning, Massive, Models, Modern |
 | 13 | Evolution: Modern Era (2020-2025) | APIs, Actions, Agentic, Autonomous, Book, Break, Conversational, Evolution, LLMs, Memory, Modern, Multi-step, Next, Planning, Reasoning, Remember, Systems, Tool |
-| 14 | Evolution : Multi-Agent & Reasoning | Agent, Agents, Beyond, Claude, Code, Coding, Computer, Deep, Evolution, Extended, Frameworks, Long, Models, Multi-Agent, Orchestra, Reasoning, Specialised |
+| 14 | Evolution : Multi-Agent & Reasoning | Agent, Agents, Claude, Code, Coding, Computer, Deep, Evolution, Extended, Frameworks, Long, Models, Multi-Agent, Orchestra, Reasoning, Specialised |
 | 15 | Architecture Evolution: Then vs Now | Agentic, Amazon, Architecture, Classification, Code, Contextual, Database, Dialogflow, Dialogue, Entities, Entity, Evolution, Extraction, Framework, Frameworks, Generation, Input, Intent |
 | 16 | Use Case: Customer Support Evolution | Access, Agentic, Banking, Better, Business, Capabilities, Case, City, Credit, Customer, Debit, Dialogue, Entity, Everything, Evolution, Execute, Fixed |
 | 17 | Components of Modern Conversational AI | Components, Conversational, Dialogue, Entity, Error, Intent, LLM-based, Language, Manage, Management, Memory, Modern, Natural, Role, Sentiment, State, Turn-taking, Understand |
