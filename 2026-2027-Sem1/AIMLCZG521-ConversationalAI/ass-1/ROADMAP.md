@@ -1,9 +1,9 @@
 # 521 · Group Assignment 1 · Roadmap
 
 **Problem Statement 2 — Study of Embedding Models and Approximate Nearest Neighbor Search: Semantic Quality vs Search Efficiency**
-Source: `S1_26_AIMLZG521_Assignment1_PS2_SD.pdf` · 10 marks · group submission (.ipynb + PDF report, zipped)
+Source: `S1_26_AIMLZG521_Assignment1_PS2_SD.pdf` · **Group 129** · 10 marks · group submission (.ipynb + PDF report, zipped)
 
-Window: handout says ~15 days per assignment (521-master.md flags the slide's "~3 weeks" as optimistic — plan for 15 days from whenever it's assigned).
+**Deadline: 28 Aug 2026 (Fri).** That's 10 days from 18 Aug — noticeably tighter than the course's general "~15 days per assignment" pattern (521-master.md), so the schedule below is compressed accordingly, not the earlier 15-day version.
 
 ## Scoring map
 
@@ -20,17 +20,25 @@ Window: handout says ~15 days per assignment (521-master.md flags the slide's "~
 
 Everything here is already covered conceptually in `notes/S02-retrieval.md` — this assignment is that note's Part 2 (and half of Part 1) turned into code. Section numbers below point at the exact place to re-read before implementing each task.
 
-## Suggested timeline (15 days)
+## Timeline — 18 to 28 Aug 2026 (10 days)
 
-| Days | Focus |
-|---|---|
-| 1–2 | Pick dataset + both embedding models; confirm relevance-label format; assign contribution areas |
-| 3–4 | M1 — generate embeddings for both models, log dims/pooling/time (Task 1–2) |
-| 5–7 | M2 — similarity metric comparison + exact kNN baseline with Recall@5/latency (Task 3–4) |
-| 8–11 | M3 — build HNSW and IVF indexes, sweep parameters, produce the two trade-off plots (Task 5–6) |
-| 12–13 | M4 — qualitative comparison across 10 queries, write the final recommendation (Task 7–8) |
-| 14 | Assemble PDF report (exec summary + all sections), cross-check against the 15-point notebook checklist below |
-| 15 | Final run-through top to bottom, zip, submit |
+The module order (M1→M2→M3→M4) is the right order to *read and understand* the tasks, but it is **not** the tightest order to *execute* them in a 4-person team — T7 only depends on T2, not on T3–T6, so it doesn't need to wait for module 3 to finish, and with only 10 days there's no slack to waste.
+
+**Dependency chain:** T1→T2 gates everything. T3 and T4 both need T2. T5 needs T2, and needs T4's latency number for its "speed relative to exact search" measurement. T6 needs T5. T7 needs only T2 — no dependency on T3–T6. T8 and the report need everything finished.
+
+| Date | Day | Focus | Who |
+|---|---|---|---|
+| Tue 18 Aug | 0 (today) | Kickoff: confirm remote system access, pick the dataset (SciFact/NFCorpus/FiQA-2018) and both embedding models, lock in the 4-person split | Whole team |
+| Wed–Thu 19–20 Aug | 1–2 | T1 (corpus/queries) + T2 (embeddings, both models, logged specs) | P1 |
+| Fri–Sat 21–22 Aug | 3–4 | T3 + T4 (similarity metrics, exact kNN baseline) **running in parallel with** T7 (qualitative comparison) — both branches only need P1's Thu embeddings | P2 → T3, T4 · P4 → T7 |
+| Fri 21–Mon 24 Aug | 3–6 | T5 (HNSW vs IVF) — starts same day as P2/P4, needs T4's latency number from P2 (~22 Aug) to finish the "speed relative to exact search" measurement | P3 |
+| Tue 25 Aug | 7 | T6 (trade-off plots) — needs P3's T5 sweep, finished 24 Aug | P4 |
+| Wed 26 Aug | 8 | T8 (final recommendation) — needs T3, T5/T6, T7 all in hand | P1 + P4 |
+| Tue–Thu 19–27 Aug | throughout | Draft static report sections (dataset details, tools/libraries, problem statement, methodology) whenever free — don't wait for 27 Aug to start writing | P1 |
+| Thu 27 Aug | 9 | Assemble the full PDF report + executive summary, run the 15-point notebook checklist, gather Virtual Lab screenshots | Whole team, P1 leads |
+| Fri 28 Aug | 10 (deadline) | Final start-to-end run-through, zip, **submit early in the day** — strictly no makeups, no late buffer | Whole team |
+
+Ten days is tight enough that the parallel T7/T3-T4 split isn't optional — if P2, P3, and P4 all wait for each other in sequence instead of branching after 20 Aug, the team runs out of runway before 28 Aug.
 
 ## Task-by-task plan
 
@@ -104,24 +112,24 @@ Answer all six, each with a specific number or config pulled from T3–T7 — no
 5. What's the main limitation of your chosen approach?
 6. How would you deploy this in production — reference §17's components (embedding service, index, metadata filters, monitoring).
 
-## Group contribution split
+## Group contribution split (4 members)
 
-The assignment's 6 contribution areas map directly to the 8 tasks — a natural 6-person (or fewer, doubled-up) split:
+Six contribution areas over four people means two people each own two areas — paired here so each person's load is ~2–3 marks and their active weeks don't all collide:
 
-| Area | Tasks | Marks |
-|---|---|---:|
-| Dataset & embedding | T1, T2 | 1.0 |
-| Similarity matrix comparison | T3 | 1.5 |
-| kNN baseline | T4 | 1.5 |
-| HNSW vs IVF | T5 | 2.0 |
-| Evaluation & analysis | T6, T7 | 3.0 |
-| Visualization & reporting | T8 + final PDF/report assembly | 1.0 + report |
+| Member | Areas | Tasks | Marks | Active when (18–28 Aug) |
+|---|---|---|---:|---|
+| P1 | Dataset & embedding **+** Visualization & reporting | T1, T2 · T8 + final report/exec-summary assembly | 2.0 + report | 19–20 Aug (setup, blocks everyone else), background report drafting 19–27 Aug, T8 26 Aug, assembly 27–28 Aug |
+| P2 | Similarity matrix comparison **+** kNN baseline | T3, T4 | 3.0 | 21–22 Aug, right after P1's 20 Aug embeddings land |
+| P3 | HNSW vs IVF | T5 | 2.0 | 21–24 Aug — starts same day as P2 (only needs T2), syncs with P2 ~22 Aug for T4's latency number |
+| P4 | Evaluation & analysis | T6, T7 | 3.0 | **T7: 21–22 Aug**, in parallel with P2 (only needs T2, not T3–T6) — don't wait for module order. **T6: 25 Aug**, once P3's T5 sweep lands 24 Aug |
 
-## Two things to verify before you start — genuinely ambiguous from this PDF alone
+P1 deliberately carries the lightest task-marks load because report assembly (exec summary, consolidated comparative tables, making sure every figure is labelled per the #15 risk flag) is real work that isn't separately marked but is required for every checklist item. P4's two tasks are split across the timeline rather than back-to-back — running T7 early avoids a week of idle time waiting on T5. Every member still documents their own contribution in both the notebook and the report per the contribution guidelines, regardless of this table.
 
-- ⚠️ **"Virtual Lab screenshots"** — General Instruction #10 lists these as a required, penalizable-if-missing item ("missing Virtual Lab screenshots ... may lead to a reduction of marks"), and #4 requires the "prescribed environment" specifically. Neither is defined in this PDF — that's almost certainly set up in the course handout / Canvas (the "prescribed environment" is very likely BITS's Virtual Lab). **Confirm what this environment is and what screenshots are expected before you build anything** — code correctly run in Colab or a local notebook may not count if the prescribed environment is something else.
-- ⚠️ **One PDF or two?** Instruction #2 asks for "the completed assignment notebook in both formats: (a) `.ipynb`, (b) PDF format of the executed notebook" — that reads as a straight PDF export of the notebook itself (all cells + outputs, via `nbconvert`/print). Separately, Instruction #11 and the Deliverables section ask for a "final report in PDF format," capped at 30 pages, with its own structure (methodology, tables, graphs, exec summary) — that reads as a distinct written report, not a notebook export. The Deliverables section only lists two items (`.ipynb` + "PDF report"), which could mean they're treated as the same PDF, or that #2b was folded into #11. **Safest interpretation**: submit all three — `.ipynb`, the notebook exported to PDF, and the separate structured report PDF — zipped together. Confirm with the instructor/TA if possible; Instruction #10 explicitly penalizes "absence of either the .ipynb file or the final PDF report."
-- ⚠️ **Confirm "PS2" is actually your group's assigned set** (General Instructions #5: "submission of an incorrect Assignment Set will not be evaluated" — zero, not a deduction). The filename also contains `SD`, which isn't explained anywhere in the extracted text — check the handout/Canvas for what that suffix denotes before assuming this is definitely your group's variant.
+## Resolved clarifications
+
+- ✅ **"Prescribed environment" (#4) and "Virtual Lab" (#10), resolved** — the course has issued remote system access with good specs (confirmed). Run the actual computation there rather than on a personal laptop, and take screenshots of the notebook running on that system for instruction #10's "Virtual Lab screenshots" requirement — a few per module (T2 embedding generation, T5 index building, T6 plots) is a safe amount. This also means model/dataset choice doesn't need to be compute-conservative: `bge-large-en-v1.5` (T2's stronger model recommendation) and the larger `FiQA-2018` corpus are both fine if you'd rather use them than the smaller options.
+- ✅ **Two files, not three** — going with the Deliverables section's literal listing: `.ipynb` + one PDF report (max 30 pages), zipped together. That PDF report should do double duty for instruction #2b's "PDF format of the executed notebook," so build it accordingly rather than as pure narrative: include the actual code (or key snippets) alongside its output for every task, not just prose describing what you did — screenshots/exports of executed cells, not just result tables. That gives the single report the best chance of satisfying both #2b and #11/Deliverables at once. If a TA later asks specifically for a raw `nbconvert` export as a third file, that's a five-minute fix, not a redesign.
+- ✅ **`SD` suffix, resolved — "Student Details"** (per-group filename tag, not a problem-statement variant code). So the filename itself doesn't raise a "wrong set" risk; it's just this document's per-group naming, not a sign there's a different PS2 variant out there. General Instructions #5's warning about submitting the correct Assignment Set still applies in the general sense (this is Problem Statement 2, not PS1/PS3/etc.) — worth a quick confirmation that Group 129 was assigned PS2 specifically, but not because of the `SD` tag.
 
 ## Grading risk flags (easy to lose marks even with correct code)
 
@@ -156,4 +164,4 @@ Notebook must include all of (PDF instruction §7 a–o — every letter is grad
 
 Report PDF (max 30 pages): experimental methodology, comparative tables, graphs, retrieval examples, analysis/recommendations, **one-page executive summary**.
 
-Submit (see the "one PDF or two?" flag above): `.ipynb` + notebook-exported PDF + report PDF, zipped as one file per group. Double-check the **correct assignment set** was used — an incorrect set is not evaluated at all — and that you have whatever Virtual Lab screenshots the course expects.
+Submit two files, zipped together: `.ipynb` + the PDF report (built to double as evidence of the executed notebook — see above). Double-check PS2 was Group 129's assigned set, and that you have the Virtual Lab screenshots the course expects.

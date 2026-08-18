@@ -24,6 +24,8 @@
 
 ⚠️ **Where slide 26 and the handout still disagree: assignment duration** — handout ~15 days, slide ~3 weeks. Since the slide was wrong on quizzes, **plan for 15 days.** Being early costs nothing; being late is uncorrectable — *strictly no makeups*.
 
+**Assignment 1 (PS2 — embedding models & ANN search), Group 129, due 28 Aug 2026 — roadmap:** `ass-1/ROADMAP.md`.
+
 > ### 📌 Note on the handout's cohort
 >
 > The handout held is `(S2-25_AIMLCZG521) - April 2026.pdf`, Version 2.0, dated 25/02/2025 — labelled for the **April–May** cohort, while your recordings are labelled **S1-26**. The evaluation scheme evidently carried over unchanged, so this is not a live problem.
