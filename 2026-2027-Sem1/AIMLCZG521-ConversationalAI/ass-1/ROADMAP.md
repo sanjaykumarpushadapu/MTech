@@ -20,97 +20,98 @@ Source: `S1_26_AIMLZG521_Assignment1_PS2_SD.pdf` · **Group 129** · 10 marks ·
 
 Everything here is already covered conceptually in `notes/S02-retrieval.md` — this assignment is that note's Part 2 (and half of Part 1) turned into code. Section numbers below point at the exact place to re-read before implementing each task.
 
-## Timeline — 18 to 28 Aug 2026 (10 days)
+## Day-by-day execution plan
 
-The module order (M1→M2→M3→M4) is the right order to *read and understand* the tasks, but it is **not** the tightest order to *execute* them in a 4-person team — T7 only depends on T2, not on T3–T6, so it doesn't need to wait for module 3 to finish, and with only 10 days there's no slack to waste.
+One linear path, in date order — each step is a concrete action, not a description. S02 note section numbers (§) tell you where to re-read the concept before implementing it. **Why this order:** T1→T2 gates everything; T3 and T4 both need T2; T5 needs T2 plus T4's latency number; T6 needs T5; T7 needs only T2, so it runs in parallel with T3/T4 instead of waiting; T8 and the report need everything finished. With only 10 days, skipping the parallel branch (T7 running alongside T3/T4) means running out of runway before 28 Aug.
 
-**Dependency chain:** T1→T2 gates everything. T3 and T4 both need T2. T5 needs T2, and needs T4's latency number for its "speed relative to exact search" measurement. T6 needs T5. T7 needs only T2 — no dependency on T3–T6. T8 and the report need everything finished.
+### Day 0 — Tue 18 Aug (today): kickoff — whole team
 
-| Date | Day | Focus | Who |
-|---|---|---|---|
-| Tue 18 Aug | 0 (today) | Kickoff: confirm remote system access, pick the dataset (SciFact/NFCorpus/FiQA-2018) and both embedding models, lock in the 4-person split | Whole team |
-| Wed–Thu 19–20 Aug | 1–2 | T1 (corpus/queries) + T2 (embeddings, both models, logged specs) | P1 |
-| Fri–Sat 21–22 Aug | 3–4 | T3 + T4 (similarity metrics, exact kNN baseline) **running in parallel with** T7 (qualitative comparison) — both branches only need P1's Thu embeddings | P2 → T3, T4 · P4 → T7 |
-| Fri 21–Mon 24 Aug | 3–6 | T5 (HNSW vs IVF) — starts same day as P2/P4, needs T4's latency number from P2 (~22 Aug) to finish the "speed relative to exact search" measurement | P3 |
-| Tue 25 Aug | 7 | T6 (trade-off plots) — needs P3's T5 sweep, finished 24 Aug | P4 |
-| Wed 26 Aug | 8 | T8 (final recommendation) — needs T3, T5/T6, T7 all in hand | P1 + P4 |
-| Tue–Thu 19–27 Aug | throughout | Draft static report sections (dataset details, tools/libraries, problem statement, methodology) whenever free — don't wait for 27 Aug to start writing | P1 |
-| Thu 27 Aug | 9 | Assemble the full PDF report + executive summary, run the 15-point notebook checklist, gather Virtual Lab screenshots | Whole team, P1 leads |
-| Fri 28 Aug | 10 (deadline) | Final start-to-end run-through, zip, **submit early in the day** — strictly no makeups, no late buffer | Whole team |
+1. Confirm everyone can log into the provided remote system.
+2. Pick the dataset: `SciFact`, `NFCorpus`, or `FiQA-2018` (all three clear the 1,000-passage/50-query minimums — compute isn't a constraint on the remote system, so pick by topic interest, not size).
+3. Pick the two embedding models: `distilbert-base-uncased` (mean pooling) and `bge-large-en-v1.5`.
+4. Lock in roles: P1, P2, P3, P4 per the split below.
+5. Set up one shared notebook/folder the whole team commits results into.
 
-Ten days is tight enough that the parallel T7/T3-T4 split isn't optional — if P2, P3, and P4 all wait for each other in sequence instead of branching after 20 Aug, the team runs out of runway before 28 Aug.
+### Days 1–2 — Wed–Thu 19–20 Aug: T1 + T2 · owner P1 · 1.0 mark
 
-## Task-by-task plan
+1. Download the chosen dataset's `corpus`, `queries`, and `qrels` (BEIR ships all three pre-labelled).
+2. Optional: subsample — never below 1,000 passages / 50 queries.
+3. Record the dataset name, size, and source (needed verbatim for checklist item e).
+4. Generate embeddings for the full corpus with **both** models.
+5. Log per model: name, embedding dimension, max/typical input length, pooling strategy used (§7), approximate embedding time.
+6. Write "why encoder models are appropriate" — source from §3–§4 (fixed bidirectional whole-input representation vs a decoder's next-token focus). Keep this separate from step 7.
+7. Write "why these two specific models differ" — source from §9 (contrastive training vs MLM).
+8. **Share the embeddings + specs with P2, P3, and P4 by end of day** — everything downstream is blocked on this.
 
-Each task below is a literal step list — do them in order, check them off as you go. S02 note section numbers (§) tell you where to re-read the concept before implementing it.
+### Days 3–4 — Fri–Sat 21–22 Aug: T3 + T4 (owner P2, 3.0 marks) run in parallel with T7 (owner P4, 2.0 marks)
 
-### T1 — Corpus & query dataset · 0.5 marks
-
-1. Choose one BEIR-format dataset: `SciFact` (~5K docs / 300 queries), `NFCorpus` (~3.6K / 323), or `FiQA-2018` (~57K / 648) — all clear the 1,000-passage / 50-query minimums out of the box.
-2. Download its `corpus`, `queries`, and `qrels` (relevance labels) — BEIR ships all three already in the right shape, so you don't hand-build relevance judgments.
-3. Optional: subsample down to a lighter working set — never below 1,000 passages or 50 queries.
-4. Record the dataset name, size, and source now — you'll need it verbatim for checklist item (e).
-
-### T2 — Embedding generation & pooling · 0.5 marks
-
-1. Pick two encoder models with clearly different profiles:
-   - `distilbert-base-uncased` with mean pooling — reuse Lab 2's `Embedding-distilbert.ipynb` code.
-   - One contrastively-trained model: `bge-large-en-v1.5` (or `bge-small-en-v1.5` / `all-MiniLM-L6-v2` if compute is tight). Profiled in S02 §8.
-2. Generate embeddings for the **same** corpus with both models.
-3. For each model, log: name, embedding dimension, max/typical input length, pooling strategy used (§7), approximate embedding time.
-4. Answer **"why are encoder models appropriate"** — this is a separate sub-requirement from step 5. Source it from §3–§4: encoders build one fixed, bidirectional representation of the whole input in a single pass, which is exactly what similarity search needs; a decoder is built to predict the *next* token, not a stable whole-input vector.
-5. Explain **why your two specific models differ** — source it from §9 (contrastive training vs MLM). This is the model-comparison half; keep it separate from step 4.
-
-### T3 — Similarity metric comparison · 1.5 marks
-
-1. Pick **one** of your two Task 2 models — the task says "for one selected embedding model," so don't repeat this for both.
+**P2 — T3 (similarity metrics, 1.5 marks):**
+1. Pick **one** of the two Day-2 models — the task says "for one selected embedding model," don't repeat for both.
 2. Select at least 20 query-document pairs.
-3. Compute cosine similarity, dot product, and L2/Euclidean distance for every pair (definitions in §10).
-4. Check whether the Top-k ranking changes depending on which metric you use.
-5. Check whether normalizing the vectors changes the result — cosine and dot product only rank identically once vectors are normalized; show this, don't just assert it.
-6. State which metric is most suitable for your embeddings, referencing the math (not the library default).
+3. Compute cosine similarity, dot product, and L2/Euclidean distance for every pair (§10).
+4. Check whether the ranking changes across the three metrics.
+5. Check whether normalizing the vectors changes the result — cosine and dot product only rank identically once normalized; show it, don't assert it.
+6. State which metric is most suitable, referencing the math.
 
-### T4 — Exact kNN baseline · 1.5 marks
+**P2 — T4 (exact kNN baseline, 1.5 marks), right after T3:**
+7. Implement brute-force search: compare every query embedding against every document embedding.
+8. Retrieve Top-5 per query.
+9. Measure per query: latency, Recall@5, and vectors examined (= corpus size N — report it anyway, T5 needs it as the comparison point).
+10. Report the average latency across the query set — **send this number to P3 as soon as it's ready**, T5 depends on it.
+11. Ground the "why this baseline matters" write-up in §12/§11 (O(N) cost).
 
-1. Implement brute-force search: for each query, compare its embedding against every document embedding.
-2. Retrieve Top-5 per query.
-3. Measure, per query: search latency, Recall@5, and number of vectors examined (this equals the full corpus size N for exact search every time — report it anyway, since it's the number T5's ANN configs get compared against).
-4. Report the average latency across the whole query set.
-5. Ground the "why this baseline matters" explanation in §12/§11 (exact search costs O(N) per query).
+**P4 — T7 (qualitative analysis, 2.0 marks), same two days, independently:**
+1. Select 10 representative queries.
+2. Retrieve Top-5 from each of the two embedding models for every query.
+3. Compare the two result lists side by side.
+4. Pick **at least 3 of 6** named difference types (semantic similarity, keyword overlap, domain-specific terminology, ambiguous/short/long queries) with a real example pair for each.
+5. Explain *why* the models differ per example, tying back to §9 (contrastive model should win on paraphrase/domain terms; DistilBERT should lean on lexical overlap).
 
-### T5 — HNSW vs IVF · 2 marks
+### Days 3–6 — Fri 21–Mon 24 Aug: T5 · owner P3 · 2.0 marks (starts same day as P2/P4)
 
-1. Build an HNSW index (`faiss.IndexHNSWFlat`) and an IVF index (`faiss.IndexIVFFlat`) over the same embedding vectors.
-2. For HNSW, sweep `ef_search` across at least two values, e.g. start `M=16`, `ef_construction=200`, then vary `efSearch` 50 → 500 (§16). ⚠️ FAISS's real attribute name is camelCase: `index.hnsw.efSearch` / `index.hnsw.efConstruction` — using the snake_case from the literature silently does nothing, no error.
-3. For IVF, vary `nprobe` (attribute: `index.nprobe`) across at least three values.
-4. Run the identical query set through every configuration.
-5. For each configuration measure: Recall@5, average query latency, speed relative to the T4 exact baseline, and candidate vectors examined — approximate this via `ef_search` for HNSW and `nprobe/nlist × N` for IVF, and say explicitly that it's an approximation ("where measurable" in the PDF is permission to do exactly this).
+1. Build an HNSW index (`faiss.IndexHNSWFlat`) and an IVF index (`faiss.IndexIVFFlat`) over the same embeddings.
+2. Sweep `ef_search` for HNSW across at least two values — start `M=16`, `ef_construction=200`, vary `efSearch` 50→500 (§16). ⚠️ FAISS's real attribute names are camelCase — `index.hnsw.efSearch` / `index.hnsw.efConstruction` — the snake_case version silently does nothing.
+3. Vary `nprobe` for IVF (`index.nprobe`) across at least three values.
+4. Once P2's Day-4 latency number arrives (~22 Aug), run the identical query set through every configuration.
+5. For each configuration, measure Recall@5, average query latency, speed relative to P2's exact baseline, and candidate vectors examined — approximate via `ef_search` for HNSW and `nprobe/nlist × N` for IVF, and say explicitly that it's an approximation.
 
-### T6 — Trade-off analysis · 1 mark
+### Day 7 — Tue 25 Aug: T6 · owner P4 (now free after finishing T7) · 1.0 mark
 
 1. Plot Recall@5 vs query latency across every HNSW/IVF configuration from T5.
 2. Plot Recall@5 vs search efficiency (vectors examined, or speedup vs the exact baseline).
-3. From the two plots, name: the fastest config, the highest-recall config, the best-balanced config.
-4. Answer: for a large query volume, which configuration would you deploy and why — cite the actual numbers from steps 1–3, not a general statement.
+3. Name the fastest config, the highest-recall config, and the best-balanced config.
+4. Answer: for a large query volume, which configuration would you deploy and why — cite the actual T5/T6 numbers.
 
-### T7 — Qualitative retrieval analysis · 2 marks
+### Day 8 — Wed 26 Aug: T8 · owners P1 + P4 · 1.0 mark
 
-1. Select 10 representative queries.
-2. Retrieve Top-5 from each of your two Task 2 models for every query.
-3. Compare the two result lists side by side.
-4. Pick **at least 3 of the 6** named difference types (semantic similarity, keyword overlap, domain-specific terminology, ambiguous queries, short queries, long queries) and give a real example pair for each — don't just assert all six.
-5. Explain *why* the models differ for each example, tying back to §9: the contrastive model should win on paraphrase/domain terms; the MLM-only model (DistilBERT) should lean more on lexical overlap.
-
-### T8 — Final recommendation · 1 mark
-
-Answer all six, each with a specific number or config pulled from T3–T7 — not a general statement:
-
+Answer all six with a specific number or config from T3–T7, not a general statement:
 1. Which embedding model performed better?
 2. Which similarity metric was most appropriate?
 3. Which ANN method had the best trade-off?
-4. What configuration for a resource-constrained deployment — point at a specific T5/T6 config (smaller `M`/lower `ef_search`, or IVF with fewer `nprobe`), not a new idea introduced here.
-5. What's the main limitation of your chosen approach?
-6. How would you deploy this in production — reference §17's components (embedding service, index, metadata filters, monitoring).
+4. Resource-constrained deployment config — point at a specific T5/T6 result (smaller `M`/lower `ef_search`, or IVF with fewer `nprobe`).
+5. Main limitation of the chosen approach?
+6. How would you deploy this in production — reference §17 (embedding service, index, metadata filters, monitoring).
+
+### Throughout Days 1–9 (19–27 Aug, background): report drafting · owner P1
+
+1. Draft the static sections that don't depend on anyone else's results as soon as there's spare time: dataset details, tools/libraries, problem statement, methodology write-up.
+2. Fold in each teammate's results as they land (P2's Day 4, P3's Day 6, P4's Day 7/8) rather than waiting until Day 9 to start assembling.
+
+### Day 9 — Thu 27 Aug: assemble everything · whole team, P1 leads
+
+1. Merge all task write-ups into the notebook, in task order, each with its own explanation/justification/inference (not one generic block — see grading risk flags).
+2. Build the PDF report: experimental methodology, comparative tables, graphs, retrieval examples, analysis/recommendations, one-page executive summary.
+3. Write the final conclusion as four explicit sub-points: key observations, strengths, limitations, future improvements (#16).
+4. Check every figure and table is labelled and explained (#15).
+5. Gather Virtual Lab screenshots from the remote system.
+6. Run the full 15-point notebook checklist (a–o, below).
+
+### Day 10 — Fri 28 Aug: submit · whole team · DEADLINE
+
+1. Run the notebook start-to-end on a clean kernel — zero errors, every cell shows output.
+2. Confirm the report PDF also carries code + outputs per task (it's doing double duty as the "executed notebook" evidence — see below).
+3. Zip `.ipynb` + report PDF together.
+4. **Submit early in the day** — strictly no makeups, no late buffer.
 
 ## Group contribution split (4 members)
 
