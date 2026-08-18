@@ -8,6 +8,10 @@
 *.xlsx
 *.zip
 
+# Exception: assignment briefs are small, ours to keep, and useful in-repo —
+# track PDFs that live directly in an assignment folder (e.g. ass-1/, Assignment/).
+!2026-2027-Sem1/*/[Aa]ss*/*.pdf
+
 # Textbooks kept locally for reference — never committed
 _library/
 !_library/README.md
