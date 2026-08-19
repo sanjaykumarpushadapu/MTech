@@ -1,0 +1,10 @@
+# PS2_Group129.ipynb — packages required to run this notebook end-to-end.
+# Install with: pip install -r requirements.txt
+
+datasets                # Task 1 — loads the SciFact BEIR dataset from Hugging Face
+pandas
+numpy
+
+sentence-transformers    # Task 2+ — embedding models (pulls in torch, transformers as dependencies)
+faiss-cpu                # Task 5+ — HNSW / IVF ANN indexes
+matplotlib                # Task 6+ — plots
