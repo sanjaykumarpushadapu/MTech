@@ -6,6 +6,7 @@ pandas
 numpy
 
 sentence-transformers    # Task 2+ — embedding models (pulls in torch, transformers as dependencies)
+huggingface-hub          # Task 2+ — downloads missing models into models/
 faiss-cpu                # Task 5+ — HNSW / IVF ANN indexes
 matplotlib                # Task 6+ — plots
 truststore              # makes Python trust the OS/corporate cert store (fixes SSL behind a proxy)
