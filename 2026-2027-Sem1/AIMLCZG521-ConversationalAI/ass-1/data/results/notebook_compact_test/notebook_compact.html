@@ -7917,13 +7917,42 @@ Normalized vectors   Normalized vectors
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Assignment-Scope">Assignment Scope<a class="anchor-link" href="#Assignment-Scope">¶</a></h2><p>This assignment studies semantic retrieval quality and approximate nearest-neighbor search efficiency using two embedding models.</p>
-<ul>
-<li><strong>Module 1</strong> — Dataset and embedding preparation</li>
-<li><strong>Module 2</strong> — Similarity metrics and exact retrieval</li>
-<li><strong>Module 3</strong> — HNSW and IVF ANN search</li>
-<li><strong>Module 4</strong> — Embedding quality analysis and final recommendation</li>
-</ul>
+<h2 id="Executive-Summary-(one-page)">Executive Summary (one page)<a class="anchor-link" href="#Executive-Summary-(one-page)">¶</a></h2><p><strong>Objective.</strong> Compare two encoder embedding models and two approximate-nearest-neighbour (ANN) indexes on a real retrieval task, trading off <strong>semantic quality vs. search efficiency</strong>, and recommend a production configuration — every claim backed by executed results.</p>
+<p><strong>Dataset.</strong> SciFact (BEIR): <strong>5,183</strong> document passages, <strong>300</strong> queries, each with relevance judgments (qrels). Clears the 1,000-passage / 50-query minimums.</p>
+<p><strong>Models.</strong> <code>distilbert-base-uncased</code> (768-dim, mean pooling, general-purpose) vs. <code>BAAI/bge-large-en-v1.5</code> (1024-dim, [CLS] pooling, retrieval-tuned). A deliberately contrasting pair.</p>
+<p><strong>Key results (executed).</strong></p>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Best embedding model (exact Recall@5)</td>
+<td><strong>BGE-large 0.780</strong> vs DistilBERT 0.108 (~7x higher)</td>
+</tr>
+<tr>
+<td>Most appropriate metric</td>
+<td><strong>Cosine</strong> — identical ranking to dot/L2 on unit-normalized vectors; scale-invariant. Normalization changes dot-vs-cosine ranking for 4/5 DistilBERT queries (vectors not unit-length) but not for BGE (already unit-length)</td>
+</tr>
+<tr>
+<td>Best ANN trade-off</td>
+<td><strong>HNSW efSearch=16</strong> — Recall@5 = 0.777 at 12.85x speedup: fastest config meeting the Recall@5 &gt;= 0.75 bar</td>
+</tr>
+<tr>
+<td>Fastest ANN</td>
+<td>IVF nprobe=1 (30.95x) but Recall@5 = 0.502 — rejected by the quality bar</td>
+</tr>
+<tr>
+<td>Model disagreement (Task 7)</td>
+<td>Mean Top-5 set overlap ~ 0.11 — the two models genuinely retrieve different documents</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommendation.</strong> Embed with <strong>BGE-large (unit-normalized)</strong> and serve <strong>HNSW efSearch=16</strong>; where RAM is the binding constraint use <strong>IVF</strong> (smaller footprint) tuned to meet the recall bar. Deploy by encoding documents offline, normalizing, indexing, and applying the same encoder + normalization to queries at search time.</p>
+<hr/>
 </div>
 </div>
 </div>
@@ -7956,11 +7985,11 @@ Normalized vectors   Normalized vectors
 </tr>
 <tr>
 <td>Best ANN trade-off</td>
-<td><strong>HNSW efSearch=16</strong> — Recall@5 ~ 0.77 at ~3-4x speedup: fastest config meeting the Recall@5 &gt;= 0.75 bar</td>
+<td><strong>HNSW efSearch=16</strong> — Recall@5 = 0.777 at 12.85x speedup: fastest config meeting the Recall@5 &gt;= 0.75 bar</td>
 </tr>
 <tr>
 <td>Fastest ANN</td>
-<td>IVF nprobe=1 (~10-14x) but Recall@5 ~ 0.50 — rejected by the quality bar</td>
+<td>IVF nprobe=1 (30.95x) but Recall@5 = 0.502 — rejected by the quality bar</td>
 </tr>
 <tr>
 <td>Model disagreement (Task 7)</td>
@@ -7981,7 +8010,7 @@ Normalized vectors   Normalized vectors
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Tools-and-Libraries-Used">Tools and Libraries Used<a class="anchor-link" href="#Tools-and-Libraries-Used">¶</a></h2><ul>
-<li><strong>Python 3.10</strong></li>
+<li><strong>Python 3.14.5</strong> (recorded execution environment)</li>
 <li><code>datasets</code> (Hugging Face) — loading the BEIR-format retrieval dataset</li>
 <li><code>pandas</code>, <code>numpy</code> — data handling</li>
 <li><code>sentence-transformers</code> — encoder embedding models (Task 2 onward)</li>
@@ -8020,7 +8049,7 @@ Normalized vectors   Normalized vectors
 <tr>
 <td>Best embedding model</td>
 <td><strong>BGE-large</strong></td>
-<td>Recall@5 = 0.780 vs 0.108 for DistilBERT (7× higher)</td>
+<td>Recall@5 = 0.780 vs 0.108 for DistilBERT (7x higher)</td>
 </tr>
 <tr>
 <td>Best similarity metric</td>
@@ -8030,12 +8059,17 @@ Normalized vectors   Normalized vectors
 <tr>
 <td>Best ANN trade-off</td>
 <td><strong>HNSW <code>efSearch=16</code></strong></td>
-<td>Recall@5 ≈ 0.77, fastest config meeting the 0.75 quality bar</td>
+<td>Recall@5 = 0.777 at 12.85x speedup, fastest tested configuration meeting the 0.75 quality bar</td>
+</tr>
+<tr>
+<td>Fastest ANN</td>
+<td><strong>IVF <code>nprobe=1</code></strong></td>
+<td>Recall@5 = 0.502 at 30.95x speedup; rejected by the quality bar</td>
 </tr>
 <tr>
 <td>Resource-constrained option</td>
 <td><strong>IVF</strong> (lower memory)</td>
-<td>HNSW graph memory &gt; IVF centroid+list; use IVF nprobe tuned to recall target</td>
+<td>HNSW graph memory &gt; IVF centroid+list; use IVF <code>nprobe=20</code> to meet the recall target</td>
 </tr>
 <tr>
 <td>Main limitation</td>
@@ -8049,7 +8083,7 @@ Normalized vectors   Normalized vectors
 </tr>
 </tbody>
 </table>
-<p><strong>Recommendation:</strong> Embed with BGE-large (unit-normalized vectors) and serve an HNSW index at <code>efSearch=16</code>. This configuration achieves Recall@5 ≈ 0.77 at 3–4× the speed of exact search, with quality above the 0.75 operational threshold.</p>
+<p><strong>Recommendation:</strong> Embed with BGE-large (unit-normalized vectors) and serve an HNSW index at <code>efSearch=16</code>. This configuration achieves Recall@5 = 0.777 at 12.85x the exact-search speed, with quality above the 0.75 operational threshold.</p>
 </div>
 </div>
 </div>
@@ -8201,7 +8235,7 @@ Every query has &gt;=1 relevance judgment: True
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[Task 2] device=cpu, batch_size=32
+<pre>[Task 2] device=cpu, batch_size=32, cpu_threads=12
 === distilbert-base-uncased ===
   Loaded saved embeddings: docs=(5183, 768), queries=(300, 768)
 === BAAI/bge-large-en-v1.5 ===
@@ -8210,7 +8244,7 @@ Every query has &gt;=1 relevance judgment: True
 </div>
 </div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -9260,7 +9294,7 @@ Query [1099] (4 words): Statins decrease blood cholesterol.
 <li><strong>Counter-example: short-query / general-model advantage</strong> — a query where DistilBERT retrieves more relevant documents than BGE (or, where the BGE advantage is smallest). BGE wins <em>on average</em> but not <em>universally</em>; short or near-duplicate claims with high surface-form overlap can still favour the general model's keyword-matching behaviour.</li>
 </ol>
 <p>Jaccard is interpreted as <strong>Top-5 set overlap</strong>, not full ranking agreement; a separate first-result agreement value is reported because two models can retrieve the same documents in a different order. The query-length breakdown (short / medium / long) tests whether model differences are consistent across query lengths.</p>
-<h3 id="Inference">Inference<a class="anchor-link" href="#Inference">¶</a></h3><p>Across the ten length-diverse queries, BGE-large achieves higher mean qrel hits@5 than DistilBERT (0.6 vs 0.3 in this sample) and consistently higher lexical overlap, but the counter-example above confirms the advantage is not uniform. Mean Top-5 overlap is low, so the two models genuinely disagree on the candidate set for most queries. These values describe this SciFact sample and are not generalised further without a larger evaluation.</p>
+<h3 id="Inference">Inference<a class="anchor-link" href="#Inference">¶</a></h3><p>Across the ten length-diverse queries, BGE-large achieves higher mean qrel hits@5 than DistilBERT (<strong>0.700 vs 0.300 in this sample</strong>) and consistently higher lexical overlap, but the counter-example above confirms the advantage is not uniform. Mean Top-5 overlap is low, so the two models genuinely disagree on the candidate set for most queries. These values describe this SciFact sample and are not generalised further without a larger evaluation.</p>
 </div>
 </div>
 </div>
@@ -9441,17 +9475,17 @@ Supporting cross-model exact comparison:
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h1 id="Final-Conclusion">Final Conclusion<a class="anchor-link" href="#Final-Conclusion">¶</a></h1><h2 id="Recommendation-(one-line)">Recommendation (one line)<a class="anchor-link" href="#Recommendation-(one-line)">¶</a></h2><p><strong>Embed with <code>BAAI/bge-large-en-v1.5</code> (unit-normalized) and serve an HNSW index at <code>efSearch=16</code></strong> — the fastest configuration that still clears the Recall@5 ≥ 0.75 quality bar. Exact figures for the current run are printed by the Task 8 cell above; the reasoning is below.</p>
-<h2 id="Why-this-model">Why this model<a class="anchor-link" href="#Why-this-model">¶</a></h2><p>On the full corpus with exact cosine kNN, <strong>BGE-large reaches Recall@5 = 0.780 versus 0.108 for DistilBERT — about 7× higher.</strong> The qualitative analysis agrees (mean qrel hits@5 0.6 vs 0.3 across ten queries), while still surfacing individual queries where DistilBERT wins, so the choice is evidence-based rather than absolute. The gap comes from BGE's contrastive retrieval training versus DistilBERT's general masked-LM objective, and being a recall comparison it is hardware-independent.</p>
+<h2 id="Why-this-model">Why this model<a class="anchor-link" href="#Why-this-model">¶</a></h2><p>On the full corpus with exact cosine kNN, <strong>BGE-large reaches Recall@5 = 0.780 versus 0.108 for DistilBERT — about 7x higher.</strong> The qualitative analysis agrees (mean qrel hits@5 <strong>0.700 vs 0.300 across ten queries</strong>), while still surfacing individual queries where DistilBERT wins, so the choice is evidence-based rather than absolute. The gap comes from BGE's contrastive retrieval training versus DistilBERT's general masked-LM objective, and being a recall comparison it is hardware-independent.</p>
 <h2 id="Why-this-index-and-parameter">Why this index and parameter<a class="anchor-link" href="#Why-this-index-and-parameter">¶</a></h2><p>The parameter sweeps trace the recall/latency trade-off directly:</p>
 <ul>
 <li><strong>Exact search</strong> — Recall@5 0.780, scans all 5,183 vectors/query (the ground-truth ceiling).</li>
-<li><strong>HNSW <code>efSearch=16</code></strong> — Recall@5 ≈ 0.77, roughly <strong>3–4× faster</strong> than exact: the fastest tested configuration that still meets the 0.75 target.</li>
-<li><strong>IVF <code>nprobe=1</code></strong> — the fastest option overall (~14× speedup) but Recall@5 only ≈ 0.50, so it is rejected by the quality bar.</li>
+<li><strong>HNSW <code>efSearch=16</code></strong> — Recall@5 = 0.777, <strong>12.85x faster</strong> than exact: the fastest tested configuration that still meets the 0.75 target.</li>
+<li><strong>IVF <code>nprobe=1</code></strong> — the fastest option overall (<strong>30.95x speedup</strong>) but Recall@5 only = 0.502, so it is rejected by the quality bar.</li>
 </ul>
-<p>The decision rule is explicit: <strong>pick the lowest-latency configuration whose Recall@5 ≥ 0.75.</strong> HNSW <code>efSearch=16</code> wins because raising <code>efSearch</code> buys only marginal recall (0.78 at ef=64) for several times the latency, and IVF needs <code>nprobe≈20</code> to reach the same recall — by which point its speed advantage is gone. Absolute millisecond latencies are hardware-dependent; the executed Task 8 cell reports them for the machine this notebook was run on.</p>
+<p>The decision rule is explicit: <strong>pick the lowest-latency configuration whose Recall@5 ≥ 0.75.</strong> HNSW <code>efSearch=16</code> wins because raising <code>efSearch</code> buys only marginal recall (0.78 at ef=64) for several times the latency, and IVF needs <code>nprobe=20</code> to reach the same recall — by which point its speed advantage is gone. Absolute millisecond latencies are hardware-dependent; the executed Task 8 cell reports them for the machine this notebook was run on.</p>
 <h2 id="When-to-choose-differently">When to choose differently<a class="anchor-link" href="#When-to-choose-differently">¶</a></h2><ul>
 <li><strong>Recall-critical</strong> (e.g. legal/clinical retrieval): use exact search, or HNSW <code>efSearch≥64</code> (Recall@5 0.780 at a smaller speedup).</li>
-<li><strong>Latency-critical and lower recall acceptable</strong> (e.g. first-pass candidate generation before a re-ranker): IVF <code>nprobe=1</code> is fastest, accepting Recall@5 ≈ 0.50.</li>
+<li><strong>Latency-critical and lower recall acceptable</strong> (e.g. first-pass candidate generation before a re-ranker): IVF <code>nprobe=1</code> is fastest, accepting Recall@5 = 0.502.</li>
 </ul>
 <h2 id="Deployment">Deployment<a class="anchor-link" href="#Deployment">¶</a></h2><p>Encode documents offline with BGE-large → L2-normalize → build the HNSW index. At query time apply the <strong>same</strong> encoder and normalization, search top-k, and rebuild/version the index whenever the corpus changes. Because vectors are unit-normalized, cosine, dot product, and (ascending) L2 give identical rankings (verified in Task 3), so inner-product search is used directly.</p>
 <h3 id="Strengths">Strengths<a class="anchor-link" href="#Strengths">¶</a></h3><p>Metric formulas implemented from definition; an exhaustive exact ground-truth baseline; a normalization experiment that shows a real effect (DistilBERT rankings change, BGE already unit-length); controlled HNSW/IVF sweeps timed identically to the exact baseline for a fair speedup; cross-model evaluation; and three distinct, evidence-backed retrieval-difference examples.</p>
