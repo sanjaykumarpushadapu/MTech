@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Builds PS2_Group129.pdf from the executed notebook, in a more compact
-# layout than plain `jupyter nbconvert --to pdf` (10pt font, 0.75in margins,
-# smaller code font). Measured to cut the same content from 47 -> 34 pages
-# versus the default nbconvert styling, to help stay under the assignment's
-# 30-page report cap. Requires: run all cells in Jupyter first (outputs must
+# layout than plain `jupyter nbconvert --to pdf` (code inputs excluded, 10pt
+# font, 0.75in margins). The report keeps markdown, tables, figures, and
+# saved outputs while omitting repeated source code, which keeps the PDF under
+# the assignment's 30-page report cap. Requires: run all cells in Jupyter first (outputs must
 # be saved in the .ipynb), a LaTeX install (TeX Live / MacTeX with xelatex),
 # and `pip install nbconvert`.
 #
@@ -14,7 +14,7 @@ cd "$(dirname "$0")"
 NB="PS2_Group129.ipynb"
 WORK="$(mktemp -d)"
 
-jupyter nbconvert --to latex "$NB" --output notebook --output-dir "$WORK"
+jupyter nbconvert --to latex "$NB" --TemplateExporter.exclude_input=True --output notebook --output-dir "$WORK"
 
 python3 - "$WORK/notebook.tex" <<'PYEOF'
 import sys
