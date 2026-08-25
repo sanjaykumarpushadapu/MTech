@@ -13,3 +13,16 @@ truststore              # makes Python trust the OS/corporate cert store (fixes 
 #python -c "import platform, sys; print(sys.executable); print(platform.machine()); print(sys.version)"
 #python -c "import numpy; print('numpy', numpy.__version__); import faiss; print('faiss imported')"
 #python -c "import torch; print('torch', torch.__version__); print('MPS available:', torch.backends.mps.is_available())"
+#sanjaykumarpushadapu@MacBookPro ass-1 %  source /Users/sanjaykumarpushadapu/Projects/MTech/2026-2027-Sem1/AIMLCZG521-ConversationalAI/ass-1/.venv/bin/
+activate
+(.venv) sanjaykumarpushadapu@MacBookPro ass-1 % python -c "import platform, sys; print(sys.executable); print(platform.machine()); print(sys.version)" 
+/Users/sanjaykumarpushadapu/Projects/MTech/2026-2027-Sem1/AIMLCZG521-ConversationalAI/ass-1/.venv/bin/python
+arm64
+3.11.5 (v3.11.5:cce6ba91b3, Aug 24 2023, 10:50:31) [Clang 13.0.0 (clang-1300.0.29.30)]
+(.venv) sanjaykumarpushadapu@MacBookPro ass-1 % python -c "import numpy; print('numpy', numpy.__version__); import faiss; print('faiss imported')"
+numpy 1.23.5
+faiss imported
+(.venv) sanjaykumarpushadapu@MacBookPro ass-1 % python -c "import torch; print('torch', torch.__version__); print('MPS available:', torch.backends.mps.is_available())"
+torch 2.13.0
+MPS available: True
+(.venv) sanjaykumarpushadapu@MacBookPro ass-1 % 
