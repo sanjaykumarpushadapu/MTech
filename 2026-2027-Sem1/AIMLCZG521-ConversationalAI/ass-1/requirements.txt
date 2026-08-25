@@ -10,3 +10,6 @@ huggingface-hub          # Task 2+ — downloads missing models into models/
 faiss-cpu                # Task 5+ — HNSW / IVF ANN indexes
 matplotlib                # Task 6+ — plots
 truststore              # makes Python trust the OS/corporate cert store (fixes SSL behind a proxy)
+#python -c "import platform, sys; print(sys.executable); print(platform.machine()); print(sys.version)"
+#python -c "import numpy; print('numpy', numpy.__version__); import faiss; print('faiss imported')"
+#python -c "import torch; print('torch', torch.__version__); print('MPS available:', torch.backends.mps.is_available())"
