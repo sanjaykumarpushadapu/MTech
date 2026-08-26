@@ -1,0 +1,6 @@
+{
+  "elapsed_time": 87.58611445900169,
+  "n_corpus": 10000,
+  "n_queries": 500,
+  "batch_size": 64
+}
