@@ -55,7 +55,7 @@ cd tools && node check-slide-coverage.mjs \
 | 41 | HNSW (Hierarchical Navigable Small World) | Hierarchical, HNSW, Navigable, Small, World |
 | 42 | HNSW (Hierarchical Navigable Small World) | Concept, Hierarchical, HNSW, List, Malkov, Multi-Layer, Navigable, Skip, Small, Source, Vectors, World, Yashunin |
 | 43 | HNSW: Memory Layout | Components, Connections, Example, HNSW, Layer, Layout, Memory, Original, Search, Storage, Vector |
-| 44 | HNSW: Memory Calculation by Scale | Budget, Graph, HNSW, Memory, Minimal, Overhead, Planning, Practical, Production, Scale, Vector |
+| 44 | HNSW: Memory Calculation by Scale | Budget, Graph, HNSW, Memory, Overhead, Planning, Practical, Production, Scale, Vector |
 | 45 | Parameter Tuning: HNSW | Default, Fast, Faster, Higher, HNSW, Layer, Lower, Parameter, Pro, Slow, Slower, Start, Time, Tip, Tuning, Typical |
 | 46 | Resources & Further Reading | Dense, Efficient, Foundation, Gurevych, HNSW, Karpukhin, Malkov, Passage, Product, Reading, Reimers, Retrieval, Sentence-BERT, Siamese, Vector, Yashunin |
 | 47 | References | CUy1DZZspM, Embedding |

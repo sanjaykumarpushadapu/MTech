@@ -1,55 +1,66 @@
-# 521 · S03 slide inventory
+# 521 · S03 slide inventory (ANN & Hybrid deck)
 
-Derived index of the session-4 deck (`Session4-Model-Landscape-Cost-Engineering.pdf`, instructor label "Lecture No. 4 | Module 1"), captured at intake so coverage can be re-checked without re-uploading the deck. Slide numbers, titles, and the named items on each slide only — no slide prose.
-
-This deck teaches the handout **L3** row (Model Landscape & Cost Engineering); the instructor's "Lecture 4" label reflects retrieval having taken two contact sessions (L2 embeddings + a hybrid-search session). Session identity resolved to handout L3 — see `source/MATERIAL-LOG.md`.
+Derived index of the **second** deck taught under handout L2, instructor label "Lecture No. 3 — ANN Search algorithm and Hybrid Retrieval" (62 slides). Its topics — deeper ANN algorithms (IVF, PQ), TF-IDF, BM25 mathematics, and RRF — are all handout-L2 scope, so its genuinely-new depth was folded into `notes/S03-ann-hybrid-retrieval.md` rather than made a new session (see `source/MATERIAL-LOG.md`, 27 Aug 2026). Slide numbers, titles and named items only.
 
 Verify with:
 
 ```bash
 cd tools && node check-slide-coverage.mjs \
   ../2026-2027-Sem1/AIMLCZG521-ConversationalAI/source/S03-slide-inventory.md \
-  ../2026-2027-Sem1/AIMLCZG521-ConversationalAI/notes/S03-model-landscape.md
+  ../2026-2027-Sem1/AIMLCZG521-ConversationalAI/notes/S03-ann-hybrid-retrieval.md
 ```
 
 | Slide | Title | Named items |
 |---|---|---|
-| 1 | Conversational AI | Model, Landscape, Cost, Engineering |
-| 2 | BITS Pilani | AIMLCZG521, Conversational, Lecture, Module |
-| 3 | Disclaimer & Acknowledgement | |
-| 4 | Learning Objectives | Dense, MoE, SLM, SSM, MMLU, GPTQ, AWQ, QLoRA, M_total, M_weights, M_KV, M_activation, vLLM |
-| 5 | Agenda | Dense, GPT-4o, Claude, Llama, Gemini, Mixtral, DeepSeek-V3, Phi-4, Gemma, Qwen2.5, Mamba-2, Jamba, FP32, NF4, GPTQ, AWQ, FP8, LoRA, QLoRA, KV-Cache, Activations |
-| 6 | The 2025 LLM Landscape | Dense Transformer, Mixture-of-Experts, Small LMs, State Space Models, GPT-4o, Claude 3.7 Sonnet, Llama 3.3, Gemini 2.0, DeepSeek-V3, Mixtral, Qwen2, Jamba-1.5, Phi-4, Gemma 3, Mamba-2, RWKV, MMLU, Context Window |
-| 7 | The 2026 LLM Landscape | GPT-5, Claude 4, Llama 4, Gemini 3, DeepSeek-V4, Qwen3-MoE, Grok-2, Phi-5, Gemma 4, Mamba-3, RWKV-7, Jamba 2, Liquid-2, MMLU |
-| 8 | Dense Transformer Models | GPT-4o, Claude 3.7 Sonnet, Llama 3.3 70B, Gemini 2.0 Flash, Extended Thinking, vLLM, BF16, H100, MMLU |
-| 9 | Mixture of Experts | Transformer, Router, Experts, Decoder block, Multi-Head Attention |
-| 10 | Mixture of Experts: Router Mechanism | Router, TopK, softmax, Expert, Expert Collapse, Auxiliary Load-Balance Loss, DeepSeek-V3, Shazeer, W_router |
-| 11 | Mixture of Experts Models | DeepSeek-V3, Qwen2-57B-A14B, Jamba-1.5 Large, Active, Total, Saving, H100 |
-| 12 | Small Language Models (SLMs) | Phi-4, Gemma 3, Qwen2.5, Llama 3.2, SmolLM2, MMLU, router, NER, slot-filling |
-| 13 | Attention Mechanism Fundamentals | Query, Key, Value, Scaled Dot-Product Attention, softmax, d_k, Vaswani |
-| 14 | Transformer's Quadratic Complexity Problem | QK, FlashAttention-3, Sparse Attention, sequence length |
-| 15 | State Space Models: Linear Complexity Solution | Mamba-2, S4, hidden state, d_state, Selective SSM |
-| 16 | State Space Models (SSMs) | Mamba-2, Jamba-1.5, O(n), In-Context Learning, hybrid, vLLM, TRT-LLM, MMLU |
-| 17 | Intelligent Model Routing | SLM, MoE, Dense, Phi-4-mini, Qwen2.5, Mixtral, DeepSeek-V3, Claude 3.7, GPT-4o, RouteLLM, CSAT, P50 latency |
-| 18 | Transition — quantify cost | Architecture, VRAM, Quantization, Token pricing |
-| 19 | Quantization: Making Models Efficient | FP32, BF16, FP8, E4M3, E5M2, INT8, LLM.int8, NF4, GPTQ, AWQ, INT4, bits |
-| 20 | Floating Point Formats | FP32, BF16, FP16, FP8, E4M3, E5M2, Sign, Exponent, Mantissa, Transformer Engine |
-| 21 | Post-Training Quantization (PTQ) | GPTQ, AWQ, FP8 Native, Hessian, calibration, salient weights, exllama, AutoAWQ, Transformer Engine, vLLM, TRT-LLM, SGLang, Ollama |
-| 22 | Low-Rank Adaptation (LoRA) | W_frozen, B A, low-rank, adapter, Hu |
-| 23 | LoRA Architecture Visualization | rank |
-| 24 | QLoRA: Quantization + Fine-Tuning | NF4, double quantization, LoRA, BF16, A6000, A40, A100, MMLU, MT-Bench, Adam, Dettmers |
-| 25 | Quantization Decision Guide | FP32, BF16, QLoRA, NF4, FP8, INT8, AWQ, TTFT, A10G |
-| 26 | GPU Memory Estimation | M_total, M_weights, M_KV-cache, M_activation, layers, heads, d_head, seq, batch |
-| 27 | Why Do We Need KV-Cache | KV-Cache, autoregressive, O(n), Query, Key, Value, cache |
-| 28 | KV-Cache: Technical Implementation | Prefill, Generation, d_head, W_Q, W_K, W_V, concat, softmax |
-| 29 | KV-Cache: The Hidden Memory Consumer | M_KV, layers, heads, d_head, seq_len, batch_size, PagedAttention, GQA, Grouped-Query Attention |
-| 30 | Hands-On: Memory Calculation | 175B, BF16, KV-Cache, Activations, H100, A100, FP8, tensor parallelism |
-| 31 | Memory-Efficient Inference at Scale | FlashAttention-3, PagedAttention, vLLM, FlexGen, Tensor Parallelism, Pipeline Parallelism, Megatron-LM, continuous batching |
-| 32 | Token Economics: Understanding API Costs | GPT-4o, GPT-4 Turbo, Claude 3.7 Sonnet, Claude 3.5 Haiku, Gemini 2.0 Flash, DeepSeek-V3, Mixtral, vLLM, Input, Output, Cached Input |
-| 33 | Prompt Caching: 90% Cost Reduction | prompt caching, TTL, system prompt, few-shot, cache invalidation, breakpoint, Anthropic, OpenAI |
-| 34 | Production Cost Optimization Playbook | prompt caching, model routing, RouteLLM, self-host, vLLM, AWQ, speculative decoding, Batch API, max_tokens |
-| 35 | Emerging Trends in LLM Optimization | 1-BIT LLMs, BitNet, FlashAttention-4, Hardware-Aware Quantization, ternary, GQA, ring attention |
-| 36 | Self-Hosting vs API: Break-Even Analysis | Managed API, Self-Hosted, vLLM, H100, break-even, DevOps, tokens/month, latency, data privacy |
-| 37 | Key Takeaways | Dense, MoE, SLM, SSM, Mamba-2, Jamba-1.5, KV-Cache, GQA, PagedAttention, FlashAttention-3, prompt caching, self-host |
-| 38 | References | |
-| 39 | References & Further Reading | |
+| 4 | Outline | ANN, HNSW, IVF, PQ, TF-IDF, BM25, Hybrid, RRF |
+| 5 | ANN Indexing Strategies Revisit | HNSW, IVF, PQ |
+| 6 | IVF: Inverted File Index | k-means, nlist, centroids, inverted list, nprobe |
+| 7 | Partition the Dataset | k-means, Voronoi, centroid, Euclidean |
+| 8 | The Inverted Lists | inverted list, cluster |
+| 9 | Search Process | nlist, nprobe, top-k |
+| 10 | Numerical Example | nprobe, centroid, Euclidean |
+| 11 | Time Complexity IVF vs kNN | centroids |
+| 12 | The Accuracy Tradeoff | nprobe, recall |
+| 13 | Pros and Cons | nlist, nprobe, training |
+| 14 | Use Cases and Implementations | FAISS |
+| 16 | Parameter Tuning: IVF | nlist, nprobe, subvectors |
+| 17 | Product Quantization | ADC, codes, IVF |
+| 18 | Product Quantization | subvector, codebook, compression |
+| 19 | PQ Step 1: Train Codebooks | codebook, k-means, centroids |
+| 20 | PQ Step 2: Encode | centroid, compression |
+| 21 | PQ Step 3: Fast Distance | ADC, distance table |
+| 22 | PQ Numerical: Dataset | subvector |
+| 23 | PQ Numerical: Split | subvector |
+| 24 | PQ Numerical: Codebook data | codebook, k-means |
+| 26 | PQ Numerical: Encode | centroid |
+| 27 | PQ Numerical: Memory Savings | codebook, compression |
+| 28 | PQ Numerical: Similarity Search | ADC |
+| 29 | PQ Numerical: Distance Tables | codebook, centroid |
+| 30 | PQ Numerical: Approximate Distances | table lookups |
+| 31 | PQ Key Parameters | compression |
+| 32 | PQ Why It Is Powerful | compression, IVF |
+| 33 | Complexity Comparison ANN Algorithms | Linear scan, HNSW, IVF, PQ, IVF+PQ, HNSW+PQ, FAISS, ScaNN, ANNOY |
+| 35 | Dense Vector Search Has Limitations | exact keyword, rare, out-of-vocabulary, BM25 |
+| 36 | Limitation 1: Exact Keyword Matching | BM25, IDF |
+| 37 | Limitation 2: Rare Terms | BM25, inverse document |
+| 38 | Limitation 3: OOV | out-of-vocabulary, BM25 |
+| 39 | Summary: Sparse + Dense | BM25, hybrid |
+| 40 | TF-IDF: Foundation | term frequency, inverse document frequency, TF-IDF |
+| 41 | TF-IDF: Worked Example | IDF |
+| 42 | TF-IDF: Limitations | saturation, length normalization, bag-of-words, BM25 |
+| 43 | BM25: Improved TF-IDF | saturation, length normalization, probabilistic |
+| 44 | BM25: IDF and TF Components | saturation, length |
+| 45 | BM25: Saturation Intuition | saturation, term frequency |
+| 46 | BM25: Step-by-Step Example | IDF |
+| 47 | BM25: Step-by-Step (Steps 2 and 3) | norm |
+| 48 | BM25 vs TF-IDF | length normalization, saturation, probabilistic |
+| 49 | BM25 vs TF-IDF Detail | length normalization, saturation |
+| 50 | Why Hybrid: Exact Keywords | BM25, dense |
+| 51 | Why Hybrid: Unique IDs | BM25, dense |
+| 52 | Dense + Sparse Complementary | dense, sparse, semantic |
+| 53 | Combining Different Score Ranges | min-max, z-score, RRF |
+| 54 | Reciprocal Rank Fusion: The Math | RRF, rank |
+| 55 | Properties of RRF | score-agnostic, bounded, symmetric, robust |
+| 56 | RRF Example: Scenario | RRF |
+| 57 | RRF Example: Score Calculation | RRF, consensus |
+| 58 | Performance Characteristics | BM25, hybrid, recall, precision |

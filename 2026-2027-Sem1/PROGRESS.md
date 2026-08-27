@@ -53,16 +53,18 @@ One view across all four subjects. Update the same weekend the session happens.
 
 ## 521 Conversational AI · mid-sem S1–8 · comp all
 
+*Instructor contact-session numbering: retrieval spans **S2–S3**, so **S4+ run one ahead** of the handout L-number. Rows 5+ are provisional — numbered as decks arrive.*
+
 | S | Topic | Deck | Note | Open | Lab |
 |---|---|---|---|---|---|
 | 1 | Foundations, chatbots → agents | ✅ | ✅ | ☐ | ☐ L1 *(BPE + agent notebooks ✅)* · *transcript ✅* |
-| 2 | Embeddings & hybrid retrieval | ✅ | ✅ | ☐ | ☐ L2 *(DistilBERT notebook ✅; other handout lab items open)* |
-| 3 | Model landscape & cost | ✅ | ✅ | ☐ | ☐ L3 |
-| 4 | Function calling & ReAct | ☐ | ☐ | ☐ | ☐ |
-| 5 | Fine-tuning & DPO | ☐ | ☐ | ☐ | ☐ L4 |
-| 6 | Agent memory systems | ☐ | ☐ | ☐ | ☐ L5a |
-| 7 | RAG foundations | ☐ | ☐ | ☐ | ☐ |
-| 8 | **Revision** (S1–S7) | ☐ | ☐ | ☐ | — |
+| 2 | Embeddings & vector search | ✅ | ✅ | ☐ | ☐ L2 *(DistilBERT notebook ✅)* |
+| 3 | ANN search & hybrid retrieval | ✅ | ✅ | ☐ | ☐ L3 hybrid search |
+| 4 | Model landscape & cost | ✅ | ✅ | ☐ | — |
+| 5 | Function calling & ReAct | ☐ | ☐ | ☐ | ☐ |
+| 6 | Fine-tuning & DPO | ☐ | ☐ | ☐ | ☐ L4 |
+| 7 | Agent memory systems | ☐ | ☐ | ☐ | ☐ L5a |
+| 8 | RAG foundations → advanced | ☐ | ☐ | ☐ | ☐ |
 | 9 | Planning & multi-agent | ☐ | ☐ | ☐ | ☐ L5b |
 | 10 | Evaluation & LLM-as-judge | ☐ | ☐ | ☐ | ☐ L6 |
 | 11 | Cost optimization & caching | ☐ | ☐ | ☐ | ☐ L7 |

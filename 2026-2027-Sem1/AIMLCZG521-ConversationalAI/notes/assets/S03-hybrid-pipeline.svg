@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="340" fill="#ffffff"/>
+  <defs><marker id="hp" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#475569"/></marker></defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Hybrid retrieval: dense + sparse in parallel, fused by RRF</text>
+
+  <rect x="40" y="150" width="96" height="44" rx="6" fill="#e2e8f0" stroke="#334155"/>
+  <text x="88" y="177" text-anchor="middle" font-size="12" font-weight="600">user query</text>
+
+  <!-- dense lane -->
+  <rect x="200" y="80" width="150" height="46" rx="6" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="275" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1e40af">dense embedding</text>
+  <text x="275" y="116" text-anchor="middle" font-size="10.5" fill="#1e3a8a">→ ANN vector search</text>
+  <!-- sparse lane -->
+  <rect x="200" y="216" width="150" height="46" rx="6" fill="#fef3c7" stroke="#d97706"/>
+  <text x="275" y="236" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400e">keyword terms</text>
+  <text x="275" y="252" text-anchor="middle" font-size="10.5" fill="#78350f">→ BM25 sparse search</text>
+
+  <line x1="136" y1="165" x2="198" y2="108" stroke="#2563eb" stroke-width="1.6" marker-end="url(#hp)"/>
+  <line x1="136" y1="179" x2="198" y2="235" stroke="#d97706" stroke-width="1.6" marker-end="url(#hp)"/>
+
+  <!-- RRF -->
+  <rect x="410" y="148" width="110" height="48" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="465" y="169" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">RRF fusion</text>
+  <text x="465" y="185" text-anchor="middle" font-size="10.5" fill="#166534">rank-based, k=60</text>
+  <line x1="350" y1="103" x2="408" y2="158" stroke="#475569" stroke-width="1.6" marker-end="url(#hp)"/>
+  <line x1="350" y1="239" x2="408" y2="186" stroke="#475569" stroke-width="1.6" marker-end="url(#hp)"/>
+
+  <!-- reranker + llm -->
+  <rect x="560" y="120" width="120" height="40" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="4 3"/>
+  <text x="620" y="144" text-anchor="middle" font-size="11" fill="#475569">optional reranker</text>
+  <rect x="560" y="184" width="120" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="620" y="208" text-anchor="middle" font-size="11.5" font-weight="700" fill="#5b21b6">top passages → LLM</text>
+  <line x1="520" y1="165" x2="558" y2="145" stroke="#475569" stroke-width="1.4" marker-end="url(#hp)"/>
+  <line x1="520" y1="178" x2="558" y2="198" stroke="#475569" stroke-width="1.4" marker-end="url(#hp)"/>
+
+  <text x="360" y="300" text-anchor="middle" font-size="11.5" fill="#334155" font-weight="600">Dense finds meaning, sparse guarantees exact evidence, RRF needs no score tuning to combine them.</text>
+  <text x="360" y="320" text-anchor="middle" font-size="11" fill="#64748b">Typical: BM25 70% / vector 75% / hybrid 90% recall for ~20 ms extra.</text>
+</svg>

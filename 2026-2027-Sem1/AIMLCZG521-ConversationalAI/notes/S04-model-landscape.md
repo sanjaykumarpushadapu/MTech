@@ -1,4 +1,4 @@
-# Conversational AI · Session 03 · Model Landscape & Cost Engineering
+# Conversational AI · Session 04 · Model Landscape & Cost Engineering
 
 *Learned 23 Aug 2026*
 
@@ -31,7 +31,7 @@ The 2026 projection keeps the same four rows and shifts every number in one dire
 
 **Tradeoff / when NOT to use** — Do not read the table top-to-bottom as "best to worst." A Dense Transformer on high-volume intent-classification is pure waste; a State Space Model on multi-hop retrieval underperforms a same-size Dense model by 5–10 MMLU points. The right row is the *cheapest* one that clears the task's quality bar — which is why the landscape ends in a router, not a single winner.
 
-![Four model families placed on cost-per-token versus reasoning-capability axes, with context-window and active-parameter annotations.](assets/S03-landscape-quadrant.svg)
+![Four model families placed on cost-per-token versus reasoning-capability axes, with context-window and active-parameter annotations.](assets/S04-landscape-quadrant.svg)
 
 ---
 
@@ -69,7 +69,7 @@ output        = Σ wᵢ · Expertᵢ(x)
 
 Everything else in the block — multi-head attention, the add-&-norm layers, residuals — is unchanged; the experts replace only the feed-forward network.
 
-![In each decoder block the feed-forward network is replaced by a router that selects the top-k experts from a bank; attention and norms are unchanged.](assets/S03-moe-router.svg)
+![In each decoder block the feed-forward network is replaced by a router that selects the top-k experts from a bank; attention and norms are unchanged.](assets/S04-moe-router.svg)
 
 **Worked example** — DeepSeek-V3 holds **671B** total parameters (256 experts) but the router activates only **37B** per token. Compute saving = 1 − 37/671 = **94.5%**, and its API lands near ~5% of a GPT-4o-equivalent bill.
 
@@ -150,7 +150,7 @@ For GPT-4-class depth (L=96) at 128K tokens, that's ≈ 1.57 **trillion** score 
 
 **Tradeoff / when NOT to use** — Naive full attention stops being viable past ~128K tokens. The production mitigations are FlashAttention-3 and sparse attention (they cut the *constant*, not the O(n²) *order*), and — for a genuinely linear order — State Space Models.
 
-![Quadratic attention connects every token to every other token, versus a State Space Model that carries a fixed-size state forward one step at a time.](assets/S03-attention-vs-ssm.svg)
+![Quadratic attention connects every token to every other token, versus a State Space Model that carries a fixed-size state forward one step at a time.](assets/S04-attention-vs-ssm.svg)
 
 ---
 
@@ -196,7 +196,7 @@ yₜ = C · hₜ + D · xₜ
 
 **Tradeoff / when NOT to use** — Precision buys quality; below 4-bit, error grows fast and reasoning tasks feel it first. Production rule of thumb: INT8 is the safe balance (4× memory cut, <1% quality loss); 4-bit (GPTQ/AWQ) for most cost-sensitive serving; keep BF16/FP8 only where maximum quality is required and VRAM permits.
 
-![A memory ladder for a 70B model from FP32 (280 GB) down to NF4 (35 GB), annotated with quality retained at each precision.](assets/S03-precision-ladder.svg)
+![A memory ladder for a 70B model from FP32 (280 GB) down to NF4 (35 GB), annotated with quality retained at each precision.](assets/S04-precision-ladder.svg)
 
 ---
 
@@ -256,7 +256,7 @@ W_new = W_frozen + ΔW,   where  ΔW = B · A
 
 `A` is d×r and `B` is r×d, with rank `r ≪ d`. The frozen path and the LoRA path run in parallel and their outputs add. Two hyperparameters govern the adapter: rank `r` (capacity) and a scaling factor **α**; adapters are usually attached to the attention projections (Q, K, V) and the MLP layers.
 
-![The frozen weight matrix W runs in parallel with a low-rank B·A adapter path; their outputs sum to the adapted output.](assets/S03-lora-decomposition.svg)
+![The frozen weight matrix W runs in parallel with a low-rank B·A adapter path; their outputs sum to the adapted output.](assets/S04-lora-decomposition.svg)
 
 **Worked example** — For a 4096×4096 weight, full `ΔW` is 16.7M parameters. LoRA at r=8 uses A (4096×8) + B (8×4096) = 65,536 params — a **256× reduction**. A whole adapter is 32–64 MB instead of ~28 GB for a full 7B copy.
 
@@ -280,7 +280,7 @@ QLoRA:            70B × 0.5 bytes (NF4) + LoRA adapters (~1 GB)        ≈ 36 G
 → 31× memory reduction (1,120 GB → 36 GB), 70B now trains on one 48 GB A6000/A40.
 ```
 
-![Two memory stacks side by side: full fine-tuning at ~1,120 GB versus QLoRA at ~36 GB, a 31× reduction.](assets/S03-qlora-memory.svg)
+![Two memory stacks side by side: full fine-tuning at ~1,120 GB versus QLoRA at ~36 GB, a 31× reduction.](assets/S04-qlora-memory.svg)
 
 **Tradeoff / when NOT to use** — The base is frozen at 4-bit, so QLoRA inherits 4-bit's small quality floor and can't move the base model's raw knowledge — it adapts behaviour, it doesn't re-teach facts. When you need maximum-fidelity full fine-tuning and have the VRAM, full BF16 tuning still edges it; for almost everything else, QLoRA is the default.
 
@@ -310,7 +310,7 @@ M_total = M_weights + M_KV-cache + M_activation
 - **M_KV-cache** — dynamic: grows with sequence length and batch (full formula in *KV-Cache: the hidden memory consumer*).
 - **M_activation** — temporary, during the forward pass only: ≈ batch × seq × hidden × layers × 2 bytes, roughly 10–20% of weights.
 
-![A stacked VRAM budget showing fixed weights plus sequence-dependent KV-cache and activations summing to total memory.](assets/S03-gpu-memory-stack.svg)
+![A stacked VRAM budget showing fixed weights plus sequence-dependent KV-cache and activations summing to total memory.](assets/S04-gpu-memory-stack.svg)
 
 **Worked example** — A 7B model in BF16: weights 14 GB + KV-cache ~2 GB + activations ~1 GB → needs **~17 GB VRAM**. That's why a 7B "fits a 24 GB card" with headroom, but the same card chokes once you push long contexts and large batches (the KV term explodes — next section).
 
@@ -332,7 +332,7 @@ attention = softmax(Q_new · K_allᵀ / √d_k) · V_all
 
 Only **K and V** are cached, never Q: the Query changes with each new position (must be recomputed), while Keys and Values represent fixed past context — compute once, reuse forever. In the **prefill** phase the whole prompt is processed in parallel to build the initial cache; in the **generation** phase tokens are added one at a time. Only the key/value projections (W_K, W_V) are cached; the query projection (W_Q) is recomputed each step.
 
-![Naive generation recomputes all past Keys and Values each step (O(n²)); the KV-cache stores and reuses them, computing only the new token (O(n)).](assets/S03-kv-cache.svg)
+![Naive generation recomputes all past Keys and Values each step (O(n²)); the KV-cache stores and reuses them, computing only the new token (O(n)).](assets/S04-kv-cache.svg)
 
 **Worked example** — Generating a 3-token continuation "The / cat / is": naive recomputes 1+2+3 = 6 K,V pairs; cached computes 1+1+1 = 3 and reuses the rest. Over hundreds of output tokens the saving compounds to a **10–100× faster** generation.
 
@@ -360,7 +360,7 @@ The leading `2` is for storing both K and V.
 M_KV = 2 × 32 × 32 × 128 × 2048 × 1 × 2 ≈ 1.07 GB  (~1 GB)
 ```
 
-Now the same model at **128K context, batch 8**: the cache scales to **well over 100 GB** (the deck cites ~137 GB) — far more than the model's own 16 GB of weights. ⚠️ The exact figure depends on per-term rounding; the point that survives is the *order*: at long context, KV-cache dwarfs weights.
+Now the same model at **128K context, batch 8**: the cache scales to **well over 100 GB** (the standard figure is ~137 GB) — far more than the model's own 16 GB of weights. ⚠️ The exact figure depends on per-term rounding; the point that survives is the *order*: at long context, KV-cache dwarfs weights.
 
 **Tradeoff / when NOT to use** — Because M_KV scales with `heads`, the fix is to share Keys/Values across heads: **Grouped-Query Attention (GQA)** cuts the `heads` factor, and **PagedAttention** (vLLM) manages the cache like virtual memory so it isn't over-allocated. Skipping these is fine at short context; at 8K+ or high batch they're essential, or you run out of VRAM.
 
@@ -438,7 +438,7 @@ Output tokens cost **3–10× more** than input.
 
 **Mechanism** — Mark the static prefix as cacheable; the provider keeps it warm for a TTL (Anthropic ~5 min, OpenAI ~1 hour, refreshed on each hit). Cached input is discounted **90% (Anthropic) / 50% (OpenAI)**. Minimum cacheable size: 1,024 tokens (Claude), 512 (GPT-4o). The rule for the prompt layout: **static content first, dynamic query last** — any change before the cache breakpoint invalidates the whole cache.
 
-![A cacheable prompt places system prompt, examples, and documents first (cached, 90% off) with the dynamic query last; a bar chart shows the cost collapse across repeated requests.](assets/S03-prompt-caching.svg)
+![A cacheable prompt places system prompt, examples, and documents first (cached, 90% off) with the dynamic query last; a bar chart shows the cost collapse across repeated requests.](assets/S04-prompt-caching.svg)
 
 **Worked example** — A 10,000-token context reused across 100 requests on Claude 3.7:
 
@@ -467,9 +467,9 @@ With caching    : 1 × 10K × $3/1M  +  99 × 10K × $0.30/1M
 
 This is the RouteLLM (Ong et al., 2024) pattern — learn a routing policy from preference data.
 
-![A request enters a complexity classifier and is dispatched down one of three lanes — SLM, mid MoE, or Dense LLM — with per-lane cost annotations.](assets/S03-model-routing.svg)
+![A request enters a complexity classifier and is dispatched down one of three lanes — SLM, mid MoE, or Dense LLM — with per-lane cost annotations.](assets/S04-model-routing.svg)
 
-**Worked example** — The support bot, split 80% SLM / 15% MoE / 5% Dense: effective cost = 0.80×$0.01 + 0.15×$0.08 + 0.05×$0.80 = $0.008 + $0.012 + $0.040 = **$0.06/1K req** versus $0.80/1K flat GPT-4o — a **~92% cost reduction** (the deck's case study, with a marginally cheaper SLM tier, quotes 95%), with CSAT maintained and P50 latency improved 40% (small models answer the easy majority faster).
+**Worked example** — The support bot, split 80% SLM / 15% MoE / 5% Dense: effective cost = 0.80×$0.01 + 0.15×$0.08 + 0.05×$0.80 = $0.008 + $0.012 + $0.040 = **$0.06/1K req** versus $0.80/1K flat GPT-4o — a **~92% cost reduction** (a marginally cheaper SLM tier reaches ~95%), with CSAT maintained and P50 latency improved 40% (small models answer the easy majority faster).
 
 **Tradeoff / when NOT to use** — A router is only as good as its difficulty judgement: misroute a hard query to an SLM and you get a confidently wrong answer, which is worse than a slow correct one. Tune the classifier conservatively (when unsure, escalate), and skip routing entirely for low-volume or uniformly-hard workloads where the routing overhead and misroute risk outweigh the savings.
 
@@ -508,7 +508,7 @@ This is the RouteLLM (Ong et al., 2024) pattern — learn a routing policy from 
 
 **Worked example** — The dominant term at low volume is DevOps, not GPUs: self-hosting's ~$8–12K/month fixed ops cost swamps a ~$3K API bill until token volume is large enough that the API's per-token charge crosses it. Rule of thumb: **< 5B tokens/month → API wins; ≥ 10B tokens/month → self-hosting saves 60–70%**; 5–10B is the "consider it, with quantized Llama/Qwen" zone.
 
-![A break-even chart: flat-slope API cost versus self-hosting's high fixed cost plus low marginal cost, crossing near 5–10B tokens/month.](assets/S03-selfhost-breakeven.svg)
+![A break-even chart: flat-slope API cost versus self-hosting's high fixed cost plus low marginal cost, crossing near 5–10B tokens/month.](assets/S04-selfhost-breakeven.svg)
 
 **Tradeoff / when NOT to use** — Self-hosting is not just a GPU lease — the $8–12K/month DevOps and on-call burden is the line teams forget, and it's what makes the API win below ~5B tokens/month. Self-host for scale, data-residency, or predictable latency; stay on the API for everything else. (Data-privacy or on-prem requirements can override the pure cost math and justify self-hosting earlier.)
 

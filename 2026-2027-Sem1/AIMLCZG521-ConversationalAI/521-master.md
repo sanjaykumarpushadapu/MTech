@@ -43,36 +43,44 @@ The handout groups all 16 sessions into 4 themes before it lists them one by one
 | Module | Theme | Sessions |
 |---|---|---|
 | 1 | Foundations — embeddings, retrieval, model landscape, cost engineering | L1–L3 |
+
+*Module 1's handout L1–L3 is delivered as instructor sessions S01–S04 (retrieval spans S02–S03).*
 | 2 | Core Building Blocks — function calling, memory systems, RAG pipelines | L4–L8 |
 | 3 | Autonomous Agents — planning, multi-agent systems, evaluation, optimization | L9–L11 |
 | 4 | Production Ecosystem — security, protocols (MCP, A2A), ethics, governance | L12–L16 |
 
 ## Session index
 
-| S | Topic | Sub-topics | Source | Exam | Note file |
-|---|---|---|---|---|---|
-| L1 | Foundations of Conversational AI | Chatbots → agentic systems; **7-stage lifecycle**; architecture; **tokenization/BPE**; context windows; protocols; production concerns | *The Landscape of AI Agents* (2024), arXiv:2404.11584 | mid | `notes/S01-foundations.md` |
-| L2 | Embeddings, Vector Search & Hybrid Retrieval | Semantic vs keyword; vector DB architecture (HNSW, ANN); BM25 + dense + RRF | Dense Passage Retrieval (Karpukhin 2020) | mid | `notes/S02-retrieval.md` |
-| L3 | Model Landscape & Cost Engineering | LLM/MoE/SLM/SSM comparison; quantization; KV-cache; prompt caching; model routing | QLoRA (Dettmers 2023) | mid | `notes/S03-model-landscape.md` |
-| L4 | Structured Outputs & Function Calling | Native function-calling APIs (OpenAI, Anthropic); ReAct (thought-action-observation); error handling & validation | ReAct (Yao 2023) | mid | `notes/S04-function-calling.md` |
-| L5 | Fine-Tuning & Preference Optimization | Fine-tune vs prompt engineering; QLoRA / PEFT; DPO, GRPO | DPO (Rafailov 2023) | mid | `notes/S05-finetuning.md` |
-| L6 | Agent Memory Systems | Short-term vs long-term; hybrid architecture (SQL + vector) | MemGPT (2023) + LangGraph memory docs | mid | `notes/S06-memory.md` |
-| L7 | RAG: Foundations to Advanced | Processing & chunking; re-ranking & contextual retrieval; agentic RAG (routing, iteration). *Mid-term revision* | Anthropic *Contextual Retrieval* (2024) | mid | `notes/S07-08-rag.md` |
-| L9 | Agent Planning & Multi-Agent Systems | State management & planning; hierarchical & collaborative architectures; error recovery & iteration limits | MetaGPT (2024) | comp | `notes/S09-multi-agent.md` |
-| L10 | Evaluation: RAG to Agents | RAG & agent metrics; LLM-as-judge pattern & limits; benchmarks | MT-Bench (2023), GAIA | comp | `notes/S10-evaluation.md` |
-| L11 | Cost Optimization & Prompt Caching | Token economics & hidden costs; prompt caching; cache warming & invalidation; model routing | Anthropic prompt-caching docs | comp | `notes/S11-cost.md` |
-| L12 | Security & Adversarial Robustness | Prompt injection (direct & indirect) defence; PII detection & redaction; red-teaming | ⚠️ handout cites OpenAI caching docs — likely a typo; expect a security reading in class | comp | `notes/S12-security.md` |
-| L13 | MCP (Model Context Protocol) Deep Dive | Client-server architecture; primitives (resources, tools, prompts); building MCP servers | MCP specification | comp | `notes/S13-mcp.md` |
-| L14 | A2A & Interoperability | Agent cards; task lifecycle; protocol comparison (A2A, Agent Protocol); orchestration patterns | A2A protocol spec | comp | `notes/S14-a2a.md` |
-| L15–L16 | Ethics, Governance & Bias Mitigation | Bias types & manifestations; mitigation & debiasing; self-improving agents & risks. *Final revision* | Anthropic Responsible Scaling Policy | comp | `notes/S15-16-ethics.md` |
+> **Numbering follows the instructor's actual contact sessions**, not the handout's L-numbers. Retrieval was taught across **two** sessions — **S02** (embeddings & vector search) and **S03** (ANN algorithms & hybrid) — so from S03 on the instructor runs **one session ahead** of the handout. The **Handout** column keeps the exam-scope topic mapping. Sessions **S05+** are numbered as their decks arrive.
+>
+> ⚠️ **Mid-sem scope is "contact sessions 1–8" = the instructor's actual sessions.** With the one-session offset that is roughly handout topics **L1–L7** of new material (S8 revision). Confirm the exact cut-off on Canvas before the mid-sem.
+
+| Session | Handout | Topic | Sub-topics | Source | Exam | Note file |
+|---|---|---|---|---|---|---|
+| **S01** | L1 | Foundations of Conversational AI | Chatbots → agentic systems; **7-stage lifecycle**; architecture; **tokenization/BPE**; context windows; protocols; production concerns | *The Landscape of AI Agents* (2024) | mid | `notes/S01-foundations.md` |
+| **S02** | L2 | Embeddings & Vector Search | Semantic vs keyword; embeddings & encoders; pooling; vector similarity; linear-scan vs ANN; **HNSW**; vector DB architecture; Dense Passage Retrieval | Dense Passage Retrieval (Karpukhin 2020) | mid | `notes/S02-retrieval.md` |
+| **S03** | L2 | ANN Search & Hybrid Retrieval | **IVF & Product Quantization**; ANN complexity comparison; **TF-IDF & BM25** (saturation, k₁/b); **Reciprocal Rank Fusion**; hybrid systems | Dense Passage Retrieval; BM25 (Robertson & Zaragoza) | mid | `notes/S03-ann-hybrid-retrieval.md` |
+| **S04** | L3 | Model Landscape & Cost Engineering | LLM/MoE/SLM/SSM comparison; quantization; KV-cache; prompt caching; model routing | QLoRA (Dettmers 2023) | mid | `notes/S04-model-landscape.md` |
+| S05 | L4 | Structured Outputs & Function Calling | Native function-calling APIs (OpenAI, Anthropic); ReAct (thought-action-observation); error handling & validation | ReAct (Yao 2023) | mid | *deck awaited* |
+| S06 | L5 | Fine-Tuning & Preference Optimization | Fine-tune vs prompt engineering; QLoRA / PEFT; DPO, GRPO | DPO (Rafailov 2023) | mid | *deck awaited* |
+| S07 | L6 | Agent Memory Systems | Short-term vs long-term; hybrid architecture (SQL + vector) | MemGPT (2023) + LangGraph memory docs | mid | *deck awaited* |
+| S08 | L7 | RAG: Foundations to Advanced | Processing & chunking; re-ranking & contextual retrieval; agentic RAG (routing, iteration) | Anthropic *Contextual Retrieval* (2024) | mid | *deck awaited* |
+| — | L8 | Mid-term revision (no new material) | — | — | mid | — |
+| *as delivered* | L9 | Agent Planning & Multi-Agent Systems | State management & planning; hierarchical & collaborative architectures; error recovery & iteration limits | MetaGPT (2024) | comp | *deck awaited* |
+| *as delivered* | L10 | Evaluation: RAG to Agents | RAG & agent metrics; LLM-as-judge pattern & limits; benchmarks | MT-Bench (2023), GAIA | comp | *deck awaited* |
+| *as delivered* | L11 | Cost Optimization & Prompt Caching | Token economics & hidden costs; prompt caching; cache warming & invalidation; model routing | Anthropic prompt-caching docs | comp | *deck awaited* |
+| *as delivered* | L12 | Security & Adversarial Robustness | Prompt injection (direct & indirect) defence; PII detection & redaction; red-teaming | ⚠️ handout cites OpenAI caching docs — likely a typo; expect a security reading | comp | *deck awaited* |
+| *as delivered* | L13 | MCP (Model Context Protocol) Deep Dive | Client-server architecture; primitives (resources, tools, prompts); building MCP servers | MCP specification | comp | *deck awaited* |
+| *as delivered* | L14 | A2A & Interoperability | Agent cards; task lifecycle; protocol comparison (A2A, Agent Protocol); orchestration patterns | A2A protocol spec | comp | *deck awaited* |
+| *as delivered* | L15–L16 | Ethics, Governance & Bias Mitigation | Bias types & manifestations; mitigation & debiasing; self-improving agents & risks. *Final revision* | Anthropic Responsible Scaling Policy | comp | *deck awaited* |
 
 ## Labs (10 · tentative, from handout)
 
 | Lab | Objective | Session ref | Done |
 |---|---|---|---|
 | 1 | Tokenization and AI bot with tool calling — **notebooks in `labs/S01-…`**: BPE from scratch, Ollama `llama3` + LangChain + Tavily, ReAct agent | L1 | ☐ |
-| 2 | Similarity metrics, text-to-speech, rule-based systems, sentiment analysis — **current notebook in `labs/S02-…` covers DistilBERT contextual embeddings + cosine; remaining items open** | L2 | ☐ |
-| 3 | Hybrid search implementation | L3 | ☐ |
+| 2 | Similarity metrics, text-to-speech, rule-based systems, sentiment analysis — **current notebook in `labs/S02-…` covers DistilBERT contextual embeddings + cosine; remaining items open** | S02 | ☐ |
+| 3 | Hybrid search implementation | S03 | ☐ |
 | 4 | Function calling, prompting techniques, multimodal AI | L5 & L6 | ☐ |
 | 5a | LLM fine-tuning | L6 & L7 | ☐ |
 | 5b | Naïve RAG | L9 | ☐ |
