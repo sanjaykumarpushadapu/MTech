@@ -100,8 +100,6 @@ HNSW trades memory for speed; IVF+PQ trades accuracy for compression; **HNSW+PQ*
 
 **Intuition** — Before dense embeddings, keyword search scored a document by two commonsense signals: how *often* a query word appears in it (term frequency), and how *rare* that word is across the whole collection (inverse document frequency). A word that is frequent *here* but rare *everywhere* — a product code, say — is a strong signal; a word like "the" is worthless because it is everywhere.
 
-Dense embeddings, for all their semantic power, fail exactly where sparse scoring shines, three ways: **exact keyword matching** ("ERROR code 500" — dense smooths over numbers and codes), **rare/unique terms** (a part ID like `XR55-QW7`, unseen in training, gets a meaningless embedding), and **out-of-vocabulary words** (a token like `VijayawadaExpress123` is split into sub-tokens and blurred). Sparse retrieval matches the exact string, so none of these hurt it — which is *why* sparse and dense are combined into hybrid search.
-
 **Mechanism** —
 
 ```text
@@ -134,8 +132,6 @@ TF-IDF   = TF(t,d) × IDF(t)
 
 **Worked example** — Query: `"HNSW ef_search"`. BM25 strongly rewards a document containing the exact rare term `ef_search`. A dense retriever may understand the general HNSW tuning topic, but exact-match evidence is important because `ef_search` is a parameter name.
 
-**Tradeoff / when NOT to use** — BM25 struggles with vocabulary mismatch. A user asking `"how do I make vector lookup faster?"` may need a document titled `"ANN indexing and HNSW tuning"`; semantic retrieval is more likely to bridge that wording gap.
-
 **The BM25 formula** — BM25 keeps TF-IDF's two ideas and adds *saturation* and *length normalization*:
 
 ```text
@@ -151,6 +147,8 @@ with a smoothed IDF = `log[(N − df + 0.5)/(df + 0.5) + 1]`. Two knobs: **k₁*
 **Worked example — full BM25.** Same query "machine learning"; document of 12 terms with avgdl = 50; "machine" appears in 300 docs, "learning" in 400. IDF(machine) = ln(3.331) = 1.203, IDF(learning) = ln(2.499) = 0.916. norm = 1 − 0.75 + 0.75·(12/50) = 0.43. TF(machine, f=2) = 2·2.5 / (2 + 1.5·0.43) = 5.0/2.645 = 1.890; TF(learning, f=3) = 7.5/3.645 = 2.058. **BM25 = 1.203·1.890 + 0.916·2.058 = 4.159.**
 
 **BM25 vs TF-IDF** — on the same document TF-IDF totals ≈ 0.57 while BM25 totals 4.159. The two scores live on different scales, so the number itself is not the point — the point is *why* BM25 ranks this short, focused document higher: length normalization rewards it for being shorter than average (12 vs 50 tokens), saturation stops the repeated "learning" from dominating, and the probabilistic foundation gives better ordering.
+
+**Tradeoff / when NOT to use** — BM25 struggles with vocabulary mismatch. A user asking `"how do I make vector lookup faster?"` may need a document titled `"ANN indexing and HNSW tuning"`; semantic retrieval is more likely to bridge that wording gap.
 
 ---
 
@@ -235,7 +233,7 @@ This session maps directly to **Lab 3: Hybrid Search Implementation**. Build a t
 4. Fuse the dense and BM25 rankings with RRF (k=60).
 5. Print the top-5 for queries that test paraphrase (dense wins), exact ID / error code (sparse wins), and mixed cases (hybrid wins).
 
-The lesson is not the library call; it is seeing which query fails under dense-only or keyword-only retrieval, and how RRF recovers it. Reproduce the worked numbers by hand: IVF (2 of 6 vectors scanned), PQ (160 B → 74 B), BM25 (4.159), RRF (Doc A 0.03252).
+The lesson is not the library call; it is seeing which query fails under dense-only or keyword-only retrieval, and how RRF recovers it. Reproduce the worked numbers by hand: IVF (2 of 6 vectors scanned), PQ (160 B → 74 B), BM25 (4.159), RRF (Doc B 0.0313 edges Doc A 0.0307).
 
 ---
 
