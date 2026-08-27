@@ -630,6 +630,14 @@ Do not eyeball the checklist:
 - [ ] No PDFs, slides, datasets, transcripts, weights, or secrets are staged
 - [ ] Dates and weights match handouts or are marked `⚠️`
 
+**Green is necessary, not sufficient.** A clean `npm run check` and a clean `check-slide-coverage.mjs` run do not by themselves make a note complete or a compliance line honest — the coverage tool only knows the named items in the inventory, and `check:framing` matches a narrow regex. Before claiming done, do a by-eye pass for what the scripts miss:
+
+- **Source-framing the regex misses.** Phrases that name the source as the reason for content — "the deck cites/notes/shows/marks/quotes", "the slide's", "the handout says" — are violations even when `check:framing` passes. State the content directly.
+- **Internal-number consistency.** Every figure repeated in a `## Why this matters`, self-study, summary, or open-book line must match the note's own worked example (e.g. a fusion score quoted in the lab equals the score computed in the RRF section).
+- **Split-induced duplication.** After moving or splitting sections, re-read the seams: a concept must not be taught twice across two notes or in adjacent sections.
+
+Do not write "no open gaps" on the strength of green checks alone.
+
 Do not run `git commit` from the sandbox. It can create `.git/*.lock` files that the sandbox cannot remove. Stage work if requested, then give the user the commit command.
 
 ## 12. Repo Layout

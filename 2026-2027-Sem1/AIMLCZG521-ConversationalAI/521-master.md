@@ -1,7 +1,9 @@
 # AIMLCZG521 · Conversational AI — Master Index
 
 4 credits · 3-1-0 · Instructors: Bharathi R (Lead), S Bhagath, Anupam Purwar, Vijay Singh
-**Mid-sem: L1–L8, closed book · Comprehensive: L1–L16, open book**
+**Mid-sem: contact sessions 1–8, closed book · Comprehensive: 1–16, open book**
+
+> **Numbering rule.** 521 notes follow the **instructor's actual contact-session numbers**, not the handout's L-numbers. A deck's own "Lecture No. N" label sets its note number (`S0N`); the handout L-number is a topic / exam-scope mapping only (the *Handout* column in the session index). **File each new deck as `S0<its lecture number>`.** Retrieval spanned two sessions (S02–S03), so the instructor runs one ahead of the handout from S03 on — mid-sem "sessions 1–8" therefore means contact sessions 1–8 (≈ handout topics L1–L7).
 
 > This file is the revision homepage during the semester, and the **open-book front index** in December.
 
