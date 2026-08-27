@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 350" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="350" fill="#ffffff"/>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Prompt caching — static first, dynamic query last</text>
+
+  <!-- prompt layout -->
+  <text x="205" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">Prompt layout</text>
+  <rect x="60" y="70"  width="290" height="34" rx="4" fill="#bbf7d0" stroke="#16a34a"/><text x="205" y="92" text-anchor="middle" font-size="11">system prompt  (cached · 90% off)</text>
+  <rect x="60" y="108" width="290" height="34" rx="4" fill="#bbf7d0" stroke="#16a34a"/><text x="205" y="130" text-anchor="middle" font-size="11">few-shot examples  (cached)</text>
+  <rect x="60" y="146" width="290" height="34" rx="4" fill="#bbf7d0" stroke="#16a34a"/><text x="205" y="168" text-anchor="middle" font-size="11">reference document  (cached)</text>
+  <line x1="60" y1="188" x2="350" y2="188" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="360" y="192" text-anchor="start" font-size="9.5" fill="#dc2626">cache breakpoint</text>
+  <rect x="60" y="196" width="290" height="34" rx="4" fill="#fde68a" stroke="#d97706"/><text x="205" y="218" text-anchor="middle" font-size="11">dynamic query  (full price)</text>
+  <text x="205" y="252" text-anchor="middle" font-size="10" fill="#b91c1c">any change before the breakpoint invalidates the whole cache</text>
+
+  <!-- cost bars -->
+  <text x="540" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">10K ctx × 100 requests</text>
+  <rect x="430" y="90" width="220" height="34" rx="4" fill="#fecaca" stroke="#dc2626"/><text x="540" y="112" text-anchor="middle" font-size="11">no caching:  $3.00</text>
+  <rect x="430" y="140" width="24" height="34" rx="4" fill="#bbf7d0" stroke="#16a34a"/><text x="470" y="162" text-anchor="start" font-size="11">with caching:  $0.327</text>
+  <text x="540" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a">89% saving</text>
+  <text x="540" y="228" text-anchor="middle" font-size="10.5" fill="#64748b">1st req full + 99 at cached rate</text>
+
+  <text x="360" y="300" text-anchor="middle" font-size="11.5" fill="#334155">TTL: ~5 min (Anthropic) / ~1 hr (OpenAI). Min cacheable: 1,024 tok (Claude), 512 (GPT-4o).</text>
+  <text x="360" y="322" text-anchor="middle" font-size="11" fill="#64748b">Never splice a timestamp or per-user field before the query — it busts the cache every call.</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="380" fill="#ffffff"/>
+  <defs>
+    <marker id="a4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#16a34a"/></marker>
+  </defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">QLoRA: fine-tuning a 70B model — 31× less memory</text>
+
+  <!-- full FT stack (tall) scale: 1120GB -> 260px => 0.232px/GB -->
+  <text x="175" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#b91c1c">Full fine-tuning ≈ 1,120 GB</text>
+  <rect x="110" y="70" width="130" height="65" fill="#fecaca" stroke="#dc2626"/><text x="175" y="107" text-anchor="middle" font-size="10.5">weights 280</text>
+  <rect x="110" y="135" width="130" height="65" fill="#fca5a5" stroke="#dc2626"/><text x="175" y="172" text-anchor="middle" font-size="10.5">gradients 280</text>
+  <rect x="110" y="200" width="130" height="130" fill="#f87171" stroke="#dc2626"/><text x="175" y="270" text-anchor="middle" font-size="10.5" fill="#450a0a">2× Adam states 560</text>
+  <text x="175" y="348" text-anchor="middle" font-size="10.5" fill="#64748b">70B × 4 bytes × 4 = 1,120 GB · needs 8× A100</text>
+
+  <!-- arrow -->
+  <line x1="290" y1="200" x2="400" y2="200" stroke="#16a34a" stroke-width="3" marker-end="url(#a4)"/>
+  <text x="345" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#16a34a">31×</text>
+
+  <!-- qlora stack (short) -->
+  <text x="540" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#166534">QLoRA ≈ 36 GB</text>
+  <rect x="470" y="162" width="140" height="60" fill="#bbf7d0" stroke="#16a34a"/><text x="540" y="188" text-anchor="middle" font-size="10.5">4-bit NF4 base 35</text>
+  <text x="540" y="204" text-anchor="middle" font-size="9.5" fill="#166534">(frozen · double-quantized)</text>
+  <rect x="470" y="222" width="140" height="18" fill="#4ade80" stroke="#16a34a"/><text x="540" y="235" text-anchor="middle" font-size="9.5">BF16 LoRA adapters ~1</text>
+  <text x="540" y="262" text-anchor="middle" font-size="10.5" fill="#64748b">70B now trains on one 48 GB A6000/A40</text>
+
+  <text x="360" y="362" text-anchor="middle" font-size="11.5" fill="#334155">NF4 base + double quantization + paged optimizers; only the BF16 adapters get gradients. &lt;1% MMLU/MT-Bench delta.</text>
+</svg>

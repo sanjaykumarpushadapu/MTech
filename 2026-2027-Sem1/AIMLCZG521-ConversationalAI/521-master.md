@@ -31,6 +31,8 @@
 > The handout held is `(S2-25_AIMLCZG521) - April 2026.pdf`, Version 2.0, dated 25/02/2025 — labelled for the **April–May** cohort, while your recordings are labelled **S1-26**. The evaluation scheme evidently carried over unchanged, so this is not a live problem.
 >
 > It does mean the **session plan below is inherited from that document**. It matches the current deck's course-architecture slide, so it's very likely still accurate — but if an S1-26 handout appears on Canvas, worth a two-minute diff.
+>
+> **Delivery vs. numbering (confirmed 27 Aug 2026):** the instructor's live lecture numbers run one ahead of the handout because retrieval spanned two contact sessions. Instructor "Lecture 3" (ANN algorithms + hybrid: HNSW/IVF/PQ, BM25, RRF) is still **handout L2** scope and folds into `notes/S02-retrieval.md`; instructor "Lecture 4" (Model Landscape & Cost Engineering) is **handout L3** → `notes/S03-model-landscape.md`. Notes and exam scope follow the handout numbers, not the deck labels.
 
 Strictly **no makeups** for quizzes and assignments. All assignments are plagiarism-checked.
 

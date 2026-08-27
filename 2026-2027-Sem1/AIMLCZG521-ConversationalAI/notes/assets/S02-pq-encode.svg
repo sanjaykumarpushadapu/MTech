@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="400" fill="#ffffff"/>
+  <defs><marker id="pq" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#475569"/></marker></defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Product Quantization: split, replace each chunk with a codebook ID</text>
+
+  <!-- original vector -->
+  <text x="60" y="66" font-size="11.5" font-weight="700" fill="#334155">Original vector (128-dim, 512 B)</text>
+  <g>
+    <rect x="60" y="76" width="130" height="34" fill="#e0e7ff" stroke="#4338ca"/><text x="125" y="98" text-anchor="middle" font-size="10.5">sub 1 [32-dim]</text>
+    <rect x="195" y="76" width="130" height="34" fill="#e0e7ff" stroke="#4338ca"/><text x="260" y="98" text-anchor="middle" font-size="10.5">sub 2 [32-dim]</text>
+    <rect x="330" y="76" width="130" height="34" fill="#e0e7ff" stroke="#4338ca"/><text x="395" y="98" text-anchor="middle" font-size="10.5">sub 3 [32-dim]</text>
+    <rect x="465" y="76" width="130" height="34" fill="#e0e7ff" stroke="#4338ca"/><text x="530" y="98" text-anchor="middle" font-size="10.5">sub 4 [32-dim]</text>
+  </g>
+  <!-- codebooks -->
+  <text x="60" y="150" font-size="11" fill="#64748b">each subspace has its own codebook of k=256 centroids (trained by k-means)</text>
+  <g font-size="10.5">
+    <line x1="125" y1="110" x2="125" y2="165" stroke="#475569" stroke-width="1.3" marker-end="url(#pq)"/>
+    <line x1="260" y1="110" x2="260" y2="165" stroke="#475569" stroke-width="1.3" marker-end="url(#pq)"/>
+    <line x1="395" y1="110" x2="395" y2="165" stroke="#475569" stroke-width="1.3" marker-end="url(#pq)"/>
+    <line x1="530" y1="110" x2="530" y2="165" stroke="#475569" stroke-width="1.3" marker-end="url(#pq)"/>
+    <rect x="90" y="168" width="70" height="28" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="125" y="186" text-anchor="middle" font-weight="700">ID 142</text>
+    <rect x="225" y="168" width="70" height="28" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="260" y="186" text-anchor="middle" font-weight="700">ID 73</text>
+    <rect x="360" y="168" width="70" height="28" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="395" y="186" text-anchor="middle" font-weight="700">ID 201</text>
+    <rect x="495" y="168" width="70" height="28" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="530" y="186" text-anchor="middle" font-weight="700">ID 18</text>
+  </g>
+  <text x="60" y="226" font-size="11.5" font-weight="700" fill="#166534">Compressed = 4 IDs = 4 bytes  → 128× smaller</text>
+
+  <!-- ADC -->
+  <rect x="60" y="248" width="600" height="96" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="360" y="270" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">Fast distance (ADC): never decompress</text>
+  <text x="360" y="290" text-anchor="middle" font-size="11" fill="#475569">precompute query→centroid distance tables once, then per DB vector:</text>
+  <text x="360" y="310" text-anchor="middle" font-size="11" font-family="monospace" fill="#0f172a">dist = table1[ID1] + table2[ID2] + table3[ID3] + table4[ID4]</text>
+  <text x="360" y="330" text-anchor="middle" font-size="11" fill="#64748b">4 lookups + 3 adds, not 128 multiplications — like grading with an answer key instead of re-solving each test.</text>
+
+  <text x="360" y="368" text-anchor="middle" font-size="11.5" fill="#334155" font-weight="600">M subvectors × k=256 centroids (1 byte each). M=8 → 32× compression; billions of vectors fit in RAM.</text>
+  <text x="360" y="388" text-anchor="middle" font-size="11" fill="#64748b">Trade: ~70–85% recall alone; paired with IVF (IVF+PQ) it's the standard for massive scale.</text>
+</svg>

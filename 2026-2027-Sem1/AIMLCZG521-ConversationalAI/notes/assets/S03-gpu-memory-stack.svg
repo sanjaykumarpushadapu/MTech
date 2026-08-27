@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="340" fill="#ffffff"/>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">GPU memory = weights + KV-cache + activations</text>
+  <text x="360" y="46" text-anchor="middle" font-size="12" fill="#475569">M_total = M_weights + M_KV-cache + M_activation</text>
+
+  <!-- 7B example stack -->
+  <text x="150" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">7B model @ short ctx ≈ 17 GB</text>
+  <rect x="95" y="200" width="120" height="90" fill="#c7d2fe" stroke="#4338ca"/><text x="155" y="248" text-anchor="middle" font-size="11" font-weight="600">weights 14 GB</text><text x="155" y="264" text-anchor="middle" font-size="9.5" fill="#3730a3">fixed</text>
+  <rect x="95" y="150" width="120" height="50" fill="#fbcfe8" stroke="#db2777"/><text x="155" y="180" text-anchor="middle" font-size="10.5">KV ~2 GB</text>
+  <rect x="95" y="118" width="120" height="32" fill="#fde68a" stroke="#d97706"/><text x="155" y="138" text-anchor="middle" font-size="10.5">activ. ~1 GB</text>
+
+  <!-- long ctx stack -->
+  <text x="470" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">Same model, long ctx + big batch</text>
+  <rect x="410" y="255" width="120" height="35" fill="#c7d2fe" stroke="#4338ca"/><text x="470" y="277" text-anchor="middle" font-size="10.5" font-weight="600">weights (same)</text>
+  <rect x="410" y="120" width="120" height="135" fill="#fbcfe8" stroke="#db2777"/><text x="470" y="188" text-anchor="middle" font-size="11" fill="#9d174d">KV-cache</text><text x="470" y="204" text-anchor="middle" font-size="9.5" fill="#9d174d">grows with seq × batch</text>
+  <rect x="410" y="95" width="120" height="25" fill="#fde68a" stroke="#d97706"/><text x="470" y="112" text-anchor="middle" font-size="10">activations</text>
+
+  <text x="360" y="318" text-anchor="middle" font-size="11.5" fill="#334155">Budgeting on weights alone works at short context and fails silently at long context — KV-cache dominates.</text>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 350" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="350" fill="#ffffff"/>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">KV-cache: reuse past Keys &amp; Values instead of recomputing them</text>
+
+  <!-- without -->
+  <text x="185" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c">Without cache — O(n²)</text>
+  <g font-size="10.5">
+    <rect x="60" y="75"  width="250" height="26" rx="4" fill="#fee2e2" stroke="#dc2626"/><text x="70" y="93" font-size="10">t₁: compute K₁,V₁</text>
+    <rect x="60" y="107" width="250" height="26" rx="4" fill="#fecaca" stroke="#dc2626"/><text x="70" y="125" font-size="10">t₂: recompute K₁,V₁ + K₂,V₂</text>
+    <rect x="60" y="139" width="250" height="26" rx="4" fill="#fca5a5" stroke="#dc2626"/><text x="70" y="157" font-size="10">t₃: recompute K₁,V₁,K₂,V₂ + K₃,V₃</text>
+  </g>
+  <text x="185" y="188" text-anchor="middle" font-size="11" fill="#b91c1c">1+2+3 = 6 K,V computed for 3 tokens</text>
+
+  <!-- with -->
+  <text x="535" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">With cache — O(n)</text>
+  <g font-size="10.5">
+    <rect x="410" y="75"  width="250" height="26" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="420" y="93" font-size="10">t₁: compute K₁,V₁ → cache</text>
+    <rect x="410" y="107" width="250" height="26" rx="4" fill="#bbf7d0" stroke="#16a34a"/><text x="420" y="125" font-size="10">t₂: reuse K₁,V₁ · compute K₂,V₂ → cache</text>
+    <rect x="410" y="139" width="250" height="26" rx="4" fill="#86efac" stroke="#16a34a"/><text x="420" y="157" font-size="10">t₃: reuse K₁,K₂,V₁,V₂ · compute K₃,V₃</text>
+  </g>
+  <text x="535" y="188" text-anchor="middle" font-size="11" fill="#166534">1+1+1 = 3 K,V computed → 10–100× faster</text>
+
+  <line x1="360" y1="70" x2="360" y2="205" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <rect x="120" y="225" width="480" height="70" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="360" y="250" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">Cache only K and V, never Q</text>
+  <text x="360" y="270" text-anchor="middle" font-size="11" fill="#475569">Q changes each new position (recompute); K,V represent fixed past context (compute once, reuse).</text>
+  <text x="360" y="288" text-anchor="middle" font-size="11" fill="#64748b">Like a running total: add each new number, don't re-sum the whole column.</text>
+</svg>

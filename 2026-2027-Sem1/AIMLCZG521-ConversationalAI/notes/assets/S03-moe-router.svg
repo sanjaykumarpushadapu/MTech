@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="400" fill="#ffffff"/>
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#475569"/></marker>
+  </defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Mixture of Experts: the router replaces the feed-forward network</text>
+
+  <!-- token in -->
+  <rect x="40" y="180" width="110" height="44" rx="6" fill="#e2e8f0" stroke="#334155"/>
+  <text x="95" y="200" text-anchor="middle" font-size="12" font-weight="600">Token x</text>
+  <text x="95" y="216" text-anchor="middle" font-size="10.5" fill="#475569">(after attention)</text>
+  <line x1="150" y1="202" x2="205" y2="202" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- router -->
+  <rect x="205" y="170" width="120" height="64" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="265" y="196" text-anchor="middle" font-size="12.5" font-weight="700">Router</text>
+  <text x="265" y="213" text-anchor="middle" font-size="10.5" fill="#1e40af">W_router · x</text>
+  <text x="265" y="227" text-anchor="middle" font-size="10.5" fill="#1e40af">TopK(k=2) → softmax</text>
+
+  <!-- experts -->
+  <g font-size="11">
+    <rect x="380" y="70"  width="120" height="40" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="440" y="95" text-anchor="middle" font-weight="600">Expert 1 ✓</text>
+    <rect x="380" y="125" width="120" height="40" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="440" y="150" text-anchor="middle" font-weight="600">Expert 2 ✓</text>
+    <rect x="380" y="180" width="120" height="40" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="4 3"/>
+    <text x="440" y="205" text-anchor="middle" fill="#94a3b8">Expert 3 (idle)</text>
+    <rect x="380" y="235" width="120" height="40" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="4 3"/>
+    <text x="440" y="260" text-anchor="middle" fill="#94a3b8">… Expert N (idle)</text>
+  </g>
+  <line x1="325" y1="192" x2="378" y2="92"  stroke="#16a34a" stroke-width="1.8" marker-end="url(#a)"/>
+  <line x1="325" y1="202" x2="378" y2="145" stroke="#16a34a" stroke-width="1.8" marker-end="url(#a)"/>
+  <line x1="325" y1="212" x2="378" y2="200" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="325" y1="220" x2="378" y2="255" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+  <!-- combine -->
+  <rect x="560" y="105" width="120" height="56" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="620" y="128" text-anchor="middle" font-size="12" font-weight="700">Weighted sum</text>
+  <text x="620" y="145" text-anchor="middle" font-size="10.5" fill="#92400e">Σ wᵢ · Expertᵢ(x)</text>
+  <line x1="500" y1="90"  x2="558" y2="125" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="500" y1="145" x2="558" y2="140" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <text x="360" y="320" text-anchor="middle" font-size="12" fill="#334155" font-weight="600">Store many experts, run few → capacity of a large hospital at the cost of a small clinic visit.</text>
+  <text x="360" y="342" text-anchor="middle" font-size="11" fill="#64748b">DeepSeek-V3: 671B stored, 37B active per token = 94.5% compute saving.</text>
+  <text x="360" y="364" text-anchor="middle" font-size="11" fill="#b91c1c">Load-balance loss (α·L) stops the router collapsing onto 1–2 hot experts.</text>
+</svg>

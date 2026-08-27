@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 330" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="330" fill="#ffffff"/>
+  <defs><marker id="tf" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#475569"/></marker></defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">TF-IDF: how common is it here × how rare is it everywhere</text>
+
+  <!-- TF -->
+  <rect x="50" y="70" width="180" height="120" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="140" y="94" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">TF</text>
+  <text x="140" y="114" text-anchor="middle" font-size="10.5" fill="#1e3a8a">term frequency</text>
+  <text x="140" y="136" text-anchor="middle" font-size="11" font-family="monospace" fill="#0f172a">f / |d|</text>
+  <text x="140" y="160" text-anchor="middle" font-size="10" fill="#1e40af">more occurrences</text>
+  <text x="140" y="174" text-anchor="middle" font-size="10" fill="#1e40af">= more important here</text>
+
+  <text x="255" y="135" text-anchor="middle" font-size="24" font-weight="700" fill="#334155">×</text>
+
+  <!-- IDF -->
+  <rect x="280" y="70" width="200" height="120" rx="8" fill="#fef3c7" stroke="#d97706"/>
+  <text x="380" y="94" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">IDF</text>
+  <text x="380" y="114" text-anchor="middle" font-size="10.5" fill="#92400e">inverse document frequency</text>
+  <text x="380" y="136" text-anchor="middle" font-size="11" font-family="monospace" fill="#0f172a">log(N / df)</text>
+  <text x="380" y="160" text-anchor="middle" font-size="10" fill="#92400e">"Qdrant" → high (rare)</text>
+  <text x="380" y="174" text-anchor="middle" font-size="10" fill="#92400e">"the" → ~0 (everywhere)</text>
+
+  <text x="505" y="135" text-anchor="middle" font-size="22" font-weight="700" fill="#334155">=</text>
+
+  <rect x="530" y="90" width="150" height="80" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="605" y="120" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">TF-IDF score</text>
+  <text x="605" y="142" text-anchor="middle" font-size="10.5" fill="#166534">rare word, present here</text>
+  <text x="605" y="156" text-anchor="middle" font-size="10.5" fill="#166534">= strong signal</text>
+
+  <rect x="60" y="220" width="600" height="86" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="360" y="243" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">Why BM25 was needed — TF-IDF's four gaps</text>
+  <text x="360" y="264" text-anchor="middle" font-size="11" fill="#7f1d1d">linear TF (no saturation) · no length normalization · bag-of-words (ignores order) · repetition adds forever</text>
+  <text x="360" y="288" text-anchor="middle" font-size="11" fill="#64748b">BM25 fixes all four: saturating TF (k₁), length penalty (b), probabilistic foundation.</text>
+</svg>

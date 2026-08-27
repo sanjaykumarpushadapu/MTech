@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="380" fill="#ffffff"/>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Quantization memory ladder — a 70B model</text>
+  <text x="360" y="46" text-anchor="middle" font-size="11.5" fill="#64748b">fewer bits per weight = smaller VRAM footprint, like saving a photo as a smaller JPEG</text>
+  <!-- bars: scale 280GB -> width 560 (2px per GB) -->
+  <g font-size="12">
+    <!-- FP32 -->
+    <rect x="150" y="70"  width="500" height="34" rx="4" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="145" y="92" text-anchor="end" font-weight="700">FP32 · 32-bit</text>
+    <text x="400" y="92" text-anchor="middle" fill="#991b1b">280 GB · quality 100%</text>
+    <!-- BF16 -->
+    <rect x="150" y="118" width="250" height="34" rx="4" fill="#ffedd5" stroke="#ea580c"/>
+    <text x="145" y="140" text-anchor="end" font-weight="700">BF16 · 16-bit</text>
+    <text x="275" y="140" text-anchor="middle" fill="#9a3412">140 GB · ~99.9%</text>
+    <!-- FP8 -->
+    <rect x="150" y="166" width="125" height="34" rx="4" fill="#fef9c3" stroke="#ca8a04"/>
+    <text x="145" y="188" text-anchor="end" font-weight="700">FP8 · 8-bit</text>
+    <text x="330" y="188" text-anchor="start" fill="#854d0e">70 GB · ~99.5% (H100)</text>
+    <!-- INT8 -->
+    <rect x="150" y="214" width="125" height="34" rx="4" fill="#ecfccb" stroke="#65a30d"/>
+    <text x="145" y="236" text-anchor="end" font-weight="700">INT8 · 8-bit</text>
+    <text x="330" y="236" text-anchor="start" fill="#3f6212">70 GB · ~99%</text>
+    <!-- NF4 -->
+    <rect x="150" y="262" width="63" height="34" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="145" y="284" text-anchor="end" font-weight="700">NF4 / 4-bit</text>
+    <text x="268" y="284" text-anchor="start" fill="#166534">35 GB · ~98%  ← fits one 48 GB GPU</text>
+  </g>
+  <line x1="150" y1="60" x2="150" y2="308" stroke="#94a3b8" stroke-width="1"/>
+  <text x="360" y="340" text-anchor="middle" font-size="12" fill="#334155" font-weight="600">280 GB → 35 GB (8× smaller) for ~2% quality loss.</text>
+  <text x="360" y="360" text-anchor="middle" font-size="11" fill="#64748b">Rule of thumb: INT8 = safe balance; 4-bit for cost-sensitive serving; BF16/FP8 only when max quality is required.</text>
+</svg>

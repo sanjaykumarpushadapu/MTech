@@ -2,7 +2,7 @@
 
 **Everything still needed, with the date it starts blocking work.** Checked at the start of every session that touches a listed item, and raised **unprompted** as its date approaches — the user asked to be told forcefully rather than politely.
 
-*Last checked: 10 Aug 2026 — all four handouts are now held in `_handouts/`; 11 of 12 books held; only Kimothi (536 R3) outstanding. Current material logs were rebuilt from direct handout checks. 521 L2 DistilBERT embedding notebook is received, but remaining Lab 2 items are still unverified.*
+*Last checked: 27 Aug 2026 — 521 L3 (Model Landscape & Cost Engineering) deck received and processed into `notes/S03-model-landscape.md`; the earlier "official L3 deck still needed" gap is now closed. All four handouts held; 11 of 12 books held; only Kimothi (536 R3) outstanding. 521 L2 DistilBERT embedding notebook is received, but remaining Lab 2 items are still unverified.*
 
 ---
 

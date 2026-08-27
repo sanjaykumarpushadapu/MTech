@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="380" fill="#ffffff"/>
+  <defs><marker id="iv" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#475569"/></marker></defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">IVF: search only the nearest clusters, not the whole dataset</text>
+
+  <!-- clusters -->
+  <g>
+    <circle cx="150" cy="150" r="60" fill="#dcfce7" stroke="#16a34a" stroke-dasharray="4 3"/>
+    <circle cx="150" cy="150" r="6" fill="#16a34a"/><text x="150" y="140" text-anchor="middle" font-size="10" fill="#166534">C1</text>
+    <circle cx="300" cy="235" r="60" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="300" cy="235" r="6" fill="#2563eb"/><text x="300" y="225" text-anchor="middle" font-size="10" fill="#1e40af">C2 ✓ (nearest)</text>
+    <circle cx="300" cy="90" r="52" fill="#fef3c7" stroke="#d97706" stroke-dasharray="4 3"/>
+    <circle cx="300" cy="90" r="6" fill="#d97706"/><text x="300" y="80" text-anchor="middle" font-size="10" fill="#92400e">C3</text>
+    <!-- dots in C2 -->
+    <g fill="#1e40af"><circle cx="285" cy="245" r="3"/><circle cx="315" cy="225" r="3"/><circle cx="300" cy="255" r="3"/><circle cx="320" cy="250" r="3"/></g>
+  </g>
+  <!-- query -->
+  <circle cx="305" cy="215" r="7" fill="#dc2626"/><text x="305" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">query</text>
+
+  <!-- steps -->
+  <g font-size="11.5" fill="#334155">
+    <text x="430" y="70" font-weight="700">Build (offline):</text>
+    <text x="440" y="90">k-means → nlist centroids (Voronoi cells)</text>
+    <text x="440" y="108">each vector filed in its centroid's inverted list</text>
+    <text x="430" y="140" font-weight="700">Search (query time):</text>
+    <text x="440" y="160">1. compare query to all nlist centroids</text>
+    <text x="440" y="178">2. pick the nprobe closest clusters</text>
+    <text x="440" y="196">3. scan only those inverted lists → top-k</text>
+  </g>
+  <line x1="410" y1="150" x2="365" y2="220" stroke="#475569" stroke-width="1.4" marker-end="url(#iv)"/>
+
+  <rect x="60" y="285" width="600" height="72" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="360" y="308" text-anchor="middle" font-size="11.5" fill="#334155" font-weight="600">Cost O(K·D + N·D/K): compare to K centroids, then scan 1/K of the data. N=10M, K=100 → ~100× faster than brute force.</text>
+  <text x="360" y="328" text-anchor="middle" font-size="11" fill="#64748b">Like a library's card catalogue: don't read every book — go to the right shelf, then scan only that shelf.</text>
+  <text x="360" y="347" text-anchor="middle" font-size="11" fill="#b91c1c">nprobe=1 can miss a true neighbour in an adjacent cluster; raise nprobe (~10–20) for &gt;95% recall.</text>
+</svg>

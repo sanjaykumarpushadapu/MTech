@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+  <rect width="720" height="360" fill="#ffffff"/>
+  <defs>
+    <marker id="a6" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#334155"/></marker>
+  </defs>
+  <text x="360" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Self-host vs. API — the break-even crossover</text>
+
+  <!-- axes -->
+  <line x1="90" y1="290" x2="660" y2="290" stroke="#334155" stroke-width="1.5" marker-end="url(#a6)"/>
+  <line x1="90" y1="290" x2="90" y2="60" stroke="#334155" stroke-width="1.5" marker-end="url(#a6)"/>
+  <text x="375" y="322" text-anchor="middle" font-size="12" fill="#475569">Monthly token volume  →</text>
+  <text x="58" y="175" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90 58 175)">Total monthly cost  →</text>
+
+  <!-- API line: starts low, steep slope -->
+  <line x1="90" y1="270" x2="600" y2="90" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="610" y="88" font-size="11.5" font-weight="700" fill="#2563eb">API (per-token)</text>
+  <!-- Self-host line: high fixed, shallow slope -->
+  <line x1="90" y1="150" x2="600" y2="120" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="610" y="122" font-size="11.5" font-weight="700" fill="#dc2626">Self-host</text>
+  <text x="610" y="138" font-size="9.5" fill="#dc2626">(fixed DevOps + GPU)</text>
+
+  <!-- crossover -->
+  <circle cx="360" cy="163" r="5" fill="#0f172a"/>
+  <line x1="360" y1="163" x2="360" y2="290" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="360" y="308" text-anchor="middle" font-size="10.5" fill="#334155">~5–10B tok/mo</text>
+  <text x="360" y="150" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f172a">break-even</text>
+
+  <!-- zones -->
+  <text x="205" y="255" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="600">&lt;5B: API wins</text>
+  <text x="500" y="230" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">≥10B: self-host saves 60–70%</text>
+
+  <text x="360" y="345" text-anchor="middle" font-size="11" fill="#64748b">The forgotten term is $8–12K/mo DevOps — it's what keeps the API ahead at low volume (privacy needs can override the math).</text>
+</svg>
