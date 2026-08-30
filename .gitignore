@@ -39,7 +39,7 @@ data/
 # Exception: 521 ass-1's report is our own writeup (generated from the notebook's
 # own executed results), not raw copyrighted course material — track it like the
 # assignment-PDF exception above.
-!2026-2027-Sem1/AIMLCZG521-ConversationalAI/ass-1/PS2_Group129_Report.docx
+!2026-2027-Sem1/AIMLCZG521-ConversationalAI/ass-1/PPS2-Group129 final Report.docx
 
 # Secrets
 .env
