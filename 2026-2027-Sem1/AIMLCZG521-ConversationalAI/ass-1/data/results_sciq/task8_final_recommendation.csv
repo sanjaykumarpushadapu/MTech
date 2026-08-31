@@ -1,0 +1,5 @@
+Decision,Selection,Measured evidence,Reason
+Embedding model,all-MiniLM-L6-v2,0.744,Higher full-query Recall@5
+Similarity metric,Cosine / Inner Product after L2 normalization,Rank-equivalent,Task 3: 0/25 normalized ranking differences
+Best ANN trade-off,HNSW {'efSearch': 8},0.706,0.024 ms/query; 10.36x exact speed
+Resource-constrained,all-MiniLM-L6-v2 + HNSW {'efSearch': 8},0.744,384-D MiniLM and fastest ANN setting

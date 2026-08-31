@@ -1,0 +1,11 @@
+Query ID,Query,Words,Top-5 overlap,M1 support rank,M2 support rank,M1 Top-1 lexical overlap,M2 Top-1 lexical overlap,Difference type
+q_0003,What is the least dangerous radioactive decay?,7,2,1,1,0.857,0.857,Short / long query
+q_0026,A small scale version of what type of map displays individual rock units?,13,4,1,1,0.667,0.667,Semantic similarity / ranking
+q_0029,Where do angiosperms produce seeds in flowers?,7,4,2,1,0.429,0.714,Keyword overlap
+q_0102,How many different amino acids make up proteins.,8,3,Not in Top-5,4,0.625,0.375,Keyword overlap
+q_0180,"The atomic number of tungsten is 74. therefore, in a neutral atom of tungsten, there are 74 electrons. the atomic number of argon is 18. therefore, in a neutral atom of argon, there are how many electrons?",37,2,1,1,0.895,0.895,Short / long query
+q_0276,Tests for levels of what in blood allow a diabetic patient to regulate how much insulin to administer?,18,2,1,Not in Top-5,0.706,0.353,Keyword overlap
+q_0316,"Friction causes the molecules on rubbing surfaces to move faster, which produces what?",13,4,Not in Top-5,3,0.154,0.154,Semantic similarity / ranking
+q_0324,"Electrical potential energy can be described by the equation pe = qv, where q is the electric charge and v is what?",22,2,1,1,0.947,0.947,Short / long query
+q_0398,What term describes the orientation of a body lying face-down?,10,1,1,1,0.818,0.818,Semantic similarity / ranking
+q_0463,Light waves which interfere with themselves after interaction with a small aperture or target are said to what?,18,1,1,1,0.941,0.941,Short / long query
