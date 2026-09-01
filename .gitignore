@@ -30,7 +30,8 @@ data/
 # Model directories may contain lightweight config/tokenizer metadata worth tracking;
 # large weights remain excluded by the binary extension rules above.
 
-
+# Generated environment snapshot
+llm_baseline_requirements.txt
 
 # Secrets
 .env
