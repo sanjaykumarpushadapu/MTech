@@ -53,6 +53,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Temporary deck QA artifacts — working evidence only, never committed
+2026-2027-Sem1/*/source/.audit/
+
 # Transcripts — raw source, not knowledge base. Read them to build/update the note,
 # fold the important content (instructor quotes, emphasis, off-slide clarifications)
 # into the session note, then don't commit. The note is the record, not the transcript.

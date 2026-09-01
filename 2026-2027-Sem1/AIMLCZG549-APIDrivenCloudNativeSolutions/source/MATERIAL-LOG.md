@@ -1,58 +1,46 @@
 # AIMLC ZG549 · API-driven Cloud Native Solutions · Material Log
 
-Rebuilt: 10 Aug 2026.
+**Last reconciled:** 01 Sep 2026
+**Path convention:** paths below are relative to this subject folder.
 
-This file records held teaching material, direct handout scope, processed outputs, and unresolved gaps. Raw decks, recordings, transcripts, and downloaded books are source inputs only; they must not be committed.
+This is the canonical subject-level ledger for material availability, scope checks, durable outputs, and active gaps. Keep detailed audit prose in Git history; do not append a new recheck block here for every pass.
 
-Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing · `—` not applicable.
+Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not applicable.
 
-## Handout
+## Current source state
 
-| Item | Status |
+| Item | Current status |
 |---|---|
-| Direct handout file | ✓ `_handouts/AIML ZG549 COURSE HANDOUT.docx` |
-| Direct row verification | ✓ S1, S2, S3 and labs checked on 10 Aug 2026 |
+| Handout | Historically checked against S1–S3 and labs. `_handouts/AIML ZG549 COURSE HANDOUT.docx` is absent from the current checkout and accessible local paths; restore it before the next scope-changing update. |
+| Raw decks, recordings, transcripts, books | External or ignored inputs; no raw course material belongs in Git. |
+| Canonical outputs | Session notes in `notes/`, lab material in `labs/`, and this material ledger. |
 
-## Session Material Status
+## Session material status
 
-| Session | Handout topic and required sub-topics | Material held | Processed output | Open gap |
+| Session | Handout topic | Material held | Durable output | Current gap |
 |---|---|---|---|---|
-| S1 | API Basics: API introduction; design/specify/build; REST standards and structure; OpenAPI specification; mocking; semantic versioning; tools; OpenAPI generators; REST/GraphQL/gRPC; API versioning; examples | ✓ `API driven_Lecture 1_25Jul.pptx`; duplicate `Lecture 1 (1).ppt`; S01 transcript; R2 ch1 | ✓ `notes/S01-api-basics.md` | none known |
-| S2 | Cloud Native Application: modern application requirements; cloud-native evolution; cloud-native software; cloud-enabled vs cloud-based vs cloud-native; examples | ✓ `Lecture 2 and 3.pptx` slides 4-17; R2 ch1; R3 ch1 | ✓ `notes/S02-cloud-native.md` | none known |
-| S3 | Cloud Native Application: CNCF landscape; cloud-native ecosystem; DevOps and GitOps; microservices and service mesh; containers and Kubernetes; serverless; architecture case study | ✓ `Lecture 2 and 3.pptx` slides 18-71; R3 ch1 | ✓ `notes/S03-ecosystem.md` | none known |
-| S4 | Data Science and Machine Learning | ✗ | ☐ | deck required |
-| S5 | Data Science and Machine Learning: API-driven data pipeline | ✗ | ☐ | deck required |
-| S6 | Data Science and Machine Learning: API-driven ML pipelines and MLOps practices | ✗; R4 book held | ☐ | deck required |
-| S7 | Tools review and API-driven ML model deployment case study | ✗ | ☐ | deck required |
-| S8 | AI and Cognitive Services Part-A: Basic APIs for AI applications | ✗ | ☐ | deck required |
-| S9 | Not listed as new handout session content | — | ☐ | verify class plan when reached |
-| S10-S11 | AI and Cognitive Services Part-B: Language Models / RAG | ✗ | ☐ | deck required |
-| S12 | Cloud Native Application Deployment: Docker, containers, Kubernetes, deployment strategies | ✗ | ☐ | deck required |
-| S13 | IoT and Data Analytics | ✗ | ☐ | deck required |
-| S14-S15 | IoT and Data Analytics: APIs, ingestion, processing, analytics, monitoring, serverless functions, case study | ✗ | ☐ | deck required |
-| S16 | Course Review and Discussion | ✗ | ☐ | deck required |
+| S00 | Python self-study | ✓ Severance source is listed in the course plan | — | self-study note not yet created |
+| S01 | API Basics | ✓ Lecture 1 deck(s); transcript; R2 ch1 | ✓ `notes/S01-api-basics.md` | none known |
+| S02 | Cloud Native Application | ✓ Mixed Lecture 2/3 deck, slides 4–17; R2/R3 ch1 | ✓ `notes/S02-cloud-native.md` | none known |
+| S03 | Cloud Native ecosystem | ✓ Mixed Lecture 2/3 deck, slides 18–71; R3 ch1 | ✓ `notes/S03-ecosystem.md` | none known |
+| S04–S16 | Data science/ML, AI services, deployment, IoT, review | ✗ decks not held | ☐ no notes yet | collect each deck before writing |
 
-## Reference Scope
+## Reference scope
 
-| Reference | Scope |
+| Reference | Current scope/status |
 |---|---|
-| R1 Severance, *Python for Everybody* | Module 0 self-study: ch1-10 and ch14-16 only; ch11-13 out of scope unless a lab requires them |
-| R2 Gough/Bryant/Auburn, *Mastering API Architecture* | ch1 only for S1-S2 |
-| R3 Davis, *Cloud Native Patterns* | ch1 only for S2-S3 |
-| R4 Treveil, *Introducing MLOps* | held for S6; chapter map to build when S6 arrives |
+| R1 Severance | S00 self-study; cited chapters only |
+| R2 Gough/Bryant/Auburn | ch1 for S1–S2 |
+| R3 Davis | ch1 for S2–S3 |
+| R4 Treveil | held for S6; chapter map when S6 arrives |
+| R5 public web resources | fetch when the corresponding session arrives |
 
-## Recheck Notes — 10 Aug 2026
+## Durable decisions
 
-- S01, S02 and S03 note titles match the handout session titles.
-- S02 and S03 use one mixed deck split by handout scope: slides 4-17 for S2 and slides 18-71 for S3.
-- S01 includes the handout's `mocking` item even though it was not taught by a dedicated slide; it is filled from the OpenAPI toolchain because the handout names it explicitly.
-- S03 includes a concise service-mesh subsection because the handout names it, even though the agenda/deck treatment is thin.
-- Source-framing scan passes for current notes via `npm run check`.
+- The mixed Lecture 2/3 deck is split by handout scope: **slides 4–17 → S02** and **slides 18–71 → S03**.
+- S01–S03 notes are the current durable outputs. Sessions S04 onward require their deck before note creation.
+- The subject note is the primary learning artifact; shared notes are optional synthesis and cannot be the only home for core material.
 
-## Recheck Notes — 01 Sep 2026 (material-log path audit)
+## Storage rule
 
-- The historical S1–S3 handout checks remain recorded, but `_handouts/AIML ZG549 COURSE HANDOUT.docx` is not present in the current checkout or accessible local paths. Treat the handout as a reattachment/path-restoration gap before the next scope-changing note update; do not silently claim a current direct-file check.
-
-## Storage Rule
-
-`source/decks/` and `source/transcripts/` are ignored source-input locations. Do not stage or commit raw course material.
+`source/decks/` and `source/transcripts/` are ignored source-input locations. Do not stage or commit raw course material; keep the durable record in notes and lab READMEs.

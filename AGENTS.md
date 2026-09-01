@@ -39,7 +39,7 @@ For session-note, lab, source-log, master-index, progress, or watchlist work, th
 - Verify uploaded material against the handout row and deck/session identity before changing scope.
 - Keep notes self-contained; never leave core knowledge only in a notebook, `_shared/`, transcript, slide, PDF, or local scratch file.
 - Update all tracking files affected by the change.
-- When touching material intake or scope, enumerate and inspect every `MATERIAL-LOG.md` in the repository. Reconcile each file's current status tables and referenced paths with the current checkout; do not append a new recheck paragraph while leaving stale active rows or invalid paths above it. Preserve dated history, but mark superseded decisions explicitly. Record unavailable external materials as current gaps rather than treating historical verification as a current file check.
+- When touching material intake or scope, enumerate every `MATERIAL-LOG.md` in the repository. Fully reconcile the affected subject log(s) against the current checkout, and scan the other logs only for cross-subject scope, numbering, or path collisions. Do not append repetitive audit history: each log is a compact current snapshot, while Git history preserves detailed chronology. Record unavailable external materials as current gaps rather than treating historical verification as a current file check.
 - Run `cd tools && npm run check` and `git status --short` before the final response. If the Windows shell passes repository globs literally and the bundled check fails for that reason, run each checker with an explicit tracked-file list, record the shell limitation, and do not claim the failed bundled command passed.
 
 The final response must include a short compliance line, for example: `AGENTS check: handout row checked, tracking updated, repo checks passed; open gap: S02 remaining lab files not held.` Keep it concise, but do not omit it.
@@ -74,23 +74,23 @@ The top-level `##` Part/session headings follow the handout (above). Beneath the
 - **Synthesis sections keep their own name.** When a section has no single corresponding deck slide — a bridge/intro the note adds, or handout scope the deck doesn't cover (e.g. BM25/DPR/RRF absent from the S02 deck) — give it a plain descriptive heading. Do not invent a fake deck title.
 - After any retitle or split, re-run the coverage checker: a heading word the checker was matching against (e.g. "mathematics") can disappear in a rename and surface a false negative to fix in the body.
 
-### Capture a Slide Inventory at Intake
+### Capture a Temporary Slide Audit at Intake
 
-**The moment a deck is uploaded, before writing or editing the note, write a slide inventory** to `<subject>/source/S<NN>-slide-inventory.md`: one row per source slide — slide number, title, and the named items on it (models, algorithms, frameworks, protocols, figures, table labels). Titles and named terms only, never slide prose, so it is an index rather than course material and is safe to commit. Include title, agenda, disclaimer, objectives, recap, and reference slides too; if a slide is routed to the master index, leave its named-items cell blank rather than omitting the row.
+**The moment a deck is uploaded, before writing or editing the note, create a temporary slide inventory** in the OS temp directory or an ignored subject-level audit directory. It must contain one row per source slide — slide number, title, and named items (models, algorithms, frameworks, protocols, figures, and table labels). Include title, agenda, disclaimer, objectives, recap, and reference slides too; if a slide is routed to the master index, leave its named-items cell blank rather than omitting the row.
 
-Before accepting the inventory, read the source's actual page/slide count from PDF/PPTX metadata and assert that the inventory row count matches it exactly. A coverage result such as `52/52` is not evidence of full coverage when the source has 62 slides and the inventory has only 52 rows.
+Do not create or commit `<subject>/source/S<NN>-slide-inventory.md` by default. A permanent inventory is justified only for an ambiguous multi-session split or when the user explicitly requests a durable source index. Delete the temporary inventory after the audit unless it is needed for one of those documented reasons.
 
-This exists because uploads do not persist. Without an inventory, every later coverage check needs the user to re-upload the same file, and each re-check starts from nothing.
+Before accepting the audit, read the source's actual page/slide count from PDF/PPTX metadata and assert that the temporary inventory row count matches it exactly. A coverage result such as `52/52` is not evidence of full coverage when the source has 62 slides and the temporary inventory has only 52 rows.
 
-**Verify coverage by matching, not by reading.** First run the checker in all-slide mode to validate inventory completeness, then run the normal substantive-content check:
+**Verify coverage by matching, not by reading.** First run the checker in all-slide mode to validate temporary inventory completeness, then run the normal substantive-content check:
 
 ```bash
 cd tools
-node check-slide-coverage.mjs <inventory.md> <note.md> --all
-node check-slide-coverage.mjs <inventory.md> <note.md>
+node check-slide-coverage.mjs <temporary-inventory.md> <note.md> --all
+node check-slide-coverage.mjs <temporary-inventory.md> <note.md>
 ```
 
-It reports every named item absent from the note. Judge each hit: a genuine omission gets added to the note; a false positive (PDF character corruption, a spelling variant, a word the note phrases differently) gets pruned from the inventory so the signal stays clean. The gate is a clean run, recorded in the compliance line.
+It reports every named item absent from the note. Judge each hit: a genuine omission gets added to the note; a false positive (PDF character corruption, a spelling variant, a word the note phrases differently) gets pruned from the temporary inventory so the signal stays clean. The gate is a clean run, recorded as a compact result in `source/MATERIAL-LOG.md` when useful.
 
 Reading the deck and concluding "this looks covered" is not a coverage check. That judgement repeatedly passed notes that had dropped named items, collapsed the deck's own structure, and replaced concrete lists with an ellipsis. Matching is not a judgement call.
 
@@ -177,6 +177,18 @@ Session notes exist to teach and to be revised from. When extending a note from 
 
 ## 3. Material Scope
 
+### Documentation ownership
+
+Keep each fact in one canonical place:
+
+- `<subject>/source/MATERIAL-LOG.md` — current subject-level material availability, scope checks, durable outputs, and active gaps. Keep it compact; do not append repetitive audit narratives.
+- `MATERIALS-WATCHLIST.md` — cross-subject blockers, requested uploads, and reminders only; do not duplicate full session ledgers.
+- Temporary deck-audit files — one-row-per-slide working evidence used during intake and coverage checks; keep them outside Git or in an ignored audit directory, and delete them after verification unless a permanent index is explicitly justified.
+- `<code>-master.md` — course navigation, handout scope, and note status; never point to a note that does not exist.
+- `notes/` — durable teaching content; `labs/` — runnable lab material; `_shared/` — optional synthesis; `_templates/` — reusable templates.
+
+Use Git history for detailed audit chronology. Before changing a material ledger, reconcile its current tables and paths instead of adding another dated narrative block.
+
 ### Out of Scope Means Out
 
 A chapter the handout does not cite is not part of this semester. Do not pull from it, recommend it, or use it to expand exam-scope note bodies. Mark it `OUT OF SCOPE` in chapter maps.
@@ -214,9 +226,9 @@ Never trust a deck filename alone, either. Verify identity from title slide, age
 
 If one deck contains multiple sessions, split it by handout scope and log the split in `source/MATERIAL-LOG.md`. If the boundary is ambiguous, stop and ask; do not blend two sessions.
 
-### Every Deck Gets a Slide Inventory, No Exceptions
+### Every Deck Gets a Temporary Slide Audit
 
-**The moment any deck is uploaded — every subject, every session, no exceptions for "beyond course," re-uploads, or decks that look already covered — write `<subject>/source/S<NN>-slide-inventory.md` before writing or editing the note.** See "Capture a Slide Inventory at Intake" in section 2 for the format and the checker command. This step belongs to intake itself, not to a later audit — if it is skipped here, it does not reliably happen later. A deck without a committed inventory has not finished intake, regardless of how thorough the note looks.
+**The moment any deck is uploaded — every subject, every session, including re-uploads and decks that look already covered — run the temporary slide-audit protocol before writing or editing the note.** Do not create a committed `S<NN>-slide-inventory.md` by default. Keep the complete slide → home verdict table in the temporary workspace; it is QA evidence, not permanent study documentation. A permanent inventory is allowed only for an ambiguous multi-session split or an explicit user request, and the reason must be recorded in the material log.
 
 | Format                      | Extract with    | Required care                                       |
 | --------------------------- | --------------- | --------------------------------------------------- |
@@ -235,7 +247,7 @@ Always extract and look at deck images. Slide text often omits equations, shapes
 
 Do not rely on the master index, the note's history, or a prior audit — **only the rendered source is authoritative.** Run all six steps in one pass; the reason past audits kept surfacing "new" gaps is that they were done partially. Do not declare the audit done until every slide has a verdict.
 
-1. **Read the source count, render every slide to an image, and look at it.** `pdftoppm`; if poppler is missing, `PyMuPDF`/`fitz` or `pdf2image`. Text extraction silently drops image-only slides (a graphic that extracts as just its title) and every label that lives inside a diagram. Reading extracted text is not the same as seeing the slide. Assert that the rendered-image count and inventory row count both equal the source count.
+1. **Read the source count, render every slide to an image, and look at it.** `pdftoppm`; if poppler is missing, `PyMuPDF`/`fitz` or `pdf2image`. Text extraction silently drops image-only slides (a graphic that extracts as just its title) and every label that lives inside a diagram. Reading extracted text is not the same as seeing the slide. Assert that the rendered-image count and temporary inventory row count both equal the source count.
 2. **Go slide-by-slide, in deck order**, and give **each** slide a verdict: mapped to a note heading, a genuine gap (fix it now), or logistics → master (see step 5). The full slide → home table is the audit deliverable; an inventory alone or a summary sentence is not a substitute.
 3. **Apply all three coverage levels — a slide passes only if it clears every one:**
    - **Presence** — the slide's content is in the note at all.
@@ -616,7 +628,7 @@ git status --short
 
 Do not eyeball the checklist:
 
-- [ ] `source/S<NN>-slide-inventory.md` exists for this deck and `check-slide-coverage.mjs` was run clean (false positives pruned, genuine gaps folded into the note)
+- [ ] Temporary slide inventory/verdict table was complete, matched the source slide count, and `check-slide-coverage.mjs` was run clean; delete it after verification unless a permanent index is justified
 - [ ] Handout row checked directly from `.docx`/`.pdf`
 - [ ] Every handout topic and sub-topic explicitly covered in the same note
 - [ ] Handout-cited sources read/extracted or gaps recorded
@@ -635,7 +647,7 @@ Do not eyeball the checklist:
 - [ ] No PDFs, slides, datasets, transcripts, weights, or secrets are staged
 - [ ] Dates and weights match handouts or are marked `⚠️`
 
-**Green is necessary, not sufficient.** A clean `npm run check` and a clean `check-slide-coverage.mjs` run do not by themselves make a note complete or a compliance line honest — the coverage tool only knows the named items in the inventory, and `check:framing` matches a narrow regex. Before claiming done, do a by-eye pass for what the scripts miss:
+**Green is necessary, not sufficient.** A clean `npm run check` and a clean `check-slide-coverage.mjs` run do not by themselves make a note complete or a compliance line honest — the coverage tool only knows the named items in the temporary inventory, and `check:framing` matches a narrow regex. Before claiming done, do a by-eye pass for what the scripts miss:
 
 - **Source-framing the regex misses.** Phrases that name the source as the reason for content — "the deck cites/notes/shows/marks/quotes", "the slide's", "the handout says" — are violations even when `check:framing` passes. State the content directly.
 - **Internal-number consistency.** Every figure repeated in a `## Why this matters`, self-study, summary, or open-book line must match the note's own worked example (e.g. a fusion score quoted in the lab equals the score computed in the RRF section).
@@ -663,9 +675,7 @@ MTech/
     │   ├── openbook/S01-....md
     │   ├── labs/S01-.../
     │   └── source/
-    │       ├── README.md
-    │       ├── MATERIAL-LOG.md
-    │       └── transcripts/      # gitignored
+    │       └── MATERIAL-LOG.md
     ├── _shared/                  # optional synthesis only
     ├── _library/                 # gitignored textbooks
     └── _templates/

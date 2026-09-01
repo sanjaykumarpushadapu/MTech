@@ -10,7 +10,7 @@ Notes, labs and study material for the whole degree. One folder per semester.
 
 ## Rules
 
-- **No course material in git.** Textbook PDFs, slides and datasets live in Google Drive. `.gitignore` blocks them. Each subject's `source/` holds a pointer file only.
+- **No course material in git.** Textbook PDFs, slides and datasets live in Google Drive. `.gitignore` blocks them. Each subject's `source/` holds the canonical material ledger; slide inventories are temporary QA files and are not committed by default.
 - **One markdown file per session**, in `<subject>/notes/`, following `_templates/SESSION-TEMPLATE.md`.
 - **Every session gets one note** the same weekend it's taught. The note body is what you revise from for *both* exams — there are no separate recall cards. A **condensed open-book page** is derived from it later, for the bound December file.
 - **Subject notes are the primary study path.** Start from the subject master, then the session note. `_shared/` is optional secondary synthesis, not a required hop.
@@ -28,7 +28,7 @@ For the current semester, open `2026-2027-Sem1/README.md` first. That file is th
 ├── <CODE>-<CourseTitle>/    ← folder name = course code + handout's course title
 │   ├── <code>-master.md     ← running index; revision homepage; open-book front index in Dec
 │   ├── notes/               ← one file per session
-│   └── source/              ← pointer to Drive only
+│   └── source/              ← canonical material ledger; temporary QA files are ignored
 ├── _shared/                 ← optional synthesis notes, secondary to subject notes
 └── _templates/
     └── SESSION-TEMPLATE.md

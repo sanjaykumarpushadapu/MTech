@@ -4,6 +4,8 @@
 
 *Last checked: 01 Sep 2026 — 521 renumbered to instructor contact sessions: S02 Embeddings & Vector Search, **S03 ANN Search & Hybrid Retrieval**, **S04 Model Landscape & Cost Engineering**. The attached S03/S04 decks were revalidated slide-by-slide and remain held and noted. Handouts were historically checked, but the repository-relative `_handouts/` copies are not present in the current checkout; 521 was found externally, while matching 536/546/549 files were not found in accessible local paths. 11 of 12 books held; only Kimothi (536 R3) outstanding. 521 L2 DistilBERT notebook held; remaining Lab 2 items still unverified.*
 
+> **Ownership:** each subject's `source/MATERIAL-LOG.md` is the compact current ledger for that subject. This file contains only cross-subject blockers, requests, and reminders; do not copy full session-status tables here.
+
 ---
 
 ## 🔴 Blocking now
