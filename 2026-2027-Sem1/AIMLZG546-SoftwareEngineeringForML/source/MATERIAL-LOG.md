@@ -50,6 +50,10 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - S2 remains blocked because the handout row is known but the deck is not held, and the repo rule says no deck means no note.
 - Source-framing scan passes for current notes via `npm run check`.
 
+## Recheck Notes — 01 Sep 2026 (material-log path audit)
+
+- The historical S1 handout check remains recorded, but `_handouts/AIML ZG546 COURSE HANDOUT-9335246709.docx` is not present in the current checkout or accessible local paths. Treat the handout as a reattachment/path-restoration gap before the next scope-changing note update; do not silently claim a current direct-file check.
+
 ## Storage Rule
 
 Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.

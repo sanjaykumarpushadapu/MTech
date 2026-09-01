@@ -39,7 +39,8 @@ For session-note, lab, source-log, master-index, progress, or watchlist work, th
 - Verify uploaded material against the handout row and deck/session identity before changing scope.
 - Keep notes self-contained; never leave core knowledge only in a notebook, `_shared/`, transcript, slide, PDF, or local scratch file.
 - Update all tracking files affected by the change.
-- Run `cd tools && npm run check` and `git status --short` before the final response.
+- When touching material intake or scope, enumerate and inspect every `MATERIAL-LOG.md` in the repository. Reconcile each file's current status tables and referenced paths with the current checkout; do not append a new recheck paragraph while leaving stale active rows or invalid paths above it. Preserve dated history, but mark superseded decisions explicitly. Record unavailable external materials as current gaps rather than treating historical verification as a current file check.
+- Run `cd tools && npm run check` and `git status --short` before the final response. If the Windows shell passes repository globs literally and the bundled check fails for that reason, run each checker with an explicit tracked-file list, record the shell limitation, and do not claim the failed bundled command passed.
 
 The final response must include a short compliance line, for example: `AGENTS check: handout row checked, tracking updated, repo checks passed; open gap: S02 remaining lab files not held.` Keep it concise, but do not omit it.
 
@@ -75,14 +76,18 @@ The top-level `##` Part/session headings follow the handout (above). Beneath the
 
 ### Capture a Slide Inventory at Intake
 
-**The moment a deck is uploaded, before writing or editing the note, write a slide inventory** to `<subject>/source/S<NN>-slide-inventory.md`: one row per slide — slide number, title, and the named items on it (models, algorithms, frameworks, protocols, figures, table labels). Titles and named terms only, never slide prose, so it is an index rather than course material and is safe to commit.
+**The moment a deck is uploaded, before writing or editing the note, write a slide inventory** to `<subject>/source/S<NN>-slide-inventory.md`: one row per source slide — slide number, title, and the named items on it (models, algorithms, frameworks, protocols, figures, table labels). Titles and named terms only, never slide prose, so it is an index rather than course material and is safe to commit. Include title, agenda, disclaimer, objectives, recap, and reference slides too; if a slide is routed to the master index, leave its named-items cell blank rather than omitting the row.
+
+Before accepting the inventory, read the source's actual page/slide count from PDF/PPTX metadata and assert that the inventory row count matches it exactly. A coverage result such as `52/52` is not evidence of full coverage when the source has 62 slides and the inventory has only 52 rows.
 
 This exists because uploads do not persist. Without an inventory, every later coverage check needs the user to re-upload the same file, and each re-check starts from nothing.
 
-**Verify coverage by matching, not by reading.** Run:
+**Verify coverage by matching, not by reading.** First run the checker in all-slide mode to validate inventory completeness, then run the normal substantive-content check:
 
 ```bash
-cd tools && node check-slide-coverage.mjs <inventory.md> <note.md>
+cd tools
+node check-slide-coverage.mjs <inventory.md> <note.md> --all
+node check-slide-coverage.mjs <inventory.md> <note.md>
 ```
 
 It reports every named item absent from the note. Judge each hit: a genuine omission gets added to the note; a false positive (PDF character corruption, a spelling variant, a word the note phrases differently) gets pruned from the inventory so the signal stays clean. The gate is a clean run, recorded in the compliance line.
@@ -230,15 +235,15 @@ Always extract and look at deck images. Slide text often omits equations, shapes
 
 Do not rely on the master index, the note's history, or a prior audit — **only the rendered source is authoritative.** Run all six steps in one pass; the reason past audits kept surfacing "new" gaps is that they were done partially. Do not declare the audit done until every slide has a verdict.
 
-1. **Render every slide to an image and look at it.** `pdftoppm`; if poppler is missing, `PyMuPDF`/`fitz` or `pdf2image`. Text extraction silently drops image-only slides (a graphic that extracts as just its title) and every label that lives inside a diagram. Reading extracted text is not the same as seeing the slide.
-2. **Go slide-by-slide, in deck order**, and give **each** slide a verdict: mapped to a note heading, a genuine gap (fix it now), or logistics → master (see step 5). The full slide → home table is the audit deliverable.
+1. **Read the source count, render every slide to an image, and look at it.** `pdftoppm`; if poppler is missing, `PyMuPDF`/`fitz` or `pdf2image`. Text extraction silently drops image-only slides (a graphic that extracts as just its title) and every label that lives inside a diagram. Reading extracted text is not the same as seeing the slide. Assert that the rendered-image count and inventory row count both equal the source count.
+2. **Go slide-by-slide, in deck order**, and give **each** slide a verdict: mapped to a note heading, a genuine gap (fix it now), or logistics → master (see step 5). The full slide → home table is the audit deliverable; an inventory alone or a summary sentence is not a substitute.
 3. **Apply all three coverage levels — a slide passes only if it clears every one:**
    - **Presence** — the slide's content is in the note at all.
    - **Findability + title** — it sits under a heading a reviewer can point to by name; for a slide that is its own distinct topic, **mirror the slide's own title verbatim** as the (sub)section heading. Content buried in another section's prose or under a bold lead-in is a **gap**, not a pass — fix placement and title.
    - **Fidelity** — every **named item, number, label, and worked-example value** on the slide is present and matches (algorithm names like WordPiece, framework/model names, stats, example figures). "The topic is covered" is not enough if a named item on the slide is missing or altered. Facts are carried verbatim; prose is rewritten fresh.
 4. **Check every named entity explicitly.** Walk the slide's algorithms, frameworks, models, protocols, tools, stats, and worked-example numbers as a literal list — each is present, or a deliberate omission you can justify (recap/agenda/summary slides carry nothing new).
 5. **Logistics slides go to the master, not the note** (evaluation scheme, course architecture, learning outcomes, textbooks, prerequisites, references) — their absence from the note is correct. Cross-check them against the master, but **never copy a deck logistics slide over the master**: when a deck slide and the confirmed handout/recording disagree, the handout/recording wins (a deck slide can be wrong — e.g. a quiz count). Flag the discrepancy; do not "fix" the master to match the deck.
-6. **Deliverable:** the complete slide → home table, every gap fixed in the same pass, and a short list of deliberate omissions with reasons. "Matches the index" is never the finish line — only "every slide has a verdict against the rendered source" is.
+6. **Deliverable:** the complete slide → home table with exactly one row for every source slide, every gap fixed in the same pass, and a short list of deliberate omissions with reasons. "Matches the index" is never the finish line — only "every slide has a verdict against the rendered source" is.
 
 **This protocol is also the definition of done for *writing* a note from a deck, not only for re-auditing one.** Every gap a later audit finds — a dropped table column, an algorithm named on a slide but absent from the note, a buried subsection, a changed number — exists because the first write skipped a step above. Run all six steps on the first write and there is nothing left for an audit to catch. A note is not "written"; it is written *and* reconciled slide-by-slide against the rendered deck.
 

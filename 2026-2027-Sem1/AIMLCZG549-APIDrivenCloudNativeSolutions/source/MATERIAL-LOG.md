@@ -49,6 +49,10 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - S03 includes a concise service-mesh subsection because the handout names it, even though the agenda/deck treatment is thin.
 - Source-framing scan passes for current notes via `npm run check`.
 
+## Recheck Notes — 01 Sep 2026 (material-log path audit)
+
+- The historical S1–S3 handout checks remain recorded, but `_handouts/AIML ZG549 COURSE HANDOUT.docx` is not present in the current checkout or accessible local paths. Treat the handout as a reattachment/path-restoration gap before the next scope-changing note update; do not silently claim a current direct-file check.
+
 ## Storage Rule
 
 `source/decks/` and `source/transcripts/` are ignored source-input locations. Do not stage or commit raw course material.

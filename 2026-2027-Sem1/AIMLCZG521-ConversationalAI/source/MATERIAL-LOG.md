@@ -11,7 +11,7 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 | Item | Status |
 |---|---|
 | Direct handout file | ✓ `_handouts/Conversational_AI_Course_Handout (S2-25_AIMLCZG521) - April 2026.pdf` |
-| Direct row verification | ✓ L1, L2, lab 1, and lab 2 checked on 10 Aug 2026 |
+| Direct row verification | ✓ L1, L2, lab 1, and lab 2 checked on 10 Aug 2026; L3 checked directly on 01 Sep 2026 |
 | Cohort caveat | Handout is April 2026 / S2-25; recordings are S1-26. Evaluation scheme was confirmed from recording as unchanged |
 
 ## Session Material Status
@@ -20,7 +20,7 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 |---|---|---|---|---|
 | L1 | Foundations of Conversational AI: Chatbots to Agentic Systems; System Lifecycle & Architecture | ✓ `Session-1-Foundations-of-ConvAI.pdf`; S01 transcript; `byte_pair_encoding.ipynb`; public paper *The Landscape of AI Agents* | ✓ `notes/S01-foundations.md`; `labs/S01-tokenization-and-tool-calling/README.md` | none known |
 | L2 | Embeddings, Vector Search & Hybrid Retrieval: Semantic vs Keyword Search; Vector Database Architecture (HNSW, ANN); BM25 + Dense Retrieval + RRF | ✓ `Session_02_Embeddings_Vector_Search.pdf`; `Embedding-distilbert.ipynb`; public paper *Dense Passage Retrieval* | ✓ `notes/S02-retrieval.md`; `labs/S02-embeddings-vector-search/README.md` | Lab 2 remains partial: text-to-speech, rule-based systems, and sentiment-analysis files/confirmation still missing |
-| L3 | Model Landscape & Cost Engineering | ✓ Session-4 deck (instructor label "Lecture No. 4 | Module 1"), title "Model Landscape & Cost Engineering"; QLoRA (Dettmers 2023, public) | ✓ `notes/S04-model-landscape.md`; `source/S04-slide-inventory.md`; 11 authored SVGs; `labs/S03-hybrid-search/README.md` | none known |
+| L3 | Model Landscape & Cost Engineering | ✓ Session-4 deck (instructor label "Lecture No. 4 | Module 1"), title "Model Landscape & Cost Engineering"; QLoRA (Dettmers 2023, public) | ✓ `notes/S04-model-landscape.md`; `source/S04-slide-inventory.md`; 11 authored SVGs | none known |
 | L4 | Structured Outputs & Function Calling | ✗ | ☐ | deck required |
 | L5 | Fine-Tuning & Preference Optimization | ✗ | ☐ | deck required |
 | L6 | Agent Memory Systems | ✗ | ☐ | deck required |
@@ -39,7 +39,7 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 |---|---|---|---|
 | 1 | Tokenization and AI Bot with Tool Calling | ✓ `byte_pair_encoding.ipynb`; `LocalGPT.ipynb`; `tavily_weather_agent.ipynb` | Notebook map added to S01 note and Lab 1 README |
 | 2 | Similarity metrics, Text to speech, Rule based systems, Sentiment analysis | partial `Embedding-distilbert.ipynb` | Embeddings/similarity covered; remaining lab items open |
-| 3 | Hybrid Search Implementation | ✓ ANN/hybrid deck ("Lecture 3", 62 slides) processed | Deck depth folded into `notes/S02-retrieval.md` (IVF, PQ, TF-IDF, BM25 math, RRF); `source/S03-slide-inventory.md` added, coverage 52/52; hybrid-search lab code still ☐ |
+| 3 | Hybrid Search Implementation | ✓ ANN/hybrid deck ("Lecture 3", 62 slides) processed | Deck depth in `notes/S03-ann-hybrid-retrieval.md` (IVF, PQ, TF-IDF, BM25 math, RRF); `source/S03-slide-inventory.md` contains all 62 slides, coverage 62/62; hybrid-search lab code still ☐ |
 | 4-10 | Later labs | ✗ | collect when sessions arrive |
 
 ## Public References
@@ -96,19 +96,18 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - This resolves the open L3 gap and **validates the earlier call** (10–11 Aug) that `Session3-ANN-HybridSearch-Ranking.pdf` is extra **L2** material, not the L3 model-landscape deck. Both facts now line up: the instructor's live lecture count runs one ahead of the handout because retrieval took two contact sessions — instructor Lecture 2 = handout L2 (embeddings/vector search), instructor Lecture 3 = still handout L2 scope (ANN algorithms + hybrid: HNSW/IVF/PQ, TF-IDF/BM25, RRF), instructor Lecture 4 = handout L3 (model landscape). Handout session numbers (and exam scope) are unchanged.
 - Full 39-slide audit performed against the rendered deck: title slide, agenda, 2025/2026 landscape tables, Dense/MoE/SLM/SSM sections, attention + quadratic-complexity bridge, quantization ladder + FP formats + PTQ (GPTQ/AWQ/FP8), LoRA/QLoRA, GPU-memory formula, KV-cache (3 slides), inference-at-scale, token economics, prompt caching, routing, cost playbook, self-host break-even, emerging trends. Slide 9's image-only "Transformer vs. MoE" architecture diagram (text extraction dropped it to a bare title) was caught on the visual pass and captured. Logistics slides (disclaimer, objectives, references) kept out of the note per the master-index rule.
 - Worked-example arithmetic executed and reconciled against the deck: MoE savings (94.5/72.3/75.4/86.9%), LoRA 256× / QLoRA 31× (1,120→36 GB), KV-cache Llama-8B ≈1 GB @2K, routing effective $0.06/1K, caching 89%. Two deck rounding inconsistencies flagged in-note with ⚠️: the routing case-study headline (deck 95% vs table-computed 92%) and the 128K KV-cache figure (deck ~137 GB; the point that survives is KV ≫ weights at long context).
-- `Session3-ANN-HybridSearch-Ranking.pdf` (instructor Lecture 3) is being folded into `notes/S02-retrieval.md` as additional L2 depth in the same session; a further recheck note will record what was added.
+- Historical intermediate state — superseded by the contact-session renumbering below: `Session3-ANN-HybridSearch-Ranking.pdf` (instructor Lecture 3) was initially being folded into `notes/S02-retrieval.md` as additional L2 depth.
 
 ## Recheck Notes — 27 Aug 2026 (ANN/Hybrid deck folded into S02)
 
-- The instructor "Lecture 3" deck (`Session3-ANN-HybridSearch-Ranking.pdf`, 62 slides) was audited slide-by-slide against `notes/S02-retrieval.md`. Its topics are all handout **L2** scope, so — per the Handout-First / no-renumber rule — its genuinely-new depth was layered into the existing S02 note rather than made a new session.
-- Added to S02: a full **IVF** section (k-means partition, inverted lists, nprobe search, the nlist=3/nprobe=1 numerical example, O(KD+ND/K) complexity, nlist/nprobe tuning), a full **Product Quantization** section (subvector split, codebook training, ADC table-lookup distance, the 5×8 memory example 160 B→74 B, M/k parameters, IVF+PQ), the **ANN-algorithm complexity-comparison** table (Linear/HNSW/IVF/PQ/IVF+PQ/HNSW+PQ + FAISS/ScaNN/ANNOY), a new **TF-IDF** section (TF·IDF, the dense-retrieval limitations that motivate sparse: exact-keyword/rare-term/OOV, TF-IDF's four gaps), and expanded **BM25** (full formula with k₁/b, saturation curve, worked example BM25=4.159, BM25-vs-TF-IDF), **RRF** (score-range problem, why k≈60, five properties), and **hybrid** (BM25/vector/hybrid performance table). Four new diagrams: `S02-ivf-search.svg`, `S02-pq-encode.svg`, `S02-tfidf-idf.svg`, `S02-bm25-saturation.svg`.
-- Section renumber: IVF/PQ inserted as 14/15 (HNSW block shifted to 16–19), TF-IDF inserted as 20 (BM25→21, DPR→22, RRF→23, Hybrid→24). Existing numeric cross-references all point to sections ≤11 and were unaffected. Worked-example arithmetic re-executed (TF-IDF 0.530, BM25 4.159, IVF ~100×, PQ 160→74 B, RRF Doc A 0.03252). `npm run check` clean (0 framing violations); all 22 S02 diagram links resolve, no unused SVGs; slide-coverage 52/52 against the new ANN inventory.
+- Historical intermediate state — superseded by the renumbering recheck below: the instructor "Lecture 3" deck (`Session3-ANN-HybridSearch-Ranking.pdf`, 62 slides) was first audited against `notes/S02-retrieval.md`, and its L2 depth was initially layered there.
+- Historical intermediate outputs — superseded: the IVF/PQ/TF-IDF/BM25/RRF material and diagrams were later moved into the dedicated S03 note/assets when contact-session numbering was adopted. The then-current 52-row inventory reported 52/52; the inventory is now complete at 62 rows and reports 62/62.
 
 ## Recheck Notes — 27 Aug 2026 (renumbered to instructor contact sessions)
 
 - On the user's instruction the repo now numbers notes by the **instructor's actual contact sessions** rather than handout L-numbers. Retrieval was delivered as two sessions, so the mapping is now: **S01** Foundations (L1) · **S02** Embeddings & Vector Search (L2, embeddings deck) · **S03** ANN Search & Hybrid Retrieval (L2, ANN/hybrid deck — *new note*) · **S04** Model Landscape & Cost Engineering (L3). The instructor runs one session ahead of the handout from S03 on.
 - Files moved: `notes/S03-model-landscape.md` → `notes/S04-model-landscape.md` (+ its 11 SVGs `S03-*`→`S04-*` and `source/S03-slide-inventory.md`→`source/S04-slide-inventory.md`). `notes/S02-retrieval.md` was split: embeddings/vector-search/HNSW/DPR stay in S02 (retitled "Embeddings & Vector Search", 18 sections); the ANN/hybrid depth (IVF, PQ, complexity table, dense-limitations, TF-IDF, BM25, RRF, hybrid) moved into the new `notes/S03-ann-hybrid-retrieval.md` (7 sections), with SVGs `S02-{ivf-search,pq-encode,tfidf-idf,bm25-saturation,bm25-scoring,rrf-fusion}`→`S03-*` and a new `S03-hybrid-pipeline.svg`. The ANN-deck inventory is now `source/S03-slide-inventory.md`.
-- Verification after renumber: coverage clean — S02 43/43, S03 52/52, S04 35/35; `npm run check` clean; all SVG links resolve in every note; no unused SVGs. Master index, PROGRESS and this log updated to instructor numbering; mid-sem scope caveat (contact sessions 1–8 ≈ handout L1–L7) recorded in the master.
+- Verification after renumber: coverage clean at that stage — S02 43/43, S03 52/52 against the then-current inventory, S04 35/35; `npm run check` clean; all SVG links resolve in every note; no unused SVGs. The later 01 Sep 2026 recheck expanded S03 to all 62 slides and re-ran all-slide coverage. Master index, PROGRESS and this log updated to instructor numbering; mid-sem scope caveat (contact sessions 1–8 ≈ handout L1–L7) recorded in the master.
 
 ## Recheck Notes — 01 Sep 2026 (attached PDFs revalidated)
 
@@ -116,6 +115,10 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - Rendered and visually inspected all 101 slides. Logistics/title/summary/reference slides remain represented in the source inventories and routed to the master index; substantive slides are represented in the session notes. S03 inventory was expanded from 52 to all 62 slides, including the previously omitted logistics and recap slides.
 - Added exact findability headings for the ANN/PQ/TF-IDF/BM25/RRF sections in `notes/S03-ann-hybrid-retrieval.md` and for the 2025/2026 landscape, MoE, SSM, LoRA, QLoRA, KV-cache, cost, and emerging-trends slides in `notes/S04-model-landscape.md`. Corrected the stale Lecture 4 path in `521-master.md` to `notes/S04-model-landscape.md`.
 - Coverage checks pass: S03 **60/60 substantive slides** and S04 **35/35 substantive slides**. No raw PDF is tracked in git; the attached files remain external course material per the storage rule.
+
+## Recheck Notes — 01 Sep 2026 (material-log path audit)
+
+- The historical L1/L2/L3 handout checks remain valid as recorded, but the repository-relative `_handouts/` path listed above is not present in the current checkout. The matching 521 handout was found in the user's external course folder; it is not currently copied into this repository. Keep the external-file status explicit before the next scope-changing note update.
 
 ## Storage Rule
 

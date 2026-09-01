@@ -94,6 +94,10 @@ S02 and S03 held up well under the same bullet-by-bullet check — only the one 
 
 All three inventories are now committed and will catch drift automatically on future runs without needing the decks re-uploaded.
 
+## Recheck Notes — 01 Sep 2026 (material-log path audit)
+
+- The historical S1/S2 handout checks remain recorded, but `_handouts/AIML ZG536 COURSE HANDOUT.docx` is not present in the current checkout or accessible local paths. Treat the handout as a reattachment/path-restoration gap before the next scope-changing note update; do not silently claim a current direct-file check.
+
 ## Storage Rule
 
 Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.
