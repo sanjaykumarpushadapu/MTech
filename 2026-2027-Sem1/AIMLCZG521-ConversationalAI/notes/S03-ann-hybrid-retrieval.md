@@ -10,48 +10,127 @@ Embeddings and an index give you *fast approximate* vector search — but two ga
 
 *Graph indexes like HNSW are fast but memory-hungry; at billion scale, partition-based (IVF) and compression-based (PQ) indexes are what keep vectors in RAM.*
 
+### ANN Indexing Strategies-Revisit
+
+The three families have different operating points: **HNSW** is graph-based and fast but memory-hungry; **IVF** is partition-based and searches only selected clusters; **PQ** is compression-based and reduces the memory footprint. Production systems combine these choices when the dataset and recall target justify the complexity.
+
 ---
 
 ### 1. IVF: Inverted File Index
 
 **Intuition** — Instead of comparing the query to every vector, IVF first sorts the whole dataset into neighbourhoods, then searches only the few neighbourhoods nearest the query. It is the library card-catalogue trick: don't read every book — go to the right shelf and scan only that shelf.
 
-**Mechanism** — Two phases:
+#### STEP 1 — PARTITION THE DATASET
 
-- *Build (offline).* Run k-means over a training sample to learn `nlist` coarse centroids; these carve vector space into Voronoi cells. Every vector is filed into an **inverted list** attached to its nearest centroid.
-- *Search (query time).* Compare the query to all `nlist` centroids, pick the `nprobe` closest clusters, and scan only the vectors in those inverted lists, then return top-k.
+Run k-means over a training sample to learn `nlist` coarse centroids; these carve vector space into Voronoi cells. Assign every vector to its nearest centroid.
+
+#### THE INVERTED LISTS — DATA STRUCTURE
+
+Every centroid owns an **inverted list** containing the vector IDs assigned to that cluster — the partition information needed to retrieve candidate vectors quickly.
+
+#### Step 2-SEARCH PROCESS
+
+Compare the **query vector** to all `nlist` centroids, pick the `nprobe` closest clusters, and scan only the vectors in those inverted lists, then return top-k.
 
 ![IVF partitions the dataset into clusters and searches only the nprobe nearest ones](assets/S03-ivf-search.svg)
 
-**Worked example** — `nlist=3`, `nprobe=1`, 2-D vectors. Query `q=(5.0, 5.0)`; centroids C1(1.25, 1.00), C2(4.90, 5.25), C3(8.85, 1.15). Euclidean distances: C1 ≈ 5.48, **C2 ≈ 0.26**, C3 ≈ 5.44, so C2 is nearest. Scan only C2's list — v3 = (5.0, 5.1) at dist 0.10, v4 = (4.8, 5.4) at dist 0.45 — and return **v3**, having touched **2 of 6** vectors.
+#### NUMERICAL EXAMPLE
 
-**Algorithm motivation** — *The problem:* brute force compares the query against all N vectors. *The fix:* pre-cluster once so a query visits only a handful of clusters. Complexity drops from O(N·D) to **O(K·D + N·D/K)** — rank K centroids, then scan one cluster of N/K vectors. For N=10M, K=100: 100 + 100,000 = 100,100 comparisons vs 10,000,000, about **100× faster**. *Everyday analogy:* a supermarket groups items into aisles; you walk to "dairy" instead of scanning every shelf in the store.
+`nlist=3`, `nprobe=1`, 2-D vectors. Query `q=(5.0, 5.0)`; centroids C1(1.25, 1.00), C2(4.90, 5.25), C3(8.85, 1.15). Euclidean distances: C1 ≈ 5.48, **C2 ≈ 0.26**, C3 ≈ 5.44, so C2 is nearest. Scan only C2's list — v3 = (5.0, 5.1) at dist 0.10, v4 = (4.8, 5.4) at dist 0.45 — and return **v3**, having touched **2 of 6** vectors.
 
-***In practice*** — Tuning knobs: `nlist` ≈ √N to N/1000 (sweet spot ~4√N; 1M vectors → ~1,000–4,000 clusters), and `nprobe` chosen at query time (1–5 → ~70–85% recall, very fast; 50–100 → ~95%+ recall, slower; typical 10–20). A k-means training phase over a 10K–100K sample precedes indexing.
+#### TIME COMPLEXITY — IVF vs kNN
 
-**Tradeoff / when NOT to use** — A true nearest neighbour can sit just across a cluster boundary; with `nprobe=1` that cluster is never scanned and recall drops. Raising `nprobe` fixes it at more cost (exact search needs `nprobe=nlist`). IVF also needs training and is sensitive to cluster quality, so for small or highly dynamic datasets HNSW's no-training graph is easier to operate.
+*The problem:* brute force compares the query against all N vectors in **O(N·D)**. *The fix:* IVF first ranks K centroids in **O(K·D)**, then scans one cluster in **O(ND/K)**, for **O(K·D + N·D/K)** overall. For N=10M, K=100: 100 + 100,000 = 100,100 comparisons vs 10,000,000, about **100× faster**. *Everyday analogy:* a supermarket groups items into aisles; you walk to "dairy" instead of scanning every shelf in the store.
+
+#### Parameter Tuning: IVF
+
+***In practice*** — Tuning knobs: `nlist` ≈ √N to N/1000 (sweet spot ~4√N; 1M vectors → ~1,000–4,000 clusters), and `nprobe` chosen at query time (1–5 → ~70–85% recall, very fast; 50–100 → ~95%+ recall, slower; typical 10–20). A k-means training phase over a 10K–100K sample precedes indexing. The optional **PQ subquantizers** (`M`) control how many subvectors are used when IVF is combined with PQ.
+
+#### THE ACCURACY TRADEOFF — WHY APPROXIMATE?
+
+A true nearest neighbour can sit just across a cluster boundary; with `nprobe=1` that cluster is never scanned and recall drops. Raising `nprobe` fixes it at more cost (exact search needs `nprobe=nlist`).
+
+#### PROS & CONS
+
+**Advantages** — IVF reduces search work, supports predictable `nprobe` tuning, and can be combined with PQ for very large indexes. **Limitations** — IVF needs training, is sensitive to cluster quality, and can miss boundary neighbours; for small or highly dynamic datasets HNSW's no-training graph is easier to operate.
+
+#### USE CASES & IMPLEMENTATIONS
+
+Typical uses include **Visual Search**, **Semantic Search**, and **Recommendations**. **FAISS IVF-PQ** is a representative implementation for combining partitioning with vector compression.
 
 ---
 
+#### IVF: Inverted File Index + PQ (Product Quantization)
+
+The standard construction pipeline is: raw vector data → k-means centroids → vector assignment into inverted lists → optional compression encoding → the final IVF index. IVF narrows the candidate set; PQ makes the stored candidates compact.
+
 ### 2. Product Quantization (PQ)
+
+#### Product Quantization (PQ) — Core Concept: Divide & Conquer
 
 **Intuition** — PQ shrinks each vector by *divide and conquer*: chop it into a few short pieces and replace each piece with the ID of the closest entry in a small "codebook." A 512-byte vector becomes 4 bytes, so billions of vectors now fit in RAM.
 
 **Mechanism** — Three steps:
 
+#### Product Quantization (PQ) – Step 1: Train Codebooks
+
 1. *Train codebooks.* Split each D-dimensional vector into M subvectors; for each subvector position, run k-means to learn a codebook of k centroids (k=256 fits in one byte).
+
+#### Product Quantization (PQ) – Step 2: Encode Vectors → Compact IDs
+
 2. *Encode.* Replace each subvector with the ID (0–255) of its nearest centroid, so a vector becomes M one-byte codes.
+
+#### Product Quantization: Step 3 – Fast Distance Computation (ADC)
+
 3. *Fast distance (ADC — Asymmetric Distance Computation).* At query time, split the query, precompute a distance table from each query subvector to all 256 centroids, then a database vector's distance is just `table1[ID1] + table2[ID2] + ...` — a few lookups and adds, never decompressing anything.
 
 ![Product Quantization splits a vector, encodes each part as a codebook ID, and computes distance by table lookup](assets/S03-pq-encode.svg)
 
-**Worked example** — 5 vectors × 8 dims, M=2 (two 4-dim subspaces), k=2. Storage: original 5×8×4 = **160 B**; PQ codes 5×2×1 = 10 B plus codebooks 2×2×4×4 = 64 B, total **74 B**. The codebook is a fixed one-time cost, so at millions of vectors the compression approaches **32×** (float32 → 1 byte per code). An ADC query precomputes two small distance tables and sums lookups per vector, so vectors with codes `[0,0]` score ≈ 0.05 (closest) without any reconstruction.
+#### PQ Numerical Example – Step 1: The Dataset
+
+The worked dataset has five vectors, each with 8 dimensions. Vector 1 is `[0.2, 0.3, 0.8, 0.9, 0.1, 0.4, 0.7, 0.6]`; the remaining rows are the same five-vector dataset used in the codebook and encoding steps.
+
+#### PQ Numerical Example – Step 2: Split into Subvectors
+
+With `M=2`, each 8-dimensional vector becomes two subvectors, each with 4 dimensions. Vector 1 splits into `[0.2, 0.3, 0.8, 0.9]` and `[0.1, 0.4, 0.7, 0.6]`; the same split is applied to all five vectors.
+
+#### PQ Numerical Example – Step 2: Collect Codebook Training Data
+
+The first subvector from each vector trains Codebook 1; the second subvector from each vector trains Codebook 2. Run **K-Means (k=2)** independently on those two five-row training sets.
+
+#### PQ Numerical Example – Step 3: Create Codebooks with K-Means
+
+K-means produces two centroids for each four-dimensional subspace. These centroids are the vector prototypes used by the encoder.
+
+#### PQ Numerical Example – Step 4: Encode Vectors Using the Codebooks
+
+For each vector, replace each subvector with the ID of its nearest centroid. In the slide's Vector 3 example, both subvectors select centroid 1, producing code `[1,1]`; the encoded dataset contains `[0,0]`, `[0,0]`, `[1,1]`, `[1,1]`, and `[0,0]`.
+
+#### PQ Numerical Example – Step 5: Memory Savings
+
+Storage: original 5×8×4 = **160 B**; PQ codes 5×2×1 = 10 B plus codebooks 2×2×4×4 = 64 B, total **74 B**. The codebook is a fixed one-time cost, so at millions of vectors the compression approaches **32×** (float32 → 1 byte per code).
+
+#### PQ Numerical Example – Step 6: Similarity Search
+
+A new **query vector** must be compared with the compressed database. Do not decompress every vector; use **Asymmetric Distance Computation (ADC)** with the compressed codes and codebooks.
+
+#### PQ Numerical Example – Step 6a: Compute Distance Tables
+
+For the query `[0.2, 0.25, 0.75, 0.85, 0.15, 0.35, 0.65, 0.55]`, the two distance tables are `[0.05, 1.17]` and `[0.00, 1.17]` for centroid IDs 0 and 1 respectively.
+
+#### PQ Numerical Example – Step 6b: Compute Approximate Distances
+
+Look up the two distances for each vector's compressed codes. Vectors 1, 2, and 5 have `[0,0]` and score **0.05**; vectors 3 and 4 have `[1,1]` and score **2.34**. No full-vector reconstruction is needed.
 
 **Algorithm motivation** — *The problem:* storing raw float32 vectors at billion scale needs terabytes of RAM, and a full distance is 128 multiplications per vector. *The fix:* quantize sub-pieces to bytes and replace multiplications with table lookups. *Everyday analogy:* grading exams with a pre-filled answer key — score each paper by looking up its answers, not re-solving every question.
 
 ***In practice*** — Parameters: M (8/16/32/64 — more subvectors give better accuracy but more bytes; M must divide D; 768-dim → M=96) and k (256 → 1 byte). M=8 → 8 bytes/vector (32× compression); M=64 → 64 bytes (4×, higher accuracy). PQ is usually paired with IVF (**IVF+PQ**): IVF narrows to a cluster, PQ makes each stored vector tiny.
 
 **Tradeoff / when NOT to use** — Compression is lossy, so PQ alone lands at ~70–85% recall, too low when exact ordering matters and RAM is not the constraint. Use it when billions of vectors must fit in memory and ~90–95% recall (with IVF and re-ranking) is acceptable.
+
+#### Product Quantization (PQ) – Why It Is Powerful
+
+PQ provides **fast search** through table lookups, **massive compression**, and **scalability** to billion-vector collections. It is also composable with IVF: IVF narrows the candidates and PQ keeps them compact.
 
 **ANN algorithms at a glance** — the strategies on the axes that decide a production choice:
 
@@ -72,7 +151,7 @@ HNSW trades memory for speed; IVF+PQ trades accuracy for compression; **HNSW+PQ*
 
 *Dense search finds meaning; sparse search finds exact strings. This part builds the sparse half, from TF-IDF to BM25.*
 
-### 3. Why sparse retrieval: where dense search fails
+### 3. Dense Vector Search Has Limitations
 
 **Intuition** — Dense embeddings capture *meaning*, which is exactly why they stumble on *exact* things. Three failure modes recur in production, all cases where the surface string matters more than the semantics.
 
@@ -80,7 +159,7 @@ HNSW trades memory for speed; IVF+PQ trades accuracy for compression; **HNSW+PQ*
 
 - **Exact keyword matching.** "ERROR code 500" is smoothed by a dense model into "server error / something went wrong"; the document "Fix for error 500 in nginx" may not rank first because "error", "500", "nginx" are not semantically close in embedding space.
 - **Rare / unique terms.** A part ID like `XR55-QW7`, unseen in training, gets a near-meaningless embedding, so vector search cannot match the exact string even when a document contains it.
-- **Out-of-vocabulary words.** A token like `VijayawadaExpress123` is broken into sub-tokens (`Vijay`, `##aw`, `##ada`, `Express`, `123`) and blurred, wrecking the ranking.
+- **Out-of-vocabulary (OOV) words.** A token like `VijayawadaExpress123` is broken into sub-tokens (`Vijay`, `##aw`, `##ada`, `Express`, `123`) and blurred, wrecking the ranking.
 
 | Aspect | Dense (embeddings) | Sparse (BM25) |
 |---|---|---|
@@ -89,6 +168,10 @@ HNSW trades memory for speed; IVF+PQ trades accuracy for compression; **HNSW+PQ*
 | Exact keyword match | ✗ can miss | ✓ perfect |
 | Rare / unique terms | ✗ out-of-vocabulary | ✓ high IDF captures |
 | Numbers, codes, IDs | ✗ not in training | ✓ works perfectly |
+
+#### Summary: Why We Need Sparse + Dense Together
+
+**Dense Models** capture semantic meaning and paraphrases; sparse BM25 retrieval preserves exact keywords, rare terms, numbers, and IDs. **Hybrid Search** combines both strengths.
 
 **Worked example** — Query "AIMLCZG521 schedule". Dense retrieval ranks a generic "Course schedule for AI/ML" doc *above* "AIMLCZG521 timing" because it never learned the course code; BM25 scores the exact-ID match far higher and ranks it correctly.
 
@@ -112,11 +195,13 @@ TF-IDF   = TF(t,d) × IDF(t)
 
 **Worked example** — Corpus of 1,000 docs; document "machine learning is a subset of machine learning" (8 terms); query "machine learning". "machine": TF = 2/8 = 0.25, IDF = ln(1000/400) = 0.916 → 0.229. "learning": TF = 2/8 = 0.25, IDF = ln(1000/300) = 1.204 → 0.301. Document score = 0.229 + 0.301 = **0.530**.
 
-**Tradeoff / when NOT to use** — TF-IDF has four gaps: term frequency grows **linearly** (10 occurrences score 10×, no diminishing returns), **no length normalization** (long documents win just by being long), **bag-of-words** ("dog bites man" = "man bites dog"), and **no saturation**. These are exactly what BM25 fixes, so in practice BM25 replaces raw TF-IDF as the sparse baseline.
+#### TF-IDF: Foundation of Sparse Retrieval – Limitations
+
+**Tradeoff / when NOT to use** — TF-IDF has four gaps: **Linear TF** (10 occurrences score 10×, no diminishing returns), **no length normalization** (long documents win just by being long), **bag of words** ("dog bites man" = "man bites dog"), and **no saturation**. These are exactly what BM25 fixes, so in practice BM25 replaces raw TF-IDF as the sparse baseline.
 
 ---
 
-### 5. BM25
+### 5. BM25: Best Matching 25 (Improved TF-IDF)
 
 **Intuition** — BM25 is the strong classical baseline for keyword search. It rewards documents that contain query terms, especially rare terms, while avoiding unlimited reward for repeated words.
 
@@ -138,9 +223,13 @@ TF-IDF   = TF(t,d) × IDF(t)
 score(Q,D) = Σᵢ IDF(qᵢ) · [ f(qᵢ,D)·(k₁+1) ] / [ f(qᵢ,D) + k₁·(1 − b + b·|D|/avgdl) ]
 ```
 
-with a smoothed IDF = `log[(N − df + 0.5)/(df + 0.5) + 1]`. Two knobs: **k₁** (default 1.5, range 1.2–2.0) sets how fast term frequency saturates; **b** (default 0.75) sets the length penalty (0 = none, 1 = full). `avgdl` is the average document length in the collection.
+with a smoothed IDF = `log[(N − df + 0.5)/(df + 0.5) + 1]`. Two knobs: **k₁** (also written **k1**, default 1.5, range 1.2–2.0) sets how fast term frequency saturates; **b** (default 0.75) sets the length penalty (0 = none, 1 = full). `avgdl` is the average document length in the collection.
 
 ![BM25 saturates repeated-term contribution while TF-IDF keeps growing linearly](assets/S03-bm25-saturation.svg)
+
+#### BM25: Including Saturation – Intuition
+
+The **saturation curve** rises quickly for the first occurrences of a term and then flattens; repeated occurrences contribute progressively less.
 
 **Saturation, in one line** — each extra occurrence of a term adds *less* than the previous one; the contribution flattens toward a ceiling of `(k₁+1)/(k₁·norm)`. Going from 1→2 occurrences helps a lot; 10→11 barely moves the score — like a smoke alarm, one beep already means "fire." This is the single biggest fix over TF-IDF, whose score just keeps climbing.
 
@@ -170,6 +259,10 @@ RRF(doc) = sum_over_rankers 1 / (k + rank(doc))
 
 `k` is often around 60. A document appearing reasonably high in both lists can beat a document that appears high in only one.
 
+#### RRF: Example – Scenario: Query "machine learning tutorial"
+
+The dense and sparse systems produce two ranked lists; RRF combines those **ranked lists** rather than trying to add incomparable raw scores.
+
 **Worked example** — Use `k = 60`.
 
 | Document | BM25 rank | Dense rank | RRF score |
@@ -178,7 +271,18 @@ RRF(doc) = sum_over_rankers 1 / (k + rank(doc))
 | B | 5 | 3 | `1/65 + 1/63 = 0.0313` |
 | C | 2 | not in top list | `1/62 = 0.0161` |
 
-Document B wins because it is strong in both systems.
+#### RRF: Example – Score Calculation (k=60)
+
+Document B wins because it is strong in both systems; the **final ranking** rewards consensus across the two lists.
+
+#### Hybrid Search Implementation-Demo
+
+```text
+dense_results = dense_retrieve(query, top_k)
+sparse_results = bm25_retrieve(query, top_k)
+fused = rrf(dense_results, sparse_results, k=60, lambda=0.5)
+return sort_by_rrf_score(fused)
+```
 
 **Tradeoff / when NOT to use** — RRF is robust and simple, but it ignores score margins. If dense retrieval is overwhelmingly confident and BM25 is only weakly matching, rank-only fusion can over-promote the keyword result. Production systems often follow hybrid retrieval with reranking.
 

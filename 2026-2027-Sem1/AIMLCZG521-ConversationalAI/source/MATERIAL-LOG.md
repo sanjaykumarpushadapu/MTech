@@ -110,6 +110,13 @@ Legend: `✓` held/complete · `partial` held but incomplete · `✗` missing ·
 - Files moved: `notes/S03-model-landscape.md` → `notes/S04-model-landscape.md` (+ its 11 SVGs `S03-*`→`S04-*` and `source/S03-slide-inventory.md`→`source/S04-slide-inventory.md`). `notes/S02-retrieval.md` was split: embeddings/vector-search/HNSW/DPR stay in S02 (retitled "Embeddings & Vector Search", 18 sections); the ANN/hybrid depth (IVF, PQ, complexity table, dense-limitations, TF-IDF, BM25, RRF, hybrid) moved into the new `notes/S03-ann-hybrid-retrieval.md` (7 sections), with SVGs `S02-{ivf-search,pq-encode,tfidf-idf,bm25-saturation,bm25-scoring,rrf-fusion}`→`S03-*` and a new `S03-hybrid-pipeline.svg`. The ANN-deck inventory is now `source/S03-slide-inventory.md`.
 - Verification after renumber: coverage clean — S02 43/43, S03 52/52, S04 35/35; `npm run check` clean; all SVG links resolve in every note; no unused SVGs. Master index, PROGRESS and this log updated to instructor numbering; mid-sem scope caveat (contact sessions 1–8 ≈ handout L1–L7) recorded in the master.
 
+## Recheck Notes — 01 Sep 2026 (attached PDFs revalidated)
+
+- Revalidated the two attached PDFs directly, not only from repository notes: `Session3-ANN-HybridSearch-Ranking.pdf` is the instructor's **Lecture No. 3** deck with **62 slides** and remains handout **L2** ANN Search & Hybrid Retrieval; `Session4-Model-Landscape-Cost-Engineering.pdf` is **Lecture No. 4** with **39 slides** and remains handout **L3** Model Landscape & Cost Engineering. The handout Learning Plan row was checked directly from the local course handout; no scope renumbering is needed.
+- Rendered and visually inspected all 101 slides. Logistics/title/summary/reference slides remain represented in the source inventories and routed to the master index; substantive slides are represented in the session notes. S03 inventory was expanded from 52 to all 62 slides, including the previously omitted logistics and recap slides.
+- Added exact findability headings for the ANN/PQ/TF-IDF/BM25/RRF sections in `notes/S03-ann-hybrid-retrieval.md` and for the 2025/2026 landscape, MoE, SSM, LoRA, QLoRA, KV-cache, cost, and emerging-trends slides in `notes/S04-model-landscape.md`. Corrected the stale Lecture 4 path in `521-master.md` to `notes/S04-model-landscape.md`.
+- Coverage checks pass: S03 **60/60 substantive slides** and S04 **35/35 substantive slides**. No raw PDF is tracked in git; the attached files remain external course material per the storage rule.
+
 ## Storage Rule
 
 Recordings, decks, transcripts, and raw PDFs stay outside git or in ignored source folders only. The durable record is the note/lab README, not the raw course material.

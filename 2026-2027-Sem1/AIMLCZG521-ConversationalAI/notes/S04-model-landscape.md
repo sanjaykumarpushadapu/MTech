@@ -18,12 +18,16 @@ Every production agent starts with two decisions that set its cost and its ceili
 
 **Mechanism** — The families are separated by four axes: how many parameters are *active* per token (which sets FLOP cost), the context window, benchmark quality (MMLU is the common yardstick), and price per million tokens.
 
+#### The 2025 LLM Landscape
+
 | Architecture | Key models (2025) | Context | MMLU | Cost / 1M tok | Best use |
 |---|---|---|---|---|---|
 | Dense Transformer | GPT-4o, Claude 3.7 Sonnet, Llama 3.3 70B, Gemini 2.0 | 128K–1M | 86–90% | $3–$30 | Complex reasoning, multimodal |
 | Mixture-of-Experts | DeepSeek-V3, Mixtral 8×22B, Qwen2-57B-A14B, Jamba-1.5 | 32K–256K | 80–88% | $0.3–$2 | Cost-effective at scale |
 | Small LMs (1–14B) | Phi-4, Gemma 3, Qwen2.5-7B, Llama 3.2-3B | 4K–128K | 72–85% | $0.05–$0.3 | Routing, edge, classification |
 | State Space Models | Mamba-2, RWKV-6, Jamba-1.5 (hybrid) | 1M+ | 68–75% | Variable | Ultra-long-context tasks |
+
+#### The 2026 LLM Landscape
 
 The 2026 projection keeps the same four rows and shifts every number in one direction: context windows stretch (Dense 256K–2M), MMLU climbs into the 90s, Small-LM pricing collapses toward $0.001–$0.05, and hybrids (Jamba 2.0, Liquid-2) push linear-scaling context past 1M. The projected 2026 line-up: GPT-5, Claude 4, Llama 4, Gemini 3 (Dense); DeepSeek-V4, Qwen3-MoE, Grok-2, Mixtral 8×70B (MoE); Phi-5, Gemma 4 (SLM); Mamba-3, RWKV-7, Jamba 2.0, Liquid-2 (SSM/hybrid). The *shape* of the tradeoff is stable; the absolute numbers drift cheaper and longer each year.
 
@@ -58,6 +62,8 @@ The 2026 projection keeps the same four rows and shifts every number in one dire
 
 **Intuition** — Keep the truck's total capacity, but only fire the two cylinders each token needs. An MoE swaps the dense feed-forward sublayer in each transformer block for a *bank of expert networks* plus a *router* that picks a few experts per token. Total knowledge stays huge; compute per token stays small.
 
+#### Mixture of Experts: Router Mechanism
+
 **Mechanism** — Inside each block the router scores the token against every expert and keeps the top-k (usually k=2); only those experts run, and their outputs are blended:
 
 ```
@@ -72,6 +78,8 @@ Everything else in the block — multi-head attention, the add-&-norm layers, re
 ![In each decoder block the feed-forward network is replaced by a router that selects the top-k experts from a bank; attention and norms are unchanged.](assets/S04-moe-router.svg)
 
 **Worked example** — DeepSeek-V3 holds **671B** total parameters (256 experts) but the router activates only **37B** per token. Compute saving = 1 − 37/671 = **94.5%**, and its API lands near ~5% of a GPT-4o-equivalent bill.
+
+#### Mixture of Experts Models
 
 | Model | Total | Active | Saving = 1 − Active/Total |
 |---|---|---|---|
@@ -131,7 +139,7 @@ This is the Vaswani et al. (2017) mechanism; the piece that matters for cost is 
 
 ---
 
-### 6. The Transformer's Quadratic Complexity Problem
+### 6. Transformer's Quadratic Complexity Problem
 
 **Intuition** — "Every token attends to every other token" sounds harmless until you count the pairs. Double the sequence and you *quadruple* the work — attention cost grows with the *square* of length.
 
@@ -158,6 +166,8 @@ For GPT-4-class depth (L=96) at 128K tokens, that's ≈ 1.57 **trillion** score 
 
 **Intuition** — Instead of letting every token see every other token, an SSM reads the sequence like a person reading a page: left to right, carrying a fixed-size mental summary and updating it at each word. The summary never grows, so cost per token is constant no matter how long the document.
 
+#### State Space Models: Linear Complexity Solution
+
 **Mechanism** — Mamba-2 / S4 maintain a hidden state `hₜ` updated by a linear recurrence:
 
 ```
@@ -177,7 +187,7 @@ yₜ = C · hₜ + D · xₜ
 
 ## Part 2 · Quantization Techniques & KV-Cache
 
-### 8. Quantization: making models efficient
+### 8. Quantization: Making Models Efficient
 
 **Intuition** — A model's weights are stored as numbers with some precision. Quantization keeps the *same* weights but writes them in fewer bits — like storing a photo as a smaller JPEG. Drop from 32-bit to 4-bit and the file (VRAM footprint) shrinks ~8×, while the picture still looks almost the same.
 
@@ -248,6 +258,8 @@ Tooling: GPTQ ships via exllama v2, AWQ via Hugging Face AutoAWQ (`pip install`)
 
 **Intuition** — Fine-tuning normally rewrites all of a model's billions of weights — huge and expensive. LoRA freezes the original model and learns a *small correction* alongside it, factored into two skinny matrices. You adapt behaviour by training megabytes, not gigabytes.
 
+#### LoRA Architecture Visualization
+
 **Mechanism** — The weight update `ΔW` is decomposed into a low-rank product:
 
 ```
@@ -284,6 +296,8 @@ QLoRA:            70B × 0.5 bytes (NF4) + LoRA adapters (~1 GB)        ≈ 36 G
 
 **Tradeoff / when NOT to use** — The base is frozen at 4-bit, so QLoRA inherits 4-bit's small quality floor and can't move the base model's raw knowledge — it adapts behaviour, it doesn't re-teach facts. When you need maximum-fidelity full fine-tuning and have the VRAM, full BF16 tuning still edges it; for almost everything else, QLoRA is the default.
 
+#### Quantization Decision Guide
+
 **Decision guide** — pick precision by scenario:
 
 | Scenario | Precision | Why |
@@ -318,9 +332,11 @@ M_total = M_weights + M_KV-cache + M_activation
 
 ---
 
-### 14. Why we need the KV-Cache
+### 14. Why Do We Need KV-Cache?
 
 **Intuition** — A transformer generates one token at a time, and each new token must attend to *all* previous tokens. Recomputing every previous token's Key and Value from scratch each step is the same work over and over. The KV-cache saves those Keys and Values so each step only computes the *new* token's — turning O(n²) total work into O(n).
+
+#### KV-Cache: Technical Implementation
 
 **Mechanism** — Without a cache, generating token *t* recomputes K,V for tokens 1…t every step. With a cache, K and V for past tokens are stored once and reused; only the new token's K,V are computed and appended:
 
@@ -386,7 +402,7 @@ Practical hardware: ~6–7× A100 40GB with tensor parallelism, or 2× H100 80GB
 
 ---
 
-### 17. Memory-efficient inference at scale
+### 17. Memory-Efficient Inference at Scale
 
 **Intuition** — Once weights and KV-cache are budgeted, a set of serving techniques squeeze more context and throughput out of the same GPUs. These are the production baseline in 2025, named here at the weight they deserve — you *use* them, you rarely re-implement them.
 
@@ -432,7 +448,7 @@ Output tokens cost **3–10× more** than input.
 
 ---
 
-### 19. Prompt caching
+### 19. Prompt Caching: 90% Cost Reduction
 
 **Intuition** — Most agent requests resend the *same* big preamble every time — a long system prompt, few-shot examples, a reference document — followed by a short unique question. Prompt caching stores that repeated preamble server-side so you're billed the cheap cached rate for it instead of full input price on every call.
 
@@ -475,7 +491,7 @@ This is the RouteLLM (Ong et al., 2024) pattern — learn a routing policy from 
 
 ---
 
-### 21. Production cost-optimization playbook
+### 21. Production Cost Optimization Playbook
 
 **Intuition** — The levers combine into a sequence: quick wins first (caching, routing, output caps), deeper structural changes later (self-hosting, speculative decoding, leaner RAG).
 
@@ -491,7 +507,13 @@ This is the RouteLLM (Ong et al., 2024) pattern — learn a routing policy from 
 
 ---
 
-### 22. Self-hosting vs API: break-even analysis
+### 22. Emerging Trends in LLM Optimization (2025–26)
+
+**Going deeper** — Beyond course depth, the 2025–26 efficiency frontier: **1-bit LLMs** (BitNet b1.58, ternary weights {−1, 0, +1}, ~2–5× energy efficiency, MMLU parity at 8B+); **Mixture-of-Depths v2** (dynamic per-token compute, 60–70% FLOP cut, composes with LoRA and SSMs); **FlashAttention-4** (kernels for H200/B200, ring attention for >1M context); and **hardware-aware quantization 2.0** (per-hardware format selection, INT4 on Apple Neural Engine). Direction of travel: less precision, dynamic compute, and hardware co-design converging.
+
+---
+
+### 23. Self-hosting vs API: break-even analysis
 
 **Intuition** — A managed API charges per token with zero ops; self-hosting pays a big fixed GPU + DevOps cost but a tiny marginal token cost. Below some monthly volume the API is cheaper; above it, self-hosting wins. The whole decision is *where you sit on that crossover*.
 
@@ -511,10 +533,6 @@ This is the RouteLLM (Ong et al., 2024) pattern — learn a routing policy from 
 ![A break-even chart: flat-slope API cost versus self-hosting's high fixed cost plus low marginal cost, crossing near 5–10B tokens/month.](assets/S04-selfhost-breakeven.svg)
 
 **Tradeoff / when NOT to use** — Self-hosting is not just a GPU lease — the $8–12K/month DevOps and on-call burden is the line teams forget, and it's what makes the API win below ~5B tokens/month. Self-host for scale, data-residency, or predictable latency; stay on the API for everything else. (Data-privacy or on-prem requirements can override the pure cost math and justify self-hosting earlier.)
-
-> ***Going deeper*** — Beyond course depth, the 2025–26 efficiency frontier: **1-bit LLMs** (BitNet b1.58, ternary weights {−1, 0, +1}, ~2–5× energy efficiency, MMLU parity at 8B+); **Mixture-of-Depths v2** (dynamic per-token compute, 60–70% FLOP cut, composes with LoRA and SSMs); **FlashAttention-4** (kernels for H200/B200, ring attention for >1M context); and **hardware-aware quantization 2.0** (per-hardware format selection, INT4 on Apple Neural Engine). Direction of travel: less precision, dynamic compute, and hardware co-design converging.
-
----
 
 ## Self-study / Lab / build
 

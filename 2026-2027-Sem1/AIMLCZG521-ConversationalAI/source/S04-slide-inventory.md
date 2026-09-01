@@ -15,7 +15,7 @@ cd tools && node check-slide-coverage.mjs \
 | Slide | Title | Named items |
 |---|---|---|
 | 1 | Conversational AI | Model, Landscape, Cost, Engineering |
-| 2 | BITS Pilani | AIMLCZG521, Conversational, Lecture, Module |
+| 2 | BITS Pilani | |
 | 3 | Disclaimer & Acknowledgement | |
 | 4 | Learning Objectives | Dense, MoE, SLM, SSM, MMLU, GPTQ, AWQ, QLoRA, M_total, M_weights, M_KV, M_activation, vLLM |
 | 5 | Agenda | Dense, GPT-4o, Claude, Llama, Gemini, Mixtral, DeepSeek-V3, Phi-4, Gemma, Qwen2.5, Mamba-2, Jamba, FP32, NF4, GPTQ, AWQ, FP8, LoRA, QLoRA, KV-Cache, Activations |
