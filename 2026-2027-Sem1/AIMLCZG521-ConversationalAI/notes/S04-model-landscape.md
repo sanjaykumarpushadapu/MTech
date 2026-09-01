@@ -382,11 +382,11 @@ Now the same model at **128K context, batch 8**: the cache scales to **well over
 
 ---
 
-### 16. Hands-on: sizing a 175B model
+### 16. Hands-On: Memory Calculation — Claude 3.5 Sonnet-class Inference
 
-**Intuition** — Put the three-term formula to work on a genuinely large model to see which term hurts.
+**Intuition** — Put the three-term formula to work on the deck's **Claude 3.5 Sonnet-class** 175B inference example to see which term hurts.
 
-**Worked example** — 175B params, BF16, seq 4,096, batch 4, layers/heads/d_head = 96/96/128:
+**Worked example** — **Claude 3.5 Sonnet-class** inference: 175B params, BF16, seq 4,096, batch 4, layers/heads/d_head = 96/96/128:
 
 ```
 1. Weights     : 175B × 2 bytes                        = 350 GB

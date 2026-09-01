@@ -214,15 +214,22 @@ Secrets use placeholders only, such as `OPENAI_API_KEY`.
 
 ## 4. Intake Workflow
 
-The user uploads per session and ideally names subject, session number, and file type. If session number is missing, infer from the master index and state the inference.
+The user uploads per session and ideally names subject, session number, and file type. If session number is missing, infer it only from the source contents and the handout Learning Plan row, and state the inference.
 
-### Subject Is Never Inferred From `_library/` Naming
+### Subject and Session Identity Come From Evidence, Not Filenames
 
-If the user uploads a file (paper, deck, transcript) without stating which subject it belongs to, **ask** before doing any work. Do not guess the subject by matching the upload against an existing `_library/` filename prefix, such as treating an uploaded paper as belonging to 536 because a file named `536-P1-...` already exists there. That naming can be stale, wrong, or a leftover assumption from an earlier session, and reusing it silently propagates the error into session notes across the wrong subject.
+If the user uploads a file (paper, deck, transcript) without stating which subject it belongs to, **ask** before doing any work. Do not guess the subject by matching the upload against an existing `_library/` filename prefix, such as treating an uploaded paper as belonging to 536 because a file named `536-P1-...` already exists there. That naming can be stale, wrong, or a leftover assumption from an earlier session, and reusing it silently propagates the error into session notes across the wrong subject's notes.
 
 This applies even when the paper's content plausibly fits the guessed subject. Plausibility is not confirmation. One question up front costs less than reverting edits in the wrong subject's notes later.
 
-Never trust a deck filename alone, either. Verify identity from title slide, agenda, footers, section dividers, and topic sequence against the handout Learning Plan row.
+**Never use an uploaded deck's filename as authoritative subject or session metadata.** Filenames such as `CS-4`, `S04`, `Session4`, `Lecture-4`, or `L4` may be aliases, old numbering, course-provider numbering, handout numbering, or arbitrary upload names; `CS-4` and `S04` can refer to the same deck, and a filename number can disagree with the repository session number. Treat the filename only as an untrusted clue.
+
+Resolve identity in this order:
+
+1. Read the deck's title slide, agenda, footers, section dividers, and topic sequence.
+2. Match that internal evidence to the subject's handout Learning Plan row and the repository master index.
+3. Use the handout's contact-session mapping as the canonical repository session ID (`S<NN>`); keep any handout/module/lecture alias in the source log or prose, not as a replacement for `S<NN>`.
+4. If filename and content disagree, record the conflict and follow the content + handout mapping. If content and handout still disagree or the subject is uncertain, stop and ask before writing or moving anything.
 
 If one deck contains multiple sessions, split it by handout scope and log the split in `source/MATERIAL-LOG.md`. If the boundary is ambiguous, stop and ask; do not blend two sessions.
 
