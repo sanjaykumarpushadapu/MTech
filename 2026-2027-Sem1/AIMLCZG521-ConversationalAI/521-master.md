@@ -26,7 +26,7 @@
 
 ⚠️ **Where slide 26 and the handout still disagree: assignment duration** — handout ~15 days, slide ~3 weeks. Since the slide was wrong on quizzes, **plan for 15 days.** Being early costs nothing; being late is uncorrectable — *strictly no makeups*.
 
-**Assignment 1 (PS2 — embedding models & ANN search), Group 129, due 28 Aug 2026 — roadmap:** `ass-1/ROADMAP.md`.
+**Assignment 1 (PS2 — embedding models & ANN search), Group 129, due 28 Aug 2026.**
 
 > ### 📌 Note on the handout's cohort
 >

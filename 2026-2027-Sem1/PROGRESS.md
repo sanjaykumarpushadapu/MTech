@@ -115,7 +115,6 @@ One view across all four subjects. Update the same weekend the session happens.
 
 | Subject | Assignment | Scope | Due | Status |
 |---|---|---|---|---|
-| 521 | Assignment 1 — PS2 (embedding models & ANN search: HNSW vs IVF), **Group 129** | 10 marks, group | **28 Aug 2026** | Roadmap ready: `AIMLCZG521-ConversationalAI/ass-1/ROADMAP.md` — not yet started |
 
 ## Milestones
 
