@@ -19,7 +19,7 @@ _Pretraining is the foundational stage of a language model’s development. The 
 
 ![Building a large language model](assets/S02-slide-04-building-an-llm.png)
 
-### 1. Self-Supervised Learning
+### 1.1 Self-Supervised Learning
 
 **Intuition** — An LLM's raw capability does not come from people hand-labeling millions of examples. It comes from repeatedly asking the model to predict either a masked token or the next token in a sequence. The text itself provides the answer key. That is why the process is called **self-supervised**: the supervision is already hidden inside the data. These training problems are also called **pretext tasks**.
 
@@ -37,13 +37,13 @@ Stage 1 is this session's focus; Stage 2 and Stage 3 belong later in the course.
 
 _Everyday version:_ it's like a student practicing with flashcards where the answer is printed on the back of the very same card — no teacher needs to grade anything, because the material itself already contains the answer key. Cover the next word, guess it, flip and check, repeat millions of times. That is the entire supervision signal in pretraining: the text supplies both the question and the answer, so nobody has to hand-label a thing.
 
-**Worked example** — the concrete numeric example for Stage 1's loss appears in concept 3.
+**Worked example** — the concrete numeric example for Stage 1's loss appears in Section 1.3, `LLM training`.
 
 **Tradeoff / when NOT to use** — self-supervised pretraining from scratch is usually justified only when you have web-scale unlabeled text and need a general-purpose base model. If you have a narrow task and a modest labeled dataset, don't pretrain a new model—fine-tune an existing pretrained one (session 7). Reproducing a GPT-3-scale pretraining run for one narrow classification task incurs the cost of pretraining without needing the generality it provides.
 
 ---
 
-### 2. Pretraining Objectives
+### 1.2 Pretraining Objectives
 
 **Intuition** — The training objective matters because it shapes what the model is directly optimized to do. If trained to predict the next token, a model is directly optimized for left-to-right continuation. If trained to reconstruct masked tokens from both sides, it learns bidirectional contextual representations that are often useful for classification; neither objective alone guarantees “understanding.”
 
@@ -59,7 +59,7 @@ CLM is the objective behind the decoder-only LLMs used throughout this subject. 
 
 _Everyday version:_ CLM is like reading a mystery novel one page at a time and guessing what happens next using only what you've read so far — you're never allowed to peek ahead. MLM is like being handed a page with a few words blacked out and figuring out each one using both the sentence before it and the sentence after it, the way you'd solve a crossword clue. The first habit builds someone who's good at continuing a story; the second builds someone who's good at understanding a passage once it's all laid out in front of them.
 
-**Worked example** — the numeric loss calculation in concept 3 is the CLM case, since that is what this subject's LLMs actually train on.
+**Worked example** — the numeric loss calculation in Section 1.3, `LLM training`, is the CLM case, since that is what this subject's LLMs actually train on.
 
 **Tradeoff / when NOT to use** — During training, a CLM uses a causal mask but can evaluate all positions in parallel; during inference, it generates autoregressively because each next-token distribution depends on previously generated tokens. An MLM uses bidirectional context and therefore does not natively generate free-form continuations; classification can attach a task-specific head to the encoder representation, while generation requires an autoregressive decoder or another autoregressive output mechanism.
 
@@ -71,7 +71,7 @@ _Everyday version:_ CLM is like reading a mystery novel one page at a time and g
 
 ---
 
-### 3. LLM training
+### 1.3 LLM training
 
 **Intuition** — Training only works if the model gets a score telling it how wrong it was. In language modeling, that score comes from a simple idea: after the model predicts a probability distribution over the vocabulary, check how much probability it gave to the token that really came next. If that probability was low, the model should be penalized. If it was high, the penalty should be small. Cross-entropy is that penalty. Perplexity is the same story rewritten in a more human-readable scale.
 
@@ -109,7 +109,7 @@ The model assigns these probabilities to the _correct_ target token at each of t
 
 Average log-probability = −10.8765. **Cross-entropy loss = −(−10.8765) = 10.8765.**
 
-Every probability here is tiny (~10⁻⁵, roughly 1-in-100,000) because the untrained model is guessing almost uniformly across its ~50,000-token vocabulary — it hasn't yet learned to favor the correct token. That's what a loss around 10–11 nats means in plain terms. As training proceeds, this number falls; a well-trained small model on a narrow corpus can reach a loss under 1.0 (concept 7 has a full training-run log showing this fall in practice, alongside what happens when it falls _too_ far).
+Every probability here is tiny (~10⁻⁵, roughly 1-in-100,000) because the untrained model is guessing almost uniformly across its ~50,000-token vocabulary — it hasn't yet learned to favor the correct token. That's what a loss around 10–11 nats means in plain terms. As training proceeds, this number falls; a well-trained small model on a narrow corpus can reach a loss under 1.0 (Section 3.2 has a full training-run log showing this fall in practice, alongside what happens when it falls _too_ far).
 
 **Tradeoff / when NOT to use** — cross-entropy on held-out text is useful for comparing models when tokenization, evaluation data, and aggregation conventions are aligned; differing tokenizers make raw perplexity incomparable, while train/evaluation overlap makes the score an unreliable estimate of generalization. See the MMLU discussion above. Cross-entropy also does not directly measure whether generated text is _correct_, only whether it was _likely_ under the model's training distribution — a fluent, confident, wrong answer can still carry a good loss.
 
@@ -135,7 +135,7 @@ The modern-pretraining view emphasizes that the core objective remains next-toke
 
 _If Part 1 explained how the model learns, Part 2 explains what it learns from. This is where the note shifts from objective functions to data engineering: which corpora are used, how they are mixed, and how raw scraped text gets cleaned before it ever reaches the model._
 
-### 4. Data Mixture
+### 2.1 Data Mixture
 
 **Intuition** — What a model reads during pretraining shapes almost everything it can do later. So "just scrape the web" is not a real recipe. The hard part is deciding what kinds of text deserve more weight, what should be filtered out, and whether the model should see all categories in the same proportion from start to finish.
 
@@ -191,7 +191,7 @@ _Everyday version:_ "annealing" borrows its name from metalworking, but it is no
 
 ---
 
-### 5. Data Preprocessing Pipeline
+### 2.2 Data Preprocessing Pipeline
 
 **Intuition** — Raw web text is messy. It contains duplicates, boilerplate, bad OCR, spam, private information, broken formatting, and many short fragments that would waste training compute if used as-is. So before the text reaches the model, it has to go through a preprocessing pipeline.
 
@@ -232,7 +232,7 @@ The broader pipeline also combined heuristic filters and semantic deduplication 
 
 _Part 3 asks a practical question that comes up in real organizations: once you already have a good pretrained model, how should you adapt it to your own domain? The answer is not always "train from scratch again."_
 
-### 6. Continued Pretraining (CPT)
+### 3.1 Continued Pretraining (CPT)
 
 **Intuition** — Once you have a pretrained model, there are several ways to adapt it to a new domain. They are not small variations of the same choice. They trade off cost, speed, and how much of the original broad capability survives.
 
@@ -241,7 +241,7 @@ _Part 3 asks a practical question that comes up in real organizations: once you 
 | Path                                           | What happens                                                          | Cost                                                    | Keeps general knowledge?                                   |
 | ---------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------- |
 | **Regular pretraining**                        | Random weights, train from scratch on dataset D1                      | Full pretraining cost                                   | N/A — this _is_ the general model                          |
-| **Continued Pretraining (CPT)**                | Take the pretrained model from D1, keep training it on new dataset D2 | Much cheaper than from-scratch                          | Partially — at risk of catastrophic forgetting (concept 7) |
+| **Continued Pretraining (CPT)**                | Take the pretrained model from D1, keep training it on new dataset D2 | Much cheaper than from-scratch                          | Partially — at risk of catastrophic forgetting (Section 3.2) |
 | **Retrain on the combined dataset**            | Random weights again, but train on D1 ∪ D2 together from the start    | As expensive as regular pretraining                     | Yes, by construction — but you paid full price again       |
 | **Domain-Specific Pretraining (from scratch)** | Random weights, train _only_ on the narrow-domain dataset             | Full pretraining cost, but on a smaller/narrower corpus | No — never had it                                          |
 
@@ -251,13 +251,13 @@ CPT is the practical middle path in many real systems: much cheaper than full re
 
 _Everyday version:_ CPT is like giving a fluent, well-read adult specialist training: the existing general foundation is retained while updates on domain text add specialization, although those updates can interfere with earlier capabilities.
 
-**Worked example** — see concept 8's FinLLaMA/BloombergGPT comparison: FinLLaMA is CPT (starts from Llama 3 8B, continues training on financial text), while BloombergGPT is closer to domain-specific pretraining from scratch with a general-data mixture (trained on a blend of finance and general tokens from the start, not adapted from an existing checkpoint).
+**Worked example** — see Section 3.3's FinLLaMA/BloombergGPT comparison: FinLLaMA is CPT (starts from Llama 3 8B, continues training on financial text), while BloombergGPT is closer to domain-specific pretraining from scratch with a general-data mixture (trained on a blend of finance and general tokens from the start, not adapted from an existing checkpoint).
 
 **Tradeoff / when NOT to use** — retraining on the combined dataset is generally safer against forgetting but throws away the entire cost advantage CPT exists to provide — if you can afford a full retrain, and you actually need both domains equally well represented from the start, it's the more robust (if expensive) choice. Domain-specific pretraining from scratch is the right call only when the target domain is different enough from general text that inherited general capability isn't worth much anyway (a narrow, self-contained technical corpus, for instance) — otherwise you're paying full pretraining cost for a model that has thrown away general reasoning ability it will likely still need.
 
 ---
 
-### 7. Catastrophic Forgetting
+### 3.2 Catastrophic Forgetting
 
 **Intuition** — In sequential learning across diverse datasets or tasks over time, you want an already-capable model to learn new information without destroying what it already knew. That balance is hard. The same updates that help it specialize can also overwrite older knowledge. That failure mode is called **catastrophic forgetting**.
 
@@ -288,7 +288,7 @@ _Two of these are easiest to picture directly:_ **EWC** is like assigning a high
 
 ---
 
-### 8. Domain Adaptation
+### 3.3 Domain Adaptation
 
 **Intuition** — Two real finance-domain LLMs took different paths through the pretraining choices above, and comparing them makes the tradeoffs concrete.
 
@@ -303,9 +303,9 @@ _Two of these are easiest to picture directly:_ **EWC** is like assigning a high
 | Parameters            | 8B                                                                                                                          | 50B                                                                                                                                     |
 | Training data         | 52B financial tokens, mixed with 18B general-domain tokens (≈75/25 split)                                                   | 363B finance tokens + 345B general tokens                                                                                               |
 | Forgetting mitigation | Data replay — the 18B general tokens exist specifically to prevent catastrophic forgetting of Llama 3's original capability | N/A in the same sense — general knowledge was built in from the start, not preserved against loss                                       |
-| Sizing rationale      | Inherited from Llama 3's own design                                                                                         | Sized at 50B using **Chinchilla scaling laws** (concept 11), chosen as the compute-optimal size given the available finance-data volume |
+| Sizing rationale      | Inherited from Llama 3's own design                                                                                         | Sized at 50B using **Chinchilla scaling laws** (Section 4.3), chosen as the compute-optimal size given the available finance-data volume |
 
-**Worked example** — FinLLaMA's 75/25 financial-to-general token ratio is a direct, numeric instance of the "data mixing / replay" forgetting mitigation from concept 7: roughly one in four training tokens is deliberately _not_ finance-specific, purely to keep Llama 3's general capability from eroding while it specializes.
+**Worked example** — FinLLaMA's 75/25 financial-to-general token ratio is a direct, numeric instance of the "data mixing / replay" forgetting mitigation from Section 3.2: roughly one in four training tokens is deliberately _not_ finance-specific, purely to keep Llama 3's general capability from eroding while it specializes.
 
 **Tradeoff / when NOT to use** — FinLLaMA's CPT approach is far cheaper because it starts from an 8B checkpoint, but it retains the 8B architecture and its associated capacity; CPT can improve domain performance but cannot provide the capacity of a larger architecture by itself. BloombergGPT's from-scratch approach is dramatically more expensive but allowed its designers to choose model size and data mixture freely, using scaling laws to pick a genuinely compute-optimal 50B rather than inheriting someone else's architecture decision. If your organization doesn't have the compute budget required for pretraining from scratch (most don't), CPT on an existing capable open-weight model is the realistic choice — BloombergGPT-style from-scratch training is reserved for organizations with both the capital and the proprietary data volume (Bloomberg's decades of financial text) to justify it.
 
@@ -315,7 +315,7 @@ _Two of these are easiest to picture directly:_ **EWC** is like assigning a high
 
 _This part answers the planning question. If pretraining is expensive, how do labs decide how large the model should be and how many tokens it should see? Scaling laws are the attempt to answer that before spending the full compute budget._
 
-### 9. Why Scaling Laws?
+### 4.1 Why Scaling Laws?
 
 **Intuition** — Pretraining at frontier scale is too expensive for guesswork. You cannot casually try five different 400B-scale runs and keep the best one. Scaling laws exist because labs need a way to use smaller experiments to predict what larger runs are likely to do.
 
@@ -325,13 +325,13 @@ _Everyday version:_ it's like a bakery testing a new recipe in a handful of smal
 
 **Worked example** — Meta ran scaling-law experiments on small proxy models specifically to choose Llama 3's pretraining data mix, then scaled the winning recipe up to 405 billion parameters — the whole point being that they did not need to guess or run the full 405B experiment multiple times to find a good recipe.
 
-**Tradeoff / when NOT to use** — scaling-law extrapolation assumes the small-scale trend actually continues smoothly to the target scale, which is not guaranteed — this is exactly what the "emergent abilities" debate (concept 12) complicates: some capabilities appear to _not_ follow a smooth, predictable curve at all. Scaling laws are also only worth the experimental overhead when you're planning a genuinely large, expensive run; for a small research experiment, running a handful of small-scale configurations and simply picking the best empirically is often more practical than fitting a formal power law first.
+**Tradeoff / when NOT to use** — scaling-law extrapolation assumes the small-scale trend actually continues smoothly to the target scale, which is not guaranteed — this is exactly what the "emergent abilities" debate (Section 4.4) complicates: some capabilities appear to _not_ follow a smooth, predictable curve at all. Scaling laws are also only worth the experimental overhead when you're planning a genuinely large, expensive run; for a small research experiment, running a handful of small-scale configurations and simply picking the best empirically is often more practical than fitting a formal power law first.
 
 ![Scaling-law planning loop](assets/S02-scaling-planning-loop.png)
 
 ---
 
-### 10. Kaplan Scaling Laws (2020)
+### 4.2 Kaplan Scaling Laws (2020)
 
 **Intuition** — Kaplan et al. (2020) were influential because they made scaling look smooth and predictable. Their experiments suggested that performance depends strongly on overall scale and only weakly on model shape, such as depth versus width. Their practical takeaway at the time was simple: if you get more compute, put most of it into a bigger model rather than a larger dataset.
 
@@ -359,11 +359,11 @@ N ≈ 12 × 96 × 12,288²
 
 — matching GPT-3's well-known ~175B parameter count, from just two architectural numbers.
 
-**Tradeoff / when NOT to use** — Kaplan's own conclusion ("prioritize model size over data size") is precisely what the Chinchilla paper (concept 11) overturned two years later: Kaplan's fitted constants were derived under specific experimental conditions (notably, without re-tuning the learning-rate schedule length to match the training duration) that turned out to systematically favor bigger models. Treat Kaplan's _scaling laws exist and are power laws_ insight as durable, but do not treat its specific recommended split (bigger model over more data) as still current practice — it isn't, and the "three eras" table in concept 11 shows exactly how the industry's answer changed.
+**Tradeoff / when NOT to use** — Kaplan's own conclusion ("prioritize model size over data size") is precisely what the Chinchilla paper (Section 4.3) overturned two years later: Kaplan's fitted constants were derived under specific experimental conditions (notably, without re-tuning the learning-rate schedule length to match the training duration) that turned out to systematically favor bigger models. Treat Kaplan's _scaling laws exist and are power laws_ insight as durable, but do not treat its specific recommended split (bigger model over more data) as still current practice — it isn't, and the "three eras" table in Section 4.3 shows exactly how the industry's answer changed.
 
 ---
 
-### 11. Chinchilla Scaling Laws (2022) and the Three Eras of Scaling Wisdom
+### 4.3 Chinchilla Scaling Laws (2022) and the Three Eras of Scaling Wisdom
 
 **Intuition** — Chinchilla changed the story. Two years after Kaplan, Hoffmann et al. showed that many large models were not simply small-data-limited or architecture-limited. They were **undertrained** relative to their size. In other words, the industry had often built models that were too big for the amount of data they saw.
 
@@ -406,7 +406,7 @@ A newer axis on top of all three: **test-time compute**. Models like o1 and Deep
 
 ---
 
-### 12. Emergent Abilities of LLMs
+### 4.4 Emergent Abilities of LLMs
 
 **Intuition** — Some capabilities don't improve gradually as models get bigger — they appear to snap into existence, seemingly out of nowhere, once a model crosses a certain scale. Whether this is a genuine property of scale or a measurement artifact is itself a live debate (Schaeffer et al., 2023).
 
@@ -424,9 +424,9 @@ The counter-argument (Schaeffer et al., 2023): many "emergent" abilities evapora
 
 ## Part 5 · Pretraining of popular frontier models
 
-### Model case studies
+#### Model case studies
 
-### 13. Llama 3: Three-Stage Initial Pretraining
+### 5.1 Llama 3: Three-Stage Initial Pretraining
 
 **Intuition** — Llama 3's own published pretraining recipe is a concrete, fully worked example of nearly every concept in this session applied together: data mixture, curriculum/annealing, and scaling-law-informed sizing, executed across three distinct stages.
 
@@ -440,7 +440,7 @@ The source recipe also names filtering, synthetic data, and mixing around the pr
 
    _Everyday version:_ it's the same reason a new runner builds up to a marathon with weeks of short, slow jogs before attempting the full distance, rather than sprinting 26 miles on day one and risking an injury that ends training altogether. Ramping batch size, sequence length, and context window up gradually in stages lets training find its footing at each scale before the next jump, instead of risking instability by starting at full scale immediately.
 2. **Long-context pretraining.** Context length is increased gradually across **six stages**, starting from the original 8K window and ending at a final 128K-token context window, using approximately **800B** training tokens dedicated specifically to this extension.
-3. **Annealing.** As covered in concept 4: training on a small, ultra-high-quality math-and-code subset in the final stage while decaying the learning rate toward zero — improving the 8B model measurably, with negligible effect on the 405B model.
+3. **Annealing.** As covered in Section 2.1: training on a small, ultra-high-quality math-and-code subset in the final stage while decaying the learning rate toward zero — improving the 8B model measurably, with negligible effect on the 405B model.
 
 **Worked example** — the batch-size/sequence-length numbers above _are_ the worked example: going from 4M tokens/4,096 sequence length to 16M tokens/8,192 sequence length across three phases is a 4× increase in per-step batch size, executed gradually rather than all at once specifically to avoid the training instability a single large jump would risk.
 
@@ -454,7 +454,7 @@ See concept 5 for the full Llama 3 model-as-a-judge data-curation pipeline; it i
 
 ---
 
-### 14. Qwen and Gemma Pretraining Strategies
+### 5.2 Qwen and Gemma Pretraining Strategies
 
 **Intuition — a landscape of alternative frontier recipes.** Each makes a different tradeoff from Llama 3's.
 
@@ -491,9 +491,11 @@ _Two of these ideas map onto familiar teaching patterns:_ Gemma 2's **knowledge 
 
 ---
 
-***Going deeper*** — GPT-1 and T5 are useful historical case studies, marked here as beyond-course depth and not examinable — keep them as intuition builders rather than core syllabus.
+## Extra Slides (not for exam)
 
-### GPT-1
+_GPT-1 and T5 are useful historical case studies—keep them as intuition builders rather than core syllabus._
+
+### 6.1 GPT-1
 
 **GPT-1** — the original decoder-only pretraining recipe. It introduced a two-stage workflow: unsupervised generative pretraining on a large corpus, followed by supervised fine-tuning on a task. GPT-1 uses unidirectional (causal) attention over left context. Its architecture has 12 transformer blocks, 768-dimensional hidden states, 12 heads (64 dimensions per head), a 3,072-dimensional feedforward layer, about 117 million parameters, a 40,000-token byte-pair encoding (BPE) vocabulary, and GELU activations.
 
@@ -513,7 +515,7 @@ For downstream **fine tuning**, GPT-1 retained the unsupervised pretraining hype
 
 ![GPT-1 downstream classification task](assets/S02-gpt1-classification.png)
 
-### T5 (Text-to-Text Transfer Transformer)
+### 6.2 T5 (Text-to-Text Transfer Transformer)
 
 #### T5 - Input-Output
 

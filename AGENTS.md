@@ -74,6 +74,9 @@ The top-level `##` Part/session headings follow the handout (above). Beneath the
 - **Synthesis sections keep their own name.** When a section has no single corresponding deck slide — a bridge/intro the note adds, or handout scope the deck doesn't cover (e.g. BM25/DPR/RRF absent from the S02 deck) — give it a plain descriptive heading. Do not invent a fake deck title.
 - After any retitle or split, re-run the coverage checker: a heading word the checker was matching against (e.g. "mathematics") can disappear in a rename and surface a false negative to fix in the body.
 
+### Part/topic hierarchy
+
+Use a consistent hierarchy in session notes: `## Part N · ...` for major handout-aligned Parts, `### N.M ...` for the main topics within that Part, and `#### ...` for source-slide subtopics or details. Do not use one global topic-number sequence across Parts, and do not introduce unnumbered peer headings that visually compete with the Part's numbered topics. Extra or non-examinable material gets its own parent `##` section and its own local topic numbering.
 ### Capture a Temporary Slide Audit at Intake
 
 **The moment a deck is uploaded, before writing or editing the note, create a temporary slide inventory** in the OS temp directory or an ignored subject-level audit directory. It must contain one row per source slide — slide number, title, and named items (models, algorithms, frameworks, protocols, figures, and table labels). Include title, agenda, disclaimer, objectives, recap, and reference slides too; if a slide is routed to the master index, leave its named-items cell blank rather than omitting the row.
