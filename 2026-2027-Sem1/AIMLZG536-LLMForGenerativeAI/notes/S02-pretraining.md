@@ -15,7 +15,7 @@ Pre-training is where an LLM gets its raw capability. Fine-tuning, alignment, an
 
 ## Part 1 · Building a large language model
 
-_This session is easiest to follow if you keep one picture in mind: pretraining is the stage where a model reads huge amounts of text and gradually turns "random next-token guesses" into useful language knowledge. The rest of the note explains where that learning signal comes from, what data feeds it, and how labs decide how big a model and corpus to use._
+_Pretraining is the foundational stage of a language model’s development. The model processes vast amounts of text and repeatedly predicts the next token in a sequence. It starts with nearly random guesses and gradually improves by adjusting its parameters across billions of training tokens. Over time, it learns statistical patterns in language, including syntax, common facts, and relationships between concepts. The rest of this note explains where the learning signal comes from, what data feeds it, and how scaling laws guide decisions about model size and corpus size._
 
 ![Slide 4 — Building a large language model](assets/S02-slide-04-building-an-llm.png)
 
