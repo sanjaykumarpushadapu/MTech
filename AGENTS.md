@@ -177,6 +177,8 @@ Slide coverage and clean visual QA do not prove that the note preserved the sour
 
 **Hard gate:** Do not begin source-asset edits or claim figure coverage until the rendered slide inventory and slide-to-asset map exist, contain a nonzero row for every source slide, and match the source slide count exactly. A post-hoc reference check never substitutes for this source-first audit.
 
+**PowerPoint media audit rule:** Do not inventory source visuals by checking only ordinary `PICTURE` shapes. Inspect slide XML relationships, `a:blip` media references, image placeholders, grouped content, and rendered slides; placeholder-backed figures can be substantive source images even when `python-pptx` does not expose them as picture shapes. Inspect annotation/ink layers separately and exclude pen marks from preserved assets unless the source explicitly treats them as instructional content.
+
 ### Default to More, Not Less
 
 Session notes exist to teach and to be revised from. When extending a note from new source material, prefer including a genuinely useful fact, number, named model, or example over trimming for length. Concision is a wording-quality goal (see Wording Pass) — write clean sentences, cut filler — not a content-quantity ceiling. Cutting real source content to keep a note short is the wrong tradeoff in this repo. A longer note that teaches more is preferred over a shorter one that teaches less, as long as every addition is accurate, sits under the right heading, and doesn't duplicate something already there.
