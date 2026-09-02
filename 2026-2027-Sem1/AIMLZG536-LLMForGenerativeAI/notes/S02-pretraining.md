@@ -63,7 +63,11 @@ _Everyday version:_ CLM is like reading a mystery novel one page at a time and g
 
 **Tradeoff / when NOT to use** — During training, a CLM uses a causal mask but can evaluate all positions in parallel; during inference, it generates autoregressively because each next-token distribution depends on previously generated tokens. An MLM uses bidirectional context and therefore does not natively generate free-form continuations; classification can attach a task-specific head to the encoder representation, while generation requires an autoregressive decoder or another autoregressive output mechanism.
 
-![Pretraining objectives: masked-token, denoising span-mask, and next-token prediction](assets/S02-clm-vs-mlm-objectives.png)
+![BERT masked-token prediction](assets/S02-clm-vs-mlm-objectives-bert.png)
+
+![T5 denoising span-mask prediction](assets/S02-clm-vs-mlm-objectives-t5.png)
+
+![GPT-4 next-token prediction](assets/S02-clm-vs-mlm-objectives-gpt4.png)
 
 ---
 
