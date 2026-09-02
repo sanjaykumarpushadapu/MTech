@@ -169,6 +169,10 @@ Reading every slide before writing is necessary but not sufficient — synthesis
 
 After a note is drafted from a source, do a second, separate pass: work through the extracted source text bullet by bullet (or slide by slide) and check each concrete fact, named model, named example, and cited paper off against the draft. Do not consider the note checked until this reconciliation pass has actually happened — "I read the source already" is not the same claim as "I verified the draft still has everything the source had."
 
+### Source-figure fidelity is a separate gate
+
+Slide coverage and clean visual QA do not prove that the note preserved the source's illustrations. During reconciliation, enumerate every substantive source figure, diagram, chart, and table image by slide number. For each one, confirm that the note embeds the original asset, uses a clearly labelled faithful recreation, or explicitly records why it is omitted. A conceptually similar replacement is not evidence that the source figure was preserved. **When preserving an image from a source slide, use PNG format only; do not convert the source slide image into SVG.** SVG is permitted only for a newly authored explanatory diagram that is clearly labelled as a recreation rather than the source image. When an original figure is copied into the note, retain visible provenance or copyright wording from the source where practical.
+
 ### Default to More, Not Less
 
 Session notes exist to teach and to be revised from. When extending a note from new source material, prefer including a genuinely useful fact, number, named model, or example over trimming for length. Concision is a wording-quality goal (see Wording Pass) — write clean sentences, cut filler — not a content-quantity ceiling. Cutting real source content to keep a note short is the wrong tradeoff in this repo. A longer note that teaches more is preferred over a shorter one that teaches less, as long as every addition is accurate, sits under the right heading, and doesn't duplicate something already there.
