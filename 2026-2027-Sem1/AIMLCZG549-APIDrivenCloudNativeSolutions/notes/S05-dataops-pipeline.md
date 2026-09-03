@@ -192,37 +192,23 @@ DataOps is a team sport, not one role's job: data producers clarify meaning, fre
 
 ---
 
-### Data contracts and schema evolution
+### Data contracts prevent breakage
 
 **Intuition** — A data contract is what makes a schema change a visible, negotiated event instead of a silent breakage discovered downstream days later.
 
-**Mechanism** — A data contract defines expected fields, types, constraints, and semantic meaning; names the producer and every critical consumer; is validated at ingestion and before publication; version contracts whenever compatibility changes; alerts both sides when an expectation fails; and is treated like an API change — never edited silently. Schema evolution is how a contract changes safely over time: add optional fields without breaking existing consumers; never change the meaning of an existing field silently; deprecate fields before removing them; maintain compatibility rules for both readers and writers; test historical and future schema versions; and record the schema version with every published dataset.
+**Mechanism** — A data contract defines expected fields, types, constraints, and semantic meaning; names the producer and every critical consumer; is validated at ingestion and before publication; version contracts whenever compatibility changes; alerts both sides when an expectation fails; and is treated like an API change — never edited silently.
 
-**Worked example** — The running example's customer-data contract names the source system as producer and the reporting model as consumer; when the source team adds a new `loyalty_tier` field, it is added as optional, tested against both the old and new schema, and only removed from "deprecated" status once every consumer has migrated.
+**Worked example** — The running example's customer-data contract names the source system as producer and the reporting model as consumer; when the source team adds a new `loyalty_tier` field, the contract's version is bumped and both source and consumer teams are alerted before the field goes live.
 
 **Tradeoff / when NOT to use** — Formally versioning every contract change is overhead that a single-consumer, internal-only pipeline may not need. But the moment more than one team consumes the same dataset, the coordination cost of a silent breaking change is far higher than the cost of a version bump — contracts earn their overhead exactly at that point.
 
-![A data contract between producer and consumer, with schema evolution over time: add optional field, deprecate, then remove once every consumer has migrated](assets/S05-data-contracts-schema-evolution.svg)
+![A data contract between producer and consumer: expected fields, types, and constraints, validated at ingestion and before publication, versioned on every compatibility change](assets/S05-data-contract.svg)
 
 ---
 
 ## Part 5 · Scalability and reliability practices
 
 This part works through the concrete practices that separate a pipeline that runs once from one that survives production for years: how the platform is layered, how data is processed and partitioned, how tasks fail safely, how the pipeline is observed, secured, released, and recovered. Each practice below is small on its own; production reliability is what you get from applying all of them together, as the capstone and production-readiness review at the end of this session show.
-
-### Layering the data platform
-
-**Intuition** — "The pipeline" is really several distinct layers stacked on top of each other, and naming them separately is what lets you reason about where a problem actually is.
-
-**Mechanism** — Sources generate files, events, database changes, and API responses. Ingestion captures that data reliably and records arrival metadata. Storage separates raw, validated, and curated zones. Transformation applies reusable business logic. Serving layers expose trusted datasets, features, or APIs to consumers. Orchestration connects every layer and observes every run across all of them. This is a general-purpose way to think about *any* pipeline's structure — distinct from the *canonical data architecture* in Part 2, which is one specific named reference architecture (source, raw lake, data engineering, refined data, governance) that this same layering maps onto.
-
-**Worked example** — The running example's source is the customer database; ingestion pulls a daily extract and timestamps it; storage keeps a raw copy, a validated copy (post quality-gates), and a curated copy (post business logic); transformation computes the reporting aggregates; serving exposes the final table to the reporting model; and orchestration (Prefect) schedules and watches every one of those steps.
-
-**Tradeoff / when NOT to use** — Collapsing raw, validated, and curated into a single zone saves storage cost today, but removes the ability to replay or reprocess history when transformation logic changes or a data-quality bug is discovered upstream — you can only reprocess what you kept separately.
-
-![The data platform layered as sources, ingestion, storage (raw/validated/curated), transformation, serving, and orchestration connecting every layer](assets/S05-layered-platform.svg)
-
----
 
 ### Batch, streaming, and micro-batching
 
@@ -266,17 +252,17 @@ This part works through the concrete practices that separate a pipeline that run
 
 ---
 
-### Designing safe, idempotent tasks: retries, caching, and timeouts
+### Retrying the right failures
 
 **Intuition** — Tasks fail for different reasons, and treating every failure the same way (retry blindly, or escalate everything) is wrong in both directions — the right response depends on *why* the task failed.
 
-**Mechanism** — Five failure types call for different responses: **Transient** failures (network, rate limit, or a temporary service outage) should be retried. **Data quality** failures (invalid schema, nulls, or a broken business rule) should be escalated, not retried — retrying does not fix bad data. **Code defect** failures (a deterministic exception or an incorrect transformation) should also be escalated, since retrying deterministic code just reproduces the same bug. **Capacity** failures (a memory, storage, or concurrency limit) may be retried after backing off or scaling. **Dependency** failures (missing upstream data or unavailable credentials) should be escalated until the dependency resolves. For retries specifically: use exponential backoff and a maximum retry count, set timeouts so stalled work cannot run indefinitely, capture the final error with useful run context, and escalate permanent failures to the responsible owner rather than retrying forever. Caching avoids repeating expensive work when inputs have not changed: build cache keys from code, parameters, and input versions; set an expiry that reflects data-freshness needs; invalidate when logic or upstream inputs change; avoid caching operations that have uncontrolled side effects; and measure whether caching is actually reducing time and cost, rather than assuming it does. Idempotency makes repeated execution produce the same intended result: use deterministic keys for inserts and updates, write outputs to temporary locations before an atomic publication step, separate side effects from pure transformations, record external requests to avoid duplicate actions, and verify safe reruns during failure testing, not just during normal operation. Small task boundaries, throughout, improve diagnosis, reuse, and selective reruns.
+**Mechanism** — Five failure types call for different responses: **Transient** failures (network, rate limit, or a temporary service outage) should be retried. **Data quality** failures (invalid schema, nulls, or a broken business rule) should be escalated, not retried — retrying does not fix bad data. **Code defect** failures (a deterministic exception or an incorrect transformation) should also be escalated, since retrying deterministic code just reproduces the same bug. **Capacity** failures (a memory, storage, or concurrency limit) may be retried after backing off or scaling. **Dependency** failures (missing upstream data or unavailable credentials) should be escalated until the dependency resolves. This builds directly on the retry, cache, timeout, and idempotency basics introduced under *Building and deploying a Prefect flow* — the addition here is the decision framework for *which* of those responses a given failure actually calls for, and escalating permanent failures to the responsible owner rather than retrying forever.
 
-**Worked example** — The running example's ingestion task retries with exponential backoff on a transient API timeout; its aggregation step is cached, keyed on the input data's version, so an unrelated rerun does not recompute it; and its publish step is idempotent — it upserts by customer ID into a temporary table, then atomically swaps it into place, so a retried publish never double-writes.
+**Worked example** — The running example's ingestion task hits a transient API timeout and is retried; a malformed source record is a data-quality failure and is escalated to the data owner rather than retried, since retrying a malformed record just fails the same way again.
 
-**Tradeoff / when NOT to use** — Idempotent design (deterministic keys, atomic publish) adds real engineering effort up front. That effort is optional for a purely read-only reporting task, but not for anything that writes, charges, or sends — a non-idempotent retry on those can double-charge or double-send, which is a far worse failure than the original transient error.
+**Tradeoff / when NOT to use** — Retrying every failure type the same way is the most common mistake: retrying a data-quality or code-defect failure wastes time and delays the escalation that would actually fix it, while failing to retry a transient failure creates unnecessary manual toil for a problem that would have resolved itself.
 
-![A failure-type decision tree — transient, data quality, code defect, capacity, dependency — routing to retry-with-backoff or escalate, alongside a task's retry, cache, and idempotent-write anatomy](assets/S05-task-safety-decision-tree.svg)
+![A failure-type decision tree — transient, data quality, code defect, capacity, dependency — routing to retry-with-backoff or escalate](assets/S05-task-safety-decision-tree.svg)
 
 ---
 
@@ -284,7 +270,7 @@ This part works through the concrete practices that separate a pipeline that run
 
 **Intuition** — You cannot operate what you cannot see, and "see" here means five specific signals, a way to turn them into a target, and a way to trace a bad output back to its cause.
 
-**Mechanism** — Reproducible runs need versioning across five dimensions: Code (transformations, models, and workflow definitions), Data (immutable snapshots or traceable dataset versions), Environment (pinned packages, containers, and infrastructure configuration), Parameters (runtime inputs, feature flags, and schedules), and Metadata (run ID, timestamps, lineage, and model or artifact versions) — a reproducible run can be explained, rerun, and audited. Observability itself rests on five signals: **Freshness** (did the dataset arrive on time?), **Volume** (are row counts within an expected range?), **Distribution** (did values or categories shift unexpectedly?), **Lineage** (which upstream change affected this output?), and **Reliability** (how often do flows succeed and recover?) — surfaced through dashboards for trends and alerts for conditions that require action, plus run metrics such as success rate, duration, retries, and queue time. Service Level Objectives (SLOs) turn those signals into targets: choose indicators such as success rate, freshness, and duration; set targets that reflect consumer expectations; measure over a clearly defined time window; define an error budget for acceptable unreliability; prioritize reliability work when that budget is exhausted; and review targets as workloads and business needs change. Lineage is what makes an incident traceable: record which sources produce each dataset and model, capture the transformations between upstream and downstream assets, use lineage to identify consumers before making a change, trace an incident from a bad output back to its origin, prioritize recovery for high-impact downstream products, and keep technical lineage connected to business ownership so "who does this affect" has an answer.
+**Mechanism** — Reproducible runs need versioning across five dimensions: Code (transformations, models, and workflow definitions), Data (immutable snapshots or traceable dataset versions), Environment (pinned packages, containers, and infrastructure configuration), Parameters (runtime inputs, feature flags, and schedules), and Metadata (run ID, timestamps, lineage, and model or artifact versions) — a reproducible run can be explained, rerun, and audited. Observability itself rests on five signals: **Freshness** (did the dataset arrive on time?), **Volume** (are row counts within an expected range?), **Distribution** (did values or categories shift unexpectedly?), **Lineage** (which upstream change affected this output?), and **Reliability** (how often do flows succeed and recover?) — surfaced through dashboards for trends and alerts for conditions that require action. Service Level Objectives (SLOs) turn those signals into targets: choose indicators such as success rate, freshness, and duration; set targets that reflect consumer expectations; measure over a clearly defined time window; define an error budget for acceptable unreliability; prioritize reliability work when that budget is exhausted; and review targets as workloads and business needs change. Lineage is what makes an incident traceable: record which sources produce each dataset and model, capture the transformations between upstream and downstream assets, use lineage to identify consumers before making a change, trace an incident from a bad output back to its origin, prioritize recovery for high-impact downstream products, and keep technical lineage connected to business ownership so "who does this affect" has an answer.
 
 **Worked example** — The running example's SLO is "99% of days, the report is fresh by 6am"; when that target is missed, lineage traces the late report back through the pipeline to a source system that changed its extract format overnight, and the incident is triaged from there.
 
@@ -294,13 +280,13 @@ This part works through the concrete practices that separate a pipeline that run
 
 ---
 
-### Governance, secrets, and identity
+### Governance travels with the pipeline
 
 **Intuition** — Governance that only exists as a policy document does nothing; governance has to travel *with* the pipeline, enforced at the same points where data and credentials actually move.
 
-**Mechanism** — Governance travels with the pipeline: classify sensitive data before processing it, apply least-privilege access to storage, APIs, and orchestration, keep credentials in a secret manager rather than in code or workflow files, encrypt data in transit and at rest, record lineage, approvals, and access for auditability, and define retention and deletion policies for outputs and logs. Protecting secrets and identity specifically means storing credentials in an approved secret manager, using short-lived workload identity where it is available (rather than long-lived static credentials), applying least privilege everywhere, choosing to rotate credentials and remove unused access on a schedule, preventing secrets from ever appearing in logs or artifacts, and auditing access to production data and deployments.
+**Mechanism** — Governance travels with the pipeline: classify sensitive data before processing it, apply least-privilege access to storage, APIs, and orchestration, keep credentials in a secret manager rather than in code or workflow files, encrypt data in transit and at rest, record lineage, approvals, and access for auditability, and define retention and deletion policies for outputs and logs.
 
-**Worked example** — The running example's Prefect API key and the source system's credentials are both stored as encrypted GitHub Actions secrets (the same mechanism the CI/CD workflow in Part 4 uses), scoped to only the workflow that needs them, never printed to a log, and rotated on a schedule.
+**Worked example** — The running example's Prefect API key and the source system's credentials are both stored as encrypted GitHub Actions secrets (the same mechanism the CI/CD workflow in Part 4 uses), scoped to only the workflow that needs them, and never printed to a log.
 
 **Tradeoff / when NOT to use** — Centralizing every secret in one shared vault entry is operationally simpler than scoping credentials per environment or per pipeline, but it means one leaked credential exposes every pipeline that shares it — the operational convenience of one shared secret trades directly against the blast radius of a single leak.
 
@@ -322,11 +308,11 @@ This part works through the concrete practices that separate a pipeline that run
 
 ---
 
-### Work pools and worker concurrency
+### Control worker concurrency
 
-**Intuition** — Orchestration decides *what* runs and *when*; work pools and workers decide *where* it actually executes and how much of it can run at once — mixing those concerns up is how one noisy pipeline starves every other pipeline of capacity.
+**Intuition** — A work pool decides *where* a task executes; controlling how many workers run at once inside it is what stops one noisy pipeline from starving every other pipeline of capacity.
 
-**Mechanism** — Choosing the right work pool means matching it to the execution target — local, container, VM, or Kubernetes — separating workload classes that have different security or capacity needs, defining infrastructure defaults centrally, overriding resources only when a specific deployment requires it, restricting access to sensitive pools, and measuring queue time and worker utilization to know whether the pool is sized correctly. Controlling worker concurrency means matching the worker type to CPU, memory, and network demand; limiting concurrency to protect downstream databases and APIs from being overwhelmed; using queues or pools to isolate workload classes from each other; scaling out independent tasks when their dependencies allow it; applying backpressure when downstream systems slow down; and testing scale-up and scale-down behavior under load before relying on it in production.
+**Mechanism** — Controlling worker concurrency means matching the worker type to CPU, memory, and network demand; limiting concurrency to protect downstream databases and APIs from being overwhelmed; using queues or pools to isolate workload classes from each other; scaling out independent tasks when their dependencies allow it; applying backpressure when downstream systems slow down; and testing scale-up and scale-down behavior under load before relying on it in production.
 
 **Worked example** — The running example's ingestion task hits a rate-limited source API, so its work pool is sized to a low concurrency limit that respects that rate limit, kept separate from the pool running the unrelated, high-concurrency aggregation tasks.
 
@@ -350,17 +336,17 @@ This part works through the concrete practices that separate a pipeline that run
 
 ---
 
-### Incident response and disaster recovery
+### Incident response needs named owners
 
-**Intuition** — Incidents and disasters are the same underlying problem at two different scales: something broke, someone has to notice, and someone has to fix it — disaster recovery is just incident response for the case where the fix requires restoring from a backup.
+**Intuition** — An incident with no named owner at each stage is how a five-minute problem becomes a five-hour one — everyone assumes someone else is handling it.
 
-**Mechanism** — Incident response needs named owners at every stage: **Detect** the issue through an actionable alert, **Triage** its impact, urgency, and affected consumers, **Contain** the problem by pausing or isolating bad outputs, **Recover** through a rerun, rollback, or controlled backfill, **Communicate** status and expected resolution to affected consumers, and complete a **blameless review** afterward to track improvements. Disaster recovery extends this to catastrophic failure: define a recovery time objective and a recovery point objective, back up code, configuration, metadata, and critical data, keep restoration procedures documented and automated (not tribal knowledge), test recovery in an isolated environment rather than assuming it works, verify credentials, network access, and dependencies as part of that test, and record lessons to close recovery gaps after every exercise.
+**Mechanism** — Incident response needs named owners at every stage: **Detect** the issue through an actionable alert, **Triage** its impact, urgency, and affected consumers, **Contain** the problem by pausing or isolating bad outputs, **Recover** through a rerun, rollback, or controlled backfill, **Communicate** status and expected resolution to affected consumers, and complete a **blameless review** afterward to track improvements.
 
 **Worked example** — When a bad source column silently corrupts a day of the running example's output, the on-call engineer detects it via an alert, triages it as affecting only the reporting model (not other consumers), contains it by pausing the downstream report, recovers by backfilling that one day's partition, communicates the fix to stakeholders, and a blameless review afterward adds a validity check that would have caught the bad column earlier.
 
-**Tradeoff / when NOT to use** — Running a full disaster-recovery test — an isolated-environment restore — for every pipeline on a tight cadence is expensive. Recovery time and recovery point objectives, and how often DR is actually tested, should scale with how costly downtime genuinely is for that pipeline's consumers, not be applied uniformly everywhere.
+**Tradeoff / when NOT to use** — Skipping the blameless review once the immediate fix is live is the most common shortcut — it feels done once data is flowing again. But without the review, the same root cause (the missing validity check, here) resurfaces on a different day with a different symptom.
 
-![Incident response as a six-stage loop — detect, triage, contain, recover, communicate, review — alongside a recovery-time and recovery-point objective timeline for disaster recovery](assets/S05-incident-dr.svg)
+![Incident response as a six-stage loop — detect, triage, contain, recover, communicate, review](assets/S05-incident-response.svg)
 
 ---
 
@@ -412,7 +398,7 @@ This part works through the concrete practices that separate a pipeline that run
 
 **Intuition** — Every practice in Part 5 is easy to nod along to individually; the capstone scenario and the production-readiness review are what force you to apply all of them, together, to one pipeline at once — which is the only way to find out which ones you actually skipped.
 
-**Mechanism** — The capstone scenario is exactly the running example used throughout this note: daily customer data feeds a reporting model. Designing it end to end means: define the data contract and quality gates; split the workflow into flows and tasks; choose retries, caching, and backfill behavior; design the CI/CD path, security, production controls, and deployment controls; and present monitoring signals and an incident response plan. The production-readiness review (PRR) is the checklist that confirms all of it is actually in place before — and periodically after — launch: ownership and consumer expectations are documented; code, data contracts, environments, and parameters are versioned; tests cover transformations and integration boundaries; deployment, rollback, and backfill procedures are proven, not just planned; dashboards and actionable alerts are active; and security, cost, retention, and audit requirements are satisfied.
+**Mechanism** — The capstone scenario is exactly the running example used throughout this note: daily customer data feeds a reporting model. Designing it end to end means: define the data contract and quality gates; split the workflow into flows and tasks; choose retries, caching, and backfill behavior; design the CI/CD path, security, and production controls; and present monitoring signals and an incident response plan. The production-readiness review (PRR) is the checklist that confirms all of it is actually in place before — and periodically after — launch: ownership is documented; code, data contracts, environments, and parameters are versioned; tests cover transformations and integration boundaries; deployment, rollback, and backfill procedures are proven, not just planned; dashboards and actionable alerts are active; and security, cost, retention, and audit requirements are satisfied.
 
 **Worked example** — Walking the running example through the PRR: ownership is documented (the data engineer who owns ingestion, the data scientist who owns the model); the contract, the container image, and the flow's configuration are all versioned; unit, contract, and integration tests all pass in CI; a real backfill has been tested on last month's data, not just described; the freshness SLO has a live dashboard and an alert; and the retention policy for customer data has been reviewed against governance requirements. Every checked box here traces back to a named practice earlier in this session.
 

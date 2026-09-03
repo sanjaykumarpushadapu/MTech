@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="260" viewBox="0 0 1040 260" role="img" aria-labelledby="title desc">
+  <title id="title">Cost optimization targets compute, storage, and idle resources</title>
+  <desc id="desc">Pipeline cost is controlled by right-sizing compute, tiering storage by access frequency, and shutting down idle infrastructure rather than leaving it running.</desc>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11.5px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+  </style>
+  <rect class="bg" width="1040" height="260"/>
+  <text class="title" x="40" y="32">Three levers: right-size compute, tier storage, eliminate idle spend</text>
+  <rect class="box" x="40" y="70" width="300" height="100" rx="8"/><text class="head" x="190" y="100" text-anchor="middle">Right-size compute</text><text class="body" x="190" y="122" text-anchor="middle">match instance/worker size</text><text class="body" x="190" y="138" text-anchor="middle">to actual workload</text>
+  <rect class="box" x="370" y="70" width="300" height="100" rx="8"/><text class="head" x="520" y="100" text-anchor="middle">Tier storage</text><text class="body" x="520" y="122" text-anchor="middle">hot / warm / cold by</text><text class="body" x="520" y="138" text-anchor="middle">access frequency</text>
+  <rect class="box" x="700" y="70" width="300" height="100" rx="8"/><text class="head" x="850" y="100" text-anchor="middle">Eliminate idle spend</text><text class="body" x="850" y="122" text-anchor="middle">scale-to-zero workers,</text><text class="body" x="850" y="138" text-anchor="middle">shut down unused environments</text>
+  <text class="body" x="40" y="210">Cost decisions are made without weakening reliability targets already committed to.</text>
+</svg>

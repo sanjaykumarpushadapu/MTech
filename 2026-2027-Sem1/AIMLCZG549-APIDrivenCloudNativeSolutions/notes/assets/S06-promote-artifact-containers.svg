@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="260" viewBox="0 0 1080 260" role="img" aria-labelledby="title desc">
+  <title id="title">The same built artifact is promoted across environments</title>
+  <desc id="desc">A container image is built once, then promoted unchanged from dev to staging to production, rather than rebuilt at each stage.</desc>
+  <defs><marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .img{fill:#f8e3a3;stroke:#a97e17;stroke-width:2} .env{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 11.5px Georgia,serif;fill:#17313d} .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a8)}
+  </style>
+  <rect class="bg" width="1080" height="260"/>
+  <text class="title" x="40" y="32">One immutable image, tagged once, promoted — never rebuilt per environment</text>
+  <rect class="img" x="40" y="90" width="180" height="60" rx="8"/><text class="head" x="130" y="125" text-anchor="middle">Image: app:1.4.2</text>
+  <path class="arrow" d="M220 120 L280 120"/>
+  <rect class="env" x="290" y="90" width="180" height="60" rx="6"/><text class="head" x="380" y="120" text-anchor="middle">Dev</text><text class="body" x="380" y="138" text-anchor="middle">same tag</text>
+  <path class="arrow" d="M470 120 L530 120"/>
+  <rect class="env" x="540" y="90" width="180" height="60" rx="6"/><text class="head" x="630" y="120" text-anchor="middle">Staging</text><text class="body" x="630" y="138" text-anchor="middle">same tag</text>
+  <path class="arrow" d="M720 120 L780 120"/>
+  <rect class="env" x="790" y="90" width="220" height="60" rx="6"/><text class="head" x="900" y="120" text-anchor="middle">Production</text><text class="body" x="900" y="138" text-anchor="middle">same tag</text>
+  <text class="body" x="40" y="200">Only configuration and secrets change per environment — the artifact itself never does.</text>
+</svg>

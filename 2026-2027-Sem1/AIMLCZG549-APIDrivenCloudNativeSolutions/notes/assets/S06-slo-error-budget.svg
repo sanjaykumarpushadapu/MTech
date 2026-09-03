@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="280" viewBox="0 0 1040 280" role="img" aria-labelledby="title desc">
+  <title id="title">An error budget tracks how much unreliability is still allowed</title>
+  <desc id="desc">An SLO defines a target. The gap between the target and perfect reliability is the error budget; consuming it changes priorities toward stability.</desc>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .head{font:700 11.5px Georgia,serif;fill:#17313d} .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+    .track{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .used{fill:#f6d9c9} .left{fill:#cdeadd}
+  </style>
+  <rect class="bg" width="1040" height="280"/>
+  <text class="title" x="40" y="32">Consuming the error budget shifts focus from features to stability</text>
+  <text class="head" x="40" y="70">SLO target: 99.5% successful pipeline runs this quarter</text>
+  <rect class="track" x="40" y="90" width="900" height="50" rx="6"/>
+  <rect class="left" x="43" y="93" width="576" height="44" rx="4"/>
+  <rect class="used" x="622" y="93" width="315" height="44" rx="4"/>
+  <text class="body" x="330" y="122" text-anchor="middle">budget remaining</text>
+  <text class="body" x="780" y="122" text-anchor="middle">budget consumed (0.5% allowed failure)</text>
+  <text class="body" x="40" y="175">While budget remains: ship changes at normal pace.</text>
+  <text class="body" x="40" y="195">When budget is exhausted: pause new releases, prioritize reliability work until the budget resets.</text>
+  <text class="body" x="40" y="225">The SLO is the target; the error budget is what is spent when reality falls short of it.</text>
+</svg>

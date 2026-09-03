@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="280" viewBox="0 0 1000 280" role="img" aria-labelledby="title desc">
+  <title id="title">An idempotent task writes to a temporary location, then publishes atomically</title>
+  <desc id="desc">Deterministic keys and a temporary-location write, followed by atomic publication, make a retried task produce the same result rather than a duplicate.</desc>
+  <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a3)}
+    .temp{fill:#f8e3a3;stroke:#a97e17;stroke-width:2} .pub{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+  </style>
+  <rect class="bg" width="1000" height="280"/>
+  <text class="title" x="40" y="32">Deterministic key + temp write + atomic publish = safe to retry</text>
+  <rect class="box" x="40" y="80" width="200" height="70" rx="8"/><text class="head" x="140" y="110" text-anchor="middle">Task run</text><text class="body" x="140" y="128" text-anchor="middle">deterministic key</text>
+  <path class="arrow" d="M240 115 L292 115"/>
+  <rect class="temp" x="302" y="80" width="220" height="70" rx="8"/><text class="head" x="412" y="110" text-anchor="middle">Temporary location</text><text class="body" x="412" y="128" text-anchor="middle">write here first</text>
+  <path class="arrow" d="M522 115 L574 115"/>
+  <rect class="pub" x="584" y="80" width="220" height="70" rx="8"/><text class="head" x="694" y="110" text-anchor="middle">Atomic publish</text><text class="body" x="694" y="128" text-anchor="middle">swap into place</text>
+  <path class="arrow" d="M804 150 Q900 190 700 210 Q400 230 140 210 Q60 200 60 160" fill="none"/>
+  <text class="body" x="450" y="240" text-anchor="middle">A retry after a crash lands on the same key — never a duplicate</text>
+</svg>

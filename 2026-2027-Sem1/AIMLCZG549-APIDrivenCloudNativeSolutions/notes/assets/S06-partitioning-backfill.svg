@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="260" viewBox="0 0 1080 260" role="img" aria-labelledby="title desc">
+  <title id="title">Partitioning by date, one bad partition backfilled</title>
+  <desc id="desc">Data partitioned by a time or business key. One bad partition is reprocessed, validated, and swapped in, while every other partition stays untouched.</desc>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 19px Georgia,serif;fill:#17313d}
+    .part{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .bad{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2.5}
+    .head{font:700 11px Georgia,serif;fill:#17313d} .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+  </style>
+  <rect class="bg" width="1080" height="260"/>
+  <text class="title" x="40" y="34">Partition by a time key or business key; backfill only the affected range</text>
+  <rect class="part" x="40" y="80" width="140" height="80" rx="6"/><text class="head" x="110" y="115" text-anchor="middle">Day 1</text><text class="body" x="110" y="133" text-anchor="middle">published</text>
+  <rect class="part" x="190" y="80" width="140" height="80" rx="6"/><text class="head" x="260" y="115" text-anchor="middle">Day 2</text><text class="body" x="260" y="133" text-anchor="middle">published</text>
+  <rect class="bad" x="340" y="80" width="140" height="80" rx="6"/><text class="head" x="410" y="115" text-anchor="middle">Day 3</text><text class="body" x="410" y="133" text-anchor="middle">corrupted → backfilled</text>
+  <rect class="part" x="490" y="80" width="140" height="80" rx="6"/><text class="head" x="560" y="115" text-anchor="middle">Day 4</text><text class="body" x="560" y="133" text-anchor="middle">published</text>
+  <rect class="part" x="640" y="80" width="140" height="80" rx="6"/><text class="head" x="710" y="115" text-anchor="middle">Day 5</text><text class="body" x="710" y="133" text-anchor="middle">published</text>
+  <text class="body" x="40" y="200">Only Day 3 is reprocessed, validated, and swapped in — every other day's output is untouched.</text>
+</svg>

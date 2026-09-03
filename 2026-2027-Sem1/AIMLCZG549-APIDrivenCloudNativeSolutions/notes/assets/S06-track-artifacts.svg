@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="260" viewBox="0 0 1040 260" role="img" aria-labelledby="title desc">
+  <title id="title">Run artifacts are tracked and linked back to the run that produced them</title>
+  <desc id="desc">Tables, models, and reports produced by a run are recorded as artifacts with a link back to that run, so any output can be traced to its exact origin.</desc>
+  <defs><marker id="a13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11px Georgia,serif;fill:#17313d}
+    .body{font:9px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a13)}
+    .run{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1040" height="260"/>
+  <text class="title" x="40" y="32">Every artifact links back to the exact run that created it</text>
+  <rect class="run" x="60" y="90" width="200" height="70" rx="8"/><text class="head" x="160" y="120" text-anchor="middle">Run #4821</text><text class="body" x="160" y="138" text-anchor="middle">2026-09-03 04:00</text>
+  <path class="arrow" d="M260 110 L330 90"/>
+  <path class="arrow" d="M260 125 L330 130"/>
+  <path class="arrow" d="M260 140 L330 170"/>
+  <rect class="box" x="340" y="60" width="200" height="50" rx="6"/><text class="body" x="440" y="90" text-anchor="middle">Table artifact</text>
+  <rect class="box" x="340" y="115" width="200" height="50" rx="6"/><text class="body" x="440" y="145" text-anchor="middle">Report artifact</text>
+  <rect class="box" x="340" y="170" width="200" height="50" rx="6"/><text class="body" x="440" y="200" text-anchor="middle">Model artifact</text>
+  <text class="body" x="600" y="130">An analyst or engineer can trace any output back to its parameters, code version, and inputs.</text>
+</svg>

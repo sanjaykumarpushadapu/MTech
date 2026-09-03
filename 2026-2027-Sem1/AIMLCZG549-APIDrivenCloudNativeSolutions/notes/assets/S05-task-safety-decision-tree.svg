@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="560" viewBox="0 0 1160 560" role="img" aria-labelledby="title desc">
-  <title id="title">Failure-type decision tree, and a task built for safe recovery</title>
-  <desc id="desc">Five failure types route to retry with backoff or escalate: transient and capacity failures are retried; data quality, code defect, and dependency failures are escalated. A safely designed task combines retries, caching, timeouts, and idempotent writes.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="400" viewBox="0 0 1160 400" role="img" aria-labelledby="title desc">
+  <title id="title">Failure-type decision tree</title>
+  <desc id="desc">Five failure types route to retry with backoff or escalate: transient and capacity failures are retried; data quality, code defect, and dependency failures are escalated.</desc>
   <defs>
     <marker id="arrF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
   </defs>
@@ -13,9 +13,8 @@
     .retry{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
     .esc{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
     .arrow{stroke:#24465a;stroke-width:1.6;fill:none;marker-end:url(#arrF)}
-    .anat{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:1.5}
   </style>
-  <rect class="bg" width="1160" height="560"/>
+  <rect class="bg" width="1160" height="400"/>
   <text class="title" x="40" y="34">Route by why the task failed, not by treating every failure the same</text>
 
   <rect class="fail" x="40" y="70" width="180" height="60" rx="8"/><text class="head" x="130" y="95" text-anchor="middle">Transient</text><text class="body" x="130" y="113" text-anchor="middle">network, rate limit</text>
@@ -32,10 +31,4 @@
   <path class="arrow" d="M530 130 Q680 190 650 320"/>
   <path class="arrow" d="M930 130 Q930 170 700 320"/>
   <rect class="esc" x="220" y="325" width="480" height="55" rx="8"/><text class="head" x="460" y="350" text-anchor="middle">Escalate to owner — do not retry blindly</text><text class="body" x="460" y="368" text-anchor="middle">capture final error with run context</text>
-
-  <text class="title" x="40" y="430">A task built for safe recovery</text>
-  <rect class="anat" x="40" y="450" width="250" height="60" rx="8"/><text class="head" x="165" y="475" text-anchor="middle">Retry</text><text class="body" x="165" y="493" text-anchor="middle">exponential backoff</text>
-  <rect class="anat" x="310" y="450" width="250" height="60" rx="8"/><text class="head" x="435" y="475" text-anchor="middle">Cache</text><text class="body" x="435" y="493" text-anchor="middle">keyed on code + params + inputs</text>
-  <rect class="anat" x="580" y="450" width="250" height="60" rx="8"/><text class="head" x="705" y="475" text-anchor="middle">Timeout</text><text class="body" x="705" y="493" text-anchor="middle">stalled work cannot run forever</text>
-  <rect class="anat" x="850" y="450" width="270" height="60" rx="8"/><text class="head" x="985" y="475" text-anchor="middle">Idempotent write</text><text class="body" x="985" y="493" text-anchor="middle">temp location, atomic publish</text>
 </svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="280" viewBox="0 0 1040 280" role="img" aria-labelledby="title desc">
+  <title id="title">RTO and RPO bound how long recovery takes and how much data can be lost</title>
+  <desc id="desc">Recovery time objective bounds downtime; recovery point objective bounds data loss. Disaster recovery plans are tested by restoring backups in an isolated environment.</desc>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e} .rto{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+    .rpo{fill:#f8e3a3;stroke:#a97e17;stroke-width:2} .axis{stroke:#8a7a52;stroke-width:1.5}
+    .fail{fill:#c96a3c}
+  </style>
+  <rect class="bg" width="1040" height="280"/>
+  <text class="title" x="40" y="32">RPO bounds data lost since the last good backup; RTO bounds time to restore service</text>
+  <line class="axis" x1="60" y1="150" x2="960" y2="150"/>
+  <circle class="fail" cx="500" cy="150" r="6"/><text class="body" x="500" y="175" text-anchor="middle">failure occurs</text>
+  <rect class="rpo" x="300" y="90" width="200" height="40" rx="6"/><text class="head" x="400" y="115" text-anchor="middle">RPO window</text>
+  <text class="body" x="400" y="80">data since last backup — at risk</text>
+  <rect class="rto" x="500" y="190" width="260" height="40" rx="6"/><text class="head" x="630" y="215" text-anchor="middle">RTO window</text>
+  <text class="body" x="630" y="250">time to restore service after failure</text>
+  <text class="body" x="40" y="30" opacity="0"> </text>
+  <text class="body" x="60" y="260">Plans are only trusted once tested — by restoring backups in an isolated environment, not assumed to work.</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="260" viewBox="0 0 1040 260" role="img" aria-labelledby="title desc">
+  <title id="title">An event trigger starts a run and passes parameters into it</title>
+  <desc id="desc">An external event matches a trigger condition, which starts a deployment run and passes event fields in as run parameters, rather than a fixed schedule.</desc>
+  <defs><marker id="a9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11.5px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a9)}
+    .evt{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2} .run{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+  </style>
+  <rect class="bg" width="1040" height="260"/>
+  <text class="title" x="40" y="32">Event matches trigger condition → run starts with event fields as parameters</text>
+  <rect class="evt" x="40" y="80" width="220" height="70" rx="8"/><text class="head" x="150" y="110" text-anchor="middle">External event</text><text class="body" x="150" y="128" text-anchor="middle">e.g. file arrives in bucket</text>
+  <path class="arrow" d="M260 115 L330 115"/>
+  <rect class="box" x="340" y="80" width="220" height="70" rx="8"/><text class="head" x="450" y="110" text-anchor="middle">Trigger condition</text><text class="body" x="450" y="128" text-anchor="middle">matches event pattern</text>
+  <path class="arrow" d="M560 115 L630 115"/>
+  <rect class="run" x="640" y="80" width="260" height="70" rx="8"/><text class="head" x="770" y="105" text-anchor="middle">Deployment run starts</text><text class="body" x="770" y="123" text-anchor="middle">event fields passed in</text><text class="body" x="770" y="139" text-anchor="middle">as run parameters</text>
+  <text class="body" x="40" y="200">Event-driven runs react immediately, instead of waiting for the next scheduled interval.</text>
+</svg>

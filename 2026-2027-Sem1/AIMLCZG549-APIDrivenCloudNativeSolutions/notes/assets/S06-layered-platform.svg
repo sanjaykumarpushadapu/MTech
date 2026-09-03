@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="480" viewBox="0 0 1120 480" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="360" viewBox="0 0 1120 360" role="img" aria-labelledby="title desc">
   <title id="title">The data platform, layered</title>
   <desc id="desc">Sources generate files, events, database changes, and API responses. Ingestion captures data reliably. Storage separates raw, validated, and curated zones. Transformation applies business logic. Serving exposes trusted datasets. Orchestration connects and observes every layer.</desc>
   <defs>
@@ -15,7 +15,7 @@
     .orchtext{font:700 12px Georgia,serif;fill:#9c3f6f}
     .zone{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:1.2}
   </style>
-  <rect class="bg" width="1120" height="480"/>
+  <rect class="bg" width="1120" height="360"/>
   <text class="title" x="40" y="34">Six layers, connected and observed by orchestration</text>
 
   <rect class="layer" x="40" y="180" width="150" height="90" rx="8"/><text class="head" x="115" y="210" text-anchor="middle">Sources</text><text class="body" x="115" y="228" text-anchor="middle">files, events, DB</text><text class="body" x="115" y="244" text-anchor="middle">changes, API responses</text>
@@ -35,6 +35,6 @@
   <path class="arrow" d="M826 225 L868 225"/>
   <rect class="layer" x="878" y="180" width="200" height="90" rx="8"/><text class="head" x="978" y="210" text-anchor="middle">Serving</text><text class="body" x="978" y="228" text-anchor="middle">trusted datasets,</text><text class="body" x="978" y="244" text-anchor="middle">features, or APIs</text>
 
-  <rect class="orch" x="30" y="330" width="1058" height="60" rx="10"/>
-  <text class="orchtext" x="550" y="365" text-anchor="middle">Orchestration connects every layer and observes every run</text>
+  <rect class="orch" x="30" y="60" width="1058" height="60" rx="10"/>
+  <text class="orchtext" x="550" y="95" text-anchor="middle">Orchestration connects every layer and observes every run</text>
 </svg>

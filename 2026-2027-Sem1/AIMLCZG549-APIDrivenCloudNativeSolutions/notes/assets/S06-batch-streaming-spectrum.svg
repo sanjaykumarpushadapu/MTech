@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="260" viewBox="0 0 1000 260" role="img" aria-labelledby="title desc">
+  <title id="title">Batch, micro-batching, and streaming as a latency spectrum</title>
+  <desc id="desc">Batch fits periodic reports and large scans. Micro-batching is a practical middle ground. Streaming fits low-latency, continuous events but adds state, ordering, and replay complexity.</desc>
+  <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 19px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 13px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e} .axis{stroke:#8a7a52;stroke-width:2;fill:none;marker-end:url(#a1)}
+  </style>
+  <rect class="bg" width="1000" height="260"/>
+  <text class="title" x="40" y="34">Latency requirement drives the choice, not novelty</text>
+  <path class="axis" d="M60 190 L940 190"/>
+  <text class="body" x="60" y="215">high latency, simple</text><text class="body" x="820" y="215" text-anchor="end">low latency, complex</text>
+  <rect class="box" x="60" y="90" width="260" height="80" rx="8"/><text class="head" x="190" y="120" text-anchor="middle">Batch</text><text class="body" x="190" y="140" text-anchor="middle">periodic reports,</text><text class="body" x="190" y="155" text-anchor="middle">large scans</text>
+  <rect class="box" x="370" y="90" width="260" height="80" rx="8"/><text class="head" x="500" y="120" text-anchor="middle">Micro-batching</text><text class="body" x="500" y="140" text-anchor="middle">practical middle</text><text class="body" x="500" y="155" text-anchor="middle">ground</text>
+  <rect class="box" x="680" y="90" width="260" height="80" rx="8"/><text class="head" x="810" y="120" text-anchor="middle">Streaming</text><text class="body" x="810" y="140" text-anchor="middle">low-latency, continuous —</text><text class="body" x="810" y="155" text-anchor="middle">adds state, order, replay</text>
+</svg>

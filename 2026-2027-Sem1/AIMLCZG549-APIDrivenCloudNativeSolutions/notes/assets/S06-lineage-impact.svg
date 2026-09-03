@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="280" viewBox="0 0 1080 280" role="img" aria-labelledby="title desc">
+  <title id="title">Lineage lets a break trace forward to every downstream consumer</title>
+  <desc id="desc">A lineage graph connects upstream sources through transformations to downstream dashboards and models, so an incident can be traced to its full blast radius immediately.</desc>
+  <defs><marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .node{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 10.5px Georgia,serif;fill:#17313d}
+    .body{font:9px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a7)}
+    .bad{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2.5} .hit{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1080" height="280"/>
+  <text class="title" x="40" y="32">A broken table's downstream footprint is visible immediately, not discovered later</text>
+  <rect class="bad" x="40" y="90" width="150" height="60" rx="6"/><text class="head" x="115" y="115" text-anchor="middle">Source table</text><text class="body" x="115" y="133" text-anchor="middle">breaks</text>
+  <path class="arrow" d="M190 120 L250 120"/>
+  <rect class="node" x="260" y="90" width="150" height="60" rx="6"/><text class="head" x="335" y="115" text-anchor="middle">Transform A</text><text class="body" x="335" y="133" text-anchor="middle">joins &amp; aggregates</text>
+  <path class="arrow" d="M410 120 L470 120"/>
+  <rect class="node" x="480" y="90" width="150" height="60" rx="6"/><text class="head" x="555" y="115" text-anchor="middle">Transform B</text><text class="body" x="555" y="133" text-anchor="middle">features table</text>
+  <path class="arrow" d="M630 105 L700 65"/>
+  <path class="arrow" d="M630 135 L700 175"/>
+  <rect class="hit" x="710" y="35" width="180" height="60" rx="6"/><text class="head" x="800" y="60" text-anchor="middle">Dashboard</text><text class="body" x="800" y="78" text-anchor="middle">shows wrong numbers</text>
+  <rect class="hit" x="710" y="145" width="180" height="60" rx="6"/><text class="head" x="800" y="170" text-anchor="middle">Downstream model</text><text class="body" x="800" y="188" text-anchor="middle">trained on bad features</text>
+  <text class="body" x="40" y="230">Lineage answers "what breaks if this changes" before the change ships, and "what is affected" the moment it does.</text>
+</svg>

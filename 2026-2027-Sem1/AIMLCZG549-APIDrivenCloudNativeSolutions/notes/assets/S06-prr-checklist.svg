@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="300" viewBox="0 0 1040 300" role="img" aria-labelledby="title desc">
+  <title id="title">A production readiness review checks five dimensions before go-live</title>
+  <desc id="desc">A production readiness review checks reliability, observability, security, cost, and operational ownership before a pipeline is approved to go live.</desc>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .item{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11px Georgia,serif;fill:#17313d}
+    .body{font:9px Georgia,serif;fill:#5a4a1e} .check{fill:#2f7d68;font:700 16px Georgia,serif}
+  </style>
+  <rect class="bg" width="1040" height="300"/>
+  <text class="title" x="40" y="32">Five checks, all required, before a pipeline is approved to go live</text>
+  <rect class="item" x="40" y="60" width="460" height="50" rx="6"/><text class="check" x="55" y="92">✓</text><text class="head" x="80" y="90">Reliability — SLOs defined, retries and idempotency verified</text>
+  <rect class="item" x="40" y="120" width="460" height="50" rx="6"/><text class="check" x="55" y="152">✓</text><text class="head" x="80" y="150">Observability — dashboards, alerts, lineage wired up</text>
+  <rect class="item" x="40" y="180" width="460" height="50" rx="6"/><text class="check" x="55" y="212">✓</text><text class="head" x="80" y="210">Security — secrets and identity reviewed, least privilege</text>
+  <rect class="item" x="540" y="60" width="460" height="50" rx="6"/><text class="check" x="555" y="92">✓</text><text class="head" x="580" y="90">Cost — right-sized, tiered storage, no idle spend</text>
+  <rect class="item" x="540" y="120" width="460" height="50" rx="6"/><text class="check" x="555" y="152">✓</text><text class="head" x="580" y="150">Operational ownership — named owner, on-call, runbook</text>
+  <text class="body" x="540" y="200">A gap in any one dimension holds the release until it is closed.</text>
+</svg>

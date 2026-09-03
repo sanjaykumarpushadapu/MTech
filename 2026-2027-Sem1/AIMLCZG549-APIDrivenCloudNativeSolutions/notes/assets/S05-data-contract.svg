@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="240" viewBox="0 0 1160 240" role="img" aria-labelledby="title desc">
+  <title id="title">A data contract between producer and consumers</title>
+  <desc id="desc">A producer and every critical consumer share a versioned data contract defining fields, types, constraints, and semantic meaning, validated at ingestion and before publication.</desc>
+  <defs>
+    <marker id="arrCo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .contract{fill:#f8e3a3;stroke:#a97e17;stroke-width:2}
+    .head{font:700 12.5px Georgia,serif;fill:#17313d}
+    .body{font:10.5px Georgia,serif;fill:#5a4a1e}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrCo)}
+  </style>
+  <rect class="bg" width="1160" height="240"/>
+  <text class="title" x="40" y="34">A contract sits between producer and every critical consumer</text>
+
+  <rect class="box" x="40" y="70" width="200" height="80" rx="8"/><text class="head" x="140" y="105" text-anchor="middle">Producer</text><text class="body" x="140" y="123" text-anchor="middle">owns the source data</text>
+
+  <path class="arrow" d="M240 110 L282 110"/>
+  <rect class="contract" x="292" y="60" width="280" height="100" rx="8"/>
+  <text class="head" x="432" y="84" text-anchor="middle">Data Contract</text>
+  <text class="body" x="432" y="102" text-anchor="middle">fields, types, constraints,</text>
+  <text class="body" x="432" y="118" text-anchor="middle">semantic meaning, version</text>
+  <text class="body" x="432" y="136" text-anchor="middle">validated at ingestion &amp; publish</text>
+
+  <path class="arrow" d="M572 90 L614 90"/>
+  <rect class="box" x="624" y="60" width="220" height="60" rx="8"/><text class="head" x="734" y="94" text-anchor="middle">Consumer — reporting model</text>
+  <path class="arrow" d="M572 130 L614 155"/>
+  <rect class="box" x="624" y="135" width="220" height="60" rx="8"/><text class="head" x="734" y="169" text-anchor="middle">Consumer — dashboard</text>
+
+  <text class="body" x="40" y="220">A breaking change is treated like an API change: alert both sides, and version the contract.</text>
+</svg>

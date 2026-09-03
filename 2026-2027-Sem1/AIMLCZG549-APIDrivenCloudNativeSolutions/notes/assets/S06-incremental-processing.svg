@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="300" viewBox="0 0 1080 300" role="img" aria-labelledby="title desc">
+  <title id="title">Incremental processing with a watermark</title>
+  <desc id="desc">A watermark advances only after successful publication. Late-arriving records are handled explicitly, merged by stable keys, rather than dropped.</desc>
+  <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 19px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a2)}
+    .wm{fill:#cdeadd;stroke:#2f7d68;stroke-width:2} .late{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1080" height="300"/>
+  <text class="title" x="40" y="34">The watermark only advances after the merge is confirmed published</text>
+  <rect class="wm" x="60" y="80" width="200" height="60" rx="8"/><text class="head" x="160" y="115" text-anchor="middle">Watermark: Day N</text>
+  <path class="arrow" d="M260 110 L320 110"/>
+  <rect class="box" x="330" y="70" width="260" height="80" rx="8"/><text class="head" x="460" y="100" text-anchor="middle">Read changed rows</text><text class="body" x="460" y="120" text-anchor="middle">since watermark, by stable key</text>
+  <path class="arrow" d="M590 110 L650 110"/>
+  <rect class="box" x="660" y="70" width="220" height="80" rx="8"/><text class="head" x="770" y="100" text-anchor="middle">Merge &amp; publish</text><text class="body" x="770" y="120" text-anchor="middle">checkpoint only after success</text>
+  <path class="arrow" d="M770 150 Q770 190 460 190 L260 190" />
+  <text class="body" x="500" y="210" text-anchor="middle">watermark advances to Day N+1 only now</text>
+  <rect class="late" x="330" y="220" width="260" height="55" rx="8"/><text class="head" x="460" y="245" text-anchor="middle">Late-arriving record</text><text class="body" x="460" y="263" text-anchor="middle">handled explicitly, not dropped</text>
+</svg>

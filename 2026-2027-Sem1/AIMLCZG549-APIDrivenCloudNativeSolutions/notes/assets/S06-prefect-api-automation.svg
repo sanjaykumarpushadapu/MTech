@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="260" viewBox="0 0 1040 260" role="img" aria-labelledby="title desc">
+  <title id="title">Automations act on API events without a human in the loop</title>
+  <desc id="desc">The orchestration API emits events; an automation rule matches them and fires an action, such as a notification or a follow-on run, automatically.</desc>
+  <defs><marker id="a11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11.5px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a11)}
+    .evt{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2} .act{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+  </style>
+  <rect class="bg" width="1040" height="260"/>
+  <text class="title" x="40" y="32">API event → automation rule → action, with no manual step</text>
+  <rect class="evt" x="60" y="80" width="220" height="70" rx="8"/><text class="head" x="170" y="110" text-anchor="middle">API event</text><text class="body" x="170" y="128" text-anchor="middle">e.g. flow run fails</text>
+  <path class="arrow" d="M280 115 L350 115"/>
+  <rect class="box" x="360" y="80" width="240" height="70" rx="8"/><text class="head" x="480" y="110" text-anchor="middle">Automation rule</text><text class="body" x="480" y="128" text-anchor="middle">matches the event</text>
+  <path class="arrow" d="M600 115 L670 115"/>
+  <rect class="act" x="680" y="80" width="260" height="70" rx="8"/><text class="head" x="810" y="105" text-anchor="middle">Action fires</text><text class="body" x="810" y="123" text-anchor="middle">notify, retry, or trigger</text><text class="body" x="810" y="139" text-anchor="middle">a follow-on deployment</text>
+  <text class="body" x="40" y="200">The pipeline reacts to its own state changes programmatically, through the same API it is orchestrated with.</text>
+</svg>

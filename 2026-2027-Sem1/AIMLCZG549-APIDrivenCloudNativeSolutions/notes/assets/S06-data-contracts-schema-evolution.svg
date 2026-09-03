@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="480" viewBox="0 0 1160 480" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="420" viewBox="0 0 1160 420" role="img" aria-labelledby="title desc">
   <title id="title">Data contracts and schema evolution</title>
   <desc id="desc">A producer and every critical consumer share a versioned data contract defining fields, types, constraints, and semantic meaning. Schema evolution over time: add an optional field, deprecate it, then remove it once every consumer has migrated.</desc>
   <defs>
@@ -14,7 +14,7 @@
     .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrCo)}
     .tl{fill:#cdeadd;stroke:#2f7d68;stroke-width:1.5}
   </style>
-  <rect class="bg" width="1160" height="480"/>
+  <rect class="bg" width="1160" height="420"/>
   <text class="title" x="40" y="34">A contract sits between producer and every critical consumer</text>
 
   <rect class="box" x="40" y="70" width="200" height="80" rx="8"/><text class="head" x="140" y="105" text-anchor="middle">Producer</text><text class="body" x="140" y="123" text-anchor="middle">owns the source data</text>
@@ -23,7 +23,7 @@
   <rect class="contract" x="292" y="60" width="280" height="100" rx="8"/>
   <text class="head" x="432" y="84" text-anchor="middle">Data Contract</text>
   <text class="body" x="432" y="102" text-anchor="middle">fields, types, constraints,</text>
-  <text class="body" x="432" y="118" text-anchor="middle">semantic meaning, version</text>
+  <text class="body" x="432" y="118" text-anchor="middle">freshness, semantic meaning</text>
   <text class="body" x="432" y="136" text-anchor="middle">validated at ingestion &amp; publish</text>
 
   <path class="arrow" d="M572 90 L614 90"/>
@@ -41,4 +41,5 @@
   <rect class="tl" x="644" y="290" width="240" height="60" rx="8"/><text class="head" x="764" y="315" text-anchor="middle">Deprecate field</text><text class="body" x="764" y="333" text-anchor="middle">warn, do not remove yet</text>
   <path class="arrow" d="M884 320 L926 320"/>
   <rect class="tl" x="936" y="290" width="180" height="60" rx="8"/><text class="head" x="1026" y="315" text-anchor="middle">v3 — remove</text><text class="body" x="1026" y="333" text-anchor="middle">once all consumers migrated</text>
+  <text class="body" x="40" y="390">Reader and writer compatibility rules are tested at every version, past and future.</text>
 </svg>

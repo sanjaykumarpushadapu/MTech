@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="280" viewBox="0 0 1080 280" role="img" aria-labelledby="title desc">
+  <title id="title">Observability spans data quality and operational health</title>
+  <desc id="desc">Data-quality metrics and operational metrics are collected side by side, feeding one set of dashboards and alerts rather than two separate views.</desc>
+  <defs><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11.5px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e} .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#a6)}
+    .dq{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2} .op{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .out{fill:#f8e3a3;stroke:#a97e17;stroke-width:2}
+  </style>
+  <rect class="bg" width="1080" height="280"/>
+  <text class="title" x="40" y="32">Data-quality and operational metrics feed one shared view</text>
+  <rect class="dq" x="60" y="70" width="260" height="90" rx="8"/><text class="head" x="190" y="100" text-anchor="middle">Data-quality metrics</text><text class="body" x="190" y="120" text-anchor="middle">freshness, volume, schema,</text><text class="body" x="190" y="136" text-anchor="middle">null rates, distribution drift</text>
+  <rect class="op" x="60" y="180" width="260" height="80" rx="8"/><text class="head" x="190" y="210" text-anchor="middle">Operational metrics</text><text class="body" x="190" y="230" text-anchor="middle">run duration, success rate,</text><text class="body" x="190" y="246" text-anchor="middle">queue depth, resource use</text>
+  <path class="arrow" d="M320 115 L400 150"/>
+  <path class="arrow" d="M320 220 L400 165"/>
+  <rect class="out" x="410" y="120" width="240" height="70" rx="8"/><text class="head" x="530" y="150" text-anchor="middle">Shared dashboards</text><text class="body" x="530" y="168" text-anchor="middle">and alert rules</text>
+  <path class="arrow" d="M650 155 L720 155"/>
+  <rect class="box" x="730" y="120" width="300" height="70" rx="8"/><text class="head" x="880" y="150" text-anchor="middle">One picture of pipeline health</text><text class="body" x="880" y="168" text-anchor="middle">quality and ops seen together, not separately</text>
+</svg>

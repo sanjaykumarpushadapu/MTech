@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="280" viewBox="0 0 1040 280" role="img" aria-labelledby="title desc">
+  <title id="title">Exponential backoff across five retries, then escalation</title>
+  <desc id="desc">Each retry waits longer than the last, up to a maximum retry count, then the task escalates with the final error and run context.</desc>
+  <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker></defs>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .bar{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:1.5} .head{font:700 11px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e} .esc{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+    .axis{stroke:#8a7a52;stroke-width:1.5}
+  </style>
+  <rect class="bg" width="1040" height="280"/>
+  <text class="title" x="40" y="32">Each wait doubles; after the retry budget, escalate — do not loop forever</text>
+  <line class="axis" x1="60" y1="200" x2="960" y2="200"/>
+  <rect class="bar" x="70" y="180" width="40" height="20"/><text class="body" x="90" y="215" text-anchor="middle">1s</text>
+  <rect class="bar" x="150" y="160" width="40" height="40"/><text class="body" x="170" y="215" text-anchor="middle">2s</text>
+  <rect class="bar" x="230" y="130" width="40" height="70"/><text class="body" x="250" y="215" text-anchor="middle">4s</text>
+  <rect class="bar" x="310" y="90" width="40" height="110"/><text class="body" x="330" y="215" text-anchor="middle">8s</text>
+  <rect class="bar" x="390" y="40" width="40" height="160"/><text class="body" x="410" y="215" text-anchor="middle">16s</text>
+  <text class="head" x="250" y="60" text-anchor="middle">retry 1 → 2 → 3 → 4 → 5, each backoff doubles</text>
+  <path d="M470 120 L560 120" stroke="#24465a" stroke-width="2" marker-end="url(#a4)"/>
+  <rect class="esc" x="570" y="80" width="400" height="80" rx="8"/>
+  <text class="head" x="770" y="110" text-anchor="middle">Retry budget exhausted → escalate</text>
+  <text class="body" x="770" y="130" text-anchor="middle">final error + run context sent to owner</text>
+  <text class="body" x="770" y="146" text-anchor="middle">no further automatic retries</text>
+</svg>

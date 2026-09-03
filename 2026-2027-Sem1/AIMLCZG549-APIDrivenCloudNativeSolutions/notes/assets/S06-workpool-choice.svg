@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="280" viewBox="0 0 1000 280" role="img" aria-labelledby="title desc">
+  <title id="title">Work pool choice follows the execution target</title>
+  <desc id="desc">A work pool is selected by matching its infrastructure type to where a deployment must run — local process, Docker, or Kubernetes — not chosen arbitrarily.</desc>
+  <style>
+    .bg{fill:#f8f4ea} .title{font:700 18px Georgia,serif;fill:#17313d}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2} .head{font:700 11.5px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e} .pool{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1000" height="280"/>
+  <text class="title" x="40" y="32">Pick the work pool whose infrastructure matches where the work runs</text>
+  <rect class="pool" x="40" y="80" width="280" height="90" rx="8"/><text class="head" x="180" y="112" text-anchor="middle">Process pool</text><text class="body" x="180" y="132" text-anchor="middle">local / VM execution</text><text class="body" x="180" y="148" text-anchor="middle">low overhead, no isolation</text>
+  <rect class="pool" x="360" y="80" width="280" height="90" rx="8"/><text class="head" x="500" y="112" text-anchor="middle">Docker pool</text><text class="body" x="500" y="132" text-anchor="middle">containerized execution</text><text class="body" x="500" y="148" text-anchor="middle">isolated, portable</text>
+  <rect class="pool" x="680" y="80" width="280" height="90" rx="8"/><text class="head" x="820" y="112" text-anchor="middle">Kubernetes pool</text><text class="body" x="820" y="132" text-anchor="middle">cluster execution</text><text class="body" x="820" y="148" text-anchor="middle">scalable, autoscaling workers</text>
+  <text class="body" x="40" y="220">Concurrency limits on the pool cap how many flow runs execute at once, protecting shared downstream resources.</text>
+</svg>
