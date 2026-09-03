@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="420" viewBox="0 0 1160 420" role="img" aria-labelledby="title desc">
+  <title id="title">Five quality gates for data pipelines</title>
+  <desc id="desc">Schema, completeness, validity, uniqueness, and reconciliation checks run in sequence before publication. Anything that fails a gate is quarantined and its owner notified, following a fail-fast release rule.</desc>
+  <defs>
+    <marker id="arrQ" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 20px Georgia,serif;fill:#17313d}
+    .gate{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+    .head{font:700 13px Georgia,serif;fill:#17313d}
+    .body{font:10.5px Georgia,serif;fill:#17313d}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrQ)}
+    .pass{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .fail{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1160" height="420"/>
+  <text class="title" x="40" y="36">Five gates run in sequence; anything that fails is quarantined, not published</text>
+
+  <rect class="gate" x="40" y="80" width="190" height="80" rx="8"/><text class="head" x="135" y="112" text-anchor="middle">Schema</text><text class="body" x="135" y="130" text-anchor="middle">fields, types, values</text>
+
+  <path class="arrow" d="M230 120 L262 120"/>
+  <rect class="gate" x="272" y="80" width="190" height="80" rx="8"/><text class="head" x="367" y="112" text-anchor="middle">Completeness</text><text class="body" x="367" y="130" text-anchor="middle">missing records, nulls</text>
+
+  <path class="arrow" d="M462 120 L494 120"/>
+  <rect class="gate" x="504" y="80" width="190" height="80" rx="8"/><text class="head" x="599" y="112" text-anchor="middle">Validity</text><text class="body" x="599" y="130" text-anchor="middle">ranges, formats, rules</text>
+
+  <path class="arrow" d="M694 120 L726 120"/>
+  <rect class="gate" x="736" y="80" width="190" height="80" rx="8"/><text class="head" x="831" y="112" text-anchor="middle">Uniqueness</text><text class="body" x="831" y="130" text-anchor="middle">duplicate keys, events</text>
+
+  <path class="arrow" d="M926 120 L958 120"/>
+  <rect class="gate" x="968" y="80" width="150" height="80" rx="8"/><text class="head" x="1043" y="112" text-anchor="middle">Reconciliation</text><text class="body" x="1043" y="130" text-anchor="middle">source-to-target totals</text>
+
+  <path class="arrow" d="M1043 160 L1043 200 L 600 200 L600 240"/>
+  <rect class="pass" x="470" y="250" width="260" height="60" rx="8"/>
+  <text class="head" x="600" y="286" text-anchor="middle">All gates pass → publish</text>
+
+  <path class="arrow" d="M900 160 L900 340"/>
+  <rect class="fail" x="770" y="340" width="280" height="60" rx="8"/>
+  <text class="head" x="910" y="366" text-anchor="middle">Any gate fails → fail fast,</text>
+  <text class="head" x="910" y="384" text-anchor="middle">quarantine, notify owner</text>
+</svg>

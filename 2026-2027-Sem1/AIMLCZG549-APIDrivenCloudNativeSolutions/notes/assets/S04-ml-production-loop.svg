@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="640" viewBox="0 0 1160 640" role="img" aria-labelledby="title desc">
+  <title id="title">One-time forecast versus a production ML feedback loop</title>
+  <desc id="desc">Left: a one-time forecast where a data scientist runs an ML model once for a static chart. Right: a production loop where client data and ground-truth data feed an ML model, whose predictions are monitored and fed back to retrain the model, owned by an ML engineer.</desc>
+  <defs>
+    <marker id="arrH" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 24px Georgia,serif;fill:#17313d}
+    .panel{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 19px Georgia,serif;fill:#17313d}
+    .box{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+    .role{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+    .db{fill:#24465a}
+    .body{font:14px Georgia,serif;fill:#24465a}
+    .white{font:700 13.5px Georgia,serif;fill:#fffdf7}
+    .arrow{stroke:#24465a;stroke-width:2.5;fill:none;marker-end:url(#arrH)}
+  </style>
+  <rect class="bg" width="1160" height="640"/>
+  <text class="title" x="56" y="42">A one-off ML report vs. a model that stays in production</text>
+
+  <rect class="panel" x="40" y="80" width="430" height="500" rx="16"/>
+  <text class="head" x="255" y="120" text-anchor="middle">One-time forecast</text>
+  <circle class="role" cx="150" cy="220" r="55"/>
+  <text class="body" x="150" y="225" text-anchor="middle">Data</text>
+  <text class="body" x="150" y="243" text-anchor="middle">scientist</text>
+  <path class="arrow" d="M210 220 L300 220"/>
+  <rect class="box" x="305" y="190" width="120" height="60" rx="10"/>
+  <text class="body" x="365" y="225" text-anchor="middle">ML model</text>
+  <path class="arrow" d="M255 275 L255 340"/>
+  <rect class="db" x="180" y="345" width="150" height="70" rx="10"/>
+  <text class="white" x="255" y="376" text-anchor="middle">One-time</text>
+  <text class="white" x="255" y="396" text-anchor="middle">forecast (Q1-Q6)</text>
+  <text class="body" x="255" y="470" text-anchor="middle">Runs once, answers</text>
+  <text class="body" x="255" y="490" text-anchor="middle">one question, then stops.</text>
+  <text class="body" x="255" y="510" text-anchor="middle">No monitoring loop.</text>
+
+  <rect class="panel" x="500" y="80" width="620" height="500" rx="16"/>
+  <text class="head" x="810" y="120" text-anchor="middle">Production loop</text>
+
+  <rect class="db" x="530" y="160" width="140" height="55" rx="10"/>
+  <text class="white" x="600" y="192" text-anchor="middle">Client data</text>
+  <rect class="db" x="530" y="380" width="140" height="55" rx="10"/>
+  <text class="white" x="600" y="412" text-anchor="middle">Additional data</text>
+
+  <circle class="role" cx="640" cy="300" r="60"/>
+  <text class="body" x="640" y="298" text-anchor="middle">ML</text>
+  <text class="body" x="640" y="317" text-anchor="middle">engineer</text>
+
+  <rect class="box" x="760" y="270" width="140" height="60" rx="10"/>
+  <text class="body" x="830" y="305" text-anchor="middle">ML model</text>
+
+  <rect class="db" x="960" y="160" width="140" height="55" rx="10"/>
+  <text class="white" x="1030" y="192" text-anchor="middle">Ground-truth data</text>
+  <rect class="db" x="960" y="380" width="140" height="55" rx="10"/>
+  <text class="white" x="1030" y="412" text-anchor="middle">Prediction data</text>
+
+  <rect class="box" x="880" y="470" width="180" height="55" rx="10"/>
+  <text class="body" x="970" y="503" text-anchor="middle">Monitoring &amp; analysis</text>
+
+  <path class="arrow" d="M670 188 L790 275"/>
+  <path class="arrow" d="M670 405 L790 325"/>
+  <path class="arrow" d="M900 290 L960 195"/>
+  <path class="arrow" d="M900 310 L960 400"/>
+  <path class="arrow" d="M1030 435 L1000 470"/>
+  <path class="arrow" d="M880 500 Q700 560 610 340" fill="none"/>
+  <text class="body" x="700" y="580" text-anchor="middle">Predictions feed back into monitoring; drift triggers retraining.</text>
+</svg>

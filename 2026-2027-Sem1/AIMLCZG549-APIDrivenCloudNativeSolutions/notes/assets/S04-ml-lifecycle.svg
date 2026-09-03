@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">The Machine Learning lifecycle</title>
+  <desc id="desc">Six stages in a loop: Planning, Data Preparation, Model Engineering, Model Evaluation, Model Deployment, and Monitoring and Maintenance, which loops back into Planning when drift is detected.</desc>
+  <defs>
+    <marker id="arrM" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 22px Georgia,serif;fill:#17313d}
+    .stage{stroke-width:2}
+    .s1{fill:#cfe6f6;stroke:#1f6f9c}
+    .s2{fill:#cdeadd;stroke:#2f7d68}
+    .s3{fill:#d9d3f2;stroke:#5a4a9c}
+    .s4{fill:#f8e3a3;stroke:#a97e17}
+    .s5{fill:#f6d9c9;stroke:#c96a3c}
+    .s6{fill:#e4c6d8;stroke:#9c3f6f}
+    .head{font:700 15px Georgia,serif;fill:#17313d}
+    .body{font:12px Georgia,serif;fill:#17313d}
+    .arrow{stroke:#24465a;stroke-width:2.5;fill:none;marker-end:url(#arrM)}
+  </style>
+  <rect class="bg" width="1120" height="560"/>
+  <text class="title" x="56" y="40">Six stages in a loop - monitoring decides whether to go back to planning</text>
+
+  <!-- circular arrangement -->
+  <circle class="stage s1" cx="560" cy="140" r="90"/>
+  <text class="head" x="560" y="130" text-anchor="middle">Planning</text>
+  <text class="body" x="560" y="152" text-anchor="middle">scope, success</text>
+  <text class="body" x="560" y="167" text-anchor="middle">metrics, feasibility</text>
+
+  <circle class="stage s2" cx="820" cy="240" r="90"/>
+  <text class="head" x="820" y="225" text-anchor="middle">Data</text>
+  <text class="head" x="820" y="245" text-anchor="middle">Preparation</text>
+  <text class="body" x="820" y="265" text-anchor="middle">collect, clean, engineer</text>
+
+  <circle class="stage s3" cx="820" cy="420" r="90"/>
+  <text class="head" x="820" y="410" text-anchor="middle">Model</text>
+  <text class="head" x="820" y="430" text-anchor="middle">Engineering</text>
+  <text class="body" x="820" y="450" text-anchor="middle">train, track experiments</text>
+
+  <circle class="stage s4" cx="560" cy="500" r="90"/>
+  <text class="head" x="560" y="495" text-anchor="middle">Model Evaluation</text>
+  <text class="body" x="560" y="517" text-anchor="middle">test vs. success metrics</text>
+
+  <circle class="stage s5" cx="300" cy="420" r="90"/>
+  <text class="head" x="300" y="415" text-anchor="middle">Model Deployment</text>
+  <text class="body" x="300" y="437" text-anchor="middle">serve, A/B test</text>
+
+  <circle class="stage s6" cx="300" cy="240" r="90"/>
+  <text class="head" x="300" y="225" text-anchor="middle">Monitoring &amp;</text>
+  <text class="head" x="300" y="245" text-anchor="middle">Maintenance</text>
+  <text class="body" x="300" y="265" text-anchor="middle">drift, alerts, retrain</text>
+
+  <path class="arrow" d="M645 175 Q740 195 765 205"/>
+  <path class="arrow" d="M840 328 Q850 350 830 370"/>
+  <path class="arrow" d="M700 465 Q660 480 645 485"/>
+  <path class="arrow" d="M475 485 Q420 470 390 455"/>
+  <path class="arrow" d="M300 328 Q290 300 300 275"/>
+  <path class="arrow" d="M330 175 Q420 155 470 145"/>
+
+  <text class="body" x="560" y="70" text-anchor="middle" style="font-style:italic">drift or degraded metrics send the loop back to Planning / Monitoring</text>
+</svg>

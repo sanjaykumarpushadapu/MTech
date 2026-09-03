@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="520" viewBox="0 0 1160 520" role="img" aria-labelledby="title desc">
+  <title id="title">The Big Data Analytics Life Cycle, nine stages</title>
+  <desc id="desc">Nine stages in a loop: Business Case Evaluation, Data Identification, Data Acquisition and Filtering, Data Extraction, Data Validation and Cleansing, Data Aggregation and Representation, Data Analysis, Data Visualization, Utilization of Analysis Results, looping back to Business Case Evaluation.</desc>
+  <defs>
+    <marker id="arrC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 22px Georgia,serif;fill:#17313d}
+    .stage{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .num{font:700 13px Georgia,serif;fill:#2f7d68}
+    .body{font:13px Georgia,serif;fill:#17313d}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrC)}
+  </style>
+  <rect class="bg" width="1160" height="520"/>
+  <text class="title" x="56" y="40">Nine stages, one loop: results feed the next business case</text>
+
+  <!-- top row: stages 1-5 -->
+  <g>
+    <rect class="stage" x="40"  y="80" width="200" height="80" rx="10"/>
+    <rect class="stage" x="280" y="80" width="200" height="80" rx="10"/>
+    <rect class="stage" x="520" y="80" width="200" height="80" rx="10"/>
+    <rect class="stage" x="760" y="80" width="200" height="80" rx="10"/>
+    <rect class="stage" x="920" y="200" width="200" height="80" rx="10"/>
+  </g>
+  <text class="num" x="60" y="100">1</text><text class="body" x="140" y="115" text-anchor="middle">Business Case</text><text class="body" x="140" y="132" text-anchor="middle">Evaluation</text>
+  <text class="num" x="300" y="100">2</text><text class="body" x="380" y="115" text-anchor="middle">Data</text><text class="body" x="380" y="132" text-anchor="middle">Identification</text>
+  <text class="num" x="540" y="100">3</text><text class="body" x="620" y="115" text-anchor="middle">Data Acquisition</text><text class="body" x="620" y="132" text-anchor="middle">&amp; Filtering</text>
+  <text class="num" x="780" y="100">4</text><text class="body" x="860" y="115" text-anchor="middle">Data</text><text class="body" x="860" y="132" text-anchor="middle">Extraction</text>
+  <text class="num" x="940" y="220">5</text><text class="body" x="1020" y="235" text-anchor="middle">Data Validation</text><text class="body" x="1020" y="252" text-anchor="middle">&amp; Cleansing</text>
+
+  <path class="arrow" d="M240 120 L280 120"/>
+  <path class="arrow" d="M480 120 L520 120"/>
+  <path class="arrow" d="M720 120 L760 120"/>
+  <path class="arrow" d="M960 160 L1000 200"/>
+
+  <!-- bottom row: stages 6-9, right to left -->
+  <rect class="stage" x="760" y="340" width="200" height="80" rx="10"/>
+  <rect class="stage" x="520" y="340" width="200" height="80" rx="10"/>
+  <rect class="stage" x="280" y="340" width="200" height="80" rx="10"/>
+  <rect class="stage" x="40"  y="340" width="200" height="80" rx="10"/>
+
+  <text class="num" x="780" y="360">6</text><text class="body" x="860" y="375" text-anchor="middle">Data Aggregation</text><text class="body" x="860" y="392" text-anchor="middle">&amp; Representation</text>
+  <text class="num" x="540" y="360">7</text><text class="body" x="620" y="375" text-anchor="middle">Data</text><text class="body" x="620" y="392" text-anchor="middle">Analysis</text>
+  <text class="num" x="300" y="360">8</text><text class="body" x="380" y="375" text-anchor="middle">Data</text><text class="body" x="380" y="392" text-anchor="middle">Visualization</text>
+  <text class="num" x="60" y="360">9</text><text class="body" x="140" y="375" text-anchor="middle">Utilization of</text><text class="body" x="140" y="392" text-anchor="middle">Analysis Results</text>
+
+  <path class="arrow" d="M1020 280 L900 340"/>
+  <path class="arrow" d="M760 380 L720 380"/>
+  <path class="arrow" d="M520 380 L480 380"/>
+  <path class="arrow" d="M280 380 L240 380"/>
+  <path class="arrow" d="M140 340 Q140 260 140 160" fill="none"/>
+  <text class="body" x="60" y="255" text-anchor="middle" style="font-style:italic">loops back to</text>
+  <text class="body" x="60" y="272" text-anchor="middle" style="font-style:italic">a new business case</text>
+</svg>

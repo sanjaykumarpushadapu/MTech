@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">Data Science, AI and ML convergence</title>
+  <desc id="desc">Artificial Intelligence is the outer circle containing Machine Learning; a separate Data Science circle overlaps Machine Learning where techniques like text mining and time series forecasting sit.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 26px Georgia,serif;fill:#17313d}
+    .ai{fill:#e7e2f7;fill-opacity:0.85;stroke:#5a4a9c;stroke-width:2}
+    .ml{fill:#cfe6f6;fill-opacity:0.85;stroke:#1f6f9c;stroke-width:2}
+    .ds{fill:#cdeadd;fill-opacity:0.8;stroke:#2f7d68;stroke-width:2}
+    .head{font:700 19px Georgia,serif;fill:#17313d}
+    .body{font:13.5px Georgia,serif;fill:#24465a}
+  </style>
+  <rect class="bg" width="1120" height="640"/>
+  <text class="title" x="56" y="46">AI contains ML; Data Science overlaps ML from the applied side</text>
+
+  <ellipse class="ai" cx="380" cy="330" rx="320" ry="250"/>
+  <text class="head" x="150" y="130">Artificial Intelligence</text>
+  <text class="body" x="150" y="155">linguistics, vision,</text>
+  <text class="body" x="150" y="172">robotics, planning, sensors</text>
+
+  <ellipse class="ml" cx="420" cy="380" rx="190" ry="150"/>
+  <text class="head" x="330" y="270" text-anchor="middle">Machine Learning</text>
+  <text class="body" x="330" y="300" text-anchor="middle">decision trees · kNN</text>
+  <text class="body" x="330" y="318" text-anchor="middle">Bayesian learning</text>
+  <text class="body" x="330" y="336" text-anchor="middle">support vector machines</text>
+  <text class="body" x="330" y="354" text-anchor="middle">deep learning</text>
+
+  <ellipse class="ds" cx="740" cy="380" rx="240" ry="190"/>
+  <text class="head" x="900" y="200" text-anchor="middle">Data Science</text>
+  <text class="body" x="900" y="228" text-anchor="middle">statistics · experimentation</text>
+  <text class="body" x="900" y="246" text-anchor="middle">data preparation</text>
+  <text class="body" x="900" y="264" text-anchor="middle">process mining</text>
+
+  <text class="head" x="560" y="450" text-anchor="middle">shared</text>
+  <text class="body" x="560" y="472" text-anchor="middle">text mining</text>
+  <text class="body" x="560" y="490" text-anchor="middle">time series forecasting</text>
+  <text class="body" x="560" y="508" text-anchor="middle">recommendation engines</text>
+</svg>

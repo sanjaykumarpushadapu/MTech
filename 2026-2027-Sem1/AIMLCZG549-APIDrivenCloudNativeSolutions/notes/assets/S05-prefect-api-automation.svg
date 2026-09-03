@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">Automating with the Prefect REST API</title>
+  <desc id="desc">A scoped Prefect Cloud API key drives five automation uses against deployments and flow runs: querying runs, building reliability reports, triggering parameterized runs, pausing schedules during maintenance windows, and connecting incident tooling.</desc>
+  <defs>
+    <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .key{fill:#24465a}
+    .keytext{font:700 12px Georgia,serif;fill:#fffdf7}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+    .arrow{stroke:#8a7a52;stroke-width:1.8;fill:none;marker-end:url(#arrK)}
+  </style>
+  <rect class="bg" width="1120" height="420"/>
+  <text class="title" x="40" y="36">One scoped API key drives five automation patterns</text>
+
+  <circle class="key" cx="150" cy="210" r="80"/>
+  <text class="keytext" x="150" y="200" text-anchor="middle">Scoped</text>
+  <text class="keytext" x="150" y="218" text-anchor="middle">Prefect Cloud</text>
+  <text class="keytext" x="150" y="236" text-anchor="middle">API Key</text>
+
+  <path class="arrow" d="M230 150 L300 100"/>
+  <rect class="box" x="310" y="60" width="260" height="70" rx="8"/><text class="head" x="440" y="88" text-anchor="middle">Query deployments and</text><text class="head" x="440" y="106" text-anchor="middle">recent flow runs</text>
+
+  <path class="arrow" d="M230 190 L300 175"/>
+  <rect class="box" x="310" y="145" width="260" height="60" rx="8"/><text class="head" x="440" y="180" text-anchor="middle">Build daily reliability reports</text>
+
+  <path class="arrow" d="M230 230 L300 245"/>
+  <rect class="box" x="310" y="215" width="260" height="60" rx="8"/><text class="head" x="440" y="250" text-anchor="middle">Trigger parameterized runs</text>
+
+  <path class="arrow" d="M230 265 L300 320"/>
+  <rect class="box" x="310" y="290" width="260" height="60" rx="8"/><text class="head" x="440" y="315" text-anchor="middle">Pause / resume schedules</text><text class="head" x="440" y="333" text-anchor="middle">during maintenance windows</text>
+
+  <path class="arrow" d="M580 95 L620 95"/>
+  <rect class="box" x="630" y="65" width="260" height="60" rx="8"/><text class="head" x="760" y="90" text-anchor="middle">Connect incident tooling to</text><text class="head" x="760" y="108" text-anchor="middle">failed-run metadata</text>
+
+  <text class="body" x="630" y="200">Never expose API keys in notebooks or logs — scope credentials to only</text>
+  <text class="body" x="630" y="218">the operations the automation actually needs.</text>
+</svg>

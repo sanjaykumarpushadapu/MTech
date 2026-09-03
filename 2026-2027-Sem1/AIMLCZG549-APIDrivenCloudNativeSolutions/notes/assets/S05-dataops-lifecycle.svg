@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="660" viewBox="0 0 1120 660" role="img" aria-labelledby="title desc">
+  <title id="title">The DataOps lifecycle: six stages in a loop</title>
+  <desc id="desc">Plan, Develop, Integrate, Release, Operate, and Improve arranged in a circular loop, with five operating principles — collaboration, automation, quality built in, fast feedback, continuous improvement — running across every stage.</desc>
+  <defs>
+    <marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 21px Georgia,serif;fill:#17313d}
+    .stage{stroke-width:2}
+    .s1{fill:#cfe6f6;stroke:#1f6f9c}
+    .s2{fill:#cdeadd;stroke:#2f7d68}
+    .s3{fill:#d9d3f2;stroke:#5a4a9c}
+    .s4{fill:#f8e3a3;stroke:#a97e17}
+    .s5{fill:#f6d9c9;stroke:#c96a3c}
+    .s6{fill:#e4c6d8;stroke:#9c3f6f}
+    .num{font:700 13px Georgia,serif;fill:#17313d}
+    .head{font:700 15px Georgia,serif;fill:#17313d}
+    .body{font:11.5px Georgia,serif;fill:#17313d}
+    .arrow{stroke:#24465a;stroke-width:2.2;fill:none;marker-end:url(#arrL)}
+    .principle{fill:#fffdf7;stroke:#cdbb90;stroke-width:1.5}
+    .ptext{font:12px Georgia,serif;fill:#17313d}
+  </style>
+  <rect class="bg" width="1120" height="660"/>
+  <text class="title" x="56" y="40">Six stages loop back into Plan; five principles run across all of them</text>
+
+  <circle class="stage s1" cx="560" cy="150" r="88"/>
+  <text class="num" x="560" y="130" text-anchor="middle">1</text>
+  <text class="head" x="560" y="152" text-anchor="middle">Plan</text>
+  <text class="body" x="560" y="172" text-anchor="middle">contract, success criteria</text>
+
+  <circle class="stage s2" cx="800" cy="250" r="88"/>
+  <text class="num" x="800" y="230" text-anchor="middle">2</text>
+  <text class="head" x="800" y="252" text-anchor="middle">Develop</text>
+  <text class="body" x="800" y="272" text-anchor="middle">transformations, tests</text>
+
+  <circle class="stage s3" cx="800" cy="420" r="88"/>
+  <text class="num" x="800" y="400" text-anchor="middle">3</text>
+  <text class="head" x="800" y="422" text-anchor="middle">Integrate</text>
+  <text class="body" x="800" y="442" text-anchor="middle">version code, config, schema</text>
+
+  <circle class="stage s4" cx="560" cy="520" r="88"/>
+  <text class="num" x="560" y="500" text-anchor="middle">4</text>
+  <text class="head" x="560" y="522" text-anchor="middle">Release</text>
+  <text class="body" x="560" y="542" text-anchor="middle">controlled environments</text>
+
+  <circle class="stage s5" cx="320" cy="420" r="88"/>
+  <text class="num" x="320" y="400" text-anchor="middle">5</text>
+  <text class="head" x="320" y="422" text-anchor="middle">Operate</text>
+  <text class="body" x="320" y="442" text-anchor="middle">schedule, observe, recover</text>
+
+  <circle class="stage s6" cx="320" cy="250" r="88"/>
+  <text class="num" x="320" y="230" text-anchor="middle">6</text>
+  <text class="head" x="320" y="252" text-anchor="middle">Improve</text>
+  <text class="body" x="320" y="272" text-anchor="middle">metrics, retrospectives</text>
+
+  <path class="arrow" d="M638 185 Q715 210 735 225"/>
+  <path class="arrow" d="M810 338 Q815 375 807 395"/>
+  <path class="arrow" d="M718 465 Q660 490 638 498"/>
+  <path class="arrow" d="M482 498 Q410 480 385 462"/>
+  <path class="arrow" d="M320 332 Q320 300 320 288"/>
+  <path class="arrow" d="M375 200 Q460 168 482 158"/>
+
+  <rect class="principle" x="60" y="600" width="1000" height="42" rx="8"/>
+  <text class="ptext" x="80" y="626">Operating principles across every stage: Collaboration · Automation · Quality built in · Fast feedback · Continuous improvement</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">Work pools isolate workload classes; workers apply bounded concurrency</title>
+  <desc id="desc">A rate-limited pipeline runs in a work pool with low concurrency, isolated from an unrelated high-throughput pipeline in its own pool. Backpressure is applied when downstream systems slow down.</desc>
+  <defs>
+    <marker id="arrWp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .pool{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+    .worker{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:1.5}
+    .arrow{stroke:#24465a;stroke-width:1.8;fill:none;marker-end:url(#arrWp)}
+  </style>
+  <rect class="bg" width="1120" height="420"/>
+  <text class="title" x="40" y="34">Separate pools protect one pipeline's workers from another's load</text>
+
+  <rect class="pool" x="40" y="70" width="480" height="160" rx="10"/>
+  <text class="head" x="280" y="98" text-anchor="middle">Work pool A — rate-limited source</text>
+  <rect class="worker" x="70" y="120" width="120" height="50" rx="6"/><text class="body" x="130" y="150" text-anchor="middle">Worker</text>
+  <rect class="worker" x="210" y="120" width="120" height="50" rx="6"/><text class="body" x="270" y="150" text-anchor="middle">Worker</text>
+  <text class="body" x="280" y="200">low concurrency limit, matched to API rate limit</text>
+
+  <rect class="pool" x="600" y="70" width="480" height="160" rx="10"/>
+  <text class="head" x="840" y="98" text-anchor="middle">Work pool B — high-throughput aggregation</text>
+  <rect class="worker" x="630" y="120" width="100" height="50" rx="6"/><text class="body" x="680" y="150" text-anchor="middle">Worker</text>
+  <rect class="worker" x="750" y="120" width="100" height="50" rx="6"/><text class="body" x="800" y="150" text-anchor="middle">Worker</text>
+  <rect class="worker" x="870" y="120" width="100" height="50" rx="6"/><text class="body" x="920" y="150" text-anchor="middle">Worker</text>
+  <text class="body" x="840" y="200">scaled out, backpressure when downstream slows</text>
+
+  <text class="body" x="40" y="280">A shared, unconstrained pool lets one noisy pipeline starve the other's capacity —</text>
+  <text class="body" x="40" y="298">separate pools trade operational simplicity for real isolation.</text>
+</svg>

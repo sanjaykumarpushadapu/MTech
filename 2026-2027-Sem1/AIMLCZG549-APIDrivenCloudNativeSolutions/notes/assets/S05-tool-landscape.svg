@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Choosing DataOps tools by need</title>
+  <desc id="desc">Five tool categories: orchestration, transformation, quality, observability, and platform. Open-source options include Apache Airflow, Prefect and Prefect Cloud, and Dagster; commercial options include DataKitchen and Unravel.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 20px Georgia,serif;fill:#17313d}
+    .cat{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 13px Georgia,serif;fill:#17313d}
+    .body{font:11px Georgia,serif;fill:#5a4a1e}
+    .oss{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .comm{fill:#f8e3a3;stroke:#a97e17;stroke-width:2}
+    .lbl{font:700 13px Georgia,serif;fill:#17313d}
+  </style>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="title" x="40" y="36">Five categories to choose by, not one tool to default to</text>
+
+  <rect class="cat" x="40" y="60" width="200" height="70" rx="8"/><text class="head" x="140" y="90" text-anchor="middle">Orchestration</text><text class="body" x="140" y="108" text-anchor="middle">scheduling, retries, backfills</text>
+
+  <rect class="cat" x="250" y="60" width="200" height="70" rx="8"/><text class="head" x="350" y="90" text-anchor="middle">Transformation</text><text class="body" x="350" y="108" text-anchor="middle">modular SQL / Python</text>
+
+  <rect class="cat" x="460" y="60" width="200" height="70" rx="8"/><text class="head" x="560" y="90" text-anchor="middle">Quality</text><text class="body" x="560" y="108" text-anchor="middle">validation, contracts</text>
+
+  <rect class="cat" x="670" y="60" width="200" height="70" rx="8"/><text class="head" x="770" y="90" text-anchor="middle">Observability</text><text class="body" x="770" y="108" text-anchor="middle">freshness, lineage, anomalies</text>
+
+  <rect class="cat" x="880" y="60" width="200" height="70" rx="8"/><text class="head" x="980" y="90" text-anchor="middle">Platform</text><text class="body" x="980" y="108" text-anchor="middle">environments, secrets, scale</text>
+
+  <text class="lbl" x="40" y="180">Open source</text>
+  <rect class="oss" x="40" y="195" width="330" height="60" rx="8"/><text class="head" x="205" y="222" text-anchor="middle">Apache Airflow</text><text class="body" x="205" y="240" text-anchor="middle">workflow automation</text>
+  <rect class="oss" x="390" y="195" width="330" height="60" rx="8"/><text class="head" x="555" y="222" text-anchor="middle">Prefect / Prefect Cloud</text><text class="body" x="555" y="240" text-anchor="middle">Pythonic orchestration</text>
+  <rect class="oss" x="740" y="195" width="330" height="60" rx="8"/><text class="head" x="905" y="222" text-anchor="middle">DagSter</text><text class="body" x="905" y="240" text-anchor="middle">ETL &amp; ML pipelines</text>
+  <text class="body" x="40" y="278">Curated list: github.com/kelvins/awesome-dataops</text>
+
+  <text class="lbl" x="40" y="330">Commercial</text>
+  <rect class="comm" x="40" y="345" width="330" height="60" rx="8"/><text class="head" x="205" y="372" text-anchor="middle">DataKitchen</text><text class="body" x="205" y="390" text-anchor="middle">DataOps platform</text>
+  <rect class="comm" x="390" y="345" width="330" height="60" rx="8"/><text class="head" x="555" y="372" text-anchor="middle">Unravel</text><text class="body" x="555" y="390" text-anchor="middle">data observability</text>
+
+  <text class="body" x="40" y="450" style="font-style:italic">Selection criteria: team skills · integration fit · operating cost · support model</text>
+</svg>

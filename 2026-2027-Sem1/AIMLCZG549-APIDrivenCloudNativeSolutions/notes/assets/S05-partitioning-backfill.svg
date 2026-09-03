@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="360" viewBox="0 0 1120 360" role="img" aria-labelledby="title desc">
+  <title id="title">Partitioning for safer backfills</title>
+  <desc id="desc">Data partitioned by a time key or business key. When one partition is bad, only that partition is backfilled and validated before replacing the published output, leaving every other partition untouched.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .part{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .bad{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+  </style>
+  <rect class="bg" width="1120" height="360"/>
+  <text class="title" x="40" y="34">One bad partition is backfilled independently, in parallel-safe slices</text>
+
+  <rect class="part" x="60" y="120" width="130" height="90" rx="8"/><text class="head" x="125" y="155" text-anchor="middle">Mon</text><text class="body" x="125" y="173" text-anchor="middle">published</text>
+  <rect class="part" x="205" y="120" width="130" height="90" rx="8"/><text class="head" x="270" y="155" text-anchor="middle">Tue</text><text class="body" x="270" y="173" text-anchor="middle">published</text>
+  <rect class="bad" x="350" y="120" width="130" height="90" rx="8"/><text class="head" x="415" y="155" text-anchor="middle">Wed</text><text class="body" x="415" y="173" text-anchor="middle">bad — backfilling</text>
+  <rect class="part" x="495" y="120" width="130" height="90" rx="8"/><text class="head" x="560" y="155" text-anchor="middle">Thu</text><text class="body" x="560" y="173" text-anchor="middle">published</text>
+  <rect class="part" x="640" y="120" width="130" height="90" rx="8"/><text class="head" x="705" y="155" text-anchor="middle">Fri</text><text class="body" x="705" y="173" text-anchor="middle">published</text>
+
+  <text class="body" x="60" y="255">Partition boundaries (here: one day = one partition, keyed on a time key or business key) stay</text>
+  <text class="body" x="60" y="273">consistent across every pipeline stage. Only the Wed partition is reprocessed and validated</text>
+  <text class="body" x="60" y="291">against its total before it replaces the published output — Mon, Tue, Thu, Fri are untouched.</text>
+</svg>

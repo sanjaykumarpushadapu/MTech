@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="360" viewBox="0 0 1120 360" role="img" aria-labelledby="title desc">
+  <title id="title">Incremental processing with a watermark</title>
+  <desc id="desc">A watermark advances only after successful publication. Each run reads only new or changed records since the last checkpoint, using stable keys to merge safely. A late-arriving record is handled explicitly rather than dropped.</desc>
+  <defs>
+    <marker id="arrW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .axis{stroke:#8a7a52;stroke-width:2;marker-end:url(#arrW)}
+    .run{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+    .wm{stroke:#9c3f6f;stroke-width:2;stroke-dasharray:5 4}
+    .wmtext{font:700 11px Georgia,serif;fill:#9c3f6f}
+    .late{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1120" height="360"/>
+  <text class="title" x="40" y="34">The watermark advances only after successful publication</text>
+
+  <line class="axis" x1="60" y1="280" x2="1060" y2="280"/>
+  <text class="body" x="1000" y="300">time</text>
+
+  <rect class="run" x="100" y="120" width="180" height="70" rx="8"/><text class="head" x="190" y="150" text-anchor="middle">Run 1</text><text class="body" x="190" y="168" text-anchor="middle">reads rows since t0</text>
+  <line class="wm" x1="280" y1="90" x2="280" y2="280"/>
+  <text class="wmtext" x="280" y="82" text-anchor="middle">checkpoint</text>
+
+  <rect class="run" x="360" y="120" width="180" height="70" rx="8"/><text class="head" x="450" y="150" text-anchor="middle">Run 2</text><text class="body" x="450" y="168" text-anchor="middle">reads rows since checkpoint</text>
+  <line class="wm" x1="540" y1="90" x2="540" y2="280"/>
+  <text class="wmtext" x="540" y="82" text-anchor="middle">checkpoint</text>
+
+  <rect class="late" x="600" y="200" width="180" height="60" rx="8"/><text class="head" x="690" y="225" text-anchor="middle" style="font-size:11px">Late-arriving record</text><text class="body" x="690" y="243" text-anchor="middle">merged by stable key,</text>
+
+  <rect class="run" x="820" y="120" width="200" height="70" rx="8"/><text class="head" x="920" y="150" text-anchor="middle">Run 3</text><text class="body" x="920" y="168" text-anchor="middle">picks up late record, re-checkpoints</text>
+  <line class="wm" x1="1020" y1="90" x2="1020" y2="280"/>
+  <text class="wmtext" x="1020" y="82" text-anchor="middle">checkpoint</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="480" viewBox="0 0 1160 480" role="img" aria-labelledby="title desc">
+  <title id="title">Tracking artifacts with runs, and monitoring models in production</title>
+  <desc id="desc">Datasets, metrics, reports, and model outputs are stored as versioned artifacts attached to a run ID and timestamp, compared against an approved baseline. In production, prediction quality, input drift, latency, and error rates are monitored, with retraining requiring validation and approval, never automated blindly.</desc>
+  <defs>
+    <marker id="arrM2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .art{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+    .loop{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+    .arrow{stroke:#24465a;stroke-width:1.8;fill:none;marker-end:url(#arrM2)}
+    .gate{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+  </style>
+  <rect class="bg" width="1160" height="480"/>
+  <text class="title" x="40" y="34">Versioned artifacts feed a production monitoring loop before any retraining</text>
+
+  <rect class="art" x="40" y="70" width="220" height="80" rx="8"/><text class="head" x="150" y="100" text-anchor="middle">Dataset</text><text class="body" x="150" y="118" text-anchor="middle">version, run ID, timestamp</text>
+  <rect class="art" x="280" y="70" width="220" height="80" rx="8"/><text class="head" x="390" y="100" text-anchor="middle">Model</text><text class="body" x="390" y="118" text-anchor="middle">training data, features</text>
+  <rect class="art" x="520" y="70" width="220" height="80" rx="8"/><text class="head" x="630" y="100" text-anchor="middle">Report / metrics</text><text class="body" x="630" y="118" text-anchor="middle">compared vs. baseline</text>
+
+  <text class="body" x="40" y="185">Only artifacts that pass quality criteria against the approved baseline are promoted.</text>
+
+  <text class="title" x="40" y="240">Production monitoring loop</text>
+  <circle class="loop" cx="180" cy="330" r="70"/><text class="head" x="180" y="335" text-anchor="middle">Predict</text>
+  <path class="arrow" d="M250 320 Q310 300 350 310"/>
+  <circle class="loop" cx="420" cy="330" r="70"/><text class="head" x="420" y="325" text-anchor="middle">Compare to</text><text class="head" x="420" y="343" text-anchor="middle">labels</text>
+  <path class="arrow" d="M490 330 Q540 330 570 330"/>
+  <circle class="loop" cx="640" cy="330" r="70"/><text class="head" x="640" y="325" text-anchor="middle">Drift &amp;</text><text class="head" x="640" y="343" text-anchor="middle">latency check</text>
+  <path class="arrow" d="M710 330 Q760 330 790 330"/>
+  <rect class="gate" x="800" y="290" width="200" height="80" rx="8"/><text class="head" x="900" y="320" text-anchor="middle">Threshold exceeded?</text><text class="body" x="900" y="340" text-anchor="middle">validation + human approval</text><text class="body" x="900" y="356" text-anchor="middle">before any retraining</text>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="560" viewBox="0 0 1160 560" role="img" aria-labelledby="title desc">
+  <title id="title">Failure-type decision tree, and a task built for safe recovery</title>
+  <desc id="desc">Five failure types route to retry with backoff or escalate: transient and capacity failures are retried; data quality, code defect, and dependency failures are escalated. A safely designed task combines retries, caching, timeouts, and idempotent writes.</desc>
+  <defs>
+    <marker id="arrF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .fail{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 11.5px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+    .retry{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .esc{fill:#f6d9c9;stroke:#c96a3c;stroke-width:2}
+    .arrow{stroke:#24465a;stroke-width:1.6;fill:none;marker-end:url(#arrF)}
+    .anat{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:1.5}
+  </style>
+  <rect class="bg" width="1160" height="560"/>
+  <text class="title" x="40" y="34">Route by why the task failed, not by treating every failure the same</text>
+
+  <rect class="fail" x="40" y="70" width="180" height="60" rx="8"/><text class="head" x="130" y="95" text-anchor="middle">Transient</text><text class="body" x="130" y="113" text-anchor="middle">network, rate limit</text>
+  <rect class="fail" x="240" y="70" width="180" height="60" rx="8"/><text class="head" x="330" y="95" text-anchor="middle">Data quality</text><text class="body" x="330" y="113" text-anchor="middle">invalid schema, nulls</text>
+  <rect class="fail" x="440" y="70" width="180" height="60" rx="8"/><text class="head" x="530" y="95" text-anchor="middle">Code defect</text><text class="body" x="530" y="113" text-anchor="middle">deterministic exception</text>
+  <rect class="fail" x="640" y="70" width="180" height="60" rx="8"/><text class="head" x="730" y="95" text-anchor="middle">Capacity</text><text class="body" x="730" y="113" text-anchor="middle">memory, concurrency</text>
+  <rect class="fail" x="840" y="70" width="180" height="60" rx="8"/><text class="head" x="930" y="95" text-anchor="middle">Dependency</text><text class="body" x="930" y="113" text-anchor="middle">missing upstream data</text>
+
+  <path class="arrow" d="M130 130 Q130 170 260 200"/>
+  <path class="arrow" d="M730 130 Q730 170 550 200"/>
+  <rect class="retry" x="380" y="205" width="240" height="55" rx="8"/><text class="head" x="500" y="230" text-anchor="middle">Retry with backoff</text><text class="body" x="500" y="248" text-anchor="middle">max retry count, timeout</text>
+
+  <path class="arrow" d="M330 130 Q330 170 260 320"/>
+  <path class="arrow" d="M530 130 Q680 190 650 320"/>
+  <path class="arrow" d="M930 130 Q930 170 700 320"/>
+  <rect class="esc" x="220" y="325" width="480" height="55" rx="8"/><text class="head" x="460" y="350" text-anchor="middle">Escalate to owner — do not retry blindly</text><text class="body" x="460" y="368" text-anchor="middle">capture final error with run context</text>
+
+  <text class="title" x="40" y="430">A task built for safe recovery</text>
+  <rect class="anat" x="40" y="450" width="250" height="60" rx="8"/><text class="head" x="165" y="475" text-anchor="middle">Retry</text><text class="body" x="165" y="493" text-anchor="middle">exponential backoff</text>
+  <rect class="anat" x="310" y="450" width="250" height="60" rx="8"/><text class="head" x="435" y="475" text-anchor="middle">Cache</text><text class="body" x="435" y="493" text-anchor="middle">keyed on code + params + inputs</text>
+  <rect class="anat" x="580" y="450" width="250" height="60" rx="8"/><text class="head" x="705" y="475" text-anchor="middle">Timeout</text><text class="body" x="705" y="493" text-anchor="middle">stalled work cannot run forever</text>
+  <rect class="anat" x="850" y="450" width="270" height="60" rx="8"/><text class="head" x="985" y="475" text-anchor="middle">Idempotent write</text><text class="body" x="985" y="493" text-anchor="middle">temp location, atomic publish</text>
+</svg>

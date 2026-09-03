@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="440" viewBox="0 0 1160 440" role="img" aria-labelledby="title desc">
+  <title id="title">CI/CD stages for a data pipeline</title>
+  <desc id="desc">On pull request: lint, unit test, validate schema, scan dependencies. On merge: build a versioned artifact. Before deployment: integration tests. At deploy: register the deployment. After deployment: a smoke run and observability check. Four testing types back this: unit, contract, integration, and end-to-end tests.</desc>
+  <defs>
+    <marker id="arrS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .stage{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12.5px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrS)}
+    .test{fill:#cdeadd;stroke:#2f7d68;stroke-width:1.5}
+    .ttext{font:10.5px Georgia,serif;fill:#17313d}
+  </style>
+  <rect class="bg" width="1160" height="440"/>
+  <text class="title" x="40" y="34">Promote only when code, contracts, and operational checks all pass</text>
+
+  <rect class="stage" x="40" y="60" width="200" height="90" rx="8"/><text class="head" x="140" y="86" text-anchor="middle">Pull request</text><text class="body" x="140" y="104" text-anchor="middle">lint, unit tests,</text><text class="body" x="140" y="120" text-anchor="middle">validate schema, scan deps</text>
+
+  <path class="arrow" d="M240 105 L272 105"/>
+  <rect class="stage" x="282" y="60" width="180" height="90" rx="8"/><text class="head" x="372" y="86" text-anchor="middle">Merge</text><text class="body" x="372" y="104" text-anchor="middle">build versioned artifact</text><text class="body" x="372" y="120" text-anchor="middle">or container image</text>
+
+  <path class="arrow" d="M462 105 L494 105"/>
+  <rect class="stage" x="504" y="60" width="200" height="90" rx="8"/><text class="head" x="604" y="86" text-anchor="middle">Before deployment</text><text class="body" x="604" y="104" text-anchor="middle">integration tests with</text><text class="body" x="604" y="120" text-anchor="middle">representative test data</text>
+
+  <path class="arrow" d="M704 105 L736 105"/>
+  <rect class="stage" x="746" y="60" width="180" height="90" rx="8"/><text class="head" x="836" y="86" text-anchor="middle">Deploy</text><text class="body" x="836" y="104" text-anchor="middle">register / update</text><text class="body" x="836" y="120" text-anchor="middle">the deployment</text>
+
+  <path class="arrow" d="M926 105 L958 105"/>
+  <rect class="stage" x="968" y="60" width="150" height="90" rx="8"/><text class="head" x="1043" y="86" text-anchor="middle">After deployment</text><text class="body" x="1043" y="104" text-anchor="middle">smoke run,</text><text class="body" x="1043" y="120" text-anchor="middle">verify observability</text>
+
+  <text class="title" x="40" y="210">Four testing types</text>
+  <rect class="test" x="40" y="230" width="260" height="56" rx="6"/><text class="ttext" x="170" y="252" text-anchor="middle">Unit tests</text><text class="ttext" x="170" y="270" text-anchor="middle">transformations, business rules</text>
+  <rect class="test" x="320" y="230" width="260" height="56" rx="6"/><text class="ttext" x="450" y="252" text-anchor="middle">Contract tests</text><text class="ttext" x="450" y="270" text-anchor="middle">schema / interface changes</text>
+  <rect class="test" x="600" y="230" width="260" height="56" rx="6"/><text class="ttext" x="730" y="252" text-anchor="middle">Integration tests</text><text class="ttext" x="730" y="270" text-anchor="middle">storage, APIs, orchestration</text>
+  <rect class="test" x="880" y="230" width="240" height="56" rx="6"/><text class="ttext" x="1000" y="252" text-anchor="middle">End-to-end tests</text><text class="ttext" x="1000" y="270" text-anchor="middle">one full workflow path</text>
+
+  <text class="body" x="40" y="330">Secure automation throughout: store credentials as encrypted secrets, restrict workflow</text>
+  <text class="body" x="40" y="348">permissions, and pin trusted third-party actions to a known version.</text>
+</svg>

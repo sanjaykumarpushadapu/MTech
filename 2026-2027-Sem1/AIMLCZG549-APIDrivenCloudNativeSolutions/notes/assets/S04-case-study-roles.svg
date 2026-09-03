@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="420" viewBox="0 0 1180 420" role="img" aria-labelledby="title desc">
+  <title id="title">Case study: who owns each stage of the cardiac-surgery pipeline</title>
+  <desc id="desc">The same nine-stage life cycle applied to the cardiac-surgery survival case study, with the role that owns each stage written underneath: stakeholders, Data Architect, Data Engineer, Data Engineer, Data Analyst, Data Architect and Data Scientist, Data Scientist, Data Scientist and Data Visualization Engineer, then a cross-functional team.</desc>
+  <defs>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8a7a52"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 21px Georgia,serif;fill:#17313d}
+    .stage{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .body{font:12.5px Georgia,serif;fill:#17313d}
+    .role{font:700 12px Georgia,serif;fill:#8a5a1e}
+    .arrow{stroke:#8a7a52;stroke-width:1.8;fill:none;marker-end:url(#arrR)}
+  </style>
+  <rect class="bg" width="1180" height="420"/>
+  <text class="title" x="40" y="36">Nine stages, nine hand-offs between roles</text>
+
+  <!-- 9 columns -->
+  <g id="cols"></g>
+  <!-- column x positions -->
+  <!-- 40,168,296,424,552,680,808,936,1064 width 110 -->
+
+  <rect class="stage" x="40" y="80" width="110" height="70" rx="8"/><text class="body" x="95" y="105" text-anchor="middle">1. Business</text><text class="body" x="95" y="120" text-anchor="middle">Case Eval.</text><text class="role" x="95" y="170" text-anchor="middle">Stakeholders</text>
+
+  <rect class="stage" x="168" y="80" width="110" height="70" rx="8"/><text class="body" x="223" y="105" text-anchor="middle">2. Data</text><text class="body" x="223" y="120" text-anchor="middle">Identification</text><text class="role" x="223" y="170" text-anchor="middle">Data Architect</text>
+
+  <rect class="stage" x="296" y="80" width="110" height="70" rx="8"/><text class="body" x="351" y="105" text-anchor="middle">3. Acquisition</text><text class="body" x="351" y="120" text-anchor="middle">&amp; Filtering</text><text class="role" x="351" y="170" text-anchor="middle">Data Engineer</text>
+
+  <rect class="stage" x="424" y="80" width="110" height="70" rx="8"/><text class="body" x="479" y="105" text-anchor="middle">4. Data</text><text class="body" x="479" y="120" text-anchor="middle">Extraction</text><text class="role" x="479" y="170" text-anchor="middle">Data Engineer</text>
+
+  <rect class="stage" x="552" y="80" width="110" height="70" rx="8"/><text class="body" x="607" y="105" text-anchor="middle">5. Validation</text><text class="body" x="607" y="120" text-anchor="middle">&amp; Cleansing</text><text class="role" x="607" y="170" text-anchor="middle">Data Analyst</text>
+
+  <rect class="stage" x="680" y="80" width="110" height="70" rx="8"/><text class="body" x="735" y="105" text-anchor="middle">6. Aggregation</text><text class="body" x="735" y="120" text-anchor="middle">&amp; Representation</text><text class="role" x="735" y="170" text-anchor="middle">Architect + Scientist</text>
+
+  <rect class="stage" x="808" y="80" width="110" height="70" rx="8"/><text class="body" x="863" y="105" text-anchor="middle">7. Data</text><text class="body" x="863" y="120" text-anchor="middle">Analysis</text><text class="role" x="863" y="170" text-anchor="middle">Data Scientist</text>
+
+  <rect class="stage" x="936" y="80" width="110" height="70" rx="8"/><text class="body" x="991" y="105" text-anchor="middle">8. Data</text><text class="body" x="991" y="120" text-anchor="middle">Visualization</text><text class="role" x="991" y="170" text-anchor="middle">Scientist + Viz Eng.</text>
+
+  <rect class="stage" x="1064" y="80" width="110" height="70" rx="8"/><text class="body" x="1119" y="105" text-anchor="middle">9. Utilization</text><text class="body" x="1119" y="120" text-anchor="middle">of Results</text><text class="role" x="1119" y="167" text-anchor="middle" style="font-size:10.5px">ML Eng. +</text><text class="role" x="1119" y="181" text-anchor="middle" style="font-size:10.5px">clinical team</text>
+
+  <path class="arrow" d="M150 115 L168 115"/>
+  <path class="arrow" d="M278 115 L296 115"/>
+  <path class="arrow" d="M406 115 L424 115"/>
+  <path class="arrow" d="M534 115 L552 115"/>
+  <path class="arrow" d="M662 115 L680 115"/>
+  <path class="arrow" d="M790 115 L808 115"/>
+  <path class="arrow" d="M918 115 L936 115"/>
+  <path class="arrow" d="M1046 115 L1064 115"/>
+
+  <rect x="40" y="220" width="1134" height="170" rx="10" fill="#fffdf7" stroke="#cdbb90" stroke-width="2"/>
+  <text class="body" x="60" y="250" style="font-weight:700">Reading the hand-offs:</text>
+  <text class="body" x="60" y="275">Architects and engineers own the plumbing (stages 2-4): which data exists, how it is pulled and filtered, and</text>
+  <text class="body" x="60" y="293">which fields matter. Analysts own quality (stage 5). Scientists take over once the data is trustworthy</text>
+  <text class="body" x="60" y="311">(stages 6-8): shaping features, training and evaluating models, then explaining results visually.</text>
+  <text class="body" x="60" y="336">Stage 9 hands the trained model to a wider team - ML engineers, business, clinical staff and IT - because</text>
+  <text class="body" x="60" y="354">only they can put a prediction into an actual clinical workflow.</text>
+</svg>

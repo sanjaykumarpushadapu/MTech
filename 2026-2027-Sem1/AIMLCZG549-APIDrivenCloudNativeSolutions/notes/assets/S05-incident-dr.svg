@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="520" viewBox="0 0 1160 520" role="img" aria-labelledby="title desc">
+  <title id="title">Incident response loop, and a disaster recovery timeline</title>
+  <desc id="desc">Incident response runs as a six-stage loop: detect, triage, contain, recover, communicate, review. Disaster recovery adds a recovery time objective and recovery point objective, tested by restoring backups in an isolated environment.</desc>
+  <defs>
+    <marker id="arrI" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .stage{stroke-width:2}
+    .s1{fill:#cfe6f6;stroke:#1f6f9c}
+    .s2{fill:#cdeadd;stroke:#2f7d68}
+    .s3{fill:#d9d3f2;stroke:#5a4a9c}
+    .s4{fill:#f8e3a3;stroke:#a97e17}
+    .s5{fill:#f6d9c9;stroke:#c96a3c}
+    .s6{fill:#e4c6d8;stroke:#9c3f6f}
+    .head{font:700 13px Georgia,serif;fill:#17313d}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrI)}
+    .dr{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+  </style>
+  <rect class="bg" width="1160" height="520"/>
+  <text class="title" x="40" y="34">Detect, triage, contain, recover, communicate, review — then it loops</text>
+
+  <circle class="stage s1" cx="220" cy="150" r="70"/><text class="head" x="220" y="155" text-anchor="middle">Detect</text>
+  <path class="arrow" d="M285 110 Q350 90 400 100"/>
+  <circle class="stage s2" cx="460" cy="120" r="70"/><text class="head" x="460" y="125" text-anchor="middle">Triage</text>
+  <path class="arrow" d="M525 90 Q590 80 640 100"/>
+  <circle class="stage s3" cx="700" cy="150" r="70"/><text class="head" x="700" y="155" text-anchor="middle">Contain</text>
+  <path class="arrow" d="M755 205 Q800 240 800 260"/>
+  <circle class="stage s4" cx="700" cy="330" r="70"/><text class="head" x="700" y="335" text-anchor="middle">Recover</text>
+  <path class="arrow" d="M635 370 Q560 400 520 390"/>
+  <circle class="stage s5" cx="460" cy="360" r="70"/><text class="head" x="460" y="365" text-anchor="middle">Communicate</text>
+  <path class="arrow" d="M395 390 Q320 400 280 370"/>
+  <circle class="stage s6" cx="220" cy="330" r="70"/><text class="head" x="220" y="335" text-anchor="middle">Review</text>
+  <path class="arrow" d="M215 260 Q210 200 218 220"/>
+
+  <text class="title" x="900" y="120">Disaster recovery</text>
+  <rect class="dr" x="900" y="150" width="220" height="70" rx="8"/><text class="head" x="1010" y="178" text-anchor="middle">RTO</text><text class="body" x="1010" y="196" text-anchor="middle">recovery time objective</text>
+  <rect class="dr" x="900" y="240" width="220" height="70" rx="8"/><text class="head" x="1010" y="268" text-anchor="middle">RPO</text><text class="body" x="1010" y="286" text-anchor="middle">recovery point objective</text>
+  <text class="body" x="900" y="340">tested by restoring backups</text>
+  <text class="body" x="900" y="356">in an isolated environment</text>
+</svg>

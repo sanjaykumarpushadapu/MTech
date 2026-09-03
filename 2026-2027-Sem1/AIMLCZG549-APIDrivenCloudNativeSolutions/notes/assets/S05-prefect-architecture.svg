@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="480" viewBox="0 0 1160 480" role="img" aria-labelledby="title desc">
+  <title id="title">Prefect architecture</title>
+  <desc id="desc">An account ID, workspace ID, and Prefect API key identify a workspace in Prefect Cloud. A schedule or trigger fires a deployment, producing runs of a flow built from Python functions annotated with @flow and @task, made up of tasks.</desc>
+  <defs>
+    <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .cloud{fill:none;stroke:#1f6f9c;stroke-width:2;stroke-dasharray:6 5}
+    .ctext{font:700 13px Georgia,serif;fill:#1f6f9c}
+    .box{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12.5px Georgia,serif;fill:#17313d}
+    .body{font:10.5px Georgia,serif;fill:#5a4a1e}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrA)}
+    .code{font:11px Courier New,monospace;fill:#17313d}
+  </style>
+  <rect class="bg" width="1160" height="480"/>
+  <text class="title" x="40" y="34">Account and workspace identify Prefect Cloud; a deployment produces runs of a flow</text>
+
+  <rect class="cloud" x="40" y="60" width="380" height="140" rx="12"/>
+  <text class="ctext" x="60" y="52">PREFECT CLOUD</text>
+  <text class="body" x="230" y="90" text-anchor="middle">Account ID · Workspace ID</text>
+  <text class="body" x="230" y="108" text-anchor="middle">Prefect API Key</text>
+  <rect class="box" x="90" y="125" width="280" height="55" rx="8"/>
+  <text class="head" x="230" y="157" text-anchor="middle">Workspace</text>
+
+  <path class="arrow" d="M420 155 L462 155"/>
+  <text class="body" x="440" y="115" text-anchor="middle">schedule / trigger</text>
+  <rect class="box" x="472" y="125" width="180" height="55" rx="8"/>
+  <text class="head" x="562" y="157" text-anchor="middle">Deployment</text>
+
+  <path class="arrow" d="M652 155 L694 155"/>
+  <rect class="box" x="704" y="125" width="150" height="55" rx="8"/>
+  <text class="head" x="779" y="157" text-anchor="middle">Run(s)</text>
+
+  <path class="arrow" d="M854 155 L896 155"/>
+  <rect class="box" x="906" y="110" width="180" height="85" rx="8"/>
+  <text class="head" x="996" y="140" text-anchor="middle">Flow</text>
+  <text class="body" x="996" y="158" text-anchor="middle">Python functions with</text>
+  <text class="code" x="996" y="176" text-anchor="middle">@flow / @task</text>
+
+  <path class="arrow" d="M996 195 L996 250"/>
+  <rect class="box" x="856" y="260" width="280" height="60" rx="8"/>
+  <text class="head" x="996" y="296" text-anchor="middle">Task(s)</text>
+
+  <text class="title" x="40" y="260">Building a flow, six steps</text>
+  <text class="body" x="60" y="288">1. plain Python functions for load / clean / train</text>
+  <text class="body" x="60" y="306">2. decorate reusable units as @task</text>
+  <text class="body" x="60" y="324">3. compose tasks inside @flow</text>
+  <text class="body" x="60" y="342">4. pass parameters, not hard-coded values</text>
+  <text class="body" x="60" y="360">5. run locally, inspect task states</text>
+  <text class="body" x="60" y="378">6. add a deployment only when needed</text>
+
+  <text class="title" x="440" y="340">Deploying a flow, six steps</text>
+  <text class="body" x="440" y="368">1. confirm it runs locally with explicit params</text>
+  <text class="body" x="440" y="386">2. package dependencies repeatably</text>
+  <text class="body" x="440" y="404">3. create a deployment: schedule, tags, settings</text>
+  <text class="body" x="440" y="422">4. select a matching work pool</text>
+  <text class="body" x="440" y="440">5. start a worker with code, data, secrets</text>
+  <text class="body" x="440" y="458">6. monitor first runs, validate recovery</text>
+</svg>

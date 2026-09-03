@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">Data Science as an interdisciplinary field</title>
+  <desc id="desc">Three overlapping circles - Math and Statistics, Software Development / CS-IT, and Domain or Business Knowledge - intersect at Data Science, with Machine Learning sitting between Math/Statistics and CS/IT.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 26px Georgia,serif;fill:#17313d}
+    .c1{fill:#f6d9c9;fill-opacity:0.75;stroke:#c96a3c;stroke-width:2}
+    .c2{fill:#cfe6f6;fill-opacity:0.75;stroke:#1f6f9c;stroke-width:2}
+    .c3{fill:#cdeadd;fill-opacity:0.75;stroke:#2f7d68;stroke-width:2}
+    .head{font:700 19px Georgia,serif;fill:#17313d}
+    .body{font:14.5px Georgia,serif;fill:#24465a}
+    .center{font:700 24px Georgia,serif;fill:#17313d}
+  </style>
+  <rect class="bg" width="1120" height="640"/>
+  <text class="title" x="56" y="46">Data Science sits where three skill sets overlap</text>
+
+  <circle class="c1" cx="450" cy="270" r="200"/>
+  <circle class="c2" cx="670" cy="270" r="200"/>
+  <circle class="c3" cx="560" cy="440" r="200"/>
+
+  <text class="head" x="330" y="150" text-anchor="middle">Math &amp;</text>
+  <text class="head" x="330" y="174" text-anchor="middle">Statistics</text>
+
+  <text class="head" x="790" y="150" text-anchor="middle">Software</text>
+  <text class="head" x="790" y="174" text-anchor="middle">Development / CS-IT</text>
+
+  <text class="head" x="560" y="600" text-anchor="middle">Domain &amp; Business Knowledge</text>
+
+  <text class="body" x="490" y="200" text-anchor="middle">Research</text>
+  <text class="body" x="630" y="200" text-anchor="middle">Software</text>
+  <text class="body" x="630" y="220" text-anchor="middle">Engineering</text>
+  <text class="body" x="440" y="470" text-anchor="middle">Domain</text>
+  <text class="body" x="440" y="490" text-anchor="middle">expertise</text>
+  <text class="body" x="660" y="470" text-anchor="middle">Machine</text>
+  <text class="body" x="660" y="490" text-anchor="middle">Learning</text>
+
+  <rect x="500" y="300" width="120" height="60" rx="10" fill="#fffdf7" stroke="#17313d" stroke-width="2"/>
+  <text class="center" x="560" y="326" text-anchor="middle">Data</text>
+  <text class="center" x="560" y="350" text-anchor="middle">Science</text>
+</svg>

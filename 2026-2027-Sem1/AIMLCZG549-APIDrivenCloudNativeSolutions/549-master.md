@@ -48,9 +48,9 @@ The handout names 6 modules before the session-by-session table — the shape of
 | 1 | API Basics | Intro to APIs; design/specify/build; RESTful standards & structure; OpenAPI spec, mocking, semantic versioning, tools; OpenAPI generators; REST vs GraphQL vs gRPC; API versioning; Google Maps / Rapid API | R2 ch1 + web | mid | `notes/S01-api-basics.md` |
 | 2 | Cloud Native Application | Modern application requirements; cloud-native evolution; introducing cloud-native software; cloud-enabled vs cloud-based vs cloud-native; examples | R2 ch1, R3 ch1 | mid | `notes/S02-cloud-native.md` |
 | 3 | Cloud Native Application | CNCF landscape; ecosystem overview; DevOps & GitOps; microservices & service mesh; containers & Kubernetes; serverless computing & stack; case study | R3 ch1 + web | mid | `notes/S03-ecosystem.md` |
-| 4 | Data Science & Machine Learning | Big data & characteristics; DS and ML intro; data science process; ML lifecycle | Web + notes | mid | *deck awaited* |
-| 5 | API-driven Cloud-native Data Pipeline | Ingestion; (pre)processing; storage; integration; monitoring & alerting; scalability & reliability. **Lab 1** | Web + notes | mid | *deck awaited* |
-| 6 | API-driven ML Pipelines | Model development & training; deployment; monitoring; scalability; MLOps practices | R4 Treveil | mid | *deck awaited* |
+| 4 | Data Science & Machine Learning | Big data & characteristics; DS and ML intro; data science process; ML lifecycle | Web + notes | mid | `notes/S04-big-data-and-data-science.md` |
+| 5 | API-driven Cloud-native Data Pipeline | Ingestion; (pre)processing; storage; integration; monitoring & alerting; scalability & reliability. **Lab 1** | Web + notes | mid | `notes/S05-dataops-pipeline.md` |
+| 6 | API-driven ML Pipelines | Model development & training; deployment; monitoring; scalability; MLOps practices | R4 Treveil | mid | *deck awaited — the "Lecture 5 & 6" deck received so far covers S5's DataOps/Prefect/CI-CD content only, not S6's model-development/deployment/MLOps topics; see MATERIAL-LOG.md* |
 | 7 | Tools Review & ML Deployment | Tools review; case study: API-driven ML model deployment. **Lab 2** | Web + notes | mid | *deck awaited* |
 | 8 | AI & Cognitive Services — Part A | Hugging Face APIs; computer vision APIs; NLP APIs; speech recognition APIs; case study. **Lab 3** | Web + notes | mid | *deck awaited* |
 | 9 | AI & Cognitive Services — Part B | What are language models; LLM / SLM; MMLU; LLMOps; LangChain | Web + notes | comp | *deck awaited* |

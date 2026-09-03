@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="460" viewBox="0 0 1160 460" role="img" aria-labelledby="title desc">
+  <title id="title">Build once, promote the same tested artifact</title>
+  <desc id="desc">One versioned, containerized artifact is built after tests pass in CI, then promoted unchanged through protected test, staging, and production environments using configuration, with reviewers and an auditable history, rather than being rebuilt separately for each environment.</desc>
+  <defs>
+    <marker id="arrPr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .art{fill:#24465a}
+    .arttext{font:700 11px Georgia,serif;fill:#fffdf7}
+    .env{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+    .arrow{stroke:#24465a;stroke-width:2;fill:none;marker-end:url(#arrPr)}
+    .anti{fill:#f6d9c9;stroke:#c96a3c;stroke-width:1.5;stroke-dasharray:5 4}
+  </style>
+  <rect class="bg" width="1160" height="460"/>
+  <text class="title" x="40" y="34">One tested, versioned, containerized artifact is promoted, not rebuilt</text>
+
+  <circle class="art" cx="120" cy="140" r="70"/>
+  <text class="arttext" x="120" y="132" text-anchor="middle">Container</text>
+  <text class="arttext" x="120" y="150" text-anchor="middle">image</text>
+  <text class="arttext" x="120" y="168" text-anchor="middle">v1.4.0</text>
+
+  <path class="arrow" d="M190 140 L232 140"/>
+  <rect class="env" x="242" y="100" width="220" height="80" rx="8"/><text class="head" x="352" y="130" text-anchor="middle">Test</text><text class="body" x="352" y="148" text-anchor="middle">tests pass</text><text class="body" x="352" y="164" text-anchor="middle">config: test values</text>
+
+  <path class="arrow" d="M462 140 L504 140"/>
+  <rect class="env" x="514" y="100" width="220" height="80" rx="8"/><text class="head" x="624" y="130" text-anchor="middle">Staging</text><text class="body" x="624" y="148" text-anchor="middle">reviewer approval</text><text class="body" x="624" y="164" text-anchor="middle">config: staging values</text>
+
+  <path class="arrow" d="M734 140 L776 140"/>
+  <rect class="env" x="786" y="100" width="220" height="80" rx="8"/><text class="head" x="896" y="130" text-anchor="middle">Production</text><text class="body" x="896" y="148" text-anchor="middle">restricted permissions,</text><text class="body" x="896" y="164" text-anchor="middle">no concurrent deploys, audit</text>
+
+  <text class="body" x="40" y="220" style="font-style:italic">The same image, unchanged, moves right — only externalized configuration differs per environment.</text>
+
+  <text class="title" x="40" y="290">Anti-pattern: rebuilding per environment</text>
+  <rect class="anti" x="40" y="310" width="220" height="60" rx="8"/><text class="body" x="150" y="335" text-anchor="middle">build for test</text>
+  <rect class="anti" x="300" y="310" width="220" height="60" rx="8"/><text class="body" x="410" y="335" text-anchor="middle">rebuild for staging</text>
+  <rect class="anti" x="560" y="310" width="220" height="60" rx="8"/><text class="body" x="670" y="335" text-anchor="middle">rebuild for production</text>
+  <text class="body" x="40" y="400">Three different builds means "it passed in test" no longer guarantees what actually ships.</text>
+</svg>

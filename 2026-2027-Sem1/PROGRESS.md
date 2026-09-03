@@ -37,8 +37,8 @@ One view across all four subjects. Update the same weekend the session happens.
 | 1 | API basics & OpenAPI | ✅ | ✅ | ☐ | — · *transcript ✅* |
 | 2 | Cloud-native concepts | ✅ | ✅ | ☐ | ☐ |
 | 3 | Cloud Native Application | ✅ | ✅ | ☐ | ☐ |
-| 4 | Data science & ML lifecycle | ☐ | ☐ | ☐ | ☐ |
-| 5 | API-driven data pipeline | ☐ | ☐ | ☐ | ☐ L1 |
+| 4 | Data science & ML lifecycle | ✅ | ✅ | ☐ | ☐ |
+| 5 | API-driven data pipeline | ✅ | ✅ | ☐ | ☐ L1 |
 | 6 | ML pipelines & MLOps | ☐ | ☐ | ☐ | ☐ |
 | 7 | Tools review & deployment | ☐ | ☐ | ☐ | ☐ L2 |
 | 8 | AI/cognitive service APIs | ☐ | ☐ | ☐ | ☐ L3 |

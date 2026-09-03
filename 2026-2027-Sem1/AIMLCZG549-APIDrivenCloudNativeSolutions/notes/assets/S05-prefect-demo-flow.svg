@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="560" viewBox="0 0 1160 560" role="img" aria-labelledby="title desc">
+  <title id="title">The demo: one project directory, one main flow, five tasks</title>
+  <desc id="desc">A project directory holds data, flows, tasks, and output folders. The main flow composes five tasks: data ingestion, data pre-processing, data exploration, data analysis, and data visualization, run as one deployment on scheduled runs.</desc>
+  <defs>
+    <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 20px Georgia,serif;fill:#17313d}
+    .folder{fill:#f8e3a3;stroke:#a97e17;stroke-width:1.5}
+    .file{fill:#fffdf7;stroke:#cdbb90;stroke-width:1.2}
+    .ftext{font:11px Georgia,serif;fill:#17313d}
+    .code{font:10.5px Courier New,monospace;fill:#5a4a1e}
+    .flowbox{fill:#cfe6f6;stroke:#1f6f9c;stroke-width:2}
+    .task{fill:#cdeadd;stroke:#2f7d68;stroke-width:1.5}
+    .ttext{font:11px Georgia,serif;fill:#17313d}
+    .arrow{stroke:#24465a;stroke-width:1.8;fill:none;marker-end:url(#arrD)}
+  </style>
+  <rect class="bg" width="1160" height="560"/>
+  <text class="title" x="40" y="36">project_directory feeds one main flow made of five tasks</text>
+
+  <rect class="folder" x="40" y="70" width="220" height="34" rx="6"/><text class="ftext" x="55" y="92">project_directory/</text>
+  <rect class="folder" x="70" y="112" width="180" height="30" rx="6"/><text class="ftext" x="85" y="132">data/</text>
+  <rect class="file" x="100" y="146" width="180" height="26" rx="5"/><text class="code" x="115" y="164">Covid_data.csv</text>
+  <rect class="folder" x="70" y="180" width="180" height="30" rx="6"/><text class="ftext" x="85" y="200">flows/</text>
+  <rect class="file" x="100" y="214" width="200" height="26" rx="5"/><text class="code" x="115" y="232">workflow_covidex.py</text>
+  <rect class="folder" x="70" y="248" width="180" height="30" rx="6"/><text class="ftext" x="85" y="268">tasks/</text>
+  <rect class="file" x="100" y="282" width="230" height="24" rx="5"/><text class="code" x="115" y="299" style="font-size:9.5px">BasicStats.py · Binning.py · Encoding.py …</text>
+  <rect class="file" x="100" y="310" width="230" height="24" rx="5"/><text class="code" x="115" y="327" style="font-size:9.5px">CorrelationCoeffecient.py · PearsonCorrelation.py</text>
+  <rect class="file" x="100" y="338" width="230" height="24" rx="5"/><text class="code" x="115" y="355" style="font-size:9.5px">ChiSquareCovidExample.py · FeatureImportance…</text>
+  <rect class="file" x="100" y="366" width="230" height="24" rx="5"/><text class="code" x="115" y="383" style="font-size:9.5px">Normalization.py · Visualization.py</text>
+  <rect class="folder" x="70" y="400" width="180" height="30" rx="6"/><text class="ftext" x="85" y="420">output/</text>
+  <rect class="file" x="100" y="434" width="200" height="26" rx="5"/><text class="code" x="115" y="452">scatter_plot.png</text>
+
+  <path class="arrow" d="M400 240 L440 240"/>
+
+  <rect class="flowbox" x="450" y="90" width="670" height="400" rx="10"/>
+  <text class="ttext" x="785" y="118" text-anchor="middle" style="font-weight:700;font-size:14px">Main Flow — one deployment, scheduled runs</text>
+
+  <rect class="task" x="480" y="140" width="600" height="46" rx="6"/><text class="ttext" x="780" y="168" text-anchor="middle">Task 1 — Data Ingestion: get data from source</text>
+  <path class="arrow" d="M780 186 L780 206"/>
+  <rect class="task" x="480" y="212" width="600" height="46" rx="6"/><text class="ttext" x="780" y="240" text-anchor="middle">Task 2 — Data Pre-processing / Cleaning</text>
+  <path class="arrow" d="M780 258 L780 278"/>
+  <rect class="task" x="480" y="284" width="600" height="46" rx="6"/><text class="ttext" x="780" y="312" text-anchor="middle">Task 3 — Data Exploration (EDA)</text>
+  <path class="arrow" d="M780 330 L780 350"/>
+  <rect class="task" x="480" y="356" width="600" height="46" rx="6"/><text class="ttext" x="780" y="384" text-anchor="middle">Task 4 — Data Analysis (ML code)</text>
+  <path class="arrow" d="M780 402 L780 422"/>
+  <rect class="task" x="480" y="428" width="600" height="46" rx="6"/><text class="ttext" x="780" y="456" text-anchor="middle">Task 5 — Data Visualization</text>
+
+  <text class="ftext" x="450" y="518">Executed from a VS Code terminal, observed in the Prefect Cloud Dashboard —</text>
+  <text class="ftext" x="450" y="536">reference repo: github.com/shreyassureshrao/dsp.git</text>
+</svg>

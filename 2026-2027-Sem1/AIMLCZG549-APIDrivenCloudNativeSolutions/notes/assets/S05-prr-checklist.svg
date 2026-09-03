@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="440" viewBox="0 0 1120 440" role="img" aria-labelledby="title desc">
+  <title id="title">The production-readiness review, six checked domains</title>
+  <desc id="desc">Ownership and consumer expectations documented; code, contracts, environments, and parameters versioned; tests cover transformations and integration boundaries; deployment, rollback, and backfill procedures proven; dashboards and actionable alerts active; security, cost, retention, and audit requirements satisfied — tying every practice in the session back to one pipeline.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .item{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .check{fill:#2f7d68}
+    .head{font:700 12.5px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+  </style>
+  <rect class="bg" width="1120" height="440"/>
+  <text class="title" x="40" y="34">Six domains, each checked before — and periodically after — launch</text>
+
+  <rect class="item" x="40" y="60" width="330" height="90" rx="8"/><text class="check" x="60" y="88" style="font-size:18px">✓</text><text class="head" x="90" y="88">Ownership</text><text class="body" x="90" y="106">consumer expectations documented</text>
+
+  <rect class="item" x="395" y="60" width="330" height="90" rx="8"/><text class="check" x="415" y="88" style="font-size:18px">✓</text><text class="head" x="445" y="88">Versioning</text><text class="body" x="445" y="106">code, contracts, environments, params</text>
+
+  <rect class="item" x="750" y="60" width="330" height="90" rx="8"/><text class="check" x="770" y="88" style="font-size:18px">✓</text><text class="head" x="800" y="88">Testing</text><text class="body" x="800" y="106">transformations, integration boundaries</text>
+
+  <rect class="item" x="40" y="170" width="330" height="90" rx="8"/><text class="check" x="60" y="198" style="font-size:18px">✓</text><text class="head" x="90" y="198">Deployment procedures</text><text class="body" x="90" y="216">rollback, backfill proven</text>
+
+  <rect class="item" x="395" y="170" width="330" height="90" rx="8"/><text class="check" x="415" y="198" style="font-size:18px">✓</text><text class="head" x="445" y="198">Monitoring</text><text class="body" x="445" y="216">dashboards, actionable alerts active</text>
+
+  <rect class="item" x="750" y="170" width="330" height="90" rx="8"/><text class="check" x="770" y="198" style="font-size:18px">✓</text><text class="head" x="800" y="198">Compliance</text><text class="body" x="800" y="216">security, cost, retention, audit</text>
+
+  <text class="body" x="40" y="310">This is a periodic re-check, not a one-time gate — a pipeline that passed a year ago is</text>
+  <text class="body" x="40" y="328">not necessarily production-ready today.</text>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="380" viewBox="0 0 1120 380" role="img" aria-labelledby="title desc">
+  <title id="title">Cost and performance levers, weighed against latency and recovery</title>
+  <desc id="desc">Right-sizing workers, caching deterministic results, incremental processing, and off-peak scheduling all reduce cost, but each is balanced against latency and recovery objectives set elsewhere in the pipeline.</desc>
+  <defs>
+    <marker id="arrCst" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8a7a52"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .lever{fill:#cdeadd;stroke:#2f7d68;stroke-width:2}
+    .head{font:700 12px Georgia,serif;fill:#17313d}
+    .body{font:9.5px Georgia,serif;fill:#5a4a1e}
+    .bal{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .arrow{stroke:#8a7a52;stroke-width:1.8;fill:none;marker-end:url(#arrCst)}
+  </style>
+  <rect class="bg" width="1120" height="380"/>
+  <text class="title" x="40" y="34">Four cost levers, each traded against latency and recovery goals</text>
+
+  <rect class="lever" x="40" y="70" width="240" height="70" rx="8"/><text class="head" x="160" y="100" text-anchor="middle">Right-size workers</text><text class="body" x="160" y="118" text-anchor="middle">to observed demand</text>
+
+  <rect class="lever" x="300" y="70" width="240" height="70" rx="8"/><text class="head" x="420" y="100" text-anchor="middle">Cache deterministic</text><text class="body" x="420" y="118" text-anchor="middle">expensive results</text>
+
+  <rect class="lever" x="560" y="70" width="240" height="70" rx="8"/><text class="head" x="680" y="100" text-anchor="middle">Incremental processing</text><text class="body" x="680" y="118" text-anchor="middle">over full refreshes</text>
+
+  <rect class="lever" x="820" y="70" width="260" height="70" rx="8"/><text class="head" x="950" y="100" text-anchor="middle">Off-peak scheduling</text><text class="body" x="950" y="118" text-anchor="middle">for flexible workloads</text>
+
+  <path class="arrow" d="M560 175 L560 210"/>
+  <rect class="bal" x="340" y="220" width="440" height="70" rx="8"/>
+  <text class="head" x="560" y="248" text-anchor="middle">Balanced against latency and recovery objectives</text>
+  <text class="body" x="560" y="268" text-anchor="middle">measure runtime, resource use, queue time, data scanned first</text>
+</svg>

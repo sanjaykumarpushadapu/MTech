@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Every minute of the day: a data-deluge snapshot</title>
+  <desc id="desc">A ring of independent high-velocity data sources feeding into one minute of global activity: WhatsApp 41.6 million messages, Google 6.3 million searches, Instagram 694K reels via DM, Venmo $463K in payments, Twitch 48K hours watched, and 30 DDoS attacks launched by cyber-criminals.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 24px Georgia,serif;fill:#17313d}
+    .hub{fill:#24465a}
+    .hubtext{font:700 17px Georgia,serif;fill:#fffdf7}
+    .src{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .name{font:700 14px Georgia,serif;fill:#17313d}
+    .stat{font:13px Georgia,serif;fill:#5a4a1e}
+    .line{stroke:#cdbb90;stroke-width:1.5}
+  </style>
+  <rect class="bg" width="1120" height="520"/>
+  <text class="title" x="56" y="42">Independent, high-velocity sources, every 60 seconds</text>
+
+  <circle class="hub" cx="560" cy="280" r="80"/>
+  <text class="hubtext" x="560" y="272" text-anchor="middle">Every minute</text>
+  <text class="hubtext" x="560" y="294" text-anchor="middle">of the day</text>
+
+  <!-- 6 sources around the hub -->
+  <line class="line" x1="560" y1="200" x2="560" y2="120"/>
+  <rect class="src" x="460" y="60" width="200" height="60" rx="10"/>
+  <text class="name" x="560" y="82" text-anchor="middle">WhatsApp</text>
+  <text class="stat" x="560" y="102" text-anchor="middle">41.6M messages sent</text>
+
+  <line class="line" x1="625" y1="230" x2="760" y2="160"/>
+  <rect class="src" x="760" y="110" width="200" height="60" rx="10"/>
+  <text class="name" x="860" y="132" text-anchor="middle">Google</text>
+  <text class="stat" x="860" y="152" text-anchor="middle">6.3M searches</text>
+
+  <line class="line" x1="630" y1="330" x2="770" y2="400"/>
+  <rect class="src" x="770" y="390" width="200" height="60" rx="10"/>
+  <text class="name" x="870" y="412" text-anchor="middle">Venmo</text>
+  <text class="stat" x="870" y="432" text-anchor="middle">$463K sent in payments</text>
+
+  <line class="line" x1="560" y1="360" x2="560" y2="440"/>
+  <rect class="src" x="460" y="440" width="200" height="60" rx="10"/>
+  <text class="name" x="560" y="462" text-anchor="middle">Twitch</text>
+  <text class="stat" x="560" y="482" text-anchor="middle">48K hours watched</text>
+
+  <line class="line" x1="495" y1="330" x2="360" y2="400"/>
+  <rect class="src" x="160" y="390" width="200" height="60" rx="10"/>
+  <text class="name" x="260" y="412" text-anchor="middle">Instagram</text>
+  <text class="stat" x="260" y="432" text-anchor="middle">694K reels sent via DM</text>
+
+  <line class="line" x1="495" y1="230" x2="360" y2="160"/>
+  <rect class="src" x="160" y="110" width="200" height="60" rx="10"/>
+  <text class="name" x="260" y="132" text-anchor="middle">Cyber-criminals</text>
+  <text class="stat" x="260" y="152" text-anchor="middle">30 DDoS attacks launched</text>
+
+  <text class="stat" x="560" y="540" text-anchor="middle" style="font-style:italic">Same 60 seconds, six unrelated sources - none of it waits for the others.</text>
+</svg>

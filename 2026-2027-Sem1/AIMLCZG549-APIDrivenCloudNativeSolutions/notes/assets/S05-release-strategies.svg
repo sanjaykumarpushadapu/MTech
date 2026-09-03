@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="420" viewBox="0 0 1160 420" role="img" aria-labelledby="title desc">
+  <title id="title">Five release strategies compared</title>
+  <desc id="desc">Rolling release updates capacity gradually. Blue-green keeps the previous environment ready for rollback. Canary sends limited traffic to a new version first. Shadow runs compare outputs without affecting consumers. Feature flags separate deployment from activation.</desc>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .card{fill:#fffdf7;stroke:#cdbb90;stroke-width:2}
+    .head{font:700 12.5px Georgia,serif;fill:#17313d}
+    .body{font:10px Georgia,serif;fill:#5a4a1e}
+    .bar{fill:#cfe6f6;stroke:#1f6f9c}
+  </style>
+  <rect class="bg" width="1160" height="420"/>
+  <text class="title" x="40" y="34">Each trades deployment simplicity for a smaller blast radius if the change is bad</text>
+
+  <rect class="card" x="40" y="70" width="210" height="150" rx="8"/>
+  <text class="head" x="145" y="95" text-anchor="middle">Rolling</text>
+  <rect class="bar" x="60" y="110" width="170" height="16"/><rect class="bar" x="60" y="132" width="130" height="16"/><rect class="bar" x="60" y="154" width="90" height="16"/>
+  <text class="body" x="145" y="195" text-anchor="middle">updates capacity gradually</text>
+
+  <rect class="card" x="270" y="70" width="210" height="150" rx="8"/>
+  <text class="head" x="375" y="95" text-anchor="middle">Blue-green</text>
+  <rect class="bar" x="290" y="115" width="80" height="60"/><rect class="bar" x="380" y="115" width="80" height="60" fill="#cdeadd" stroke="#2f7d68"/>
+  <text class="body" x="375" y="195" text-anchor="middle">old env ready for rollback</text>
+
+  <rect class="card" x="500" y="70" width="210" height="150" rx="8"/>
+  <text class="head" x="605" y="95" text-anchor="middle">Canary</text>
+  <rect class="bar" x="520" y="115" width="170" height="16"/><rect class="bar" x="520" y="137" width="20" height="16" fill="#cdeadd" stroke="#2f7d68"/>
+  <text class="body" x="605" y="195" text-anchor="middle">small % of traffic first</text>
+
+  <rect class="card" x="730" y="70" width="210" height="150" rx="8"/>
+  <text class="head" x="835" y="95" text-anchor="middle">Shadow</text>
+  <rect class="bar" x="750" y="115" width="80" height="60"/><rect class="bar" x="840" y="115" width="80" height="60" fill="#d9d3f2" stroke="#5a4a9c" stroke-dasharray="4 3"/>
+  <text class="body" x="835" y="195" text-anchor="middle">compares outputs unseen</text>
+
+  <rect class="card" x="960" y="70" width="160" height="150" rx="8"/>
+  <text class="head" x="1040" y="95" text-anchor="middle" style="font-size:11px">Feature flags</text>
+  <rect class="bar" x="980" y="115" width="120" height="16"/><rect class="bar" x="980" y="137" width="60" height="16" fill="#f8e3a3" stroke="#a97e17"/>
+  <text class="body" x="1040" y="195" text-anchor="middle" style="font-size:9px">deploy ≠ activate</text>
+
+  <text class="body" x="40" y="270">Chosen based on reversibility and potential impact — not every strategy needs enough</text>
+  <text class="body" x="40" y="288">run volume to produce a meaningful signal, which a low-volume batch pipeline may lack.</text>
+</svg>

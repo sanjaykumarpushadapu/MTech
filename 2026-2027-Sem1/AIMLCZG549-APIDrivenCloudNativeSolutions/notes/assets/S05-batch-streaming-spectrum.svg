@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="320" viewBox="0 0 1120 320" role="img" aria-labelledby="title desc">
+  <title id="title">Batch, micro-batching, and streaming along a latency axis</title>
+  <desc id="desc">Batch fits periodic reports and large scans. Micro-batching is a practical middle ground. Streaming fits low-latency decisions and continuous events, at the cost of state, ordering, replay, and monitoring complexity.</desc>
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#24465a"/></marker>
+  </defs>
+  <style>
+    .bg{fill:#f8f4ea}
+    .title{font:700 19px Georgia,serif;fill:#17313d}
+    .axis{stroke:#8a7a52;stroke-width:2;marker-end:url(#arrB)}
+    .box{stroke-width:2}
+    .b1{fill:#cfe6f6;stroke:#1f6f9c}
+    .b2{fill:#f8e3a3;stroke:#a97e17}
+    .b3{fill:#f6d9c9;stroke:#c96a3c}
+    .head{font:700 14px Georgia,serif;fill:#17313d}
+    .body{font:11px Georgia,serif;fill:#5a4a1e}
+  </style>
+  <rect class="bg" width="1120" height="320"/>
+  <text class="title" x="40" y="34">Latency requirement drives the choice — use the simplest model that fits</text>
+
+  <line class="axis" x1="60" y1="270" x2="1060" y2="270"/>
+  <text class="body" x="60" y="292">high latency, low complexity</text>
+  <text class="body" x="900" y="292">low latency, high complexity</text>
+
+  <rect class="box b1" x="80" y="120" width="280" height="100" rx="10"/>
+  <text class="head" x="220" y="155" text-anchor="middle">Batch</text>
+  <text class="body" x="220" y="175" text-anchor="middle">periodic reports,</text>
+  <text class="body" x="220" y="191" text-anchor="middle">large scans, simple ops</text>
+
+  <rect class="box b2" x="420" y="120" width="280" height="100" rx="10"/>
+  <text class="head" x="560" y="155" text-anchor="middle">Micro-batching</text>
+  <text class="body" x="560" y="175" text-anchor="middle">practical middle ground</text>
+
+  <rect class="box b3" x="760" y="120" width="280" height="100" rx="10"/>
+  <text class="head" x="900" y="155" text-anchor="middle">Streaming</text>
+  <text class="body" x="900" y="175" text-anchor="middle">low-latency decisions,</text>
+  <text class="body" x="900" y="191" text-anchor="middle">state, order, replay, monitoring</text>
+</svg>
