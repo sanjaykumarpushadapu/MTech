@@ -74,9 +74,18 @@ The top-level `##` Part/session headings follow the handout (above). Beneath the
 - **Synthesis sections keep their own name.** When a section has no single corresponding deck slide — a bridge/intro the note adds, or handout scope the deck doesn't cover (e.g. BM25/DPR/RRF absent from the S02 deck) — give it a plain descriptive heading. Do not invent a fake deck title.
 - After any retitle or split, re-run the coverage checker: a heading word the checker was matching against (e.g. "mathematics") can disappear in a rename and surface a false negative to fix in the body.
 
+### Fact-level source ownership and leakage gate
+
+Coverage and heading order do not prove that details live under the correct source topic. Before editing a deck-backed note, create a temporary fact-ownership ledger for every substantive slide: title, named models/algorithms, figures, examples, mechanisms, and every important number or percentage, with one deliberate note destination for each. Treat each source-titled section as a closed boundary during drafting. Do not place a later slide's number, example, mechanism, or figure interpretation in an earlier or adjacent section merely because the topics are related. If the deck intentionally repeats a fact, record both source occurrences; otherwise classify it as **exact source detail**, **intentional synthesis**, **clearly labeled additional context**, or **unresolved**. Synthesis belongs under an explicitly named synthesis section and must not be used to satisfy slide-level coverage. Before finalizing, run a targeted leakage scan over adjacent slides, repeated-title slides, divider/extra-slide boundaries, and all distinctive numbers/named items, then manually verify every hit against the ledger. A passing `52/52` coverage result is not a substitute for this fact-level ownership check.
+
 ### Part/topic hierarchy
 
 Use a consistent hierarchy in session notes: `## Part N · ...` for major handout-aligned Parts, `### N.M ...` for the main topics within that Part, and `#### ...` for source-slide subtopics or details. Do not use one global topic-number sequence across Parts, and do not introduce unnumbered peer headings that visually compete with the Part's numbered topics. Extra or non-examinable material gets its own parent `##` section and its own local topic numbering.
+
+### Diagram interpretation and learner-facing explanations
+
+When converting a pipeline or model diagram into study notes, distinguish **what the source lists** from **what the source proves**. A bullet placed under a stage is not automatically a mandatory step, a universal practice, or evidence that the stage directly causes the stated capability. Preserve the source's order and labels, then qualify optional recipe choices, repeated cross-stage techniques, and benefits that depend on data or implementation. Keep the learner-facing explanation simple: use a numbered flow, purpose, output, and one memory aid, while retaining a short accuracy caveat where simplification could mislead. In particular, do not claim that Q&A formatting alone creates instruction following, that online training is necessarily continuous, or that standard deployment optimizations are specified by a source slide when the slide only says `Optimization`.
+
 ### Capture a Temporary Slide Audit at Intake
 
 **The moment a deck is uploaded, before writing or editing the note, create a temporary slide inventory** in the OS temp directory or an ignored subject-level audit directory. It must contain one row per source slide — slide number, title, and named items (models, algorithms, frameworks, protocols, figures, and table labels). Include title, agenda, disclaimer, objectives, recap, and reference slides too; if a slide is routed to the master index, leave its named-items cell blank rather than omitting the row.
@@ -96,6 +105,12 @@ node check-slide-coverage.mjs <temporary-inventory.md> <note.md>
 It reports every named item absent from the note. Judge each hit: a genuine omission gets added to the note; a false positive (PDF character corruption, a spelling variant, a word the note phrases differently) gets pruned from the temporary inventory so the signal stays clean. The gate is a clean run, recorded as a compact result in `source/MATERIAL-LOG.md` when useful.
 
 Reading the deck and concluding "this looks covered" is not a coverage check. That judgement repeatedly passed notes that had dropped named items, collapsed the deck's own structure, and replaced concrete lists with an ellipsis. Matching is not a judgement call.
+
+### Learner-note provenance boundary
+
+Keep source provenance and audit identifiers out of learner-facing notes unless the user explicitly requests them. Do not add bookkeeping labels such as `Source slide N`, `(source slide 30)`, visual IDs, or coverage verdicts to headings or prose. Keep those details in temporary audit evidence or the compact material ledger. Preserve exact mapping with clean deck titles as headings, one section for each distinctly titled slide, and bounded subheadings when repeated-title slides share one section.
+
+**Mandatory final preflight:** scan every changed learner-facing note for audit-only provenance patterns before finalizing. Any hit is a failure unless the user explicitly requested those labels in the note.
 
 ### Respect the Deck's Own Deferrals
 
