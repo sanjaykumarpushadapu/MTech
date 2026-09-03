@@ -58,7 +58,7 @@ DataOps is a team sport, not one role's job: data producers clarify meaning, fre
 
 **Tradeoff / when NOT to use** — Writing straight to a refined layer and skipping the raw lake saves storage cost today, but removes the ability to reprocess history when the refinement logic changes or a bug is found — you can only refine what you kept. Conversely, keeping everything in raw form forever and refining on every read pushes the same transformation cost onto every consumer, repeatedly.
 
-![Canonical data architecture: source data flows through data engineering into a raw lake, then refined data, governed end to end, out to data customers](assets/S05-canonical-architecture.svg)
+![Canonical data architecture: source data flows through a production environment into a raw lake, then refined data, data engineering, data science, and data visualization, governed end to end, out to data customers (DataKitchen)](assets/S05-canonical-architecture.png)
 
 ---
 
@@ -72,7 +72,7 @@ DataOps is a team sport, not one role's job: data producers clarify meaning, fre
 
 **Tradeoff / when NOT to use** — Automating monitoring and testing without also automating the response (auto-quarantine bad data, auto-notify the right owner) just produces more alerts that nobody acts on — automation earns its value only when it's connected all the way through to a decision or an action.
 
-![DataOps functional architecture: orchestration and automated deployment run on a platform providing storage, metadata, auth, and secrets, reported through metrics to the DataOps team](assets/S05-functional-architecture.svg)
+![DataOps functional architecture: orchestrate/monitor/test runs across dev/test/production environments via automated deployment, backed by a DataOps platform providing storage and version control, history and metadata, auth and permissions, environment secrets, and reported through metrics and reports to the DataOps team (DataKitchen)](assets/S05-functional-architecture.png)
 
 ---
 
@@ -174,7 +174,7 @@ DataOps is a team sport, not one role's job: data producers clarify meaning, fre
 
 **Tradeoff / when NOT to use** — Putting real credentials directly into workflow YAML instead of encrypted repository secrets is the single most common way a pipeline leaks credentials. But over-restricting a workflow's permissions can just as easily break legitimate automation (a bot that needs to comment on a pull request, say) — the fix in both directions is to scope permissions to exactly what the job needs, not to avoid using secrets or permissions at all.
 
-![GitHub Actions vocabulary — workflow, job, runner, step, action — and the session's own main.yaml: push/PR triggers checkout, Python setup, install, Prefect Cloud login, then deployment run](assets/S05-github-actions.svg)
+![GitHub Actions vocabulary: a repository's .github/workflows/ holds workflows, each triggered by an event and made of jobs, each running on a runner and made of sequential steps, which are shell commands or actions](assets/S05-github-actions.png)
 
 ---
 

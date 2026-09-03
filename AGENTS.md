@@ -677,6 +677,7 @@ Do not eyeball the checklist:
 - [ ] No source references or source-framing prose in session notes
 - [ ] No cross-subject links in session notes
 - [ ] Diagrams parse, are linked, are visually QA'd, and have no unused SVG duplicates
+- [ ] Source-figure media audit run directly against the pptx (`a:blip`/PICTURE-shape inspection per the PowerPoint media audit rule, not a visual skim) for every deck this note draws on — every genuine content image found is preserved as PNG, used as a clearly labelled recreation, or explicitly recorded as omitted with a reason. Authoring an SVG for a concept does not satisfy this — it is a separate check against the deck's own media, done even when the note's diagrams already look complete.
 - [ ] Master index, `PROGRESS.md`, `MATERIALS-WATCHLIST.md`, and `source/MATERIAL-LOG.md` updated where needed
 - [ ] Condensed page, if present, was derived from the full note
 - [ ] No PDFs, slides, datasets, transcripts, weights, or secrets are staged

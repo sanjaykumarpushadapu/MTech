@@ -22,7 +22,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — Not every organization needs Big-Data-scale infrastructure. A team with a few million rows in a well-indexed relational database does not need a distributed processing stack; adopting one anyway adds operational cost (cluster management, distributed debugging) without a matching benefit. The "data deluge" framing applies once a single machine genuinely cannot store, move, or process the data in the time available — not as a default starting assumption.
 
-![Every minute of the day: a data-deluge snapshot across major platforms](assets/S04-data-deluge-context.svg)
+![Every minute of the day: a data-deluge snapshot across major platforms](assets/S04-data-deluge-context.png)
 
 > ***In practice*** — This kind of "internet minute" infographic (this one credited to Domo) is republished yearly precisely because the absolute numbers keep climbing; treat the shape of the picture (many independent high-velocity sources) as the durable lesson, not the specific figures.
 
@@ -44,7 +44,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — The five V's are a checklist for scoping a problem, not a scorecard to maximize. A dataset can be enormous (high Volume) and still be low-Value if it is not veracious — collecting more low-quality data does not fix a trust problem, and often makes it more expensive to clean. When Volume is the only V present (a large but slow-changing, single-format, well-audited dataset), ordinary database tooling is often still the right choice.
 
-![The five V's of Big Data arranged around a shared core](assets/S04-big-data-5vs.svg)
+![The five V's of Big Data arranged around a shared core](assets/S04-big-data-5vs.png)
 
 ---
 
@@ -74,7 +74,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — Treating Data Science as "the ML corner" alone (Math/Statistics ∩ CS-IT) is the most common mis-scoping: a model built with no domain input can optimise a metric that does not correspond to anything a clinician, or any other domain expert, actually cares about.
 
-![Data Science at the intersection of Math/Statistics, Software Development, and Domain Knowledge](assets/S04-data-science-venn.svg)
+![Data Science at the intersection of Math/Statistics, Software Development, and Domain Knowledge](assets/S04-data-science-venn.png)
 
 ### Supportive technologies for Data Science
 
@@ -100,7 +100,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — Treating the three labels as interchangeable causes real confusion in job postings and team design: a "Data Scientist" role that is actually pure ML-engineering work (training and shipping models with no storytelling or business-facing analysis) will frustrate a candidate who expected the broader Data Science remit, and vice versa. Knowing which part of the diagram a role actually sits in avoids that mismatch.
 
-![Artificial Intelligence, Machine Learning and Data Science as overlapping circles](assets/S04-ds-ai-ml-convergence.svg)
+![Artificial Intelligence, Machine Learning and Data Science as overlapping circles](assets/S04-ds-ai-ml-convergence.png)
 
 ### Roles in a Data Science project
 
@@ -120,9 +120,15 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **I. The ETL foundation.** Before any modeling happens, a Data Engineer builds the plumbing: Extract data from a source, Transform it in a staging area, Load it into a data warehouse, from which Business Intelligence tools read. Nothing "smart" happens here — it is the reliable pipe that everything else depends on.
 
+![Extract, transform, load: data source through a staging area into a data warehouse, read by business intelligence tools, built by a Data Engineer](assets/S04-etl-foundation.png)
+
 **II. The one-time forecast.** A Data Scientist takes an ML model and runs it once to produce a static answer — for example a one-time forecast across a few future quarters. This is a legitimate, common Data Science deliverable, but it runs once, answers one question, and stops. There is no monitoring loop: if the world changes tomorrow, this forecast does not notice.
 
+![A Data Scientist runs an ML model once to produce a one-time forecast](assets/S04-one-time-forecast.png)
+
 **III. Hidden technical debt.** The widely cited paper *"Hidden Technical Debt in Machine Learning Systems"* (Google, NeurIPS 2015) makes the uncomfortable point concrete with a figure: in a real production ML system, the actual ML code is a small black box surrounded by a much larger set of required infrastructure — configuration, data collection, feature extraction, data verification, machine resource management, analysis tools, process management tools, serving infrastructure, and monitoring. The lesson: budgeting a project as "mostly modeling work" under-counts the engineering effort by a wide margin.
+
+![Figure 1 from "Hidden Technical Debt in Machine Learning Systems" (Sculley et al., Google, NeurIPS 2015): the ML code box is small; configuration, data collection, feature extraction, data verification, machine resource management, analysis tools, process management tools, serving infrastructure, and monitoring surround it](assets/S04-hidden-technical-debt.png)
 
 **IV. The production loop.** The full picture an ML Engineer is responsible for: client data and additional data feed an ML model; the model's predictions become prediction data; ground-truth data (what actually happened) is compared against those predictions inside a monitoring-and-analysis step; and that monitoring step feeds back into maintaining and retraining the model. Unlike stage II, this system does not stop after one answer — it keeps checking itself against reality.
 
@@ -130,7 +136,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — Stage II (one-time forecast) is not a lesser version of stage IV that should always be upgraded — building and operating a full monitoring loop (stage IV) costs ongoing engineering effort. A question that will genuinely only be asked once (a one-off board report, a single historical analysis) is correctly served by stage II; the loop in stage IV is worth the investment only when the underlying question will keep being asked as new data arrives.
 
-![One-off ML report versus a monitored production loop](assets/S04-ml-production-loop.svg)
+![One-off ML report versus a monitored production loop](assets/S04-ml-production-loop.png)
 
 ### Data Science — hierarchy of needs
 
@@ -151,7 +157,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — This is a maturity model, not a strict gate — a team can prototype a small model on a clean sample dataset without first building enterprise-grade collection infrastructure for every metric. The pyramid's real warning is about *scaling* an AI initiative organization-wide without the base layers scaling with it, not about banning early experimentation.
 
-![The Data Science hierarchy of needs, base to apex](assets/S04-hierarchy-of-needs.svg)
+![The Data Science hierarchy of needs, base to apex (Jelvix, via miro.medium.com)](assets/S04-hierarchy-of-needs.png)
 
 ---
 
@@ -184,7 +190,7 @@ This session is the hinge between the cloud-native infrastructure of sessions 1-
 
 **Tradeoff / when NOT to use** — Not every analytics project needs all nine stages as separate, formal gates; a small internal dashboard refresh might collapse stages 2-4 (Identification, Acquisition, Extraction) into a single afternoon's work. The nine-stage breakdown earns its keep when the data sources, stakeholders, or regulatory requirements (as in healthcare data) are complex enough that skipping a stage creates real risk.
 
-![The nine-stage Big Data Analytics Life Cycle](assets/S04-big-data-life-cycle.svg)
+![The nine-stage Big Data Analytics Life Cycle](assets/S04-big-data-life-cycle.png)
 
 ### Case study — predicting patient survival after cardiac surgery
 
