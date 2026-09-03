@@ -303,11 +303,11 @@ _Everyday version:_ a chef doesn't dump a dish together using whatever happens t
 
 ![Data curriculum and staged data mixture](assets/S02-data-curriculum.png)
 
-The source uses **Llama 3** to illustrate **data annealing**: near the end of training, the model is exposed to a tiny, very high-quality subset while the learning rate is reduced. Data annealing improved the performance of the pretrained **Llama 3 8B** model, while improvements on the **405B** model were negligible. This is a reminder that a training trick can have different effects at different model scales; it does not prove that curriculum benefits generally shrink with model size.
+The source uses **Llama 3** to illustrate the result of **data annealing**: it improved the performance of a pretrained **Llama 3 8B** model, while improvements on the **405B** model were negligible. This is the slide's concrete example of the effect of a curriculum/annealing choice; it does not establish that curriculum benefits always shrink with model size.
 
-_Everyday version:_ "annealing" borrows its name from metalworking, but it is not a literal shared mechanism. Near the end of training, the learning rate is reduced while a small, high-quality data subset is used to refine the model after broad pretraining — a last refining touch rather than more of the same raw material.
+_Everyday version:_ a curriculum is like teaching from broad fundamentals first and introducing specialized, difficult exercises later. The learner sees a deliberate progression instead of receiving every type of example in a random order.
 
-**Worked example** — Llama 3's annealing dataset was 40 billion tokens, labelled as 0.02% of the total pretraining set, and was used partly just to _assess_ data quality; the actual annealing procedure used only 40 million tokens (0.1% of that 40B subset). The 15-trillion-token modern-era figure implies 40B/15T ≈ 0.27%, so the 0.02% label is internally inconsistent; preserve the token counts, not that incompatible percentage. Either way, this is a tiny sliver of tokens doing a disproportionate amount of late-stage quality work.
+**Worked example** — If Stage 1 contains broad, easier data and later stages increase specialized or challenging data, the model sees the training material in a deliberate order rather than a random order. This is the scheduling idea shown in the diagram.
 
 **Tradeoff / when NOT to use** — aggressive downsampling or curriculum ordering adds real engineering complexity: you need per-category quality scores, staged schedules, and monitoring for regressions. For a small-scale or research pretraining run without the infrastructure to track category-level provenance, a simpler uniform-sampling approach is a defensible starting point — curriculum tuning is where you spend engineering effort _after_ the basics work, not before.
 
@@ -597,6 +597,8 @@ The detailed schedule increases configuration gradually rather than jumping dire
 1. **Initial pretraining** — dynamic batch size and sequence length increase across three phases: 4M tokens at 4,096-token sequences; 8M tokens at 8,192-token sequences; then 16M tokens at 8,192-token sequences. The recipe uses AdamW.
 2. **Long-context pretraining** — context length grows across six stages from 8K to 128K tokens, using approximately 800B tokens for the extension.
 3. **Annealing** — the final stage uses a small, ultra-high-quality math-and-code subset while decaying the learning rate toward zero; the source reports a measurable improvement for the 8B model and negligible effect for the 405B model.
+
+The source reports an annealing dataset of **40B tokens**, described as **0.02%** of the total dataset and used to assess data quality. It says the actual annealing used **40M tokens**, or **0.1%** of that annealing dataset. These percentages are source-reported; retain the token counts and do not infer a different total-dataset ratio from them without resolving the source's denominator.
 
 _The recipe's gradual increases are a frontier-scale engineering choice, not a requirement that every model use these exact batch sizes or context stages._
 
