@@ -77,6 +77,11 @@ The top-level `##` Part/session headings follow the handout (above). Beneath the
 ### Part/topic hierarchy
 
 Use a consistent hierarchy in session notes: `## Part N · ...` for major handout-aligned Parts, `### N.M ...` for the main topics within that Part, and `#### ...` for source-slide subtopics or details. Do not use one global topic-number sequence across Parts, and do not introduce unnumbered peer headings that visually compete with the Part's numbered topics. Extra or non-examinable material gets its own parent `##` section and its own local topic numbering.
+
+### Diagram interpretation and learner-facing explanations
+
+When converting a pipeline or model diagram into study notes, distinguish **what the source lists** from **what the source proves**. A bullet placed under a stage is not automatically a mandatory step, a universal practice, or evidence that the stage directly causes the stated capability. Preserve the source's order and labels, then qualify optional recipe choices, repeated cross-stage techniques, and benefits that depend on data or implementation. Keep the learner-facing explanation simple: use a numbered flow, purpose, output, and one memory aid, while retaining a short accuracy caveat where simplification could mislead. In particular, do not claim that Q&A formatting alone creates instruction following, that online training is necessarily continuous, or that standard deployment optimizations are specified by a source slide when the slide only says `Optimization`.
+
 ### Capture a Temporary Slide Audit at Intake
 
 **The moment a deck is uploaded, before writing or editing the note, create a temporary slide inventory** in the OS temp directory or an ignored subject-level audit directory. It must contain one row per source slide — slide number, title, and named items (models, algorithms, frameworks, protocols, figures, and table labels). Include title, agenda, disclaimer, objectives, recap, and reference slides too; if a slide is routed to the master index, leave its named-items cell blank rather than omitting the row.

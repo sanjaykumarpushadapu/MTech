@@ -117,13 +117,148 @@ Every probability here is tiny (~10⁻⁵, roughly 1-in-100,000) because the unt
 
 ![Modern LLM development and training pipeline](assets/S02-modern-llm-development-pipeline.png)
 
-The source pipeline separates **preprocessing** (filtering, synthetic data generation, and mixing), **pretraining** (Q&A format, long-context stage, continued pretraining, high-quality stage, and knowledge distillation), **post-training** (supervised fine-tuning, reinforcement learning from human feedback (RLHF), direct preference optimization (DPO), online/offline methods, and knowledge distillation), and final optimization. These stages extend the data and optimization pipeline around the core pretraining objective; they do not replace next-token prediction as the central objective.
+This diagram shows the LLM development pipeline from raw data to a model prepared for use. Read it from left to right. The five blocks are stages in one workflow, not five different model architectures.
+
+**1. Dataset — the starting material**
+
+A dataset is a large collection of material such as books, websites, articles, code, conversations, and documents. The quality and diversity of this material strongly influence what the final model can learn. Raw data may contain duplicates, noise, harmful content, or irrelevant material, so it cannot normally be used directly.
+
+**2. Preprocessing — prepare the training corpus**
+
+Before training, the raw dataset is cleaned and organized:
+
+- **Filtering:** remove or down-weight low-quality, harmful, duplicated, or irrelevant content.
+- **Synthetic data:** add generated examples when they are useful and appropriately checked.
+- **Mixing:** combine web text, code, Q&A, academic content, books, and other sources in selected proportions.
+
+**Goal:** produce a training-ready corpus. Preprocessing is data engineering; the model has not learned its capabilities yet.
+
+**3. Pretraining — learn broad language patterns**
+
+The model is trained on the prepared corpus, usually with self-supervised **next-token prediction**. It learns statistical patterns, facts represented in the data, coding patterns, and other broad capabilities. The diagram lists several possible parts of a modern pretraining recipe:
+
+- **Q&A format:** represent some data as questions and answers. This can help question-answering behavior, but Q&A formatting alone does not create instruction following; instruction following is mainly developed during post-training.
+- **Long-context stage:** train with longer sequences so the model can process longer documents or conversations.
+- **Continued pretraining:** continue next-token training from an existing checkpoint, often to adapt it to a domain or new data.
+- **High-quality stage:** use a carefully curated subset, sometimes late in training, to refine the model.
+- **Knowledge distillation:** train one model to reproduce useful behavior from a stronger teacher model. This is optional and can be used at different points in a model-development recipe.
+
+**Result:** a base model with broad language capabilities. These listed items are recipe choices, not mandatory steps for every LLM.
+
+**4. Post-training — shape useful behavior**
+
+Post-training starts from the pretrained base model and uses narrower instruction or preference data to make its responses more useful, safe, and consistent:
+
+- **Supervised fine-tuning (SFT):** train on human-written or curated instruction–response examples.
+- **Reinforcement learning from human feedback (RLHF):** use human preferences or rankings to improve response behavior.
+- **Direct preference optimization (DPO):** learn directly from preferred and rejected responses without the same separate reinforcement-learning procedure used in a traditional RLHF pipeline.
+- **Online/offline methods:** use either fixed preference data (**offline**) or newly collected/on-policy feedback (**online**). Online does not necessarily mean that the model is updated continuously.
+- **Knowledge distillation:** optionally transfer useful behavior from a larger teacher to a smaller model.
+
+**Result:** an instruction-following or aligned model, rather than only a general text predictor. Post-training builds on pretraining; it does not replace it.
+
+**5. Optimization — prepare for efficient use**
+
+The source diagram labels the final block only as **Optimization**. In practice, this may include:
+
+- quantization to reduce model size and memory use;
+- pruning or sparsity methods to reduce computation;
+- faster inference and batching;
+- memory optimization;
+- hardware-specific tuning for GPUs, TPUs, or NPUs.
+
+These are common examples, not techniques explicitly specified by the source slide. The goal is to make the model cheaper, faster, and easier to serve.
+
+**Exam-friendly summary**
+
+```text
+Dataset
+  ↓
+Preprocessing
+  • Filtering
+  • Synthetic data
+  • Data mixing
+  ↓
+Pretraining
+  • Next-token prediction
+  • Q&A-formatted data
+  • Long-context stage
+  • Continued pretraining
+  • High-quality-data stage
+  • Optional knowledge distillation
+  ↓
+Post-training
+  • SFT
+  • RLHF
+  • DPO
+  • Online/offline preference methods
+  • Optional knowledge distillation
+  ↓
+Optimization
+  • Quantization
+  • Pruning/sparsity
+  • Inference and hardware optimization
+```
+
+**One-line memory trick:**
+
+> **Collect Data → Clean Data → Learn Language → Align Behavior → Optimize Deployment**
+
+The key distinction is that **pretraining teaches broad patterns**, while **post-training shapes how the model responds to people**. The arrows represent increasing data and model readiness: raw material → clean corpus → base model → aligned model → deployable system.
 
 #### Modern pre-training
 
 ![Modern pretraining pipeline](assets/S02-modern-pretraining.png)
 
-The modern-pretraining view emphasizes that the core objective remains next-token prediction while the surrounding recipe becomes richer: traditional pretraining used mostly text-only data, whereas modern pretraining adds rich, diverse input data, synthetic data generation, and multimodal integration, followed by staged training for general knowledge, reasoning, and long context and then post-training for instruction tuning and preference alignment.
+**Central idea:** modern pretraining does not replace the core objective. The model still learns primarily by predicting the next token. What has become richer is the **data**, the **training stages**, and the use of **post-training** after the core pretraining phase.
+
+**Traditional pretraining vs modern pretraining**
+
+| Aspect | Traditional pretraining | Modern pretraining |
+| --- | --- | --- |
+| Data | Mostly text-only data | Rich, diverse, multilingual, balanced, and sometimes multimodal data |
+| Data pipeline | Relatively simpler | More curation, synthetic-data generation, data mixing, and multimodal integration |
+| Core objective | Next-token prediction | Still mainly next-token prediction |
+| Training recipe | Often treated as one broad training phase | May use staged training for general knowledge, reasoning, and long context |
+| After pretraining | Separate fine-tuning may follow | Instruction tuning and preference alignment usually follow as post-training |
+
+**What the modern-pretraining side adds**
+
+1. **Rich and diverse input data** — combine text from multiple languages and domains with better curation and more balanced sampling. Depending on the model, the data may also include code, images, audio, or other modalities.
+2. **Synthetic data generation** — create additional training material with another model or a specialized data-generation process. Synthetic data must still be checked for quality, factual errors, and repeated model biases.
+3. **Multimodal integration** — train the system to connect text with other modalities, such as an image and its description. The exact architecture and objective vary by model; the diagram's point is that modern training is no longer restricted to text-only input.
+4. **Staged training** — the diagram illustrates a possible sequence:
+   - **General knowledge:** learn broad language and world-knowledge patterns.
+   - **Reasoning:** emphasize data or procedures intended to improve multi-step problem solving.
+   - **Long context:** train on longer sequences so the model can use more of a document or conversation at once.
+
+These stages are an illustrative modern recipe, not a universal schedule. Some models combine stages, repeat them, or use different names and ordering.
+
+**Where post-training fits**
+
+The diagram places **instruction tuning** and **preference alignment** after the core pretraining objective. This distinction is important:
+
+- **Pretraining** builds broad representations and capabilities from large-scale data, usually through next-token prediction.
+- **Post-training** uses instruction examples and preference signals to make the model follow requests, produce preferred formats, and behave more helpfully and safely.
+
+Therefore, instruction tuning is not the same as the core pretraining objective, even though instruction-formatted data may sometimes be included in a pretraining mixture. The diagram's lower message is the key exam point: **post-training usually happens after pretraining, not inside the core next-token-prediction objective.**
+
+**Exam-friendly summary**
+
+```text
+Traditional: mostly text-only data → next-token prediction
+
+Modern: richer and more diverse data
+        → synthetic-data generation and multimodal integration
+        → staged training: general knowledge → reasoning → long context
+        → post-training: instruction tuning → preference alignment
+
+Core objective throughout pretraining: next-token prediction
+```
+
+**One-line memory trick:**
+
+> **Same objective, richer recipe: diverse data → staged training → post-training.**
 
 > **_In practice_** _— how this appears in production._ Real pretraining runs choose a configured sequence length and process fixed-length sequences; short documents may be packed into one sequence with end-of-text separators. Context-window sizes are model- and version-specific, so comparisons should identify the exact model variant. The batch size for gradient descent is large — the biggest GPT-3 model trained with a batch size of **3.2 million tokens** at once, not 3.2 million _examples_.
 
@@ -448,7 +583,7 @@ The source recipe also names filtering, synthetic data, and mixing around the pr
 
 #### Model-as-a-Judge for data curation (Llama 3)
 
-See concept 5 for the full Llama 3 model-as-a-judge data-curation pipeline; it is the frontier-scale example of the quality-filtering step described there.
+See Section 2.2, `Data Preprocessing Pipeline`, for the full Llama 3 model-as-a-judge data-curation pipeline; it is the frontier-scale example of the quality-filtering step described there.
 
 ![Model-based data curation pipeline](assets/S02-model-based-curation.png)
 
@@ -559,7 +694,7 @@ The T5 baseline fine-tuning setup uses batch size 128, sequence length 512, a co
 
 ## Self-study / Lab / Build
 
-Lab 2 ("Build end-to-end training and fine-tuning pipelines," module M2–M5) is the natural place to reproduce this session's central worked example: the cross-entropy loss calculation in concept 3, extended into a full `train_model_simple()`-style loop — forward pass, loss, backward pass, optimizer step, periodic train/val loss logging — run against a corpus small enough to watch it overfit on purpose (matching the training log in concept 7: training loss falling smoothly while validation loss flattens then rises). Reproducing that overfitting curve by hand, once, is worth more than reading about catastrophic forgetting in the abstract.
+Lab 2 ("Build end-to-end training and fine-tuning pipelines," module M2–M5) is the natural place to reproduce this session's central worked example: the cross-entropy loss calculation in Section 1.3, `LLM training`, extended into a full `train_model_simple()`-style loop — forward pass, loss, backward pass, optimizer step, periodic train/val loss logging — run against a corpus small enough to watch it overfit on purpose (matching the training log in Section 3.2, `Catastrophic Forgetting`: training loss falling smoothly while validation loss flattens then rises). Reproducing that overfitting curve by hand, once, is worth more than reading about catastrophic forgetting in the abstract.
 
 ---
 
