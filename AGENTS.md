@@ -102,6 +102,12 @@ It reports every named item absent from the note. Judge each hit: a genuine omis
 
 Reading the deck and concluding "this looks covered" is not a coverage check. That judgement repeatedly passed notes that had dropped named items, collapsed the deck's own structure, and replaced concrete lists with an ellipsis. Matching is not a judgement call.
 
+### Learner-note provenance boundary
+
+Keep source provenance and audit identifiers out of learner-facing notes unless the user explicitly requests them. Do not add bookkeeping labels such as `Source slide N`, `(source slide 30)`, visual IDs, or coverage verdicts to headings or prose. Keep those details in temporary audit evidence or the compact material ledger. Preserve exact mapping with clean deck titles as headings, one section for each distinctly titled slide, and bounded subheadings when repeated-title slides share one section.
+
+**Mandatory final preflight:** scan every changed learner-facing note for audit-only provenance patterns before finalizing. Any hit is a failure unless the user explicitly requested those labels in the note.
+
 ### Respect the Deck's Own Deferrals
 
 When a source marks a topic as covered later — "(Module 2)", "we'll see this in L7", "detail next session", "more on this later" — **name the point, name where it is covered, and stop.** Do not teach the deferred material now. The instructor chose the order; pre-empting it buries this session's own point under material the reader has no grounding for, and duplicates the later session badly. If you are explaining the mechanism behind a fix the source postponed, you have left this session's scope.
