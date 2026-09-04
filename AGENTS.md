@@ -306,6 +306,18 @@ Do not rely on the master index, the note's history, or a prior audit — **only
 
 **You are the QA — the user is not.** Never report a note or audit as complete on the strength of extracted text, "the topic is present", or a prior pass. It is complete only when you have (a) rendered and actually looked at every slide, (b) produced the slide → home verdict table with a line for every slide, and (c) walked each slide's named items — every table column, algorithm, model, framework, statistic, and worked-example value — as a literal checklist. If you cannot show that table, the audit is not done. Do not make the user find the gap; finding it is your job, and the table is how you prove you did it.
 
+### Independent Final-Gate Rule: Coverage Is Not Correctness
+
+A passing `check-slide-coverage.mjs` result is only one gate. Before claiming a deck-backed note is fully checked, run and keep separate evidence for all of these:
+
+1. **Source identity/count:** independently verify the PPTX/PDF page count and assert that the temporary inventory, rendered-image set, and slide → home verdict table have exactly the same row/count coverage.
+2. **Findability:** map every distinctly titled substantive slide to a deliberate note heading or an explicitly justified master-index destination. Content buried under a neighbouring heading is not a pass.
+3. **Fact fidelity:** compare every formula, operator, unit, label, named item, table value, and worked-example number against the rendered source; execute arithmetic examples rather than trusting transcription.
+4. **Visual fidelity:** create a source-first visual inventory and map every substantive figure, chart, diagram, table image, and image-backed placeholder to a native asset, faithful crop, searchable transcription, or justified omission. A note-side `0 missing / 0 orphan` result is only internal reference integrity.
+5. **Post-edit recheck:** after any heading, formula, number, or asset change, rerun the relevant coverage and reference checks and inspect every changed visual at native resolution and expected note display width.
+
+The final response must distinguish these results explicitly: **rendered**, **textually covered**, **factually checked**, and **visually reconciled**. Never collapse them into “fully reviewed” when one gate was skipped, unavailable, or represented only by a keyword/asset-reference check. If an applicable gate cannot run, report it as an open gap instead of converting a partial pass into a completion claim.
+
 Auto-transcripts are noisy. Correct obvious terms silently, such as `RoPE`, `SwiGLU`, `GQA`, and `KV-cache`.
 
 ## 5. Session Note Contract
@@ -692,6 +704,8 @@ Do not eyeball the checklist:
 - [ ] Deck/session identity verified from slide contents, not filename alone
 - [ ] Mixed decks split by handout scope and logged
 - [ ] Deck agenda items covered or genuine gaps recorded
+- [ ] Every distinct deck title has a deliberate, findable note heading or a documented master-index destination; no buried titled-slide content
+- [ ] Formulas, operators, units, labels, and worked-example numbers were compared with the rendered source and arithmetic was executed
 - [ ] Deck visuals that carry explanation were preserved with equivalent note visuals, tables, or stepwise teaching flow
 - [ ] Every concept has Intuition, Mechanism, Worked example, Tradeoff, and Diagram
 - [ ] Arithmetic in worked examples was executed
@@ -700,6 +714,7 @@ Do not eyeball the checklist:
 - [ ] No cross-subject links in session notes
 - [ ] Diagrams parse, are linked, are visually QA'd, and have no unused SVG duplicates
 - [ ] Source-figure media audit run directly against the pptx (`a:blip`/PICTURE-shape inspection per the PowerPoint media audit rule, not a visual skim) for every deck this note draws on — every genuine content image found is preserved as PNG, used as a clearly labelled recreation, or explicitly recorded as omitted with a reason. Authoring an SVG for a concept does not satisfy this — it is a separate check against the deck's own media, done even when the note's diagrams already look complete.
+- [ ] Source visual inventory and note asset map were reconciled in both directions; zero missing/orphan note assets alone was not treated as source-figure completeness
 - [ ] Master index, `PROGRESS.md`, `MATERIALS-WATCHLIST.md`, and `source/MATERIAL-LOG.md` updated where needed
 - [ ] Condensed page, if present, was derived from the full note
 - [ ] No PDFs, slides, datasets, transcripts, weights, or secrets are staged

@@ -39,7 +39,7 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 
 - S01–S04 deck audits were completed against the held decks; temporary inventories are deleted after coverage verification.
 - The handout's Relative PE and Emerging Architectures items are explicitly distinguished from direct deck teaching in the S03 note rather than silently treated as slide coverage.
-- S03's five Part headings use the handout sub-topic wording; the note preserves the deck's source order and native instructional figures as PNG derivatives.
+- S03's four numbered Part headings use the handout sub-topic wording; the note preserves the deck's source order and native instructional figures as PNG derivatives. Supplementary emerging-architecture context is kept outside the numbered Parts because the deck provides no dedicated worked slide for it.
 - Class 4 is an explicit lecture-scope exception: the supplied deck teaches LLM Fine-tuning instead of the handout's standard S04 Training and Attention Efficiency row. `notes/S04-fine-tuning.md` follows the lecture deck and records the mismatch at the top of the note.
 - The subject note is the primary learning artifact; shared notes are optional synthesis and cannot be the only home for core material.
 

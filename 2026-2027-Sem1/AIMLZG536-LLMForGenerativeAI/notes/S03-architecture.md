@@ -8,6 +8,8 @@ Session 1 built the standard transformer block; session 2 showed how that block 
 
 **Running example:** the same four-part "places for improvement" frame — normalization, positional encoding, activation, feed-forward — is reused throughout, closing with the one part of the standard block this session does not upgrade in place but replaces outright: attention itself, in emerging architectures.
 
+### 1.1 Transformer architecture
+
 The standard **Transformer architecture** therefore gives us four places for improvements: **Layer Norm**, **Positional Encoding**, **Feed Forward** computation, and **Attention**. The Parts below keep those source labels visible while explaining the design choices in learner-facing language.
 
 ![Transformer architecture and places for improvement](assets/S03-transformer-places-for-improvement-source.png)
@@ -18,7 +20,7 @@ The standard **Transformer architecture** therefore gives us four places for imp
 
 *Two decisions, not one: which normalization function to use, and where in the block to place it. Both turn out to matter more than they first appear.*
 
-### RMSNorm
+### 1.2 RMSNorm
 
 **Intuition** — Normalization keeps activations inside a workable numeric range as they flow through many stacked layers, the way a thermostat keeps a room inside a livable temperature band instead of letting it drift to an extreme.
 
@@ -35,18 +37,18 @@ RMSNorm(x)   = gamma * x / sqrt(mean(x_i^2) + eps)
 
 where `gamma` is a learned gain parameter that rescales the standardized (or RMS-normalized) summed inputs, and `x` is the raw summed input to the layer.
 
-### LayerNorm Vs RMSNorm
+### 1.3 LayerNorm Vs RMSNorm
 
 **Worked example** — A single training example's layer output, before and after each normalization (values from Raschka's worked illustration):
 
 | Stage | Values | Mean | Variance |
 |---|---|---:|---:|
 | Layer inputs (5 values, one training example) | `[2.09, -9.72, -7.55, 3.24, -1.09]` | — | — |
-| Layer outputs (6 values, after a dense projection) | `[5.61, 14.32, 0.00, 34.88, 38.70, 11.29]` | 17.47 | 207.91 |
+| Layer outputs (6 values, after a dense projection) | `[5.61, 14.32, 0.00, 34.88, 38.70, 11.29]` | 17.47 | 207.97 |
 | After **LayerNorm** | `[-0.82, -0.22, -1.21, 1.21, 1.47, -0.43]` | **0.00** | **1.00** |
 | After **RMSNorm** | `[0.25, 0.63, 0.00, 1.54, 1.71, 0.50]` | 0.77 | 0.41 |
 
-LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm doesn't hit those exact targets — mean lands at 0.77, not 0.00 — but it still collapses the variance from 207.91 down to 0.41, which is the part that actually matters for training stability: activations stop blowing up in scale, even without being perfectly centered.
+LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm doesn't hit those exact targets — mean lands at 0.77, not 0.00 — but it still collapses the variance from 207.97 down to 0.41, which is the part that actually matters for training stability: activations stop blowing up in scale, even without being perfectly centered.
 
 ![LayerNorm and RMSNorm comparison figure](assets/S03-layernorm-rmsnorm-source.png)
 
@@ -55,7 +57,7 @@ LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm does
 
 ---
 
-### Pre-Norm vs Post Norm
+### 1.4 Pre-Norm vs Post Norm
 
 **Intuition** — It isn't only *which* normalization function to use — *where* it sits relative to the sublayer and the residual connection changes whether gradients get a clean, unmodified shortcut back through a deep network.
 
@@ -65,12 +67,14 @@ LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm does
 
 **An everyday picture for the difference** — Post-Norm is like re-inspecting and re-sealing a delivery truck's *entire cargo hold* at every single stop on its route — the main cargo area itself keeps getting touched and repackaged each time. Pre-Norm is like inspecting only the new items being loaded in at each stop, while the truck's existing cargo drives straight through, untouched, from the first stop to the last. The second design is far more forgiving over a very long route (a very deep stack).
 
-**Worked example — three real architectures, three placements.** The original Transformer decoder uses Post-Norm throughout. **Llama 3 8B** uses Pre-Norm: RMSNorm1 sits before the attention block, RMSNorm2 sits before the feed-forward block, and the residual stream itself is never normalized mid-flow. **OLMo 2 7B** uses a third variant — "Post-Norm but inside the residual": RMSNorm is applied *after* attention/FFN, like Post-Norm, but the placement is arranged so it still sits inside the residual branch rather than wrapping the whole running sum, closer in spirit to Pre-Norm's stability. All three architectures also add a **Final Norm** right before the output projection — because Pre-Norm's untouched residual stream can still grow in scale across many layers, and one last normalization reins that back in before the logits are computed.
+**Worked example — three real architectures, three placements.** The original Transformer decoder uses Post-Norm throughout. **Llama 3 8B** uses Pre-Norm: RMSNorm1 sits before the attention block, RMSNorm2 sits before the feed-forward block, and the residual stream itself is never normalized mid-flow. **OLMo 2 7B** uses a third variant — "Post-Norm but inside the residual": RMSNorm is applied *after* attention/FFN, like Post-Norm, but the placement is arranged so it still sits inside the residual branch rather than wrapping the whole running sum, closer in spirit to Pre-Norm's stability. All three architectures also add a final normalization before the output projection — **Final LayerNorm** for the original Transformer, **Final RMSNorm** for Llama 3 and OLMo 2 — because Pre-Norm's untouched residual stream can still grow in scale across many layers, and one last normalization reins that back in before the logits are computed.
 
 A fourth pattern is worth naming separately: **Gemma 3** normalizes **both before and after** each sublayer — a "sandwich" that pays for two normalization passes per sublayer instead of one, in exchange for controlling activation scale on both the way in and the way out. It's neither pure Pre-Norm nor pure Post-Norm; it's evidence that "normalize once, in one place" isn't the only viable design once a lab is willing to spend the extra compute.
 
 ![Normalization placements across model families](assets/S03-normalization-placements-source.png)
 
+
+#### Sample Question
 
 **Worked example — an exam-style question.** *You are designing a decoder-only LLM with more than 100 layers and want stable training with lower computation. Which normalization strategy would you choose, and why?* Answer: **RMSNorm with Pre-Norm placement** — RMSNorm removes the mean-centering pass (cheaper, 7-15% faster, as explained under *RMSNorm*), and Pre-Norm gives gradients a direct highway through the residual stream (stable at depth, tolerates larger learning rates without warmup). This combination is the default for scaling deep LLMs: **Llama, Qwen, DeepSeek, and Mistral all use it.**
 
@@ -82,7 +86,13 @@ A fourth pattern is worth naming separately: **Gemma 3** normalizes **both befor
 
 *Three ideas in sequence: encode position relatively instead of absolutely, encode that relative position through rotation instead of a lookup table, and — in a few layers of a few models — drop explicit position information entirely.*
 
-### 3. Relative positional encoding — the general idea
+### 2.1 Position Embedding
+
+Position embeddings supply the ordering signal that lets attention distinguish the same tokens appearing in different positions. The deck uses this title as the transition into relative and rotary position methods.
+
+### 2.2 Rotary Positional Embeddings (RoPE)
+
+#### Relative positional encoding — the general idea
 
 **Intuition** — Instead of each token declaring "I am at position 5," relative position encoding makes *pairs* of tokens declare "we are 3 tokens apart" — a signal that stays the same even if the whole sentence shifts.
 
@@ -98,7 +108,7 @@ A fourth pattern is worth naming separately: **Gemma 3** normalizes **both befor
 
 ---
 
-### 4. RoPE (Rotary Positional Embeddings)
+#### RoPE mechanism and rotation
 
 **Intuition** — Instead of *adding* a position vector, RoPE *rotates* the query and key vectors by an angle that depends on their position. Rotating two vectors by different amounts changes the angle *between* them in a way that depends only on the *difference* in how much each was rotated — so relative position falls directly out of the geometry, with no separate lookup table required. RoPE was introduced by Su et al. in the RoFormer paper (2021).
 
@@ -129,11 +139,13 @@ By the algebra of rotations, the combined rotation term depends only on `(n - m)
 
 **Why models moved to it** — Better handling of relative distances (attention itself becomes position-aware, rather than position being a separate add-on the model has to indirectly recover). Better long-context behavior — it is often easier to extend a RoPE-based model to a larger context window, because rotation is a continuous, extendable function rather than a fixed table capped at whatever length was seen in training. Cleaner integration with attention — position lands exactly where it is used, inside the query-key dot product, instead of being mixed into the input embedding and hoped to survive many layers of transformation intact. **RoPE is the default in Llama, Qwen, GPT-OSS, DeepSeek, GLM-4.5, and Sarvam 30B.**
 
+![Llama 3 architecture with RoPE placement](assets/S03-rope-llama3-architecture-source.png)
+
 **Tradeoff / when NOT to use** — RoPE assumes relative position is what matters and encodes nothing else — recovering an *absolute* fact like "this is the very first token" isn't naturally available unless something else in the architecture supplies it (a beginning-of-sequence token, for instance). And even RoPE-equipped models still degrade at context lengths well beyond their training length, just less sharply than absolute encodings do — which is part of what motivates NoPE, next.
 
 ---
 
-### 5. NoPE, and mixing RoPE with no positional encoding
+#### NoPE, and mixing RoPE with no positional encoding
 
 **Intuition** — What if some layers used *no* explicit positional encoding at all, relying purely on the causal attention mask itself as the only source of order information?
 
@@ -161,7 +173,9 @@ By the algebra of rotations, the combined rotation term depends only on `(n - m)
 
 *Two upgrades to the feed-forward layer: a smoother activation curve, and splitting the layer into a value path plus a gate path.*
 
-### 6. GELU and Swish — smoother activations for deep stacks
+### 3.1 Activation Functions in Modern LLMs
+
+#### GELU and Swish — smoother activations for deep stacks
 
 **Intuition** — ReLU's hard cutoff at zero (output is *exactly* zero for any negative input) creates a sharp corner that can silently kill a neuron's gradient forever if that neuron's input drifts negative — the "dying ReLU" problem. GELU and Swish replace that hard corner with a smooth curve that still resembles ReLU's overall shape, but never has a completely flat, zero-gradient region for typical inputs.
 
@@ -179,7 +193,7 @@ By the algebra of rotations, the combined rotation term depends only on `(n - m)
 
 ---
 
-### 7. Gated Linear Units and SwiGLU
+### 3.2 Where It Sits: FFN → Gated FFN (GLU)
 
 **Intuition** — A plain FFN passes every input through one filtering path (linear → activation → linear). A **gated** FFN splits the computation into two parallel paths instead — one path decides *how much* of each feature should pass through, the other path carries *what* that feature actually is — and multiplies the two together.
 
@@ -189,12 +203,12 @@ By the algebra of rotations, the combined rotation term depends only on `(n - m)
 
 ```text
 Regular FFN:  FFN(x) = act(x W1) W2                        (2 weight matrices, one path)
-Gated FFN:    FFN(x) = ( act(x W) (x) x V ) W2              (3 weight matrices, two paths, "(x)" = elementwise multiply)
+Gated FFN:    FFN(x) = ( act(x W) ⊗ (x V) ) W2              (3 weight matrices, two paths, "⊗" = elementwise multiply)
 ```
 
 `x W` goes through the activation to become a **gate** signal — deciding how much of each dimension should pass. `x V` is a separate, un-activated **value/content** path. The two are combined elementwise before the final output projection `W2`. The gate decides "how much"; the value path decides "of what" — content and relevance are computed by two different weight matrices instead of being forced through one.
 
-**Named variants** — **GEGLU** uses GELU as the gate: `FFN_GEGLU(x, W, V, W2) = (GELU(x W) (x) x V) W2`. **SwiGLU** uses Swish (specifically Swish with β=1, sometimes written Swish₁, equivalent to SiLU) as the gate: `FFN_SwiGLU(x, W, V, W2) = (Swish_1(x W) (x) x V) W2`.
+**Named variants** — **GEGLU** uses GELU as the gate: `FFN_GEGLU(x, W, V, W2) = (GELU(x W) ⊗ (x V)) W2`. **SwiGLU** uses Swish (specifically Swish with β=1, sometimes written Swish₁, equivalent to SiLU) as the gate: `FFN_SwiGLU(x, W, V, W2) = (Swish_1(x W) ⊗ (x V)) W2`.
 
 ![Regular feed-forward path](assets/S03-regular-ffn-source.png)
 ![Gated FFN (GLU) source callout](assets/S03-gated-ffn-source.png)
@@ -209,7 +223,9 @@ Gated FFN:    FFN(x) = ( act(x W) (x) x V ) W2              (3 weight matrices, 
 
 *One FFN per decoder block becomes several. A router decides which ones actually run for a given token — trading total capacity against per-token compute.*
 
-### 8. Dense vs sparse layers — why MoE exists
+### 4.1 Mixture of Experts (MoE)
+
+#### Dense vs sparse layers — why MoE exists
 
 **Intuition** — A dense FFN uses every one of its parameters on every single token. MoE instead keeps many separate FFNs ("experts") but routes each token through only a handful of them — so the model's total knowledge capacity can grow far larger while the compute spent *per token* stays roughly fixed.
 
@@ -240,28 +256,41 @@ Across decoder blocks, different tokens can follow different expert paths. This 
 
 ---
 
-### 9. Routing and load balancing
+#### Router and expert selection
 
 **Intuition** — A router's job is not only "which expert looks closest to correct for this token" — it also has to make sure no single expert becomes so popular that it turns into a bottleneck, and no expert is so ignored that it never learns anything useful.
 
-**Mechanism** — The **router**, also called the **gate network**, outputs probabilities over experts for each token; the expert layer's output is the selected expert's output **multiplied by the router's selection probability** (the "gate value") for that expert, so the router's confidence directly scales how much that expert's answer counts. A token can be routed to exactly one expert (**top-1 routing**) or to several (**top-k routing**), with the selected experts' contributions weighed and integrated. In other words, the **expert contributions** are weighted and integrated into the block output.
+**Mechanism** — The **router**, also called the **gate network**, outputs probabilities over experts for each token. The expert layer's output is the selected expert's output **multiplied by the router's selection probability** (the "gate value") for that expert, so the router's confidence directly scales how much that expert's answer counts.
 
 ![MoE router and expert selection](assets/S03-moe-router-source.png)
 
-**The load-balancing problem, and its fix** — It isn't just *which* experts are used, it's *how much* each one is used. Left unconstrained, popular experts get overloaded while others are barely trained. **Expert capacity** is the fix: a hard cap on how many tokens a given expert can process per batch. Once an expert reaches capacity, further tokens routed to it are sent to the **next expert** with the next-best routing score instead. **Token overflow** is the failure case this creates: if *all* of a token's assigned top-k experts are simultaneously at capacity, that token is not processed by any expert at all — it bypasses the MoE block entirely and reaches the next layer through the residual connection, unchanged by this block's expert computation.
+#### Load Balancing: Token Choice
+
+A token can be routed to exactly one expert (**top-1 routing**) or to several (**top-k routing**), with the **expert contributions** weighed and integrated into the block output.
 
 ![MoE top-1 and top-2 token-choice routing](assets/S03-moe-token-choice-source.png)
 ![MoE token-choice routing variant](assets/S03-moe-token-choice-variant-source.png)
+
+#### Load Balancing: Expert Capacity
+
+**The load-balancing problem, and its fix** — It isn't just *which* experts are used, it's *how much* each one is used. Left unconstrained, popular experts get overloaded while others are barely trained. **Expert capacity** is the fix: a hard cap on how many tokens a given expert can process per batch. Once an expert reaches capacity, further tokens routed to it are sent to the **next expert** with the next-best routing score instead. **Token overflow** is the failure case this creates: if *all* of a token's assigned top-k experts are simultaneously at capacity, that token is not processed by any expert at all — it bypasses the MoE block entirely and reaches the next layer through the residual connection, unchanged by this block's expert computation.
+
 ![MoE expert capacity and token overflow](assets/S03-moe-expert-capacity-source.png)
 ![MoE expert-capacity overflow variant](assets/S03-moe-expert-capacity-variant-source.png)
 
-**Worked example — an exam-style question.** *"Explain the concept of 'Expert Capacity' and the consequence of 'Token Overflow.' How do these design choices impact training and inference?"* **Training impact:** capacity keeps the router from collapsing onto a few favourite experts, forcing the model to genuinely use its full parameter count — but dropped (overflowed) tokens add noise to training, so too tight a cap causes excessive drops while too loose a cap allows imbalance to persist unchecked. **Inference impact:** capacity limits are usually relaxed at serving time, since forcing balance matters less once the model is no longer learning — but **total** parameters, not just active ones, must still fit in GPU memory, and uneven expert usage can still slow serving down.
+
 
 **Tradeoff / when NOT to use** — Tight expert capacity forces balanced expert usage (good training signal) at the cost of dropped tokens (worse quality for that specific batch). Loose capacity avoids drops but risks the router ignoring most experts, wasting the very capacity MoE was built to buy. There is no single capacity setting that avoids both failure modes at once — production systems pick a working middle ground and monitor for both symptoms directly.
 
 ---
 
-### 10. Modern MoE design patterns
+### 4.2 Sparse MoE
+
+A naming trap worth flagging: "dense" gets reused with two different meanings in this part of the session. In the dense-versus-sparse explanation, a **dense layer** means a plain FFN with no MoE at all — every parameter always active. Inside MoE specifically, a **Sparse MoE** is the hard-routing design covered so far — the router selects only a few experts (top-1 or top-k) and the rest sit fully idle for that token. A **Dense MoE**, by contrast, still runs *every* expert for every token, like a plain dense layer would, but combines their outputs in different proportions (weighted differently per token) rather than selecting a hard subset. A Dense MoE keeps the "many specialized sub-networks, weighted per token" idea without the routing/capacity/overflow machinery described in the routing sections — at the cost of losing the compute savings that make sparse MoE attractive in the first place, since every expert still runs regardless of relevance.
+
+A related pattern is **dynamic sparsity**: newer models like **Qwen3-Next** and **Llama 4** (Maverick/Scout) adjust how many experts activate based on task difficulty — increasing active experts during a reasoning-heavy "thinking mode" (reinforcement-learning-driven extended reasoning) and decreasing them for ordinary chat, effectively behaving like two different models sharing one set of weights.
+
+### 4.3 Modern MoE = shared + routed experts
 
 **Intuition** — Two questions define a modern MoE design: how many experts are *always on* versus selectively routed, and how many total experts are fine-grained specialists versus a few large generalists — different frontier labs have made genuinely different, defensible bets on both.
 
@@ -280,22 +309,24 @@ Across decoder blocks, different tokens can follow different expert paths. This 
 | Routed experts | 256 | 128 |
 | Shared experts | 1 | 1 |
 | Routing | top-8 of 256 | top-1 |
-| Layer pattern | — | alternating dense + MoE layers |
+| Layer pattern | — | alternating dense and MoE layers |
 | Design bet | many small specialists | fewer, sharper, bigger experts |
 
-A naming trap worth flagging: "dense" gets reused with two different meanings in this part of the session. In the dense-versus-sparse explanation, a **dense layer** means a plain FFN with no MoE at all — every parameter always active. Inside MoE specifically, a **Sparse MoE** is the hard-routing design covered so far — the router selects only a few experts (top-1 or top-k) and the rest sit fully idle for that token. A **Dense MoE**, by contrast, still runs *every* expert for every token, like a plain dense layer would, but combines their outputs in different proportions (weighted differently per token) rather than selecting a hard subset. A Dense MoE keeps the "many specialized sub-networks, weighted per token" idea without the routing/capacity/overflow machinery described in the routing sections — at the cost of losing the compute savings that make sparse MoE attractive in the first place, since every expert still runs regardless of relevance.
-
-A related pattern is **dynamic sparsity**: newer models like **Qwen3-Next** and **Llama 4** (Maverick/Scout) adjust how many experts activate based on task difficulty — increasing active experts during a reasoning-heavy "thinking mode" (reinforcement-learning-driven extended reasoning) and decreasing them for ordinary chat, effectively behaving like two different models sharing one set of weights.
+### 4.4 MoE
 
 **MoE at inference — the distinction that trips people up.** **Active** parameters drive *speed* — only the routed experts' weights need to be read and multiplied for a given token. **Total** parameters drive *memory* — every expert's weights must be loaded onto the GPU regardless of whether that expert gets used for this particular token, because the router's choice changes token to token, layer to layer. **Mixtral 8×7B** is the canonical illustration: roughly **47B total parameters** must fit on disk and in memory, even though only about **13B parameters are active** for any single token's forward pass. A team sizing hardware for an MoE model has to budget for the *total* footprint, not the active one — getting this backwards produces a model that runs fast per-token but simply doesn't fit on the available GPUs at all.
 
 **Tradeoff / when NOT to reach for MoE** — MoE is a good bet when the systems complexity it demands — custom routing infrastructure, load-balancing tuning, harder-to-parallelize training — is affordable in exchange for capacity a dense model at the same active-compute budget couldn't reach. This is the central **scaling efficiency** benefit: more representational capacity without activating every parameter for every token. For a small team without dedicated expert-parallel training infrastructure, or for a product where the *total*-parameter memory footprint is the binding constraint (edge deployment, for instance), a smaller dense model is usually the simpler, more reliable choice. MoE trades operational simplicity for capacity-per-compute, and that trade only pays off at a scale where the extra capacity is actually needed.
 
+#### Sample Question
+
+**Worked example — an exam-style question.** *"Explain the concept of 'Expert Capacity' and the consequence of 'Token Overflow.' How do these design choices impact training and inference?"* **Training impact:** capacity keeps the router from collapsing onto a few favourite experts, forcing the model to genuinely use its full parameter count — but dropped (overflowed) tokens add noise to training, so too tight a cap causes excessive drops while too loose a cap allows imbalance to persist unchecked. **Inference impact:** capacity limits are usually relaxed at serving time, since forcing balance matters less once the model is no longer learning — but **total** parameters, not just active ones, must still fit in GPU memory, and uneven expert usage can still slow serving down.
+
 ---
 
-## Part 5 · Emerging Architectures
+## Supplementary context · Emerging Architectures
 
-### 11. Beyond the standard transformer stack
+### 1. Beyond the standard transformer stack
 
 **Intuition** — Everything so far in this session modifies a piece *inside* the standard transformer block — its normalization, its positional encoding, its activation, its feed-forward layer. Emerging architectures ask a more radical question: does every layer even need to be a full attention layer at all?
 
