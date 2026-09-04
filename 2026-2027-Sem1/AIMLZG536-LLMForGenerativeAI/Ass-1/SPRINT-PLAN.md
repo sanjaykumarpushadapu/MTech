@@ -24,6 +24,7 @@ the brief does not specify a group size.
 | 6 | [**The eight steps**](#6--the-eight-steps) ← the actual work |
 | 7 | [Submission](#7--submission) |
 | 8 | [Risk register](#8--risk-register) |
+| 9 | [Downstream note](#9--downstream-note) |
 
 ---
 
@@ -327,7 +328,10 @@ paragraph on whether the trade-off was worth it.
    but still complete rather than answer? Did the adapter make it actually *respond* to the
    instruction? That progression is the finding the whole assignment is built to demonstrate.
 
-**Done when:** the three-way table exists with a written analysis.
+**Report:** the three-way comparison table plus the written observations.
+
+**Done when:** the table exists, the analysis is written, and it names the behavioural shift —
+not just "the output got better".
 
 ---
 
