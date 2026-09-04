@@ -1,8 +1,8 @@
-# AIML ZG536 · Class 04 · LLM Fine-tuning
+# AIML ZG536 · Session 04 · LLM Finetuning
 
-_Lecture note · 04 Sep 2026_
+*Learned 04 Sep 2026*
 
-> **Class 4 scope exception.** The supplied lecture deck teaches **LLM Fine-tuning**, while the handout's standard Session 4 row is **Training and Attention Efficiency**. This note follows the material actually taught in Class 4 and must not be treated as the handout's standard Session 4 note.
+> **Handout scope:** Full Fine-tuning; Supervised Fine Tuning (SFT); Instruction fine tuning (IFT); Prompt and Prefix tuning; Parameter Efficient Fine tuning (PEFT), including LoRA, QLoRA, and Adapters; Model Merging; and Distillation.
 
 ## Why this class matters
 
@@ -23,11 +23,11 @@ The recurring before/after contrast is simple:
 
 ---
 
-## Part 1 · Fine-tuning
+## Full Fine-tuning
 
 ### Fine-tuning
 
-**What it is.** Fine-tuning starts with a pretrained language model and trains it further on a narrower dataset or objective. The starting model already contains general representations, so the new training run specializes rather than relearning language from random weights.
+**Intuition.** Fine-tuning starts with a pretrained language model and trains it further on a narrower dataset or objective. The starting model already contains general representations, so the new training run specializes rather than relearning language from random weights.
 
 **Why it is needed.** A general model may know facts and language patterns but still fail to produce the format or behavior required by a product. Fine-tuning supplies task-, domain-, or instruction-specific training signals.
 
@@ -43,9 +43,9 @@ The recurring before/after contrast is simple:
 
 **Tradeoff / when not to use.** Full fine-tuning can adapt strongly but requires updating and storing a complete model copy. Continued pretraining needs a large, stable unlabeled corpus. PEFT is cheaper, but the small trainable component may limit how far the behavior can move.
 
-### Fine tuning: SFT, IFT, and MLM fine-tuning
+### Fine tuning
 
-**What it is.** Fine-tuning can use labeled input-output examples, instruction-response examples, or a masked-token objective, depending on the model family and desired behavior.
+**Intuition.** Fine-tuning can use labeled input-output examples, instruction-response examples, or a masked-token objective, depending on the model family and desired behavior.
 
 **Why it is needed.** The same pretrained model can be useful for different outcomes: task prediction, instruction following, or domain adaptation of an encoder-style model.
 
@@ -63,7 +63,7 @@ The recurring before/after contrast is simple:
 
 ### Few shot learning
 
-**What it is.** Few-shot or in-context learning gives a pretrained model examples inside the input prompt instead of updating its weights. **GPT-3** demonstrated that a sufficiently capable model could perform tasks beyond the narrow form of training examples it had seen.
+**Intuition.** Few-shot or in-context learning gives a pretrained model examples inside the input prompt instead of updating its weights. **GPT-3** demonstrated that a sufficiently capable model could perform tasks beyond the narrow form of training examples it had seen.
 
 **Why it is needed.** It provides a fast way to try a task without collecting a fine-tuning dataset or running an optimizer. The model uses knowledge learned during pretraining and the examples supplied at inference time.
 
@@ -84,11 +84,11 @@ No gradient update is performed. The model conditions its next-token predictions
 
 ---
 
-## Part 2 · Instruction fine tuning
+## Instruction fine tuning
 
 ### Instruction fine tuning
 
-**What it is.** Instruction fine-tuning trains a pretrained model on instruction-response pairs so that it learns to interpret a request and produce a task-appropriate answer.
+**Intuition.** Instruction fine-tuning trains a pretrained model on instruction-response pairs so that it learns to interpret a request and produce a task-appropriate answer.
 
 **Why it is needed.** A base language model is optimized for likely continuation, not necessarily for following a human request. The desired change is from **observed behavior: next-word prediction** to **desired behavior: instruction following**.
 
@@ -97,6 +97,8 @@ The observed behavior is **Next word prediction** and the desired behavior is **
 ![Observed behavior and instruction-tuned model](assets/S04-instruction-fine-tuning-behavior.png)
 ![Instruction data examples](assets/S04-instruction-data-example.png)
 ![Aligned model pipeline](assets/S04-aligned-model-pipeline.png)
+
+### IFT Data Preparation
 
 **Mechanism.** An instruction-tuning record contains an instruction, optional input/context, and the desired output. Data can be created through:
 
@@ -113,9 +115,15 @@ An IFT dataset can be stored as **JSONL (JSON Lines)**, with one training record
 
 ### Dataset schema
 
-**What it is.** A dataset schema is a model-agnostic record format that stays stable even when the model-specific prompt template changes.
+**Intuition.** A dataset schema is a model-agnostic record format that stays stable even when the model-specific prompt template changes.
 
 **Why it is needed.** Keeping raw task information separate from the final chat template lets the same dataset be rendered for different models without rewriting the underlying examples.
+
+```mermaid
+flowchart LR
+    A[Stable task record] --> B[Model-specific renderer]
+    B --> C[Chat or instruction format]
+```
 
 **Mechanism.** The Eiffel Tower example separates:
 
@@ -135,7 +143,7 @@ A JSONL record adds fields such as:
 }
 ```
 
-The stored schema is stable; a model-specific renderer such as **Mistral Instruct** can turn it into a format such as Mistral `[INST] ... [/INST]`.
+The stored schema is stable; a model-specific renderer such as **Mistral Instruct** can turn it into a format such as Mistral `[INST] ... [/INST]`. The source example comes from **SQuAD 2.0**, while the stored record uses the normalized identifier `squad_v2`.
 
 **Worked example.** The same stored record can be rendered with one chat template for a Mistral model and another for a different model, while the context, question, and answer remain unchanged.
 
@@ -143,7 +151,7 @@ The stored schema is stable; a model-specific renderer such as **Mistral Instruc
 
 ### SELF-INSTRUCT
 
-**What it is.** Self-Instruct is a semi-automated process for instruction-tuning a pretrained language model using instructional signals generated by the model itself.
+**Intuition.** Self-Instruct is a semi-automated process for instruction-tuning a pretrained language model using instructional signals generated by the model itself.
 
 **Why it is needed.** Manually writing a very large instruction dataset is costly. Self-Instruct uses a smaller set of seed tasks to expand the number and variety of instructions and examples.
 
@@ -165,15 +173,45 @@ The associated paper is **SELF-INSTRUCT: Aligning Language Models with Self-Gene
 
 ---
 
-## Part 3 · Parameter efficient fine-tuning (PEFT)
+## Prompt and Prefix tuning
+
+### Prompt and Prefix tuning
+
+**Intuition.** Instead of rewriting the model's knowledge, prompt- and prefix-tuning place a small, trainable control signal in front of the input. The same frozen model can therefore learn several task behaviours by switching the learned signal.
+
+**Why it is needed.** These methods keep the large pretrained model shared while storing only a small task-specific state, which is useful when many adaptations must coexist.
+
+**Mechanism.** Prompt tuning learns virtual prompt embeddings that are prepended to the input. Prefix tuning learns trainable key/value vectors that act like a continuous prefix inside the transformer layers; neither method requires updating the ordinary backbone weights.
+
+```mermaid
+flowchart LR
+    A[Task input] --> B[Trainable prompt or prefix]
+    B --> C[Frozen pretrained model]
+    C --> D[Task output]
+```
+
+**Worked example.** Keep one frozen model and train separate virtual prompts for sentiment classification and summarization. At inference time, selecting the sentiment prompt or summarization prompt changes the task behaviour without loading another full model.
+
+**Tradeoff / when not to use.** Prompt and prefix tuning minimize stored parameters, but the learned control signal may have less capacity than LoRA or full fine-tuning. Prefer a richer adapter when the task requires a large change in internal representations.
+
+---
+
+## Parameter Efficient Fine-tuning
 
 ### Parameter efficient fine-tuning (PEFT): why?
 
-**What it is.** PEFT adapts a large pretrained model by tuning only a small subset of its parameters rather than updating the full model.
+**Intuition.** PEFT adapts a large pretrained model by tuning only a small subset of its parameters rather than updating the full model.
 
 **Why it is needed.** As models grow, full fine-tuning can exceed consumer-hardware memory and compute limits. Storing an independent full-size model for every downstream task also makes deployment expensive.
 
 **Before/after.** Full fine-tuning stores one complete updated model per task. PEFT keeps one shared base model and stores small task-specific trainable components.
+
+```mermaid
+flowchart LR
+    A[Shared frozen base] --> B[Task adapter 1]
+    A --> C[Task adapter 2]
+    A --> D[Task adapter 3]
+```
 
 **Mechanism.** PEFT can reduce the number of trainable parameters, optimizer states, checkpoint bytes, and task-specific deployment copies. It does not mean that the frozen base model disappears; it remains part of inference.
 
@@ -181,9 +219,9 @@ The associated paper is **SELF-INSTRUCT: Aligning Language Models with Self-Gene
 
 **Tradeoff / when not to use.** PEFT is attractive when hardware, storage, or multi-task serving is constrained. Full fine-tuning may still be preferable when the task is far from the base model's capabilities and the full update is affordable.
 
-### Parameter efficient fine-tuning (PEFT): three categories
+### Parameter efficient fine-tuning (PEFT)
 
-**What it is.** PEFT methods can be grouped according to where the trainable change is introduced.
+**Intuition.** PEFT methods can be grouped according to where the trainable change is introduced.
 
 **Why it is needed.** The categories make the engineering choice explicit: add a module, update selected existing weights, or reparameterize the update so fewer values are trained.
 
@@ -202,7 +240,7 @@ The associated paper is **SELF-INSTRUCT: Aligning Language Models with Self-Gene
 
 ### Adapters
 
-**What it is.** Adapters are lightweight trainable modules inserted into a pretrained transformer while the pretrained backbone remains frozen.
+**Intuition.** Adapters are lightweight trainable modules inserted into a pretrained transformer while the pretrained backbone remains frozen.
 
 **Why it is needed.** A small bottleneck module can specialize a shared model without creating a full new copy of the backbone for every task.
 
@@ -232,11 +270,11 @@ A fully connected 1024-to-1024 layer would have:
 
 ---
 
-## Part 4 · LoRA
+## LoRA
 
 ### Regular Finetuning
 
-**What it is.** Regular or full fine-tuning directly changes the pretrained weight matrix.
+**Intuition.** Regular or full fine-tuning directly changes the pretrained weight matrix.
 
 **Why it is needed.** Updating all weights gives the model maximum freedom to fit the new task, but the update can be extremely large.
 
@@ -263,9 +301,15 @@ The larger the weight matrix, the more memory is needed for the update and its o
 
 ### Low-Rank Adaptation
 
-**What it is.** LoRA assumes that a useful adaptation update lies largely in a lower-dimensional subspace. Instead of learning every entry in `ΔW`, it learns two smaller matrices whose product approximates it.
+**Intuition.** LoRA assumes that a useful adaptation update lies largely in a lower-dimensional subspace. Instead of learning every entry in `ΔW`, it learns two smaller matrices whose product approximates it.
 
 **Why it is needed.** Many entries in a high-dimensional update can be redundant. A low-rank representation can retain the important direction of change with far fewer trainable parameters.
+
+```mermaid
+flowchart LR
+    A[Full update matrix] --> B[Low-rank factors]
+    B --> C[Approximate update]
+```
 
 **Mechanism.** Factor the update as `ΔW = W_A W_B`; the small shared inner dimension is the rank `r`.
 
@@ -285,9 +329,15 @@ The idea is related to **PCA** and **SVD**, which approximate a high-dimensional
 
 ### Low Rank Adapters - LoRA
 
-**What it is.** LoRA is a PEFT method that freezes the pretrained matrix and trains a low-rank correction alongside it.
+**Intuition.** LoRA is a PEFT method that freezes the pretrained matrix and trains a low-rank correction alongside it.
 
 **Why it is needed.** The correction can be much smaller than the original matrix, reducing trainable and stored task-specific parameters.
+
+```mermaid
+flowchart LR
+    A[Frozen W] --> C[W x + ΔW x]
+    B[Train W_A and W_B] --> C
+```
 
 **Mechanism.** Let the pretrained weight be `W ∈ R^(A×B)`. LoRA freezes `W` and learns:
 
@@ -322,7 +372,7 @@ That is approximately a **99.88% reduction** for this layer's update.
 
 **Tradeoff / when not to use.** LoRA saves trainable parameters and storage, but its rank limits adaptation capacity. It also leaves the full base model required for inference unless the update is merged into a copy of the weights.
 
-### Example: LoRA parameter reduction
+### Example
 
 ![LoRA parameter-reduction example](assets/S04-lora-parameter-example.png)
 
@@ -336,9 +386,9 @@ LoRA update = 10,000 × 8 + 8 × 20,000 = 240,000
 reduction   = 1 − 240,000 / 200,000,000 ≈ 99.88%
 ```
 
-### Initialization
+### LoRA finetuning process
 
-**What it is.** LoRA initialization chooses the factor values so that the adapted model initially behaves like the original pretrained model.
+**Intuition.** LoRA initialization chooses the factor values so that the adapted model initially behaves like the original pretrained model.
 
 **Why it is needed.** Starting with a zero update avoids an abrupt behavior change when the adapter is attached to a pretrained model.
 
@@ -364,7 +414,7 @@ Here `r` controls the rank and `α` controls the update scale through `α/r`. Du
 
 ### Multi-tenant serving - LoRA
 
-**What it is.** Multi-tenant LoRA serving uses one shared base model with several task-specific LoRA adapters.
+**Intuition.** Multi-tenant LoRA serving uses one shared base model with several task-specific LoRA adapters.
 
 **Why it is needed.** Storing a complete fine-tuned model for every task duplicates the expensive base weights. A shared base plus small adapters reduces storage and can serve multiple tasks through one system.
 
@@ -385,13 +435,20 @@ Store **1 base model + N LoRA adapters**, rather than **N full fine-tuned models
 
 ---
 
-## Part 5 · Quantization and QLoRA
+## Quantization and QLoRA
 
 ### Quantization
 
-**What it is.** Quantization reduces the precision used to store or compute model parameters, such as changing 32-bit floating-point values to 8-bit integers.
+**Intuition.** Quantization reduces the precision used to store or compute model parameters, such as changing 32-bit floating-point values to 8-bit integers.
 
 **Why it is needed.** Fewer bits reduce model storage and can reduce memory bandwidth and latency. The price is approximation error and possible quality loss.
+
+```mermaid
+flowchart LR
+    A[Higher precision] --> B[Quantize]
+    B --> C[Lower-bit storage]
+    C --> D[Dequantize when needed]
+```
 
 **Mechanism.** The formats include FP32, BF16, FP16, INT8, FP8, NF4, and INT4. Their roles differ:
 
@@ -411,9 +468,16 @@ Store **1 base model + N LoRA adapters**, rather than **N full fine-tuned models
 
 ### QLoRA
 
-**What it is.** QLoRA applies PEFT to a quantized model: the pretrained base is loaded in **4-bit precision**, while trainable LoRA adapters remain in a higher precision such as **16-bit**.
+**Intuition.** QLoRA applies PEFT to a quantized model: the pretrained base is loaded in **4-bit precision**, while trainable LoRA adapters remain in a higher precision such as **16-bit**.
 
 **Why it is needed.** The base model may be too large for full-precision fine-tuning on available hardware. QLoRA reduces base-model memory while retaining trainable adapters for task adaptation.
+
+```mermaid
+flowchart LR
+    A[4-bit frozen base] --> C[Forward computation]
+    B[Higher-precision LoRA] --> C
+    C --> D[Update adapter only]
+```
 
 **Mechanism.** Keep the base weights compressed, dequantize them for the matrix operation, and update only the higher-precision LoRA factors.
 
@@ -429,7 +493,7 @@ Store **1 base model + N LoRA adapters**, rather than **N full fine-tuned models
 
 ### QLoRA fine-tuning
 
-**What it is.** QLoRA fine-tuning is the execution path that combines a frozen quantized base with trainable higher-precision adapters.
+**Intuition.** QLoRA fine-tuning is the execution path that combines a frozen quantized base with trainable higher-precision adapters.
 
 **Why it is needed.** Separating base storage from adapter updates makes large-model adaptation possible under a tighter memory budget.
 
@@ -448,11 +512,11 @@ Store **1 base model + N LoRA adapters**, rather than **N full fine-tuned models
 
 ---
 
-## Part 6 · Model merging
+## Model Merging
 
 ### Model Merging: Combining Fine-Tuned Models
 
-**What it is.** Model merging combines two or more compatible fine-tuned models or adapters into a single model.
+**Intuition.** Model merging combines two or more compatible fine-tuned models or adapters into a single model.
 
 **Why it is needed.** If several tuned models share a compatible architecture and base checkpoint, merging can produce one deployable model instead of serving every component model separately.
 
@@ -475,26 +539,36 @@ The **Model Soups** paper reported that averaging multiple fine-tuned models can
 
 ---
 
-## References
+## Distillation
 
-References for this class include:
+### Distillation
 
-- **Hands-On Large Language Models: Language Understanding and Generation**, Jay Alammar and Maarten Grootendorst, Chapter 12;
-- **Speech and Language Processing**, Daniel Jurafsky and James H. Martin, Chapters 7 and 10;
-- Lightning AI tutorials on LoRA and Llama adapters;
-- Sebastian Raschka articles on fine-tuning and instruction data;
-- **Prefix-Tuning: Optimizing Continuous Prompts for Generation**;
-- **Parameter-Efficient Transfer Learning for NLP**;
-- **Multitask Prompted Training Enables Zero-shot Task Generalization**;
-- **LoRA: Low-Rank Adaptation of Large Language Models**;
-- **QLoRA: Efficient Finetuning of Quantized LLMs**;
-- **Model soups: averaging weights of multiple fine-tuned models**;
-- **SELF-INSTRUCT: Aligning Language Models with Self-Generated Instructions**;
-- **Super-NaturalInstructions: Generalization via Declarative Instructions on 1600+ NLP Tasks**.
+> **Scope note.** Distillation is named in the handout's S04 sub-topics but has no dedicated slide in the supplied fine-tuning deck; this section supplies the required concept explanation.
 
-## Self-study / Lab / Build
+**Intuition.** Knowledge distillation trains a smaller student model to imitate a larger teacher model. The student does not copy the teacher's parameters; it learns from the teacher's richer output signal and keeps only a cheaper approximation for deployment.
 
-No dedicated lab notebook is included with this Class 4 material. A useful self-study sequence is:
+**Why it is needed.** A teacher can be accurate but too slow or expensive for every request. Distillation transfers useful behaviour into a smaller model when latency, memory, or serving cost matters.
+
+**Mechanism.** For the same input, the teacher produces a probability distribution over candidate outputs. The student is trained using a mixture of ordinary task loss and a distillation loss that compares the student's softened distribution with the teacher's, usually with a temperature greater than 1.
+
+```mermaid
+flowchart LR
+    X[Same input] --> T[Large teacher]
+    X --> S[Small student]
+    T -->|soft targets| L[Distillation loss]
+    S --> L
+    L --> U[Update student only]
+```
+
+**Worked example.** A large instruction-tuned teacher assigns softened probabilities to the next-token choices for a support answer. The student learns from those probabilities plus the target answer, then serves the same task with fewer parameters and lower latency.
+
+**Tradeoff / when not to use.** Distillation can reduce quality, transfer teacher errors, and require an expensive teacher-generation phase. Keep the teacher for high-stakes or complex tasks when the smaller model cannot meet the quality target.
+
+---
+
+## Self-study / Lab / build
+
+No dedicated lab notebook is included with this Session 04 material. A useful self-study sequence is:
 
 1. Convert one raw SQuAD-style example into the stable JSONL schema and render it with a model-specific template.
 2. Compare zero-shot, one-shot, and few-shot prompts for the same task without updating weights.
@@ -505,4 +579,4 @@ No dedicated lab notebook is included with this Class 4 material. A useful self-
 
 ---
 
-*Scope note: this is the lecture-specific Class 4 fine-tuning note. It is not a replacement for the handout's standard Session 4 topic, Training and Attention Efficiency.*
+*Exam: this session is in scope for the **closed-book mid-semester test** (sessions 1–7). Full evaluation, weights, dates, and course logistics live in [`536-master.md`](../536-master.md).*
