@@ -1,6 +1,6 @@
 # AIML ZG536 · Large Language Models for Generative AI · Material Log
 
-**Last reconciled:** 01 Sep 2026
+**Last reconciled:** 04 Sep 2026
 **Path convention:** paths below are relative to this subject folder.
 
 This is the canonical subject-level ledger for material availability, scope checks, durable outputs, and active gaps. Keep detailed audit prose in Git history; do not append a new recheck block here for every pass.
@@ -11,7 +11,7 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 
 | Item | Current status |
 |---|---|
-| Handout | Historically checked against S1–S2. `_handouts/AIML ZG536 COURSE HANDOUT.docx` is absent from the current checkout and accessible local paths; restore it before the next scope-changing update. |
+| Handout | ✓ External handout Learning Plan row verified for Session 3; checkout copy remains absent. |
 | Raw decks, recordings, transcripts, books | External or ignored inputs; no raw course material belongs in Git. |
 | Canonical outputs | Session notes in `notes/`, lab material in `labs/`, and this material ledger. |
 
@@ -21,7 +21,7 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 |---|---|---|---|---|
 | S01 | Foundations of LLMs | ✓ Intro decks; transcript; T1/T2/R1 scope material | ✓ `notes/S01-foundations.md` | none known |
 | S02 | LLM Pre-Training | ✓ Training deck; T1/R1; web references | ✓ `notes/S02-pretraining.md` | none known |
-| S03 | Advancements in LLM Architecture | ✓ Architecture deck, 29 slides; T2; cited references | ✓ `notes/S03-architecture.md` | Emerging Architectures is marked as filled-in reasoning because the deck only points to it from references |
+| S03 | Advancements in LLM Architecture | ✓ Architecture deck, 29 slides; T2; cited references; fresh render/media audit complete | ✓ `notes/S03-architecture.md` | Emerging Architectures is marked as filled-in reasoning because the deck only points to it from references |
 | S04–S16 | Remaining handout topics | ✗ decks not held | ☐ no notes yet | collect the deck and required references before writing |
 
 ## Reference scope
@@ -38,6 +38,7 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 
 - S01–S03 deck audits were completed against the held decks; temporary inventories are deleted after coverage verification.
 - The handout's Relative PE and Emerging Architectures items are explicitly distinguished from direct deck teaching in the S03 note rather than silently treated as slide coverage.
+- S03's five Part headings use the handout sub-topic wording; the note preserves the deck's source order and native instructional figures as PNG derivatives.
 - The subject note is the primary learning artifact; shared notes are optional synthesis and cannot be the only home for core material.
 
 ## Storage rule
