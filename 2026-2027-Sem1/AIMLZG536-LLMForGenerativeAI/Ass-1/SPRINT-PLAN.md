@@ -1,7 +1,15 @@
-# Assignment 1A — 4-Person Sprint Plan
+# Assignment 1A — 4-Person Execution Plan
 
-**Course:** AIML ZG536 · **Weight:** EC-1 group project · **Marks:** 15 (Part A 10 · Part B 5)
-**Window:** Fri 4 Sep → due ~Sun 7 Sep 2026 · **Crew:** 4
+**Course:** AIML ZG536 · **Weight:** EC-1 group project (35%) · **Marks:** 15 (Part A 10 · Part B 5)
+**Effort:** ~2.5–3 working days across 4 blocks · **Crew:** 4
+
+> ⚠️ **Deadline not confirmed.** `536-master.md` records the EC-1 date only as *"Plan shared
+> ~week 2"* — no submission date. The `~27 Aug – 7 Sep` window in `STUDY-PLAN.md` is a
+> **semester planning window shared with the 549 project and 546 situated learning**, not a
+> 536-specific date, and that row is stale on weight (says 30%, resolved value is 35%).
+> **Confirm the real date on Canvas / Ops mail before pacing this plan.**
+> The blocks below are relative — run them back-to-back for a tight deadline, or spread them
+> across two weekends if there is room.
 
 Assignment 1A is one pipeline: raw domain PDFs → continual pre-training (CPT) → QLoRA
 instruction fine-tuning. The pipeline is *sequential*, so the split below is by **workstream
@@ -10,7 +18,7 @@ a named artifact to the next lane.
 
 ---
 
-## 0 · Lock-in call — Friday evening, 45 minutes, all four
+## 0 · Lock-in call — 45 minutes, all four, before any work starts
 
 Nothing starts until these five are decided and written down. Changing any of them later
 costs a re-run.
@@ -32,17 +40,17 @@ costs a re-run.
 Pick **Qwen2.5-1.5B** for the sprint, not a 7B.
 
 - Part A is **full-parameter** CPT. A 7B in bf16 with Adam states needs roughly 80 GB+ of
-  optimizer/gradient memory — tight-to-impossible on a contended lab A100, and a failed run
-  on Saturday night has no recovery room.
+  optimizer/gradient memory — tight-to-impossible on a contended lab A100, and a run that dies
+  late in Block 2 leaves no recovery room.
 - Qwen2.5 base ships a **ChatML chat template** in `tokenizer_config.json`, which is what
   B2 requires ("formatted with the model's chat template"). Most base models don't, and
-  discovering that on Sunday costs hours.
+  discovering that in Block 3 costs hours.
 - A 1.5B CPT run finishes in minutes, so a bad loss curve can be re-run instead of accepted.
 - The rubric rewards the **analysis** — loss curve, PPL drop, forgetting table — not
   parameter count. Both PDFs explicitly permit any model ("You are free to choose any domain
   and any model"; "students are encouraged to experiment with different models").
 
-If Saturday finishes early and the lab is free, re-run at 7B as a bonus. Do not bet the
+If Block 2 finishes early and the lab is free, re-run at 7B as a bonus. Do not bet the
 grade on it.
 
 ---
@@ -82,7 +90,7 @@ Agree these filenames at hour 0. A lane is "done" when its artifact exists with 
 
 ## 3 · The sprint
 
-### Block 1 — Friday evening (~3 h) · goal: prove the pipeline runs
+### Block 1 — Setup and smoke test (~3–4 h, one evening) · goal: prove the pipeline runs
 
 - **All** — 45-min lock-in call (section 0).
 - **P1** — download 8–10 domain PDFs; write the extract + clean script; ship the **first 5
@@ -95,38 +103,38 @@ Agree these filenames at hour 0. A lane is "done" when its artifact exists with 
 - **P4** — verify `transformers` / `peft` / `bitsandbytes` / `trl` all import on the lab;
   create the notebook skeleton with the 8 titled sections; set up the shared folder.
 
-> **Friday gate — the vertical slice.** Before anyone sleeps, a **20-step CPT run on 5
+> **Block 1 gate — the vertical slice.** Before Block 1 closes, a **20-step CPT run on 5
 > documents must complete**. The output will be worthless; that is fine. The point is to
 > surface every environment bug — install failures, tokenizer mismatch, OOM, checkpoint
-> paths — while there are still two days left. Scale up Saturday on a pipeline you know works.
+> paths — while there is still recovery room. Block 2 then scales up a pipeline you know works.
 
-### Block 2 — Saturday (full day) · goal: CPT trained and evaluated
+### Block 2 — Corpus, CPT, evaluation (~1 full day) · goal: CPT trained and evaluated
 
-- **P1 (AM)** — finish the full corpus; run the cleaning pipeline; record counts before and
+- **P1 (early)** — finish the full corpus; run the cleaning pipeline; record counts before and
   after **each** filter; identify the highest-impact step. Hand off.
-- **P2 (AM)** — pack the full corpus; report total tokens, avg doc length, sequence count;
+- **P2 (early)** — pack the full corpus; report total tokens, avg doc length, sequence count;
   carve the 10% held-out eval split.
-- **P3 (AM)** — write the perplexity harness; run **base-model PPL** on the holdout.
-- **P2 (PM)** — **the CPT run.** Custom `TrainerCallback` logging loss every step. Watch the
+- **P3 (early)** — write the perplexity harness; run **base-model PPL** on the holdout.
+- **P2 (main slot)** — **the CPT run.** Custom `TrainerCallback` logging loss every step. Watch the
   first loss value: 2–4 is healthy, ≈10.8 means the model initialised randomly — stop and fix
   the loading, do not train through it. Save `cpt_ckpt/`.
-- **P3 (PM)** — CPT PPL on the same holdout; % reduction (expect 10–40%); forgetting table.
-- **P1 (PM)** — begin the instruction dataset from the cleaned `.txt` — the second-longest pole.
-- **P4 (all day)** — fold Steps 1–3 into the notebook as they land; own the GPU schedule.
+- **P3 (after checkpoint)** — CPT PPL on the same holdout; % reduction (expect 10–40%); forgetting table.
+- **P1 (later)** — begin the instruction dataset from the cleaned `.txt` — the second-longest pole.
+- **P4 (throughout)** — fold Steps 1–3 into the notebook as they land; own the GPU schedule.
 
-### Block 3 — Sunday (full day) · goal: QLoRA done, inferences written
+### Block 3 — Instruction data, QLoRA, inferences (~1 full day)
 
-- **P1 (AM)** — finish `instruction_dataset.jsonl`; 80/20 split with counts; record the exact
+- **P1 (early)** — finish `instruction_dataset.jsonl`; 80/20 split with counts; record the exact
   synthetic-generation prompt template if an LLM was used (explicit rubric item).
-- **P4 (AM–PM)** — QLoRA on `cpt_ckpt/`: 4-bit via bitsandbytes, `peft`, `SFTTrainer` with the
+- **P4 (main slot)** — QLoRA on `cpt_ckpt/`: 4-bit via bitsandbytes, `peft`, `SFTTrainer` with the
   chat template. **Adapter B** (r=16, α=32, `q_proj`,`v_proj`) is the sensible default.
-- **P4 (PM)** — B3: run the trained adapter on the same 3 locked domain prompts.
-- **P3 (PM)** — write the Step 5 inferences; build the base vs CPT vs adapter comparison.
-- **All (evening)** — **inference-writing session.** Every step needs written justification.
+- **P4 (after training)** — B3: run the trained adapter on the same 3 locked domain prompts.
+- **P3 (after checkpoint)** — write the Step 5 inferences; build the base vs CPT vs adapter comparison.
+- **All (end of block)** — **inference-writing session.** Every step needs written justification.
   Both PDFs say "detailed inferences and observations are mandatory". This is the most
   commonly skipped work and it is worth real marks.
 
-### Block 4 — Sunday night / Monday morning · buffer and submit
+### Block 4 — Assembly and submission (~half day) · buffer and submit
 
 - **P4** — restart kernel, run the notebook **top to bottom**, export HTML with outputs.
 - Package the four deliverables (section 5).
@@ -138,14 +146,16 @@ Agree these filenames at hour 0. A lane is "done" when its artifact exists with 
 
 One A100 slot at a time. Contention rises sharply near the deadline.
 
-| When | Who | Job |
+| Block | Who | Job |
 |---|---|---|
-| Fri eve | P3, then P2 | Architecture audit + baseline (~30 min), then the smoke CPT |
-| Sat PM | **P2** | The real CPT run — protected slot |
-| Sat late | P3 | Base + CPT perplexity |
-| Sun | P4 | QLoRA training |
+| 1 | P3, then P2 | Architecture audit + baseline (~30 min), then the smoke CPT |
+| 2 | **P2** | The real CPT run — protected slot |
+| 2 (late) | P3 | Base + CPT perplexity |
+| 3 | P4 | QLoRA training |
 
-**The CPT run must finish Saturday.** If it slips to Sunday there is no room for a second attempt.
+**The CPT run must finish inside Block 2.** Everything downstream — perplexity, the forgetting
+table, the QLoRA adapter, B3 — is blocked behind that one checkpoint, so leaving it to Block 3
+removes any chance of a second attempt.
 
 ---
 
@@ -184,7 +194,7 @@ Marks attach to reported figures, not just working code. The notebook must state
 | Catastrophic forgetting | General prompts clearly degrade in 5B | Cut LR 10× or halve `max_steps`, re-run |
 | No chat template | `SFTTrainer` errors in B2 | Qwen2.5 ships ChatML; otherwise set `tokenizer.chat_template` and document it |
 | Corpus too small | PPL drop under 10% | Add documents, or train more epochs on the same corpus |
-| GPU contention | Queue near the deadline | CPT finishes Saturday — non-negotiable |
+| GPU contention | Queue near the deadline | CPT finishes in Block 2 — non-negotiable |
 
 ---
 
