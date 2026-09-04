@@ -18,7 +18,7 @@ The standard **Transformer architecture** therefore gives us four places for imp
 
 *Two decisions, not one: which normalization function to use, and where in the block to place it. Both turn out to matter more than they first appear.*
 
-### 1. From LayerNorm to RMSNorm
+### RMSNorm
 
 **Intuition** — Normalization keeps activations inside a workable numeric range as they flow through many stacked layers, the way a thermostat keeps a room inside a livable temperature band instead of letting it drift to an extreme.
 
@@ -34,6 +34,8 @@ RMSNorm(x)   = gamma * x / sqrt(mean(x_i^2) + eps)
 ```
 
 where `gamma` is a learned gain parameter that rescales the standardized (or RMS-normalized) summed inputs, and `x` is the raw summed input to the layer.
+
+### LayerNorm Vs RMSNorm
 
 **Worked example** — A single training example's layer output, before and after each normalization (values from Raschka's worked illustration):
 
@@ -53,7 +55,7 @@ LayerNorm forces the output to exactly zero mean and unit variance. RMSNorm does
 
 ---
 
-### 2. Where normalization sits: Pre-Norm vs Post-Norm
+### Pre-Norm vs Post Norm
 
 **Intuition** — It isn't only *which* normalization function to use — *where* it sits relative to the sublayer and the residual connection changes whether gradients get a clean, unmodified shortcut back through a deep network.
 
@@ -70,7 +72,7 @@ A fourth pattern is worth naming separately: **Gemma 3** normalizes **both befor
 ![Normalization placements across model families](assets/S03-normalization-placements-source.png)
 
 
-**Worked example — an exam-style question.** *You are designing a decoder-only LLM with more than 100 layers and want stable training with lower computation. Which normalization strategy would you choose, and why?* Answer: **RMSNorm with Pre-Norm placement** — RMSNorm removes the mean-centering pass (cheaper, 7-15% faster, section 1), and Pre-Norm gives gradients a direct highway through the residual stream (stable at depth, tolerates larger learning rates without warmup). This combination is the default for scaling deep LLMs: **Llama, Qwen, DeepSeek, and Mistral all use it.**
+**Worked example — an exam-style question.** *You are designing a decoder-only LLM with more than 100 layers and want stable training with lower computation. Which normalization strategy would you choose, and why?* Answer: **RMSNorm with Pre-Norm placement** — RMSNorm removes the mean-centering pass (cheaper, 7-15% faster, as explained under *RMSNorm*), and Pre-Norm gives gradients a direct highway through the residual stream (stable at depth, tolerates larger learning rates without warmup). This combination is the default for scaling deep LLMs: **Llama, Qwen, DeepSeek, and Mistral all use it.**
 
 **Tradeoff / when NOT to use** — Pre-Norm's stability isn't free: because the residual stream is never itself normalized, activation magnitudes can drift upward across many layers, which is exactly why every Pre-Norm model still needs a Final Norm before the output projection. Post-Norm doesn't have this drift problem, but pays for it with training instability at real depth. OLMo 2's hybrid placement and Gemma 3's sandwich placement are both evidence that the question isn't fully settled — different labs are still making different bets here, not converging on one universally "correct" placement.
 
