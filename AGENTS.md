@@ -201,6 +201,10 @@ Slide coverage and clean visual QA do not prove that the note preserved the sour
 
 **Hard gate:** Do not begin source-asset edits or claim figure coverage until the rendered slide inventory and slide-to-asset map exist, contain a nonzero row for every source slide, and match the source slide count exactly. A post-hoc reference check never substitutes for this source-first audit.
 
+### Top-Level Section-Order Gate
+
+Before assigning Part numbers, writing learner-facing cross-references, or doing pedagogical restructuring, extract the ordered top-level topic blocks from the source and the note. Map each note `##` section to its first and last source-slide numbers, then assert that the mapped intervals are monotonically increasing. A coverage pass, fact-ownership pass, or correct heading list does **not** prove that complete sections are in the right order. Re-run this assertion after every section move. If a pedagogical reorder is intentional, record the exception and rationale in temporary reconciliation evidence; otherwise restore the source order. Never infer Part 4/Part 5 identity from an earlier note, filename, or plausible teaching progression. Keep learner-facing cross-references name-based so a later reorder cannot silently make them wrong.
+
 **PowerPoint media audit rule:** Do not inventory source visuals by checking only ordinary `PICTURE` shapes. Inspect slide XML relationships, `a:blip` media references, image placeholders, grouped content, and rendered slides; placeholder-backed figures can be substantive source images even when `python-pptx` does not expose them as picture shapes. Inspect annotation/ink layers separately and exclude pen marks from preserved assets unless the source explicitly treats them as instructional content.
 
 ### Default to More, Not Less
