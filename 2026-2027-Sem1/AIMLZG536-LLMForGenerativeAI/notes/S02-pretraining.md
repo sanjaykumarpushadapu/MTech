@@ -442,17 +442,57 @@ _Two of these are easiest to picture directly:_ **EWC** is like assigning a high
 
 ### 3.3 Domain Adaptation
 
-**Intuition** — Domain adaptation offers three routes, followed by two domain-specific examples. The source presents the routes first and then compares BloombergGPT with FinLLaMA.
+**Intuition — what is domain adaptation?** Domain adaptation means taking a general-purpose LLM and making it perform better in a specific domain such as healthcare, finance, law, insurance, or software engineering. The goal is to transfer the model's broad language knowledge to a specialized area.
+
+#### Why is domain adaptation needed?
+
+A general LLM is trained on broad internet data. When asked domain-specific questions, it may:
+
+- miss specialized terminology;
+- lack important domain knowledge;
+- produce less accurate answers; or
+- fail to follow domain-specific conventions.
+
+The difference is easier to see in examples:
+
+| General-purpose LLM | Domain-adapted LLM |
+| --- | --- |
+| Knows general health topics | Understands medical terminology and clinical notes |
+| Knows programming basics | Understands a company's codebase and engineering practices |
+| Knows general finance concepts | Understands financial reports and regulations |
+
+Domain adaptation therefore does not necessarily mean building a new model from zero. It means choosing an adaptation route that adds domain capability while preserving as much useful general capability as possible.
 
 #### Domain-adaptation paths
 
-![Domain adaptation paths](assets/S02-adaptation-paths.png)
+The source shows three routes, each with two downstream options.
 
-The source shows three routes, each with two downstream options:
+##### Regular pretraining from scratch
 
-1. **Regular pretraining from scratch** — train a general pretrained LLM on a large unlabeled corpus, then either use it through **in-context learning** (Option 1) or fine-tune it on labeled target data (Option 2).
-2. **Continue pretraining (CPT)** — continue a pretrained LLM on a large domain-specific corpus, then use in-context learning (Option 3) or fine-tune it on labeled target data (Option 4).
-3. **Domain-specific pretraining from scratch** — initialize a new model and train it on a domain-specific corpus, then use in-context learning (Option 5) or fine-tune it on labeled target data (Option 6).
+![Regular pretraining domain-adaptation path](assets/S02-adaptation-paths-regular.png)
+
+Train a general pretrained LLM on a large unlabeled corpus, then choose between:
+
+- **Option 1 — in-context learning:** use the pretrained LLM through a prompt without changing its weights.
+- **Option 2 — fine-tuning:** update the model using labeled target data.
+
+##### Continued pretraining (CPT)
+
+![Continued pretraining domain-adaptation path](assets/S02-adaptation-paths-cpt.png)
+
+Continue a pretrained LLM on a large domain-specific corpus, then choose between:
+
+- **Option 3 — in-context learning:** use the continued-pretraining model through a prompt without changing its weights.
+- **Option 4 — fine-tuning:** update the model using labeled target data.
+
+##### Domain-specific pretraining from scratch
+
+![Domain-specific pretraining domain-adaptation path](assets/S02-adaptation-paths-domain-specific.png)
+
+Initialize a new model and train it on a domain-specific corpus, then choose between:
+
+- **Option 5 — in-context learning:** use the domain-specific model through a prompt without changing its weights.
+- **Option 6 — fine-tuning:** update the model using labeled target data.
 
 The important distinction is that in-context learning changes the prompt without updating weights, whereas fine-tuning updates the model using labeled target data.
 

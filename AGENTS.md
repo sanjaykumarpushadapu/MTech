@@ -197,6 +197,8 @@ Slide coverage and clean visual QA do not prove that the note preserved the sour
 
 **Classify every source slide image before editing assets:** (a) a genuine figure, chart, diagram, or visual workflow; (b) a table or text screenshot that should normally be transcribed into Markdown/text; or (c) no image. Do not create a PNG for text-only slide content, and do not delete a genuine figure merely because the surrounding explanation is textual. Keep a temporary slide-to-asset map with the classification and destination note section. After editing, verify that every intended asset has one note reference, every reference resolves, and no orphan asset remains; visually inspect each newly added or restored image at native resolution. **An asset-reference check reporting zero missing, duplicate, or orphan files proves only internal consistency; it does not prove source completeness. Independently compare the source-slide inventory with the note's asset map and record every substantive source visual as preserved, transcribed, or deliberately omitted with a reason.**
 
+**Detail-crop placement rule:** When one source visual is split into multiple readable crops, give each crop one bounded learner-facing destination. Place each crop immediately beside or before the explanation for its own route/panel/topic, in source order, under a short deck-shaped subheading or caption. Do not group all crops at the start of a section and explain them later. Pair distinctive labels, numbers, options, and annotations with the crop that contains them. Inspect every crop boundary for clipped labels or remnants of neighboring panels, then update asset assertions and rerun orphan/reference checks.
+
 **Hard gate:** Do not begin source-asset edits or claim figure coverage until the rendered slide inventory and slide-to-asset map exist, contain a nonzero row for every source slide, and match the source slide count exactly. A post-hoc reference check never substitutes for this source-first audit.
 
 **PowerPoint media audit rule:** Do not inventory source visuals by checking only ordinary `PICTURE` shapes. Inspect slide XML relationships, `a:blip` media references, image placeholders, grouped content, and rendered slides; placeholder-backed figures can be substantive source images even when `python-pptx` does not expose them as picture shapes. Inspect annotation/ink layers separately and exclude pen marks from preserved assets unless the source explicitly treats them as instructional content.
@@ -392,6 +394,18 @@ Rules:
 - Dense math must be signposted as skimmable on first pass, with the key takeaway stated plainly.
 - More explanation belongs at hard spots, not everywhere.
 - Lead with the answer or concept name first; do not bury the key definition in the second half of a subsection.
+
+### Learner-first topic-opening gate
+
+For every substantive concept, the opening must help a new learner answer these questions before or while entering the source mechanism:
+
+1. **What is it?** Give a plain-language definition or mental model.
+2. **Why is it needed?** State what a general, naive, or simpler approach may fail to do.
+3. **What changes in practice?** Give a concrete before/after contrast, preferably in the subject's domain.
+4. **How does the source implement it?** Then introduce the source's routes, stages, mechanisms, examples, or figures.
+5. **What is the tradeoff?** State when the approach is costly, risky, or unnecessary.
+
+A generic agenda sentence, a list of routes, or a bare definition does not satisfy this gate. When the learner supplies a clearer explanation, treat it as the preferred pedagogical structure and merge it into the note, correcting only unsupported technical claims. This gate is separate from source coverage: a note can contain every source fact and still fail if the learner cannot tell what the topic means, why it matters, and what changes after applying it. Skip the full pattern only for genuinely notational, purely definitional, or comparison-only sections.
 
 ### Use Case Grounding
 
