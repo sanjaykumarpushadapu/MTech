@@ -28,6 +28,10 @@ costs a re-run.
    custom one. V3 (RBI/SEBI regulatory) and V6 (ISO 9001 / GFR 2017 procurement) have the
    cleanest downloadable English PDF corpora. V4 (clinical) adds a mandatory disclaimer
    string on every response — extra rubric surface.
+   🔴 **Picking a custom use case adds a fifth deliverable.** The variants guide requires you
+   to "label it as a custom enterprise variant", build the template "in the same format as
+   given for V2–V6", and **submit it as a separate doc**. If nobody wants to write that
+   document, pick one of V1–V6 and the requirement disappears.
 2. **Model.** See the recommendation below.
 3. **The three domain prompts** — locked, never edited. They are reused in Step 3 (baseline),
    Step 4 and B3. Plus **three general prompts** for the Step 5B forgetting check
@@ -95,11 +99,14 @@ Agree these filenames at hour 0. A lane is "done" when its artifact exists with 
 ### Block 1 — Setup and smoke test (~3–4 h, one evening) · goal: prove the pipeline runs
 
 - **All** — 45-min lock-in call (section 0).
-- **P1** — download 8–10 domain PDFs; write the extract + clean script; ship the **first 5
-  cleaned `.txt` files** fast so everyone else unblocks.
-- **P3** — load the model on the lab; architecture audit (decoder layers, attention heads,
-  hidden size, head dim); confirm `lm_head` output dim equals vocab size; run and save the
-  **baseline generations** on the 3 locked prompts.
+- **P1** — download 8–10 domain PDFs; write the extract + clean script (the brief asks for
+  **page-by-page** extraction, one `.txt` per document); ship the **first 5 cleaned `.txt`
+  files** fast so everyone else unblocks.
+- **P3** — load the model (**on T4 the brief requires bf16 + gradient checkpointing**; on
+  A100 either is fine); architecture audit (decoder layers, attention heads, hidden size,
+  head dim); total trainable parameters; confirm `lm_head` output dim equals vocab size.
+  Save **baseline generations** on the 3 locked domain prompts — and, while the base model is
+  loaded, on the **3 general prompts too**, so Step 5B later only needs the CPT half.
 - **P2** — write the packing script: BOS/EOS wrap per doc, concatenate to one flat stream,
   slice to context length, save Parquet. Test on P1's first 5 files.
 - **P4** — verify `transformers` / `peft` / `bitsandbytes` / `trl` all import on the lab;
@@ -116,8 +123,12 @@ Agree these filenames at hour 0. A lane is "done" when its artifact exists with 
   after **each** filter; identify the highest-impact step. Hand off.
 - **P2 (early)** — pack the full corpus; report total tokens, avg doc length, sequence count;
   carve the 10% held-out eval split.
-- **P3 (early)** — write the perplexity harness; run **base-model PPL** on the holdout.
-- **P2 (main slot)** — **the CPT run.** Custom `TrainerCallback` logging loss every step. Watch the
+- **P3 (early)** — write the perplexity harness (cross-entropy loop, **no gradients, no
+  training** — the brief says so explicitly); run **base-model PPL** on the holdout.
+  *Blocked on P2's `packed_eval.parquet` — take P2's packing first, then this.*
+- **P2 (main slot)** — **the CPT run.** Wrap the packed dataset in a **PyTorch `Dataset`
+  class** (explicit Step 4 wording — don't hand the Trainer a raw array). Custom
+  `TrainerCallback` logging loss every step. Watch the
   first loss value: 2–4 is healthy, ≈10.8 means the model initialised randomly — stop and fix
   the loading, do not train through it. Save `cpt_ckpt/`.
 - **P3 (after checkpoint)** — CPT PPL on the same holdout; % reduction (expect 10–40%); forgetting table.
@@ -128,6 +139,9 @@ Agree these filenames at hour 0. A lane is "done" when its artifact exists with 
 
 - **P1 (early)** — finish `instruction_dataset.jsonl`; 80/20 split with counts; record the exact
   synthetic-generation prompt template if an LLM was used (explicit rubric item).
+  **Target 500 pairs (400 train / 100 eval).** The brief only says "suitable size for your
+  chosen model", so agree a number at hour 0 or this lane has no finish line. At the brief's
+  own rate of 10 pairs per text chunk, 500 pairs is ~50 chunks — a bounded afternoon.
 - **P4 (main slot)** — QLoRA on `cpt_ckpt/`: 4-bit via bitsandbytes, `peft`, `SFTTrainer` with the
   chat template. **Adapter B** (r=16, α=32, `q_proj`,`v_proj`) is the sensible default.
 - **P4 (after training)** — B3: run the trained adapter on the same 3 locked domain prompts.
@@ -167,6 +181,7 @@ removes any chance of a second attempt.
 - `Assignment1A.html` — exported HTML of the notebook, with outputs
 - `instruction_dataset.jsonl` — final instruction/response pairs
 - `domain_corpus/*.txt` — the cleaned text files from Step 1
+- *(custom variant only)* the custom-variant template doc, in the V2–V6 format
 
 ---
 
@@ -178,6 +193,7 @@ Marks attach to reported figures, not just working code. The notebook must state
 - Total token count, average document length in tokens, number of packed sequences
 - Total trainable parameters; decoder layers, attention heads, hidden size, head dim
 - Confirmation that `lm_head` output dim equals vocab size
+- The packed dataset wrapped in a PyTorch `Dataset` class
 - Loss curve plot, with the plateau point identified
 - Base PPL, CPT PPL, and the **percentage reduction**
 - Forgetting table: 3 general prompts, both models, Retained/Degraded verdict per row
