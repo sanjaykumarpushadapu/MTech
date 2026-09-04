@@ -1,15 +1,16 @@
 # Assignment 1A — 4-Person Execution Plan
 
-**Course:** AIML ZG536 · **Weight:** EC-1 group project (35%) · **Marks:** 15 (Part A 10 · Part B 5)
+**Course:** AIML ZG536 · **Marks:** 15 (Part A 10 · Part B 5)
 **Effort:** ~2.5–3 working days across 4 blocks · **Crew:** 4
 
-> ⚠️ **Deadline not confirmed.** `536-master.md` records the EC-1 date only as *"Plan shared
-> ~week 2"* — no submission date. The `~27 Aug – 7 Sep` window in `STUDY-PLAN.md` is a
-> **semester planning window shared with the 549 project and 546 situated learning**, not a
-> 536-specific date, and that row is stale on weight (says 30%, resolved value is 35%).
-> **Confirm the real date on Canvas / Ops mail before pacing this plan.**
-> The blocks below are relative — run them back-to-back for a tight deadline, or spread them
-> across two weekends if there is room.
+> ⚠️ **The brief sets no deadline.** Neither `Assignment 1A - CPT and SFT.pdf` nor
+> `Enterprise_Variants_All_Assignments.pdf` states a submission date. Confirm it on Canvas or
+> the Ops mail. The blocks below are therefore **relative** — run them back-to-back if the
+> date turns out to be tight, or spread them out if there is room.
+
+**Sourced only from the two briefs in this folder.** Marks, steps, deliverables, model table
+and the failure signals below all come from those PDFs. The 4-person split is our own
+constraint — the brief does not specify a group size.
 
 Assignment 1A is one pipeline: raw domain PDFs → continual pre-training (CPT) → QLoRA
 instruction fine-tuning. The pipeline is *sequential*, so the split below is by **workstream
@@ -32,8 +33,9 @@ costs a re-run.
    Step 4 and B3. Plus **three general prompts** for the Step 5B forgetting check
    (capital of France / water boils at / speed of light).
 4. **Shared folder + filename contract.** Exactly the names in the Handoffs table below.
-5. **Remote lab access confirmed for all four.** Assignments run on the BITS remote lab, not
-   laptops. Colab only handles the very small models.
+5. **Compute confirmed for all four.** The brief pairs T4 (16 GB, free Colab) with the small
+   model column and A100 / L40S (BITS remote lab) with the 7–8 B column. Pick the tier before
+   anyone writes training code — it decides the model row.
 
 ### Model recommendation
 
