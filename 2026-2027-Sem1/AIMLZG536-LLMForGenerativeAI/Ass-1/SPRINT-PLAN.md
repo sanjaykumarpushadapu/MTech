@@ -1,308 +1,372 @@
-# Assignment 1A — 4-Person Execution Plan
+# Assignment 1A — Full Execution Plan
 
-**Course:** AIML ZG536 · **Marks:** 15 (Part A 10 · Part B 5)
-**Effort:** ~2.5–3 working days across 4 blocks · **Crew:** 4
+**Course:** AIML ZG536 · **Marks:** 15 (Part A 10 · Part B 5) · **Crew:** 4
+**Effort:** ~2.5–3 working days
 
-> ⚠️ **The brief sets no deadline.** Neither `Assignment 1A - CPT and SFT.pdf` nor
-> `Enterprise_Variants_All_Assignments.pdf` states a submission date. Confirm it on Canvas or
-> the Ops mail. The blocks in §5 are therefore **relative** — run them back-to-back if the
-> date turns out to be tight, or spread them out if there is room.
+> ⚠️ **The brief sets no deadline.** Neither PDF in this folder states a submission date.
+> Confirm it on Canvas or the Ops mail. The schedule in §5 is relative — compress or spread it
+> to fit whatever date you're given.
 
-**Sourced only from the two briefs in this folder.** Marks, steps, deliverables, the model
-table and the failure signals all come from those PDFs. The 4-person split is our own
-constraint — the brief does not specify a group size.
-
-Assignment 1A is one pipeline: raw domain PDFs → continual pre-training (CPT) → QLoRA
-instruction fine-tuning. The pipeline is *sequential*, so the split is by **workstream
-ownership**, not by "everyone grabs two steps". Each person owns a lane end-to-end and hands
-a named artifact to the next lane.
+**Sourced only from the two briefs in this folder.** The 4-person split is our own constraint;
+the brief does not specify a group size.
 
 ---
 
 ## Contents
 
-| § | Section | Read it when |
-|---|---|---|
-| 1 | [Prerequisites](#1--prerequisites) | Before anything else — some items need lead time |
-| 2 | [Decisions to lock](#2--decisions-to-lock) | At the kickoff call |
-| 3 | [Who owns what](#3--who-owns-what) | Assigning lanes |
-| 4 | [Handoff contracts](#4--handoff-contracts) | Whenever a lane finishes |
-| 5 | [The four blocks](#5--the-four-blocks) | Day to day execution |
-| 6 | [GPU discipline](#6--gpu-discipline) | Scheduling compute |
-| 7 | [Definition of done](#7--definition-of-done) | Before submitting |
-| 8 | [Submission deliverables](#8--submission-deliverables) | Packaging |
-| 9 | [Risk register](#9--risk-register) | When something breaks |
-| 10 | [Downstream note](#10--downstream-note) | Planning later assignments |
-
----
-
-## 1 · Prerequisites
-
-Everything below is implied by the briefs. Items marked 🕒 need **lead time** — start them at
-hour zero, not when you first need them.
-
-### 1.1 Accounts and access
-
-| Need | Why the brief requires it | Owner |
-|---|---|---|
-| 🕒 **Hugging Face account + access token** | Every model in the selection table is pulled with `from_pretrained('<model-id>')` | all four |
-| 🕒 **Gated-model licence acceptance** | See the warning below — approval is not instant | P3 |
-| **Compute tier** | Brief pairs T4 (16 GB, free Colab) with the small-model column, A100 / L40S (BITS remote lab) with the 7–8 B column | all four |
-| **Persistent storage** | Step 4 says save the CPT checkpoint "to persistent storage" — a Colab session disk does not survive a disconnect | P2 |
-| **External LLM access** *(optional)* | Only if B1 uses synthetic generation rather than manual/heuristic pairs | P1 |
-
-> 🔴 **Three of the brief's A100 recommendations are gated on Hugging Face** and need licence
-> acceptance before the weights will download:
-> `mistralai/Mistral-7B-v0.1` · `meta-llama/Meta-Llama-3-8B` · `google/gemma-7b`
->
-> Approval can take anywhere from minutes to a day. **Open the model page and accept the terms
-> at hour zero**, or pick an ungated model and skip the risk entirely:
-> `Qwen/Qwen2.5-*` · `HuggingFaceTB/SmolLM2-*` · `TinyLlama/TinyLlama-1.1B-*` ·
-> `openai-community/gpt2-*` · `microsoft/biogpt-large` · `stanford-crfm/BioMedLM`
->
-> This is the single most likely thing to cost you a day for no academic reason.
-
-### 1.2 Python libraries
-
-Named directly in the brief:
-
-| Library | Used for | Brief's wording |
-|---|---|---|
-| `transformers` | model, tokenizer, Trainer, callback | "`AutoModelForCausalLM.from_pretrained()`", "`AutoTokenizer.from_pretrained()`", "custom `TrainerCallback`" |
-| `peft` | LoRA adapters | Part B2 |
-| `bitsandbytes` | 4-bit quantization | Part B2 |
-| `trl` | `SFTTrainer` | Part B2 |
-| `torch` | Dataset class, training loop | "Wrap the packed dataset in a PyTorch Dataset class" |
-
-Implied by the required outputs:
-
-| Library | Used for |
+| § | Section |
 |---|---|
-| a PDF extractor — `pypdf`, `PyMuPDF` or `pdfplumber` | Step 1: "use any standard PDF extraction library" |
-| `pyarrow` / `pandas` | Step 2: "Save as Parquet" |
-| `matplotlib` | Step 4: "plot loss vs. training step" |
-| a language detector — `langdetect` or `fasttext` | Step 1: "retain only English-language documents" |
-| `datasets` | convenient for the packed/instruction splits |
-
-**Verify every import before Block 1 ends.** `bitsandbytes` is the usual troublemaker — it
-compiles against a specific CUDA build and fails at import, not at install.
-
-### 1.3 Data
-
-- **Domain PDFs** from the source sites listed under your chosen variant (V1–V6), or your own
-  for a custom variant. Target 8–10 documents minimum; more if you have A100 headroom.
-- The brief allows any domain: *"You are free to choose any domain and any model."*
-
-### 1.4 Concepts the group should already have
-
-Continual pre-training vs. fine-tuning · causal-LM next-token loss · tokenization and
-vocabulary alignment · perplexity · LoRA / QLoRA rank and alpha · catastrophic forgetting.
-The brief assumes these; it explains only perplexity in any depth.
+| 1 | [What we are building](#1--what-we-are-building) |
+| 2 | [Prerequisites](#2--prerequisites) |
+| 3 | [Decisions to lock](#3--decisions-to-lock) |
+| 4 | [Who owns what](#4--who-owns-what) |
+| 5 | [Schedule](#5--schedule) |
+| 6 | [**The eight steps**](#6--the-eight-steps) ← the actual work |
+| 7 | [Submission](#7--submission) |
+| 8 | [Risk register](#8--risk-register) |
 
 ---
 
-## 2 · Decisions to lock
+## 1 · What we are building
 
-45 minutes, all four, before any work starts. Changing any of these later costs a re-run.
+One pipeline, eight graded steps:
 
-1. **Variant + domain.** One of V1–V6, or a custom one. V3 (RBI/SEBI regulatory) and V6
-   (ISO 9001 / GFR 2017 procurement) have the cleanest downloadable English PDF corpora.
-   V4 (clinical) adds a mandatory disclaimer string on every response — extra rubric surface.
-   🔴 **A custom use case adds a fifth deliverable.** The variants guide requires you to label
-   it a custom enterprise variant, build the template "in the same format as given for V2–V6",
-   and **submit it as a separate doc**. Pick V1–V6 and that requirement disappears.
-2. **Model** — see the recommendation below. Check its gating status first (§1.1).
-3. **The three domain prompts** — locked, never edited. Reused in Step 3 (baseline), Step 4
-   and B3. Plus **three general prompts** for the Step 5B forgetting check
-   (capital of France / water boils at / speed of light).
-4. **Instruction-dataset size.** The brief only says "suitable size", so fix a number now:
-   **500 pairs → 400 train / 100 eval**. Without it, P1's lane has no finish line.
-5. **Shared folder + filename contract** — exactly the names in §4.
+```
+domain PDFs
+   │
+   ├─ Step 1  extract + clean          → domain_corpus/*.txt
+   ├─ Step 2  tokenize + pack          → packed_train/eval.parquet
+   ├─ Step 3  load model + audit       → baseline_generations.json
+   ├─ Step 4  CPT training             → cpt_ckpt/
+   ├─ Step 5  perplexity + forgetting  → ppl_results.json
+   │
+   ├─ B1      instruction dataset      → instruction_dataset.jsonl
+   ├─ B2      QLoRA adapter            → adapter/
+   └─ B3      final evaluation         → observations
+```
 
-### Model recommendation
-
-Pick **Qwen2.5-1.5B**, not a 7B.
-
-- Part A is **full-parameter** CPT. A 7B in bf16 with Adam states needs roughly 80 GB+ of
-  optimizer and gradient memory — tight-to-impossible on a contended A100, and a run that
-  dies late in Block 2 leaves no recovery room.
-- Qwen2.5 base ships a **ChatML chat template** in `tokenizer_config.json`, which is what B2
-  requires ("formatted with the model's chat template"). Most base models don't, and finding
-  that out in Block 3 costs hours.
-- **Ungated** — no licence wait (§1.1).
-- A 1.5B CPT run finishes in minutes, so a bad loss curve gets re-run instead of accepted.
-- The rubric rewards the **analysis** — loss curve, PPL drop, forgetting table — not parameter
-  count. Both PDFs explicitly permit any model.
-
-If Block 2 finishes early and the lab is free, re-run at 7B as a bonus. Don't bet the grade on it.
+Part A turns a general model into one that **speaks your domain** (CPT). Part B turns that into
+one that **answers questions** in it (QLoRA instruction tuning).
 
 ---
 
-## 3 · Who owns what
+## 2 · Prerequisites
 
-| | Owner | Steps | Marks | First action |
-|---|---|---|---|---|
-| **P1** | Corpus & Instruction Data | Step 1 + B1 | 4 | Start downloading PDFs immediately — longest lead time, no GPU needed |
-| **P2** | Packing & CPT Training | Step 2 + Step 4 | 4 | Write the packing script against P1's first few files |
-| **P3** | Model Audit & Evaluation | Step 3 + Step 5 | 4 | Accept model licences, then run the architecture audit — needs no corpus |
-| **P4** | QLoRA & Submission | B2 + B3 + assembly | 3 + integration | Verify every import, build the notebook skeleton |
+🕒 = needs lead time, start at hour zero.
 
-P4 carries fewer rubric marks but owns notebook integration, HTML export, GPU scheduling and
-final packaging — in practice the load is even.
+**Accounts & access**
+- 🕒 Hugging Face account + access token
+- 🕒 Licence acceptance for gated models — see warning below
+- Compute: T4 (16 GB, free Colab) for the small-model column, or A100 / L40S (BITS remote lab) for the 7–8 B column
+- Persistent storage — Step 4 says save the checkpoint there; a Colab session disk does not survive a disconnect
+- External LLM access, only if B1 uses synthetic generation
 
----
+> 🔴 **Gated on Hugging Face** — will not download until you accept the terms, approval takes
+> minutes to a day: `mistralai/Mistral-7B-v0.1` · `meta-llama/Meta-Llama-3-8B` · `google/gemma-7b`
+>
+> **Ungated:** `Qwen/Qwen2.5-*` · `HuggingFaceTB/SmolLM2-*` · `TinyLlama/TinyLlama-1.1B-*` ·
+> `openai-community/gpt2-*` · `microsoft/biogpt-large` · `stanford-crfm/BioMedLM`
 
-## 4 · Handoff contracts
+**Libraries** — `transformers`, `peft`, `bitsandbytes`, `trl`, `torch` (all named in the brief);
+plus a PDF extractor (`pypdf`/`PyMuPDF`/`pdfplumber`), `pyarrow`/`pandas` for Parquet,
+`matplotlib` for the loss curve, `langdetect`/`fasttext` for the English filter.
 
-Agree these filenames at kickoff. A lane is "done" when its artifact exists under its name.
-
-| From → To | Artifact | Must contain |
-|---|---|---|
-| P1 → P2 | `domain_corpus/*.txt` | Cleaned, English-only, deduplicated text |
-| P1 → P2 | `cleaning_stats.json` | Doc counts **before and after each filter**, and which step cut most |
-| P2 → P3 | `packed_train.parquet`, `packed_eval.parquet` | 90/10 split; eval never seen in training |
-| P2 → P3 | `pack_stats.json` | Total tokens, avg doc length in tokens, number of packed sequences |
-| P2 → P3, P4 | `cpt_ckpt/` | Final CPT model **and** tokenizer |
-| P3 → P4 | `baseline_generations.json` | Base-model output on the 3 domain **and** 3 general prompts |
-| P3 → P4 | `ppl_results.json` | Base PPL, CPT PPL, % reduction |
-| P3 → P4 | `forgetting_table.md` | 3 general prompts, base vs CPT, Retained/Degraded verdict |
-| P1 → P4 | `instruction_train.jsonl`, `instruction_eval.jsonl` | 80/20 split, counts, exact generation prompt template if synthetic |
-| all → P4 | notebook section + written inferences | Every step needs justification — this is graded |
+**Verify every import before Step 1 begins.** `bitsandbytes` fails at *import*, not install.
 
 ---
 
-## 5 · The four blocks
+## 3 · Decisions to lock
 
-### Block 1 — Setup and smoke test (~3–4 h) · goal: prove the pipeline runs
+45 minutes, all four. Changing any of these later costs a re-run.
 
-- **All** — the kickoff call (§2). Confirm §1 prerequisites are actually in place.
-- **P1** — download 8–10 domain PDFs; write the extract + clean script (the brief asks for
-  **page-by-page** extraction, one `.txt` per document); ship the **first 5 cleaned files
-  fast** so everyone else unblocks.
-- **P3** — load the model (**on T4 the brief requires bf16 + gradient checkpointing**; on A100
-  either is fine); architecture audit — decoder layers, attention heads, hidden size, head dim;
-  total trainable parameters; confirm `lm_head` output dim equals vocab size. Save baseline
-  generations on the 3 domain prompts **and the 3 general prompts** while the base model is
-  loaded, so Step 5B later needs only the CPT half.
-- **P2** — write the packing script: BOS/EOS wrap per doc, concatenate to one flat stream,
-  slice to context length, save Parquet. Test on P1's first 5 files.
-- **P4** — verify `transformers` / `peft` / `bitsandbytes` / `trl` all import; create the
-  notebook skeleton with its 8 titled sections; set up the shared folder.
-
-> **Block 1 gate — the vertical slice.** Before Block 1 closes, a **20-step CPT run on 5
-> documents must complete**. The output will be worthless; that is the point. It surfaces
-> every environment bug — install failures, tokenizer mismatch, OOM, checkpoint paths — while
-> there is still recovery room. Block 2 then scales up a pipeline you know works.
-
-### Block 2 — Corpus, CPT, evaluation (~1 full day) · goal: CPT trained and evaluated
-
-- **P1** — finish the full corpus; run the cleaning pipeline; record counts before and after
-  **each** filter; identify the highest-impact step. Hand off.
-- **P2** — pack the full corpus; report total tokens, avg doc length, sequence count; carve
-  the 10% held-out eval split.
-- **P3** — write the perplexity harness (cross-entropy loop, **no gradients, no training** —
-  the brief says so explicitly); run base-model PPL on the holdout.
-  *Blocked on P2's `packed_eval.parquet` — take P2's packing first.*
-- **P2 (main slot)** — **the CPT run.** Wrap the packed dataset in a **PyTorch `Dataset`
-  class** (explicit Step 4 wording). Custom `TrainerCallback` logging loss every step. Watch
-  the first loss: 2–4 is healthy, ≈10.8 means the model initialised randomly — stop and fix
-  loading, do not train through it. Save `cpt_ckpt/`.
-- **P3 (after checkpoint)** — CPT PPL on the same holdout; % reduction (expect 10–40%);
-  the forgetting table.
-- **P1 (later)** — begin the instruction dataset — the second-longest pole.
-- **P4 (throughout)** — fold Steps 1–3 into the notebook as they land; own the GPU schedule.
-
-### Block 3 — Instruction data, QLoRA, inferences (~1 full day)
-
-- **P1** — finish `instruction_dataset.jsonl` to the agreed 500-pair target; 80/20 split with
-  counts; record the exact synthetic-generation prompt template if an LLM was used.
-- **P4 (main slot)** — QLoRA on `cpt_ckpt/`: 4-bit bitsandbytes, `peft`, `SFTTrainer` with the
-  chat template. **Adapter B** (r=16, α=32, `q_proj`,`v_proj`) is the sensible default.
-- **P4 (after training)** — B3: run the adapter on the same 3 locked domain prompts.
-- **P3** — write the Step 5 inferences; build the base vs CPT vs adapter comparison.
-- **All (end of block)** — **inference-writing session.** Every step needs written
-  justification; both PDFs say detailed inferences are mandatory. Most commonly skipped work,
-  and worth real marks.
-
-### Block 4 — Assembly and submission (~half day)
-
-- **P4** — restart kernel, run the notebook **top to bottom**, export HTML with outputs.
-- Package the deliverables (§8), walk the definition of done (§7), submit.
+1. **Variant + domain** — V1–V6, or custom.
+   🔴 A custom use case **adds a fifth deliverable**: its template in the V2–V6 format, submitted
+   as a separate doc. Pick V1–V6 and that requirement disappears.
+2. **Model** — one id, used in Steps 2, 3, 4 and B2. Check gating first.
+   **Recommended: `Qwen/Qwen2.5-1.5B`** — ungated, ships a ChatML chat template (B2 needs one),
+   and full-parameter CPT fits comfortably. A 7B needs ~80 GB with optimizer states.
+3. **Three domain prompts** — locked forever. Used in Step 3, Step 4 and B3.
+4. **Three general prompts** — for Step 5B (capital of France / water boils at / speed of light).
+5. **Instruction-dataset size** — brief says only "suitable size". Fix it now: **500 pairs → 400 / 100**.
+6. **Filenames** — exactly as written in §6.
 
 ---
 
-## 6 · GPU discipline
+## 4 · Who owns what
 
-One A100 slot at a time. Contention rises sharply near any deadline.
-
-| Block | Who | Job |
-|---|---|---|
-| 1 | P3, then P2 | Architecture audit + baseline (~30 min), then the smoke CPT |
-| 2 | **P2** | The real CPT run — protected slot |
-| 2 (late) | P3 | Base + CPT perplexity |
-| 3 | P4 | QLoRA training |
-
-**The CPT run must finish inside Block 2.** Perplexity, the forgetting table, the QLoRA adapter
-and B3 are all blocked behind that one checkpoint, so leaving it to Block 3 removes any chance
-of a second attempt.
+| | Owner | Steps | Marks |
+|---|---|---|---|
+| **P1** | Corpus & Instruction Data | Step 1 · B1 | 4 |
+| **P2** | Packing & CPT Training | Step 2 · Step 4 | 4 |
+| **P3** | Model Audit & Evaluation | Step 3 · Step 5 | 4 |
+| **P4** | QLoRA & Submission | B2 · B3 · notebook assembly | 3 + integration |
 
 ---
 
-## 7 · Definition of done
+## 5 · Schedule
 
-Marks attach to reported figures, not just code that ran. The notebook must state:
+| Block | Effort | P1 | P2 | P3 | P4 |
+|---|---|---|---|---|---|
+| **1** Setup | 3–4 h | Step 1 — first 5 files | write Step 2 script | **Step 3 complete** | verify imports, notebook skeleton |
+| **2** Train | 1 day | Step 1 done → handoff | **Step 2, then Step 4** | Step 5A base PPL → **Step 5 done** | assemble Steps 1–3 |
+| **3** Tune | 1 day | **B1 done** | — | write Step 5 inferences | **B2, then B3** |
+| **4** Ship | ½ day | inferences | inferences | inferences | run notebook top-to-bottom, export HTML |
 
-- [ ] Doc counts before and after **each** cleaning step, and the highest-impact step
-- [ ] Total token count, average document length in tokens, number of packed sequences
-- [ ] Total trainable parameters
-- [ ] Decoder layers, attention heads, hidden size, head dimension
-- [ ] `lm_head` output dim equals vocabulary size
-- [ ] Packed dataset wrapped in a PyTorch `Dataset` class
-- [ ] Loss curve plotted, with the plateau point identified
-- [ ] Base PPL, CPT PPL, and the **percentage reduction**
-- [ ] Forgetting table: 3 general prompts, both models, Retained/Degraded verdict per row
-- [ ] Instruction dataset train/eval counts
-- [ ] The exact synthetic generation prompt template
-- [ ] Adapter configuration used
-- [ ] B3 observations on the 3 locked prompts
-- [ ] Written inferences under **every** step
+> **Block 1 gate:** a 20-step CPT run on 5 documents must complete before Block 1 closes. The
+> output is worthless — the point is flushing out environment bugs while there's recovery room.
+
+**Step 4 must finish in Block 2.** Steps 5, B2 and B3 are all blocked behind that checkpoint.
 
 ---
 
-## 8 · Submission deliverables
+## 6 · The eight steps
+
+---
+
+### Step 1 — Data Collection, Extraction & Cleaning · 2 marks · P1
+
+**Produces:** `domain_corpus/*.txt`, `cleaning_stats.json`
+
+**Do this:**
+1. Download 8–10+ domain PDFs from your variant's listed sources into `raw_pdfs/`.
+2. Extract text **page-by-page** (the brief's wording) with `pypdf` / `PyMuPDF`; join the pages
+   and write **one `.txt` per PDF** into `domain_corpus/`.
+3. Record the raw document count.
+4. **Length filter** — drop documents under a threshold (e.g. 1 000 characters). Record the count after.
+5. **Deduplication** — exact hash, or near-duplicate via MinHash/shingles. Record the count after.
+6. **Language filter** — `langdetect`, keep `en` only. Record the count after.
+7. *Optional but worth marks:* the brief says the pipeline is "not confined to the following".
+   Add one more step — strip repeated headers/footers, drop boilerplate pages, normalise
+   whitespace — and justify it. That justification is exactly the "inference" the rubric wants.
+8. Write `cleaning_stats.json` with every count.
+
+**Report:** document counts **before and after each step**, and **which step had the greatest
+impact** on corpus size.
+
+**Done when:** cleaned `.txt` files exist, stats are recorded, and a short paragraph explains
+which filter dominated and why that makes sense for your domain.
+
+---
+
+### Step 2 — Tokenization & Packed Dataset · 2 marks · P2
+
+**Needs:** Step 1 output · **Produces:** `packed_train.parquet`, `packed_eval.parquet`, `pack_stats.json`
+
+**Do this:**
+1. `tok = AutoTokenizer.from_pretrained(MODEL_ID)` — the **same** id as Step 3. Never train a
+   custom tokenizer; the brief is explicit that reusing the pretrained one preserves vocabulary
+   alignment during CPT.
+2. For each `.txt`: `ids = [tok.bos_token_id] + tok(text).input_ids + [tok.eos_token_id]`.
+   BOS/EOS mark document boundaries inside the packed stream.
+3. Concatenate every document's ids into **one flat list**.
+4. Slice that stream into fixed-length chunks equal to the model's **context window**
+   (`config.max_position_embeddings`). Drop the trailing remainder. No padding — that's the point
+   of packing, and it's what gives full GPU utilisation.
+5. Hold out **10%** of the chunks as the evaluation split (Step 5A needs it, and it must never be
+   seen in training). Remaining 90% is training.
+6. Save both as **Parquet**.
+
+**Report:** total token count · average document length in tokens · total number of packed sequences.
+
+**Done when:** both Parquet files exist and the three figures are printed.
+
+---
+
+### Step 3 — Model Loading & Architecture Inspection · 2 marks · P3
+
+**Produces:** `baseline_generations.json`
+
+**Do this:**
+1. `model = AutoModelForCausalLM.from_pretrained(MODEL_ID, torch_dtype=torch.bfloat16)`.
+   **On T4 the brief also requires** `model.gradient_checkpointing_enable()`. On A100 either
+   full precision or bf16 is fine.
+2. **Parameter count** — `sum(p.numel() for p in model.parameters() if p.requires_grad)`.
+3. **Architecture audit** from `model.config`: `num_hidden_layers` (decoder layers),
+   `num_attention_heads`, `hidden_size`, and head dim = `hidden_size // num_attention_heads`.
+4. **`lm_head` check** — confirm `model.lm_head.out_features` equals `config.vocab_size`. This is
+   the sanity check that your tokenizer and model actually match.
+5. **Baseline inference** — generate on the 3 locked **domain** prompts and save the text; this is
+   the "before" evidence you compare against later.
+   *Also generate on the 3 **general** prompts now, while the base model is loaded* — Step 5B needs
+   base-model general outputs, and doing it here saves a reload.
+
+**Report:** trainable parameters · layers, heads, hidden size, head dim · the `lm_head` confirmation
+· the baseline generations.
+
+**Done when:** `baseline_generations.json` holds 6 outputs (3 domain + 3 general) and the audit
+figures are printed.
+
+---
+
+### Step 4 — CPT Training Loop & Loss Analysis · 2 marks · P2
+
+**Needs:** Step 2 + Step 3 · **Produces:** `cpt_ckpt/`, the loss curve
+
+**Do this:**
+1. **Wrap the packed dataset in a PyTorch `Dataset` class** (explicit brief wording). `__getitem__`
+   returns `input_ids` and `labels` — for causal LM they're the same tensor; the model shifts
+   internally.
+2. Configure `TrainingArguments` — learning rate around `2e-5`, a warmup, `bf16=True`, gradient
+   accumulation to reach a sensible effective batch, and `logging_steps=1` so the callback sees
+   every step.
+3. **Loss callback** — subclass `TrainerCallback`, override `on_log`, append `logs["loss"]` to a list.
+4. Run `Trainer(...).train()`.
+5. 🔴 **Check the first logged loss immediately.** 2–4 means the pretrained weights loaded
+   correctly. **≈10.8 means the model initialised randomly** — stop, fix the loading, do not train
+   through it. If loss diverges or spikes, lower the learning rate or lengthen warmup.
+6. Plot **loss vs training step** and identify where it **plateaus**.
+7. `model.save_pretrained("cpt_ckpt")` **and** `tokenizer.save_pretrained("cpt_ckpt")` — to
+   persistent storage. Part B and Step 5 both depend on this.
+
+**Report:** the loss curve plot · the starting loss · where it plateaus.
+
+**Done when:** `cpt_ckpt/` contains model *and* tokenizer, and the curve is plotted with the
+plateau called out.
+
+---
+
+### Step 5 — Evaluation: Perplexity & Catastrophic Forgetting · 2 marks · P3
+
+**Needs:** `packed_eval.parquet` + `cpt_ckpt/` · **Produces:** `ppl_results.json`, `forgetting_table.md`
+
+#### 5A — Domain perplexity
+
+`PPL = exp( −(1/N) Σ log P(tᵢ | t₁…tᵢ₋₁) )`
+
+**Do this:**
+1. Write one evaluation loop: `model.eval()`, `torch.no_grad()` — **no gradients, no training**,
+   as the brief specifies.
+2. Accumulate token-level cross-entropy over `packed_eval.parquet`, then
+   `ppl = exp(total_loss / total_tokens)`.
+3. Run it twice on the **same** split: once for the **base** model, once for the **CPT** model.
+4. `reduction% = (base − cpt) / base × 100`.
+
+**Report:** base PPL · CPT PPL · percentage drop. A successful run drops domain perplexity
+**10–40%**. Lower domain PPL after CPT = successful domain adaptation.
+
+#### 5B — Catastrophic forgetting
+
+**Do this:**
+1. Generate on the 3 **general** prompts with **both** models (base outputs already saved in Step 3).
+2. Build a side-by-side table with a **verdict column**.
+
+| Prompt | Base output | CPT output | Verdict |
+|---|---|---|---|
+| The capital of France is… | … | … | Retained / Degraded |
+
+**If outputs degrade badly:** learning rate was too high or training ran too long — cut LR 10× or
+halve `max_steps` and re-run. That usually preserves the domain gain.
+
+**Done when:** both perplexities, the percentage, and a 3-row verdict table exist — plus a
+paragraph on whether the trade-off was worth it.
+
+---
+
+### B1 — Instruction Dataset Creation · 2 marks · P1
+
+**Needs:** Step 1 output · **Produces:** `instruction_dataset.jsonl`, `instruction_train.jsonl`, `instruction_eval.jsonl`
+
+**Do this:**
+1. Chunk the cleaned `.txt` files into ~50 readable passages.
+2. Generate **10 instruction/response pairs per passage → 500 pairs**, either by hand/heuristic or
+   synthetically via an external LLM. The brief's suggested template:
+   > *"Read the text below and generate 10 instruction-response pairs in JSON format based ONLY on
+   > this text. Each entry must have instruction and response keys."*
+3. 🔴 **Save the exact prompt template you used** — the brief requires it in the submission if you
+   went synthetic.
+4. Validate the JSONL: every line is one object with an `instruction` key and a `response` key.
+   Responses must be derived **from your domain text**, not invented.
+   *(V4 clinical only: every response must carry the educational-use disclaimer.)*
+5. Shuffle, then split **80/20** → 400 train / 100 eval.
+
+**Report:** train count and eval count · the exact generation prompt template.
+
+**Done when:** all three JSONL files validate and the counts are printed.
+
+---
+
+### B2 — QLoRA Fine-Tuning · 2 marks · P4
+
+**Needs:** `cpt_ckpt/` + B1 output · **Produces:** `adapter/`
+
+**Do this:**
+1. `BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16)`.
+2. Load **`cpt_ckpt/`** — not the original base model — with that quantization config.
+3. `prepare_model_for_kbit_training(model)`.
+4. Pick **one** adapter and state why:
+
+   | Adapter | r | α | Target modules | Effect |
+   |---|---|---|---|---|
+   | A · low | 8 | 16 | `q_proj`, `v_proj` | Faster; may underfit |
+   | **B · balanced** | **16** | **32** | **`q_proj`, `v_proj`** | **Good quality/cost — default** |
+   | C · high | 32 | 32 | `q_proj`, `v_proj`, `o_proj` | Best quality; slower; more VRAM |
+
+   `LoraConfig(r=16, lora_alpha=32, target_modules=["q_proj","v_proj"], task_type="CAUSAL_LM")`
+5. Format every pair with the model's **chat template** —
+   `tok.apply_chat_template([{"role":"user","content":instruction}, {"role":"assistant","content":response}], tokenize=False)`.
+   If the tokenizer has no template, set `tok.chat_template` yourself and document it.
+6. Train with `SFTTrainer` on the 400-pair training split.
+7. Save the adapter.
+
+**Report:** the adapter config chosen and the reasoning · training loss.
+
+**Done when:** the adapter loads onto `cpt_ckpt/` and generates without error.
+
+---
+
+### B3 — Evaluation Analysis · 1 mark · P4
+
+**Do this:**
+1. Run the trained adapter on **the same 3 locked domain prompts** from Step 3.
+2. Put all three stages side by side:
+
+| Prompt | Base (Step 3) | CPT (Step 4) | CPT + adapter (B2) |
+|---|---|---|---|
+
+3. Write the observations: did the base model ramble? Did CPT make it fluent in domain vocabulary
+   but still complete rather than answer? Did the adapter make it actually *respond* to the
+   instruction? That progression is the finding the whole assignment is built to demonstrate.
+
+**Done when:** the three-way table exists with a written analysis.
+
+---
+
+## 7 · Submission
 
 | File | Contents |
 |---|---|
-| `Assignment1A.ipynb` | Notebook **with outputs** — Steps 1–5 and B1–B3, inferences throughout |
+| `Assignment1A.ipynb` | Notebook **with outputs** — Steps 1–5, B1–B3, inferences throughout |
 | `Assignment1A.html` | Exported HTML of the notebook, with outputs |
 | `instruction_dataset.jsonl` | Final instruction/response pairs |
 | `domain_corpus/*.txt` | Cleaned text files from Step 1 |
-| *custom variant only* | The custom-variant template doc, in the V2–V6 format |
+| *custom variant only* | The custom-variant template, in the V2–V6 format |
 
-**Optional extension, no marks:** a CLI or notebook chat loop routing domain queries to
-different adapters via keyword or intent rules, demonstrating `model.set_adapter()`.
+**Final checks:** restart the kernel and run **top to bottom** · every step has a written inference
+(the brief calls this mandatory twice) · every figure in the step sections above is visible in the
+output.
+
+**Optional, no marks:** a chat loop routing queries to different adapters via `model.set_adapter()`.
 
 ---
 
-## 9 · Risk register
+## 8 · Risk register
 
 | Risk | Signal | Response |
 |---|---|---|
-| Gated model not approved | 401/403 on `from_pretrained` | Accept the licence at hour zero, or switch to an ungated model (§1.1) |
-| `bitsandbytes` import fails | ImportError at runtime, not install | Match the wheel to the CUDA build; catch it in Block 1, not Block 3 |
-| Model initialised randomly | Start loss ≈10.8 instead of 2–4 | Fix `from_pretrained`; do not train through it |
-| Tokenizer mismatch | Garbage generations; vocab ≠ `lm_head` dim | One tokenizer id everywhere, always the model's own |
-| OOM during CPT | CUDA OOM | Smaller model, gradient checkpointing, lower batch + higher grad accumulation |
-| Catastrophic forgetting | General prompts clearly degrade in 5B | Cut LR 10× or halve `max_steps`, re-run |
-| No chat template | `SFTTrainer` errors in B2 | Qwen2.5 ships ChatML; otherwise set `tokenizer.chat_template` and document it |
-| Corpus too small | PPL drop under 10% | Add documents, or train more epochs on the same corpus |
-| Checkpoint lost | Colab disconnect wipes session disk | Save `cpt_ckpt/` to mounted persistent storage |
-| GPU contention | Queue near the deadline | CPT finishes in Block 2 — non-negotiable |
+| Gated model not approved | 401/403 on load | Accept the licence at hour zero, or use an ungated model |
+| `bitsandbytes` import fails | ImportError at runtime | Match the wheel to the CUDA build — catch it in Block 1 |
+| Model initialised randomly | **Start loss ≈10.8** not 2–4 | Fix `from_pretrained`; never train through it |
+| Tokenizer mismatch | `lm_head` dim ≠ vocab size | One tokenizer id everywhere, always the model's own |
+| OOM during CPT | CUDA OOM | Smaller model · gradient checkpointing · lower batch, higher grad accumulation |
+| Catastrophic forgetting | 5B outputs clearly degrade | Cut LR 10× or halve `max_steps`, re-run |
+| No chat template | `SFTTrainer` errors in B2 | Qwen2.5 ships ChatML; else set `tok.chat_template` and document it |
+| Corpus too small | PPL drop under 10% | More documents, or more epochs |
+| Checkpoint lost | Session disconnect | Save `cpt_ckpt/` to mounted persistent storage |
+| GPU contention | Queue near the deadline | Step 4 finishes in Block 2 — non-negotiable |
 
 ---
 
-## 10 · Downstream note
+## 9 · Downstream note
 
-Per the variants guide, assignments **1B, 2A, 2B and 2C reuse the same `.txt` corpus and
-`instruction_dataset.jsonl`** built here — no new data collection later. P1's lane is an
-investment across five deliverables, so clean it properly once.
+Assignments **1B, 2A, 2B and 2C reuse the same `.txt` corpus and `instruction_dataset.jsonl`**
+built here — no new data collection later. Clean it properly once.
