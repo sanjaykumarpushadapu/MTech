@@ -44,6 +44,10 @@ For session-note, lab, source-log, master-index, progress, or watchlist work, th
 
 The final response must include a short compliance line, for example: `AGENTS check: handout row checked, tracking updated, repo checks passed; open gap: S02 remaining lab files not held.` Keep it concise, but do not omit it.
 
+### Repeated Pushback Means Re-Verify, Not Re-Explain
+
+If the user questions the same claim, format choice, or compliance status more than once in a conversation — even worded differently each time — treat the second instance as a signal to re-check the underlying evidence directly (the source file, the deck's actual media/XML, the current repo state), not as a cue to restate the rule or explain it more clearly. A confident restatement of a prior conclusion is not verification of it, and a thorough audit of one thing (e.g., a text/topic keyword sweep) does not stand in for verifying a different thing the user is actually asking about (e.g., an image audit) — name explicitly which check was actually run before claiming the point is settled. When re-checking confirms the original claim, say so and show what was checked. When it doesn't, say so plainly and fix it before responding again.
+
 ### Handout First
 
 Every session note is created from the handout Learning Plan row, not from uploaded material.
