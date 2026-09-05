@@ -53,7 +53,7 @@ $$\hat{x} = s(x_q-z)$$
 
 For symmetric quantization, the range is centered around zero and the zero-point is usually fixed at zero. For asymmetric quantization, the minimum and maximum of the observed range are mapped to the available integer range.
 
-**Calibration.** Activation ranges depend on real inputs, so post-training quantization commonly runs representative calibration sequences through the model. The quantizer records ranges and chooses scales that limit precision loss. Weight-only scales can be computed from the stored weights, while activation scales require observed activation values.
+**Calibration.** Activation ranges depend on real inputs, so post-training quantization commonly runs representative calibration sequences through the model. The deck's example uses roughly **128–512 calibration sequences**; the quantizer records ranges and chooses scales that limit precision loss. Weight-only scales can be computed from the stored weights, while activation scales require observed activation values.
 
 **Two training choices:**
 
@@ -163,6 +163,8 @@ The adjusted resampling distribution is proportional to:
 $$p'(y) \propto \max(0,p_{tgt}(y)-p_{drft}(y))$$
 
 **Worked example.** Suppose the draft proposes **K = 3** tokens. For one rejected token with $p=0.30$ and $q=0.50$, the **reject probability** is $1-0.30/0.50=0.40$. A uniform draw of $u=0.25$ rejects it, so the system samples a replacement. The replacement distribution's **Replacement chance** can be `0.857` for `floor` and `0.143` for `lawn` in the small vocabulary example. If the current iteration accepts `the` and then replaces `mat` with `floor`, **Two tokens generated** are emitted from one target forward pass; later draft positions are not reached after the rejection, and the next iteration must **resample** from the new context.
+
+A predictable continuation such as the next word after `Actions speak louder than...` still costs a target-model forward pass in ordinary decoding. The deck's illustrative target-only comparison reports roughly **50–67% fewer large-model passes** when speculative verification accepts enough draft tokens.
 
 A small draft model can be an ordinary compact model or a lightweight drafter integrated with a target family. For example, a Gemma 4 drafter can use a **Multi-Token Prediction (MTP) head** to propose several likely next tokens before target verification.
 

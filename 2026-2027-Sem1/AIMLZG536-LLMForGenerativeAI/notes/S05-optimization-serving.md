@@ -59,7 +59,7 @@ $$N_{prompt} + N_{new} \leq N_{context}$$
 
 A request can fail or be truncated when the prompt plus the requested maximum output exceeds the model's context limit.
 
-**Worked example.** With a context window of 2,048 tokens (2048 token positions), a 1,600-token prompt leaves at most 448 token positions for the generated response if no truncation or sliding strategy is used.
+**Worked example.** A live context-window trace shows `Size: 40/2048`: 40 token positions are occupied out of a 2,048-token limit. With a 1,600-token prompt, at most 448 token positions remain for the generated response if no truncation or sliding strategy is used.
 
 **Tradeoff / when not to use.** Increasing context can improve access to long documents, but it increases attention and memory pressure. Do not send the maximum possible context by default; retrieve, summarize, or trim irrelevant material when the task does not need it.
 
@@ -119,6 +119,12 @@ The malformed function header can produce `SyntaxError: expected ':'`. The servi
 
 ![Next-token probability distribution](assets/S05-next-token-distribution.png)
 
+![Prompt/avatar visual](assets/S05-prompt-avatar.png)
+
+![Generation direction](assets/S05-generation-arrow.png)
+
+![LLM visual](assets/S05-llm-robot.png)
+
 **Worked example.** For the prompt `Fix this code for me… There’s a missing…`, generation proceeds incrementally: the model may first emit `There`, then `’s`, and later continue the response. Each selected token is added to the context before the next probability distribution is computed; new tokens depend on past tokens.
 
 **Mechanism.** The loop is:
@@ -154,7 +160,7 @@ where $z_i$ is the logit for token $i$ and the denominator normalizes all candid
 - a context-window limit;
 - application-specific validation or cancellation.
 
-A concrete serving configuration can record `Output count: 13 tokens`, `Max New Tokens: 14`, and a `Max Context` / `Total Context` limit separately. The output cap, not the current output count, is the upper bound for the decode loop.
+A concrete serving configuration can record `Output count: 13 tokens`, `Max New Tokens: 14`, and a `Max Context` / `Total Context` limit separately. Another trace reaches `Size: 40/41`, where `Max Context: 41` and `Total Context: 41` trigger the stop condition. The output cap, not the current output count, is the upper bound for the decode loop.
 
 **Worked example.** A response may stop immediately after emitting an end-of-turn marker. If the marker is never produced, `max_new_tokens = 128` still bounds the decode loop.
 
@@ -267,7 +273,7 @@ A second continuation example starts with `I took my dog...`; candidate completi
 
 For $P=0.8$, a narrow distribution may retain only the dominant token or a few close alternatives. A broad distribution may retain many tokens before reaching the same cumulative threshold.
 
-**Worked example.** Imagine the prompt: `The hero opened the chest and found...` If `gold` has probability 40%, Greedy Search returns `gold` immediately. Top-K with $K=3$ or Top-P with $P=0.80$ can instead sample among `gold`, `a`, and `treasure`, while excluding lower-ranked candidates such as `magic`. In the numeric comparison, **Top-k = 3** and **Top-p = 0.8** retain the same three tokens because `40% + 25% + 15% = 80%`. After filtering, compute the **renormalized probability** for each retained token so the values sum to 1. In the separate numeric example `0.40, 0.25, 0.17, 0.13, 0.05`, the first three sum to:
+**Worked example.** Imagine the prompt: `The hero opened the chest and found...` The distribution is `gold: 40%`, `a: 25%`, `treasure: 15%`, `an: 10%`, `nothing: 5%`, `magic: 3%`, `his: 1.5%`, and `a dragon: 0.5%`. Greedy Search returns `gold` immediately. Top-K with $K=3$ or Top-P with $P=0.80$ can instead sample among `gold`, `a`, and `treasure`, while excluding lower-ranked candidates such as `magic`. In the numeric comparison, **Top-k = 3** and **Top-p = 0.8** retain the same three tokens because `40% + 25% + 15% = 80%`. After filtering, compute the **renormalized probability** for each retained token so the values sum to 1. In the separate numeric example `0.40, 0.25, 0.17, 0.13, 0.05`, the first three sum to:
 
 $$0.40 + 0.25 + 0.17 = 0.82$$
 
@@ -367,7 +373,7 @@ The comparison shows why parameter count, context length, and the number of KV h
 - context length and generated length;
 - memory bandwidth between storage and compute units.
 
-GPU architecture determines whether the bottleneck is arithmetic, memory bandwidth, or capacity. A 70B model can move roughly 140 GB of FP16 weights per full forward pass; in FP32, the weights alone are about 280 GB. A 500-token response requires roughly 500 decode loops, so repeated parameter movement makes decode **memory-bandwidth-bound**. These are the three recurring **LLM inference bottlenecks**: limited VRAM, memory bandwidth, and repeated computation.
+GPU architecture determines whether the bottleneck is arithmetic, memory bandwidth, or capacity. A 70B model can move roughly 140 GB of FP16 weights per full forward pass; in FP32, the weights alone are about 280 GB. A 500-token response requires roughly **500 loops** of decode work, so repeated parameter movement makes decode **memory-bandwidth-bound**. These are the three recurring **LLM inference bottlenecks**: limited VRAM, memory bandwidth, and repeated computation.
 
 **Worked example.** If a server doubles the number of active sequences while keeping context length unchanged, the KV-cache requirement roughly doubles. If it doubles both active sequences and context length, the cache pressure can grow by roughly four times before accounting for padding or implementation details.
 
@@ -447,7 +453,9 @@ The cache reduction comes from lowering $H_{KV}$ in the memory estimate, not fro
 
 In one illustrative configuration, standard MHA stores $2\times128\times128=32,768$ K/V numbers per token per layer, while an MLA latent cache stores 576 numbers—about 55 times fewer before implementation overhead. This is a configuration example, not a universal MLA ratio. The **MLA math** is a **factorization**: compress the hidden state into a latent $c_{KV}$, cache the latent, and reconstruct or algebraically absorb the key/value projections when attention runs.
 
-MLA is associated with architectures such as DeepSeek-V2/V3 and related model families. Other models may choose GQA instead; the trained architecture determines which cache representation is valid.
+In another MLA derivation, the compressed latent $c_{KV}$ has width 512; the up-projections reconstruct K/V during training or are algebraically absorbed during inference. The exact latent width is architecture-specific.
+
+MLA is associated with architectures such as DeepSeek-V2/V3, Kimi K2, GLM-5, Ling 2.5, Mistral Large 3, and Sarvam models. The deck contrasts Sarvam 30B, which stays with GQA at smaller scale, with Sarvam 105B, which uses MLA. Other models may choose GQA instead; the trained architecture determines which cache representation is valid.
 
 ---
 
