@@ -229,6 +229,8 @@ $$0.43 + 0.37 + 0.15 = 0.95$$
 
 The normalized probabilities become approximately `0.4526, 0.3895, 0.1579`.
 
+A second continuation example starts with `I took my dog...`; candidate completions include `for a walk`, `to the vet`, `with me`, `and my cat on vacation`, and `by the collar`. Top-P changes how many of these candidates remain eligible as the distribution changes.
+
 **Tradeoff / when not to use.** A small K can remove useful alternatives and reduce diversity. A large K can reintroduce noisy tail tokens. Top-K is less adaptive than Top-P because it always keeps the same number of candidates even when the distribution is sharp or flat.
 
 ### Top-P or nucleus sampling
@@ -324,6 +326,16 @@ Prefill mainly influences TTFT. Decode repeatedly influences ITL and total gener
 
 **Why it is needed.** A model may fit in parameter storage but still exceed accelerator memory once weights, activations, KV-cache, batching, and temporary workspaces are included.
 
+A comparative KV-cache example illustrates the scale:
+
+| Model | Context / architecture example | Weights | KV cache | Total inference memory |
+|---|---|---:|---:|---:|
+| Llama 2 7B | 4,096 tokens; 32 layers; 32 KV heads | 14.0 GB | 2.0 GB | ~16.0 GB |
+| Qwen3-8B | 32,768 tokens; 36 layers; 8 KV heads | 16.4 GB | 4.5 GB | ~20.9 GB |
+| GPT-3 175B | 96 layers; 96 KV heads | 350.0 GB | 9.0 GB | ~359.0 GB |
+
+The comparison shows why parameter count, context length, and the number of KV heads must be considered together.
+
 **Mechanism.** The main pressure points are:
 
 - model weights;
@@ -333,7 +345,7 @@ Prefill mainly influences TTFT. Decode repeatedly influences ITL and total gener
 - context length and generated length;
 - memory bandwidth between storage and compute units.
 
-GPU architecture determines whether the bottleneck is arithmetic, memory bandwidth, or capacity. A 70B model can move roughly 140 GB of FP16 weights per full forward pass; repeated weight movement makes decode **memory-bandwidth-bound**. These are the three recurring **LLM inference bottlenecks**: limited VRAM, memory bandwidth, and repeated computation.
+GPU architecture determines whether the bottleneck is arithmetic, memory bandwidth, or capacity. A 70B model can move roughly 140 GB of FP16 weights per full forward pass; in FP32, the weights alone are about 280 GB. A 500-token response requires roughly 500 decode loops, so repeated parameter movement makes decode **memory-bandwidth-bound**. These are the three recurring **LLM inference bottlenecks**: limited VRAM, memory bandwidth, and repeated computation.
 
 **Worked example.** If a server doubles the number of active sequences while keeping context length unchanged, the KV-cache requirement roughly doubles. If it doubles both active sequences and context length, the cache pressure can grow by roughly four times before accounting for padding or implementation details.
 

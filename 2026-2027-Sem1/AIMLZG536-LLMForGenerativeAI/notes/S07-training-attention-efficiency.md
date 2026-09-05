@@ -106,7 +106,7 @@ A memory-hierarchy example places SRAM at roughly **13× the speed of HBM** but 
 
 The practical win is often a longer context that fits in memory—some implementations target **100K+ tokens**—but FlashAttention does not by itself make the quadratic attention algorithm linear. It produces the **No approximation** exact result while changing the memory path.
 
-**Runtime support.** Common supported paths include Ampere-or-newer NVIDIA GPUs such as A100, RTX 40-series/L40, H100, and newer hardware, subject to the installed kernel and framework. PyTorch scaled-dot-product attention, Hugging Face FlashAttention backends, vLLM, and TensorRT-LLM may select optimized kernels; the startup or runtime configuration should be checked.
+**Runtime support.** Common supported paths include Ampere-or-newer NVIDIA GPUs such as A100, RTX 40-series/L40, H100, and B200, subject to the installed kernel and framework. PyTorch scaled-dot-product attention, Hugging Face FlashAttention backends, vLLM, and TensorRT-LLM may select optimized kernels; the startup or runtime configuration should be checked.
 
 **Tradeoff / when not to use.** FlashAttention requires supported GPU kernels and compatible precision/runtime settings. It is an exact IO-aware optimization, not a replacement for sparse or linear attention. Confirm that the selected backend is active rather than assuming the framework chose it.
 
@@ -188,7 +188,7 @@ Do not equate a larger context limit with reliable long-context reasoning.
 
 ### Landscape labels beyond the core variants
 
-The architecture overview also names **KDA (Kimi Linear)**, **NSA**, and **DSA** as newer attention-efficiency directions. The optional material refers to **DeepSeek Sparse Attention** in connection with DSA. These labels belong in the landscape comparison, but the supplied slides do not develop their algorithms enough for a full mechanism section here.
+The architecture overview also names **KDA (Kimi Linear)**, **NSA**, and **DSA** as newer attention-efficiency directions. The optional material refers to **DeepSeek Sparse Attention** in connection with DSA and lists model families such as DeepSeek V3.2, Kimi K2, GLM-5, Ling 2.5, and Sarvam as examples. These labels belong in the landscape comparison, but the supplied slides do not develop their algorithms enough for full mechanism sections here.
 
 ---
 

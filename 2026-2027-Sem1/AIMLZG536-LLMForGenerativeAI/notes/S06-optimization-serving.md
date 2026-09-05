@@ -164,6 +164,8 @@ $$p'(y) \propto \max(0,p_{tgt}(y)-p_{drft}(y))$$
 
 **Worked example.** Suppose the draft proposes **K = 3** tokens. For one rejected token with $p=0.30$ and $q=0.50$, the **reject probability** is $1-0.30/0.50=0.40$. A uniform draw of $u=0.25$ rejects it, so the system samples a replacement. The replacement distribution's **Replacement chance** can be `0.857` for `floor` and `0.143` for `lawn` in the small vocabulary example. If the current iteration accepts `the` and then replaces `mat` with `floor`, **Two tokens generated** are emitted from one target forward pass; later draft positions are not reached after the rejection, and the next iteration must **resample** from the new context.
 
+A small draft model can be an ordinary compact model or a lightweight drafter integrated with a target family. For example, a Gemma 4 drafter can use a **Multi-Token Prediction (MTP) head** to propose several likely next tokens before target verification.
+
 **Tradeoff / when not to use.** Speedup depends on draft quality, target–draft compatibility, proposal length, and verification overhead. A poor draft model causes frequent rejection and little benefit. Speculative decoding preserves the target distribution when implemented with the acceptance/resampling rule; it is not merely “trust the small model.”
 
 ---
@@ -190,7 +192,7 @@ $$p'(y) \propto \max(0,p_{tgt}(y)-p_{drft}(y))$$
 - Gather the required blocks during attention, even when they are non-contiguous in physical memory.
 - Reuse free blocks as requests finish and new requests arrive.
 
-This is memory management for serving; it does not change the model's attention mathematics.
+This is the memory-management technique used by serving systems such as **vLLM**; the optimization overview also connects it with high-throughput serving stacks such as TGI. It does not change the model's attention mathematics.
 
 **Tradeoff / when not to use.** Block tables and paging add runtime complexity. Swapping blocks to CPU memory may avoid an out-of-memory failure but can be much slower than recomputing from the prompt because PCIe transfer is slow. A serving runtime should measure recomputation, swapping, preemption, and tail latency together.
 
