@@ -43,29 +43,60 @@ SEED = 42
 
 
 # --------------------------------------------------------------------------
-# Stage tracking - every filter records its before/after count automatically
+# Stage tracking - every stage records a before/after count automatically.
+# Document-count filters (apply) and text-level transforms (transform) use
+# different impact metrics, since a transform never drops a whole document.
 # --------------------------------------------------------------------------
 class Pipeline:
-    """Runs filters over a {name: text} mapping and records counts per stage."""
+    """Runs filters/transforms over a {name: text} mapping and records stage stats."""
 
     def __init__(self, docs: dict[str, str]):
         self.docs = docs
-        self.stages: list[dict] = [{"stage": "raw extraction", "documents": len(docs), "removed": 0}]
+        self.stages: list[dict] = [
+            {
+                "stage": "raw extraction",
+                "documents": len(docs),
+                "removed": 0,
+                "total_characters": sum(len(t) for t in docs.values()),
+            }
+        ]
 
     def apply(self, name: str, keep_fn) -> None:
+        """A document-count filter - drops whole documents that fail keep_fn."""
         before = len(self.docs)
         self.docs = {k: v for k, v in self.docs.items() if keep_fn(k, v)}
         self.stages.append(
-            {"stage": name, "documents": len(self.docs), "removed": before - len(self.docs)}
+            {
+                "stage": name,
+                "documents": len(self.docs),
+                "removed": before - len(self.docs),
+                "total_characters": sum(len(t) for t in self.docs.values()),
+            }
         )
 
-    def replace(self, name: str, map_fn) -> None:
-        """A transform rather than a filter - count is unchanged but recorded."""
-        self.docs = {k: map_fn(v) for k, v in self.docs.items()}
-        self.stages.append({"stage": name, "documents": len(self.docs), "removed": 0})
+    def transform(self, name: str, map_fn) -> None:
+        """A text-level transform - document count is unchanged, so impact is
+        measured in characters removed instead (used for the boilerplate step)."""
+        before_chars = sum(len(t) for t in self.docs.values())
+        self.docs = {k: map_fn(k, v) for k, v in self.docs.items()}
+        after_chars = sum(len(t) for t in self.docs.values())
+        self.stages.append(
+            {
+                "stage": name,
+                "documents": len(self.docs),
+                "removed": 0,
+                "total_characters": after_chars,
+                "characters_removed": before_chars - after_chars,
+            }
+        )
 
     def biggest_impact(self) -> dict:
-        return max(self.stages[1:], key=lambda s: s["removed"], default=self.stages[0])
+        """Greatest impact by documents removed; falls back to characters removed
+        so a transform-only stage (e.g. boilerplate stripping) can still win."""
+        by_docs = max(self.stages[1:], key=lambda s: s.get("removed", 0), default=self.stages[0])
+        if by_docs.get("removed", 0) > 0:
+            return by_docs
+        return max(self.stages[1:], key=lambda s: s.get("characters_removed", 0), default=self.stages[0])
 
 
 # --------------------------------------------------------------------------
@@ -81,6 +112,11 @@ def extract_pages(pdf_path: Path) -> list[str]:
             print(f"  ! {pdf_path.name}: page skipped ({exc})")
             pages.append("")
     return pages
+
+
+def join_pages(pages: list[str]) -> str:
+    """Join raw pages with no cleaning - used only to measure the pre-cleaning size."""
+    return "\n".join(p for p in pages if p)
 
 
 def strip_boilerplate(pages: list[str]) -> str:
@@ -174,16 +210,26 @@ def main() -> None:
         raise SystemExit(f"No PDFs found in {RAW_PDF_DIR.resolve()} - download the corpus first.")
 
     print(f"Extracting {len(pdfs)} PDFs page-by-page ...")
-    docs: dict[str, str] = {}
+    docs_raw: dict[str, str] = {}
+    pages_by_doc: dict[str, list[str]] = {}
     page_counts: dict[str, int] = {}
     for pdf in pdfs:
         pages = extract_pages(pdf)
         page_counts[pdf.stem] = len(pages)
-        docs[pdf.stem] = normalise(strip_boilerplate(pages))
-        print(f"  {pdf.name}: {len(pages)} pages -> {len(docs[pdf.stem]):,} chars")
+        pages_by_doc[pdf.stem] = pages
+        docs_raw[pdf.stem] = join_pages(pages)
+        print(f"  {pdf.name}: {len(pages)} pages -> {len(docs_raw[pdf.stem]):,} raw chars")
 
-    pipe = Pipeline(docs)
+    pipe = Pipeline(docs_raw)
     pipe.stages[0]["stage"] = "raw extraction (page-by-page)"
+
+    # extra cleaning step invited by the brief ("not confined to the following"):
+    # strip repeated headers/footers + normalise whitespace. This is a transform,
+    # not a document filter, so it's tracked by characters removed, not doc count.
+    pipe.transform(
+        "boilerplate/header-footer stripping + normalisation",
+        lambda name, _: normalise(strip_boilerplate(pages_by_doc[name])),
+    )
 
     # 1. length filter
     pipe.apply(f"length filter (>= {MIN_CHARS} chars)", lambda _, t: len(t) >= MIN_CHARS)
@@ -203,10 +249,14 @@ def main() -> None:
 
     total_chars = sum(len(t) for t in pipe.docs.values())
     top = pipe.biggest_impact()
+    impact_metric = "documents" if top.get("removed", 0) > 0 else "characters"
+    impact_value = top["removed"] if impact_metric == "documents" else top.get("characters_removed", 0)
+
     stats = {
         "stages": pipe.stages,
         "greatest_impact_stage": top["stage"],
-        "greatest_impact_removed": top["removed"],
+        "greatest_impact_metric": impact_metric,
+        "greatest_impact_value": impact_value,
         "final_documents": len(pipe.docs),
         "total_characters": total_chars,
         "total_pages_extracted": sum(page_counts.values()),
@@ -220,15 +270,16 @@ def main() -> None:
     STATS_PATH.write_text(json.dumps(stats, indent=2), encoding="utf-8")
 
     # --- the Step 1 report -------------------------------------------------
-    print("\n" + "=" * 62)
-    print("STEP 1 REPORT - document counts before and after each stage")
-    print("=" * 62)
-    print(f"{'stage':<40}{'docs':>7}{'removed':>10}")
-    print("-" * 62)
+    print("\n" + "=" * 78)
+    print("STEP 1 REPORT - counts before and after each stage")
+    print("=" * 78)
+    print(f"{'stage':<45}{'docs':>7}{'removed':>10}{'chars removed':>16}")
+    print("-" * 78)
     for s in pipe.stages:
-        print(f"{s['stage']:<40}{s['documents']:>7}{s['removed']:>10}")
-    print("-" * 62)
-    print(f"\nGreatest impact: {top['stage']} (removed {top['removed']})")
+        chars_removed = s.get("characters_removed", "")
+        print(f"{s['stage']:<45}{s['documents']:>7}{s.get('removed', 0):>10}{chars_removed:>16}")
+    print("-" * 78)
+    print(f"\nGreatest impact: {top['stage']} ({impact_value} {impact_metric} removed)")
     print(f"Final corpus:    {len(pipe.docs)} documents, {total_chars:,} characters")
     print(f"Written to:      {OUT_DIR}/  and  {STATS_PATH}")
     print("\nNow write the inference: WHY did that stage dominate for this domain?")
