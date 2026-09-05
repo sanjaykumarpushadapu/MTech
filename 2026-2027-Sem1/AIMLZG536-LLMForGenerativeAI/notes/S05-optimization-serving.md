@@ -47,7 +47,9 @@ where $N_{new}$ is the number of generated tokens. The approximation omits queue
 
 ### Input tokens and context window
 
-**Intuition.** The context window is the sequence of tokens available to the model for the current computation. It contains the prompt and the tokens generated so far.
+![Tokenized code-debugging prompt](assets/S05-input-tokenization.jpg)
+
+**Intuition.** The context window is the sequence of tokens available to the model for the current computation. It contains the prompt and the tokens generated so far. Token boundaries do not necessarily equal words: the code-debugging example splits words, punctuation, spaces, carriage returns, and the error message into separate token pieces.
 
 **Why it is needed.** The model can condition only on what fits into the available context. As the generated answer grows, it consumes part of the same budget that held the original prompt.
 
@@ -63,7 +65,9 @@ A request can fail or be truncated when the prompt plus the requested maximum ou
 
 ### Chat prompt templates
 
-**Intuition.** A chat prompt is structured conversation text, not merely a string containing the latest user sentence. Roles tell the model which message is the system instruction, user request, or assistant response region.
+![Serialized ChatML-style prompt](assets/S05-chat-prompt-template.jpg)
+
+**Intuition.** A chat prompt is structured conversation text, not merely a string containing the latest user sentence. Roles tell the model which message is the system instruction, user request, or assistant response region being generated.
 
 **Why it is needed.** A model is trained with a particular conversation format. If the serving template uses the wrong role markers or special tokens, the model may misunderstand the boundaries even when the visible words look correct.
 
@@ -85,7 +89,21 @@ def greet(name)
 assistant:
 ```
 
-The malformed function header can produce `SyntaxError: expected ':'`. A model-specific template then wraps the roles with the control markers expected during training. The serving stack must select the template expected by the chosen model.
+A ChatML-style serialization of the debugging prompt is:
+
+```text
+<|im_start|>system
+You are a helpful assistant
+<|im_end|>
+<|im_start|>user
+Fix this code for me:
+def greet(name)
+    return "Hello, " + name
+<|im_end|>
+<|im_start|>assistant
+```
+
+The malformed function header can produce `SyntaxError: expected ':'`. The serving stack must use the template expected by the model's training format.
 
 **Tradeoff / when not to use.** A template improves consistency for chat models, but a template copied from another model family can damage instruction following. Do not assume that a visible `system/user/assistant` layout proves the underlying special-token format is compatible.
 
@@ -100,6 +118,8 @@ The malformed function header can produce `SyntaxError: expected ':'`. A model-s
 **Why it is needed.** This loop is the basic mechanism behind open-ended text generation. It also explains why output length directly affects serving latency: every additional token creates another prediction step.
 
 ![Next-token probability distribution](assets/S05-next-token-distribution.png)
+
+**Worked example.** For the prompt `Fix this code for me… There’s a missing…`, generation proceeds incrementally: the model may first emit `There`, then `’s`, and later continue the response. Each selected token is added to the context before the next probability distribution is computed; new tokens depend on past tokens.
 
 **Mechanism.** The loop is:
 
