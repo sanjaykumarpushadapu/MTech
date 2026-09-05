@@ -1,6 +1,6 @@
 # AIML ZG536 · Large Language Models for Generative AI · Material Log
 
-**Last reconciled:** 04 Sep 2026
+**Last reconciled:** 05 Sep 2026
 **Path convention:** paths below are relative to this subject folder.
 
 This is the canonical subject-level ledger for material availability, scope checks, durable outputs, and active gaps. Keep detailed audit prose in Git history; do not append a new recheck block here for every pass.
@@ -23,7 +23,8 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 | S02 | LLM Pre-Training | ✓ Training deck; T1/R1; web references | ✓ `notes/S02-pretraining.md` | none known |
 | S03 | Advancements in LLM Architecture | ✓ Architecture deck, 29 slides; T2; cited references; fresh render/media audit complete | ✓ `notes/S03-architecture.md` | Emerging Architectures is marked as filled-in reasoning because the deck only points to it from references |
 | S04 | LLM Finetuning | ✓ `CS-4 LLM Fine tuning.pptx`, 25 slides; fresh render/media audit complete; native source figures retained | ✓ `notes/S04-fine-tuning.md` | Distillation is handout scope with filled-in reasoning because the supplied deck has no dedicated distillation slide |
-| S05–S07 | LLM Optimization & Serving; Training and Attention Efficiency | ✗ decks not held | ☐ no notes yet | collect the decks and required references before writing |
+| S05 | LLM Optimization & Serving | ✓ `CS 5 LLM Inference fundamentals.pptx`, 45 slides; structured inventory/media audit complete; native source visuals retained | ✓ `notes/S05-optimization-serving.md` | Formal slide rendering is unavailable in this environment; XML/package integrity and native media were verified. |
+| S06–S07 | LLM Optimization & Serving; Training and Attention Efficiency | ✗ decks not held | ☐ no notes yet | collect the decks and required references before writing |
 | S08–S16 | Remaining handout topics | ✗ decks not held | ☐ no notes yet | collect the deck and required references before writing |
 
 ## Reference scope
