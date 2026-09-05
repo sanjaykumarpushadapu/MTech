@@ -322,6 +322,8 @@ Prefill mainly influences TTFT. Decode repeatedly influences ITL and total gener
 
 ![Inference memory requirements](assets/S05-memory-requirements.png)
 
+![GPU memory hierarchy and KV-cache pressure](assets/S05-gpu-architecture.png)
+
 **Intuition.** Inference is limited not only by arithmetic. Moving model weights and cached attention states through memory can be the dominant cost.
 
 **Why it is needed.** A model may fit in parameter storage but still exceed accelerator memory once weights, activations, KV-cache, batching, and temporary workspaces are included.

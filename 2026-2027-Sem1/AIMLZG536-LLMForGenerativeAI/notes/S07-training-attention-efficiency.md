@@ -44,6 +44,8 @@ The exact attention result is useful as the reference point for every approximat
 
 ![Queries, keys, and values as attention tensors](assets/S07-attention-tensors.png)
 
+![GPU memory hierarchy](assets/S07-gpu-memory-hierarchy.png)
+
 A serving or training step can be limited by:
 
 - model weights;
