@@ -1,6 +1,6 @@
 # AIML ZG536 · Session 05 · LLM Optimization & Serving
 
-*Learned 04 Sep 2026*
+*Learned 05 Sep 2026*
 
 > **Session scope:** two-phase inference; autoregressive response generation; decoding and sampling; inference bottlenecks; and KV-cache and memory optimization with MQA, GQA, and MLA.
 
@@ -20,6 +20,8 @@ This session connects the learner-facing behavior of generation to the systems c
 
 **Why it is needed.** Treating both phases as identical hides the main performance tradeoff. Prefill usually has more parallel work over the input sequence; decode repeatedly performs small, latency-sensitive steps while the output grows.
 
+![Prompt/prefill and decode phases](assets/S05-prefill-decode.png)
+
 ```mermaid
 flowchart TD
     A[Prompt tokens] --> B[Prefill]
@@ -37,7 +39,7 @@ A useful latency decomposition is:
 
 $$T_{response} \approx T_{prefill} + N_{new}\,T_{decode}$$
 
-where $N_{new}$ is the number of generated tokens. The approximation omits queueing, batching, network, and stopping overhead, but it makes the two costs visible.
+where $N_{new}$ is the number of generated tokens. The approximation omits queueing, batching, network, and stopping overhead, but it makes the two costs visible. The inter-token interval is also called **Time-Per-Output-Token (TPOT)**; it is distinct from **Time-To-First-Token (TTFT)**.
 
 **Worked example.** A 1,000-token prompt followed by a 200-token answer has one prefill phase over the 1,000 input tokens and roughly 200 decode steps. A long prompt mainly increases time-to-first-token; a long answer mainly increases the repeated decode cost.
 
@@ -316,6 +318,8 @@ Prefill mainly influences TTFT. Decode repeatedly influences ITL and total gener
 
 ### Memory and bandwidth pressure
 
+![Inference memory requirements](assets/S05-memory-requirements.png)
+
 **Intuition.** Inference is limited not only by arithmetic. Moving model weights and cached attention states through memory can be the dominant cost.
 
 **Why it is needed.** A model may fit in parameter storage but still exceed accelerator memory once weights, activations, KV-cache, batching, and temporary workspaces are included.
@@ -323,13 +327,13 @@ Prefill mainly influences TTFT. Decode repeatedly influences ITL and total gener
 **Mechanism.** The main pressure points are:
 
 - model weights;
-- KV-cache for every active request;
+- **KV cache memory** for every active request;
 - activations and temporary buffers;
 - batch size and concurrent sequences;
 - context length and generated length;
 - memory bandwidth between storage and compute units.
 
-Long contexts and many simultaneous requests increase the cached state that must be stored and moved.
+GPU architecture determines whether the bottleneck is arithmetic, memory bandwidth, or capacity. A 70B model can move roughly 140 GB of FP16 weights per full forward pass; repeated weight movement makes decode **memory-bandwidth-bound**. These are the three recurring **LLM inference bottlenecks**: limited VRAM, memory bandwidth, and repeated computation.
 
 **Worked example.** If a server doubles the number of active sequences while keeping context length unchanged, the KV-cache requirement roughly doubles. If it doubles both active sequences and context length, the cache pressure can grow by roughly four times before accounting for padding or implementation details.
 
@@ -341,9 +345,11 @@ Long contexts and many simultaneous requests increase the cached state that must
 
 ### KV-cache growth
 
+![KV-cache lookup across prior tokens](assets/S05-kv-cache-lookup.png)
+
 **Intuition.** Attention uses keys and values from previous tokens. During autoregressive decoding, those states do not need to be recomputed for every new token, so the server stores them in a KV-cache.
 
-**Why it is needed.** Without a KV-cache, generating token $t$ would repeatedly redo attention-state work for tokens 1 through $t-1$. Caching makes incremental decoding practical, at the cost of memory that grows with sequence length and concurrency.
+**Why it is needed.** Without a KV-cache, generating token $t$ would repeatedly redo attention-state work for tokens 1 through $t-1$. The **KV cache** lives in **GPU memory**. Its memory usage grows **linearly** with the number of cached tokens, active sequences, layers, and stored K/V heads. Once the **QKV calculations** produce a key and value, the runtime can **Store K & V** and reuse them. A transformer has **one KV cache per attention layer**. The visual progression separates **Phase 1: Prefill** from **Phase 2: Decode**; past KVs do not change while new query states are computed.
 
 **Mechanism.** A simplified KV-cache memory estimate is:
 
@@ -367,6 +373,12 @@ This estimate ignores allocator overhead, padding, compression, and implementati
 
 ### Multi-head, multi-query, and grouped-query attention
 
+![Multi-head attention](assets/S05-mha.png)
+
+![Multi-query attention](assets/S05-mqa.png)
+
+![Grouped-query attention](assets/S05-gqa.png)
+
 **Intuition.** Query heads determine how many attention views the model can use, while key/value heads determine how many cached K/V copies must be stored. Sharing K/V heads reduces cache size.
 
 **Why it is needed.** Standard multi-head attention can create a large KV-cache because each query head has its own key and value heads. Serving-oriented variants reduce this memory cost while retaining multiple query heads.
@@ -385,6 +397,8 @@ The cache reduction comes from lowering $H_{KV}$ in the memory estimate, not fro
 
 ### Multi-head latent attention
 
+![MLA compared with regular multi-head attention](assets/S05-mla.jpeg)
+
 **Intuition.** Multi-head latent attention (MLA) reduces the information stored for future attention by caching a compressed latent representation rather than storing the full K/V state in the ordinary form.
 
 **Why it is needed.** KV-cache memory becomes a major constraint for long context and high concurrency. Compressing the cached representation can allow more active sequences or longer contexts within the same memory budget.
@@ -394,6 +408,12 @@ The cache reduction comes from lowering $H_{KV}$ in the memory estimate, not fro
 **Worked example.** If two serving designs represent the same history with 1.0 units and 0.25 units of cached state per token, the second design can hold roughly four times as many cached tokens in the same raw cache budget, before overhead and quality effects.
 
 **Tradeoff / when not to use.** MLA is an architectural design that must be supported by the trained model and runtime. It is not a generic post-training compression switch. Use the model's supported implementation and validate quality, latency, and cache memory together.
+
+### Optional MLA detail
+
+In one illustrative configuration, standard MHA stores $2\times128\times128=32,768$ K/V numbers per token per layer, while an MLA latent cache stores 576 numbers—about 55 times fewer before implementation overhead. This is a configuration example, not a universal MLA ratio. The **MLA math** is a **factorization**: compress the hidden state into a latent $c_{KV}$, cache the latent, and reconstruct or algebraically absorb the key/value projections when attention runs.
+
+MLA is associated with architectures such as DeepSeek-V2/V3 and related model families. Other models may choose GQA instead; the trained architecture determines which cache representation is valid.
 
 ---
 

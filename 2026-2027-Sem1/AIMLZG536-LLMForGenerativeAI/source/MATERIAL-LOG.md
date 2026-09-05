@@ -23,8 +23,9 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 | S02 | LLM Pre-Training | ✓ Training deck; T1/R1; web references | ✓ `notes/S02-pretraining.md` | none known |
 | S03 | Advancements in LLM Architecture | ✓ Architecture deck, 29 slides; T2; cited references; fresh render/media audit complete | ✓ `notes/S03-architecture.md` | Emerging Architectures is marked as filled-in reasoning because the deck only points to it from references |
 | S04 | LLM Finetuning | ✓ `CS-4 LLM Fine tuning.pptx`, 25 slides; fresh render/media audit complete; native source figures retained | ✓ `notes/S04-fine-tuning.md` | Distillation is handout scope with filled-in reasoning because the supplied deck has no dedicated distillation slide |
-| S05 | LLM Optimization & Serving | ✓ `CS 5 LLM Inference fundamentals.pptx`, 45 slides; structured inventory/media audit complete; native source visuals retained | ✓ `notes/S05-optimization-serving.md` | Formal slide rendering is unavailable in this environment; XML/package integrity and native media were verified. |
-| S06–S07 | LLM Optimization & Serving; Training and Attention Efficiency | ✗ decks not held | ☐ no notes yet | collect the decks and required references before writing |
+| S05 | LLM Optimization & Serving | ✓ CS5 (45), CS6 early sections, and CS7 MQA/GQA/MLA sections; native source-media audit complete | ✓ `notes/S05-optimization-serving.md` | Formal slide rendering unavailable; all three packages and native media were verified. |
+| S06 | LLM Optimization & Serving | ✓ CS6 speculative/PagedAttention sections and CS7 quantization/distillation sections; native source-media audit complete | ✓ `notes/S06-optimization-serving.md` | Pruning, chunked prefill, and production metrics/economics require bounded explanatory coverage; several serving items are overview-only in the decks. |
+| S07 | Training and Attention Efficiency | ✓ CS7, 54 slides; native source-media audit complete | ✓ `notes/S07-training-attention-efficiency.md` | Mixed precision and Ring Attention are not substantively taught in the deck; attention variants are mainly overview material. |
 | S08–S16 | Remaining handout topics | ✗ decks not held | ☐ no notes yet | collect the deck and required references before writing |
 
 ## Reference scope
@@ -44,6 +45,7 @@ Legend: `✓` complete · `partial` incomplete · `✗` missing · `—` not app
 - S03's four numbered Part headings use the handout sub-topic wording; the note preserves the deck's source order and native instructional figures as PNG derivatives. Supplementary emerging-architecture context is kept outside the numbered Parts because the deck provides no dedicated worked slide for it.
 - The supplied `CS-4 LLM Fine tuning.pptx` matches the updated handout S04 row, **LLM Finetuning**. The former lecture-only exception is retired; the handout's Training and Attention Efficiency topic is now S07 and remains a genuine deck gap.
 - The S04 deck's reference slides are routed to the master/ledger rather than copied into the learner note; the note keeps native embedded source figures without conversion.
+- The three optimization decks are cross-routed by handout scope: CS5 supplies decoding fundamentals; CS6 supplies two-phase/KV/inference bottleneck and speculative/PagedAttention material; CS7 supplies MQA/GQA/MLA, FlashAttention, quantization, and distillation. Native instructional media are retained in the routed notes; decorative/logo and text-only table fragments are omitted or transcribed.
 - The subject note is the primary learning artifact; shared notes are optional synthesis and cannot be the only home for core material.
 
 ## Storage rule
